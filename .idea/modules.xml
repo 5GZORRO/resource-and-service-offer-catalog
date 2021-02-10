@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/information_models/information_models.iml" filepath="$PROJECT_DIR$/information_models/information_models.iml" />
+      <module fileurl="file://$PROJECT_DIR$/interfaces/interfaces.iml" filepath="$PROJECT_DIR$/interfaces/interfaces.iml" />
+      <module fileurl="file://$PROJECT_DIR$/offering_catalogue/offering_catalogue.iml" filepath="$PROJECT_DIR$/offering_catalogue/offering_catalogue.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/tmf-offering-catalogue.iml" filepath="$PROJECT_DIR$/.idea/tmf-offering-catalogue.iml" />
+    </modules>
+  </component>
+</project>
