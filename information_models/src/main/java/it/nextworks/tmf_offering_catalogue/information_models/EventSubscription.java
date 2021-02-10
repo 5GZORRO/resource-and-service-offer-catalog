@@ -1,4 +1,4 @@
-package it.nextworks.tmf_offering_catalogue.information_models.service;
+package it.nextworks.tmf_offering_catalogue.information_models;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -13,19 +13,22 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "Sets the communication endpoint address the service instance must use to deliver notification information")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-10T10:03:19.238Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-09T15:56:41.618Z")
 
 
 
 
-public class EventSubscriptionInput   {
+public class EventSubscription   {
   @JsonProperty("callback")
   private String callback = null;
+
+  @JsonProperty("id")
+  private String id = null;
 
   @JsonProperty("query")
   private String query = null;
 
-  public EventSubscriptionInput callback(String callback) {
+  public EventSubscription callback(String callback) {
     this.callback = callback;
     return this;
   }
@@ -46,7 +49,28 @@ public class EventSubscriptionInput   {
     this.callback = callback;
   }
 
-  public EventSubscriptionInput query(String query) {
+  public EventSubscription id(String id) {
+    this.id = id;
+    return this;
+  }
+
+  /**
+   * Id of the listener
+   * @return id
+  **/
+  @ApiModelProperty(required = true, value = "Id of the listener")
+  @NotNull
+
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public EventSubscription query(String query) {
     this.query = query;
     return this;
   }
@@ -75,22 +99,24 @@ public class EventSubscriptionInput   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    EventSubscriptionInput eventSubscriptionInput = (EventSubscriptionInput) o;
-    return Objects.equals(this.callback, eventSubscriptionInput.callback) &&
-        Objects.equals(this.query, eventSubscriptionInput.query);
+    EventSubscription eventSubscription = (EventSubscription) o;
+    return Objects.equals(this.callback, eventSubscription.callback) &&
+        Objects.equals(this.id, eventSubscription.id) &&
+        Objects.equals(this.query, eventSubscription.query);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(callback, query);
+    return Objects.hash(callback, id, query);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class EventSubscriptionInput {\n");
+    sb.append("class EventSubscription {\n");
     
     sb.append("    callback: ").append(toIndentedString(callback)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    query: ").append(toIndentedString(query)).append("\n");
     sb.append("}");
     return sb.toString();

@@ -1,4 +1,4 @@
-package it.nextworks.tmf_offering_catalogue.information_models.product;
+package it.nextworks.tmf_offering_catalogue.information_models;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;

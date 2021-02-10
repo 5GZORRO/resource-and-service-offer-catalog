@@ -8,7 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
+import it.nextworks.tmf_offering_catalogue.information_models.*;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 

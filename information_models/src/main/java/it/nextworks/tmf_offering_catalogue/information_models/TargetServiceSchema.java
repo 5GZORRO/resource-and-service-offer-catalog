@@ -1,4 +1,4 @@
-package it.nextworks.tmf_offering_catalogue.information_models.service;
+package it.nextworks.tmf_offering_catalogue.information_models;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,7 +11,7 @@ import org.springframework.validation.annotation.Validated;
  */
 @ApiModel(description = "The reference object to the schema and type of target service which is described by service specification")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-10T10:03:19.238Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-09T15:56:41.618Z")
 
 
 

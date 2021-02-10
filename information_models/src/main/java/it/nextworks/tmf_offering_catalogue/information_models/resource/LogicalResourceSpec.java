@@ -8,6 +8,8 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.nextworks.tmf_offering_catalogue.information_models.AttachmentRef;
+import it.nextworks.tmf_offering_catalogue.information_models.RelatedParty;
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;

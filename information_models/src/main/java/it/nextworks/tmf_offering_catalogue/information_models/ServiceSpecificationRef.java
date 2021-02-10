@@ -1,22 +1,23 @@
-package it.nextworks.tmf_offering_catalogue.information_models.service;
+package it.nextworks.tmf_offering_catalogue.information_models;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
+import javax.validation.Valid;
 
 /**
- * Attachment reference. An attachment complements the description of an element (for instance a product) through video, pictures
+ * Service specification reference: ServiceSpecification(s) required to realize a ProductSpecification.
  */
-@ApiModel(description = "Attachment reference. An attachment complements the description of an element (for instance a product) through video, pictures")
+@ApiModel(description = "Service specification reference: ServiceSpecification(s) required to realize a ProductSpecification.")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-10T10:03:19.238Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-09T15:56:41.618Z")
 
 
 
 
-public class AttachmentRef   {
+public class ServiceSpecificationRef   {
   @JsonProperty("@baseType")
   private String baseType = null;
 
@@ -29,9 +30,6 @@ public class AttachmentRef   {
   @JsonProperty("@type")
   private String type = null;
 
-  @JsonProperty("description")
-  private String description = null;
-
   @JsonProperty("href")
   private String href = null;
 
@@ -41,13 +39,16 @@ public class AttachmentRef   {
   @JsonProperty("name")
   private String name = null;
 
-  @JsonProperty("url")
-  private String url = null;
+  @JsonProperty("targetServiceSchema")
+  private TargetServiceSchema targetServiceSchema = null;
 
   @JsonProperty("uuid")
   private String uuid = null;
 
-  public AttachmentRef baseType(String baseType) {
+  @JsonProperty("version")
+  private String version = null;
+
+  public ServiceSpecificationRef baseType(String baseType) {
     this.baseType = baseType;
     return this;
   }
@@ -67,7 +68,7 @@ public class AttachmentRef   {
     this.baseType = baseType;
   }
 
-  public AttachmentRef referredType(String referredType) {
+  public ServiceSpecificationRef referredType(String referredType) {
     this.referredType = referredType;
     return this;
   }
@@ -87,7 +88,7 @@ public class AttachmentRef   {
     this.referredType = referredType;
   }
 
-  public AttachmentRef schemaLocation(String schemaLocation) {
+  public ServiceSpecificationRef schemaLocation(String schemaLocation) {
     this.schemaLocation = schemaLocation;
     return this;
   }
@@ -107,7 +108,7 @@ public class AttachmentRef   {
     this.schemaLocation = schemaLocation;
   }
 
-  public AttachmentRef type(String type) {
+  public ServiceSpecificationRef type(String type) {
     this.type = type;
     return this;
   }
@@ -127,27 +128,7 @@ public class AttachmentRef   {
     this.type = type;
   }
 
-  public AttachmentRef description(String description) {
-    this.description = description;
-    return this;
-  }
-
-  /**
-   * A narrative text describing the content of the attachment
-   * @return description
-  **/
-  @ApiModelProperty(value = "A narrative text describing the content of the attachment")
-
-
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  public AttachmentRef href(String href) {
+  public ServiceSpecificationRef href(String href) {
     this.href = href;
     return this;
   }
@@ -167,7 +148,7 @@ public class AttachmentRef   {
     this.href = href;
   }
 
-  public AttachmentRef id(String id) {
+  public ServiceSpecificationRef id(String id) {
     this.id = id;
     return this;
   }
@@ -187,7 +168,7 @@ public class AttachmentRef   {
     this.id = id;
   }
 
-  public AttachmentRef name(String name) {
+  public ServiceSpecificationRef name(String name) {
     this.name = name;
     return this;
   }
@@ -207,27 +188,28 @@ public class AttachmentRef   {
     this.name = name;
   }
 
-  public AttachmentRef url(String url) {
-    this.url = url;
+  public ServiceSpecificationRef targetServiceSchema(TargetServiceSchema targetServiceSchema) {
+    this.targetServiceSchema = targetServiceSchema;
     return this;
   }
 
   /**
-   * Link to the attachment media/content
-   * @return url
+   * A target service schema reference (TargetServiceSchemaRef). The reference object to the schema and type of target service which is described by service specification.
+   * @return targetServiceSchema
   **/
-  @ApiModelProperty(value = "Link to the attachment media/content")
+  @ApiModelProperty(value = "A target service schema reference (TargetServiceSchemaRef). The reference object to the schema and type of target service which is described by service specification.")
 
+  @Valid
 
-  public String getUrl() {
-    return url;
+  public TargetServiceSchema getTargetServiceSchema() {
+    return targetServiceSchema;
   }
 
-  public void setUrl(String url) {
-    this.url = url;
+  public void setTargetServiceSchema(TargetServiceSchema targetServiceSchema) {
+    this.targetServiceSchema = targetServiceSchema;
   }
 
-  public AttachmentRef uuid(String uuid) {
+  public ServiceSpecificationRef uuid(String uuid) {
     this.uuid = uuid;
     return this;
   }
@@ -247,6 +229,26 @@ public class AttachmentRef   {
     this.uuid = uuid;
   }
 
+  public ServiceSpecificationRef version(String version) {
+    this.version = version;
+    return this;
+  }
+
+  /**
+   * Service specification version
+   * @return version
+  **/
+  @ApiModelProperty(value = "Service specification version")
+
+
+  public String getVersion() {
+    return version;
+  }
+
+  public void setVersion(String version) {
+    this.version = version;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -256,39 +258,39 @@ public class AttachmentRef   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    AttachmentRef attachmentRef = (AttachmentRef) o;
-    return Objects.equals(this.baseType, attachmentRef.baseType) &&
-        Objects.equals(this.referredType, attachmentRef.referredType) &&
-        Objects.equals(this.schemaLocation, attachmentRef.schemaLocation) &&
-        Objects.equals(this.type, attachmentRef.type) &&
-        Objects.equals(this.description, attachmentRef.description) &&
-        Objects.equals(this.href, attachmentRef.href) &&
-        Objects.equals(this.id, attachmentRef.id) &&
-        Objects.equals(this.name, attachmentRef.name) &&
-        Objects.equals(this.url, attachmentRef.url) &&
-        Objects.equals(this.uuid, attachmentRef.uuid);
+    ServiceSpecificationRef serviceSpecificationRef = (ServiceSpecificationRef) o;
+    return Objects.equals(this.baseType, serviceSpecificationRef.baseType) &&
+        Objects.equals(this.referredType, serviceSpecificationRef.referredType) &&
+        Objects.equals(this.schemaLocation, serviceSpecificationRef.schemaLocation) &&
+        Objects.equals(this.type, serviceSpecificationRef.type) &&
+        Objects.equals(this.href, serviceSpecificationRef.href) &&
+        Objects.equals(this.id, serviceSpecificationRef.id) &&
+        Objects.equals(this.name, serviceSpecificationRef.name) &&
+        Objects.equals(this.targetServiceSchema, serviceSpecificationRef.targetServiceSchema) &&
+        Objects.equals(this.uuid, serviceSpecificationRef.uuid) &&
+        Objects.equals(this.version, serviceSpecificationRef.version);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(baseType, referredType, schemaLocation, type, description, href, id, name, url, uuid);
+    return Objects.hash(baseType, referredType, schemaLocation, type, href, id, name, targetServiceSchema, uuid, version);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class AttachmentRef {\n");
+    sb.append("class ServiceSpecificationRef {\n");
     
     sb.append("    baseType: ").append(toIndentedString(baseType)).append("\n");
     sb.append("    referredType: ").append(toIndentedString(referredType)).append("\n");
     sb.append("    schemaLocation: ").append(toIndentedString(schemaLocation)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
-    sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    href: ").append(toIndentedString(href)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    url: ").append(toIndentedString(url)).append("\n");
+    sb.append("    targetServiceSchema: ").append(toIndentedString(targetServiceSchema)).append("\n");
     sb.append("    uuid: ").append(toIndentedString(uuid)).append("\n");
+    sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("}");
     return sb.toString();
   }

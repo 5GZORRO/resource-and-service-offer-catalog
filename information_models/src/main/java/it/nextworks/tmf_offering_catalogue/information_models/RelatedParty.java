@@ -1,23 +1,22 @@
-package it.nextworks.tmf_offering_catalogue.information_models.service;
+package it.nextworks.tmf_offering_catalogue.information_models;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
 
 /**
- * Service specification reference: ServiceSpecification(s) required to realize a ProductSpecification.
+ * RelatedParty reference. A related party defines party or party role linked to a specific entity.
  */
-@ApiModel(description = "Service specification reference: ServiceSpecification(s) required to realize a ProductSpecification.")
+@ApiModel(description = "RelatedParty reference. A related party defines party or party role linked to a specific entity.")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-10T10:03:19.238Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-09T15:56:41.618Z")
 
 
 
 
-public class ServiceSpecificationRef   {
+public class RelatedParty   {
   @JsonProperty("@baseType")
   private String baseType = null;
 
@@ -30,6 +29,9 @@ public class ServiceSpecificationRef   {
   @JsonProperty("@type")
   private String type = null;
 
+  @JsonProperty("extendedInfo")
+  private String extendedInfo = null;
+
   @JsonProperty("href")
   private String href = null;
 
@@ -39,16 +41,13 @@ public class ServiceSpecificationRef   {
   @JsonProperty("name")
   private String name = null;
 
-  @JsonProperty("targetServiceSchema")
-  private TargetServiceSchema targetServiceSchema = null;
+  @JsonProperty("role")
+  private String role = null;
 
   @JsonProperty("uuid")
   private String uuid = null;
 
-  @JsonProperty("version")
-  private String version = null;
-
-  public ServiceSpecificationRef baseType(String baseType) {
+  public RelatedParty baseType(String baseType) {
     this.baseType = baseType;
     return this;
   }
@@ -68,7 +67,7 @@ public class ServiceSpecificationRef   {
     this.baseType = baseType;
   }
 
-  public ServiceSpecificationRef referredType(String referredType) {
+  public RelatedParty referredType(String referredType) {
     this.referredType = referredType;
     return this;
   }
@@ -88,7 +87,7 @@ public class ServiceSpecificationRef   {
     this.referredType = referredType;
   }
 
-  public ServiceSpecificationRef schemaLocation(String schemaLocation) {
+  public RelatedParty schemaLocation(String schemaLocation) {
     this.schemaLocation = schemaLocation;
     return this;
   }
@@ -108,7 +107,7 @@ public class ServiceSpecificationRef   {
     this.schemaLocation = schemaLocation;
   }
 
-  public ServiceSpecificationRef type(String type) {
+  public RelatedParty type(String type) {
     this.type = type;
     return this;
   }
@@ -128,7 +127,27 @@ public class ServiceSpecificationRef   {
     this.type = type;
   }
 
-  public ServiceSpecificationRef href(String href) {
+  public RelatedParty extendedInfo(String extendedInfo) {
+    this.extendedInfo = extendedInfo;
+    return this;
+  }
+
+  /**
+   * Get extendedInfo
+   * @return extendedInfo
+  **/
+  @ApiModelProperty(value = "")
+
+
+  public String getExtendedInfo() {
+    return extendedInfo;
+  }
+
+  public void setExtendedInfo(String extendedInfo) {
+    this.extendedInfo = extendedInfo;
+  }
+
+  public RelatedParty href(String href) {
     this.href = href;
     return this;
   }
@@ -148,7 +167,7 @@ public class ServiceSpecificationRef   {
     this.href = href;
   }
 
-  public ServiceSpecificationRef id(String id) {
+  public RelatedParty id(String id) {
     this.id = id;
     return this;
   }
@@ -168,7 +187,7 @@ public class ServiceSpecificationRef   {
     this.id = id;
   }
 
-  public ServiceSpecificationRef name(String name) {
+  public RelatedParty name(String name) {
     this.name = name;
     return this;
   }
@@ -188,28 +207,27 @@ public class ServiceSpecificationRef   {
     this.name = name;
   }
 
-  public ServiceSpecificationRef targetServiceSchema(TargetServiceSchema targetServiceSchema) {
-    this.targetServiceSchema = targetServiceSchema;
+  public RelatedParty role(String role) {
+    this.role = role;
     return this;
   }
 
   /**
-   * A target service schema reference (TargetServiceSchemaRef). The reference object to the schema and type of target service which is described by service specification.
-   * @return targetServiceSchema
+   * Role of the related party.
+   * @return role
   **/
-  @ApiModelProperty(value = "A target service schema reference (TargetServiceSchemaRef). The reference object to the schema and type of target service which is described by service specification.")
+  @ApiModelProperty(value = "Role of the related party.")
 
-  @Valid
 
-  public TargetServiceSchema getTargetServiceSchema() {
-    return targetServiceSchema;
+  public String getRole() {
+    return role;
   }
 
-  public void setTargetServiceSchema(TargetServiceSchema targetServiceSchema) {
-    this.targetServiceSchema = targetServiceSchema;
+  public void setRole(String role) {
+    this.role = role;
   }
 
-  public ServiceSpecificationRef uuid(String uuid) {
+  public RelatedParty uuid(String uuid) {
     this.uuid = uuid;
     return this;
   }
@@ -229,26 +247,6 @@ public class ServiceSpecificationRef   {
     this.uuid = uuid;
   }
 
-  public ServiceSpecificationRef version(String version) {
-    this.version = version;
-    return this;
-  }
-
-  /**
-   * Service specification version
-   * @return version
-  **/
-  @ApiModelProperty(value = "Service specification version")
-
-
-  public String getVersion() {
-    return version;
-  }
-
-  public void setVersion(String version) {
-    this.version = version;
-  }
-
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -258,39 +256,39 @@ public class ServiceSpecificationRef   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ServiceSpecificationRef serviceSpecificationRef = (ServiceSpecificationRef) o;
-    return Objects.equals(this.baseType, serviceSpecificationRef.baseType) &&
-        Objects.equals(this.referredType, serviceSpecificationRef.referredType) &&
-        Objects.equals(this.schemaLocation, serviceSpecificationRef.schemaLocation) &&
-        Objects.equals(this.type, serviceSpecificationRef.type) &&
-        Objects.equals(this.href, serviceSpecificationRef.href) &&
-        Objects.equals(this.id, serviceSpecificationRef.id) &&
-        Objects.equals(this.name, serviceSpecificationRef.name) &&
-        Objects.equals(this.targetServiceSchema, serviceSpecificationRef.targetServiceSchema) &&
-        Objects.equals(this.uuid, serviceSpecificationRef.uuid) &&
-        Objects.equals(this.version, serviceSpecificationRef.version);
+    RelatedParty relatedParty = (RelatedParty) o;
+    return Objects.equals(this.baseType, relatedParty.baseType) &&
+        Objects.equals(this.referredType, relatedParty.referredType) &&
+        Objects.equals(this.schemaLocation, relatedParty.schemaLocation) &&
+        Objects.equals(this.type, relatedParty.type) &&
+        Objects.equals(this.extendedInfo, relatedParty.extendedInfo) &&
+        Objects.equals(this.href, relatedParty.href) &&
+        Objects.equals(this.id, relatedParty.id) &&
+        Objects.equals(this.name, relatedParty.name) &&
+        Objects.equals(this.role, relatedParty.role) &&
+        Objects.equals(this.uuid, relatedParty.uuid);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(baseType, referredType, schemaLocation, type, href, id, name, targetServiceSchema, uuid, version);
+    return Objects.hash(baseType, referredType, schemaLocation, type, extendedInfo, href, id, name, role, uuid);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ServiceSpecificationRef {\n");
+    sb.append("class RelatedParty {\n");
     
     sb.append("    baseType: ").append(toIndentedString(baseType)).append("\n");
     sb.append("    referredType: ").append(toIndentedString(referredType)).append("\n");
     sb.append("    schemaLocation: ").append(toIndentedString(schemaLocation)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
+    sb.append("    extendedInfo: ").append(toIndentedString(extendedInfo)).append("\n");
     sb.append("    href: ").append(toIndentedString(href)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    targetServiceSchema: ").append(toIndentedString(targetServiceSchema)).append("\n");
+    sb.append("    role: ").append(toIndentedString(role)).append("\n");
     sb.append("    uuid: ").append(toIndentedString(uuid)).append("\n");
-    sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("}");
     return sb.toString();
   }
