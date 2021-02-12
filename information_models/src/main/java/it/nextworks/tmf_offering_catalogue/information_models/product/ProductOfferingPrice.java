@@ -1,6 +1,8 @@
 package it.nextworks.tmf_offering_catalogue.information_models.product;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -11,6 +13,8 @@ import java.util.List;
 import it.nextworks.tmf_offering_catalogue.information_models.Quantity;
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 
 /**
@@ -20,14 +24,22 @@ import javax.validation.Valid;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-09T15:56:41.618Z")
 
+@Entity
+@Table(name = "product_offering_prices")
+public class ProductOfferingPrice {
 
+  @JsonIgnore
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "jpda_id")
+  private Long jpaId;
 
-
-public class ProductOfferingPrice   {
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")
@@ -35,10 +47,13 @@ public class ProductOfferingPrice   {
 
   @JsonProperty("bundledPopRelationship")
   @Valid
+  @Column(name = "bundled_pop_relationship")
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productOfferingPrice")
   private List<BundledProductOfferingPriceRelationship> bundledPopRelationship = null;
 
   @JsonProperty("constraint")
   @Valid
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productOfferingPrice")
   private List<ConstraintRef> constraint = null;
 
   @JsonProperty("description")
@@ -51,12 +66,15 @@ public class ProductOfferingPrice   {
   private String id = null;
 
   @JsonProperty("isBundle")
+  @Column(name = "is_bundle")
   private Boolean isBundle = null;
 
   @JsonProperty("lastUpdate")
+  @Column(name = "last_update")
   private String lastUpdate = null;
 
   @JsonProperty("lifecycleStatus")
+  @Column(name = "lifecycle_status")
   private String lifecycleStatus = null;
 
   @JsonProperty("name")
@@ -67,47 +85,65 @@ public class ProductOfferingPrice   {
 
   @JsonProperty("place")
   @Valid
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productOfferingPrice")
   private List<PlaceRef> place = null;
 
   @JsonProperty("popRelationship")
   @Valid
+  @Column(name = "pop_relationship")
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productOfferingPrice")
   private List<ProductOfferingPriceRelationship> popRelationship = null;
 
   @JsonProperty("price")
+  @Embedded
   private Money price = null;
 
   @JsonProperty("priceType")
+  @Column(name = "price_type")
   private String priceType = null;
 
   @JsonProperty("pricingLogicAlgorithm")
   @Valid
+  @Column(name = "pricing_logic_algorithm")
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productOfferingPrice")
   private List<PricingLogicAlgorithm> pricingLogicAlgorithm = null;
 
   @JsonProperty("prodSpecCharValueUse")
   @Valid
+  @Column(name = "prod_spec_char_value_use")
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productOfferingPrice")
   private List<ProductSpecificationCharacteristicValueUse> prodSpecCharValueUse = null;
 
   @JsonProperty("productOfferingTerm")
   @Valid
+  @Column(name = "product_offering_term")
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productOfferingPrice")
   private List<ProductOfferingTerm> productOfferingTerm = null;
 
   @JsonProperty("recurringChargePeriodLength")
+  @Column(name = "recurring_charge_period_length")
   private Integer recurringChargePeriodLength = null;
 
   @JsonProperty("recurringChargePeriodType")
+  @Column(name = "recurring_charge_period_type")
   private String recurringChargePeriodType = null;
 
   @JsonProperty("tax")
   @Valid
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productOfferingPrice")
   private List<TaxItem> tax = null;
 
   @JsonProperty("unitOfMeasure")
+  @Column(name = "unit_of_measure")
+  @Embedded
   private Quantity unitOfMeasure = null;
 
   @JsonProperty("uuid")
   private String uuid = null;
 
   @JsonProperty("validFor")
+  @Column(name = "valid_for")
+  @Embedded
   private TimePeriod validFor = null;
 
   @JsonProperty("version")

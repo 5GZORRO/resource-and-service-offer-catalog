@@ -1,10 +1,14 @@
 package it.nextworks.tmf_offering_catalogue.information_models.product;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 
 /**
@@ -14,14 +18,22 @@ import javax.validation.Valid;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-09T15:56:41.618Z")
 
+@Entity
+@Table(name = "tax_items")
+public class TaxItem {
 
+  @JsonIgnore
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "jpda_id")
+  private Long jpaId;
 
-
-public class TaxItem   {
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")
@@ -31,16 +43,25 @@ public class TaxItem   {
   private String href = null;
 
   @JsonProperty("taxAmount")
+  @Column(name = "tax_amount")
+  @Embedded
   private Money taxAmount = null;
 
   @JsonProperty("taxCategory")
+  @Column(name = "tax_category")
   private String taxCategory = null;
 
   @JsonProperty("taxRate")
+  @Column(name = "tax_rate")
   private Float taxRate = null;
 
   @JsonProperty("uuid")
   private String uuid = null;
+
+  @JsonIgnore
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "product_offering_price_id")
+  private ProductOfferingPrice productOfferingPrice;
 
   public TaxItem baseType(String baseType) {
     this.baseType = baseType;

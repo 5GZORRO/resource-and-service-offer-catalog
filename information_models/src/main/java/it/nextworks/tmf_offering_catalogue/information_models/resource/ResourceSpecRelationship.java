@@ -1,11 +1,15 @@
 package it.nextworks.tmf_offering_catalogue.information_models.resource;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 
 /**
@@ -15,11 +19,18 @@ import javax.validation.Valid;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-10T10:00:31.056Z")
 
+@Entity
+@Table(name = "resource_spec_relationships")
+public class ResourceSpecRelationship {
 
+  @JsonIgnore
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "jpda_id")
+  private Long jpaId;
 
-
-public class ResourceSpecRelationship   {
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@type")
@@ -35,6 +46,7 @@ public class ResourceSpecRelationship   {
   private String name = null;
 
   @JsonProperty("relationshipType")
+  @Column(name = "relationship_type")
   private String relationshipType = null;
 
   @JsonProperty("role")
@@ -44,7 +56,14 @@ public class ResourceSpecRelationship   {
   private String uuid = null;
 
   @JsonProperty("validFor")
+  @Column(name = "valid_for")
+  @Embedded
   private TimePeriod validFor = null;
+
+  @JsonIgnore
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "resource_specification_id")
+  private ResourceSpecification resourceSpecification;
 
   public ResourceSpecRelationship baseType(String baseType) {
     this.baseType = baseType;

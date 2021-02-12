@@ -1,10 +1,14 @@
 package it.nextworks.tmf_offering_catalogue.information_models;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 
 /**
  * The reference object to the schema and type of target service which is described by service specification
@@ -13,14 +17,22 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-09T15:56:41.618Z")
 
+@Entity
+@Table(name = "target_service_schemas")
+public class TargetServiceSchema {
 
+  @JsonIgnore
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "jpda_id")
+  private Long jpaId;
 
-
-public class TargetServiceSchema   {
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")

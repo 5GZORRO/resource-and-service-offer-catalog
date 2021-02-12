@@ -1,10 +1,14 @@
 package it.nextworks.tmf_offering_catalogue.information_models.resource;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 
 /**
  * ResourceCandidate reference: A resource candidate is an entity that makes a ResourceSpecification available to a catalog.
@@ -13,14 +17,22 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-10T10:00:31.056Z")
 
+@Entity
+@Table(name = "resource_candidate_refs")
+public class ResourceCandidateRef {
 
+  @JsonIgnore
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "jpda_id")
+  private Long jpaId;
 
-
-public class ResourceCandidateRef   {
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")
@@ -40,6 +52,11 @@ public class ResourceCandidateRef   {
 
   @JsonProperty("version")
   private String version = null;
+
+  @JsonIgnore
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "resource_category_id")
+  private ResourceCategory resourceCategory;
 
   public ResourceCandidateRef baseType(String baseType) {
     this.baseType = baseType;

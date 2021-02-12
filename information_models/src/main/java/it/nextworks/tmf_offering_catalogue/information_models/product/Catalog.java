@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.nextworks.tmf_offering_catalogue.information_models.LifecycleStatusEnumEnum;
 import it.nextworks.tmf_offering_catalogue.information_models.RelatedParty;
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
 import org.springframework.validation.annotation.Validated;
@@ -56,49 +57,6 @@ public class Catalog   {
 
   @JsonProperty("lifecycleStatus")
   private String lifecycleStatus = null;
-
-  /**
-   * Gets or Sets lifecycleStatusEnum
-   */
-  public enum LifecycleStatusEnumEnum {
-    IN_STUDY("In study"),
-    
-    IN_DESIGN("In design"),
-    
-    IN_TEST("In test"),
-    
-    ACTIVE("Active"),
-    
-    LAUNCHED("Launched"),
-    
-    RETIRED("Retired"),
-    
-    OBSOLETE("Obsolete"),
-    
-    REJECTED("Rejected");
-
-    private String value;
-
-    LifecycleStatusEnumEnum(String value) {
-      this.value = value;
-    }
-
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static LifecycleStatusEnumEnum fromValue(String text) {
-      for (LifecycleStatusEnumEnum b : LifecycleStatusEnumEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
 
   @JsonProperty("lifecycleStatusEnum")
   private LifecycleStatusEnumEnum lifecycleStatusEnum = null;

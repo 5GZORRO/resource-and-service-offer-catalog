@@ -1,6 +1,8 @@
 package it.nextworks.tmf_offering_catalogue.information_models.resource;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -10,6 +12,8 @@ import java.util.List;
 
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 
 /**
@@ -19,20 +23,29 @@ import javax.validation.Valid;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-10T10:00:31.056Z")
 
-
-
-
+@Entity
+@Table(name = "resource_spec_characteristics")
 public class ResourceSpecCharacteristic   {
+
+  @JsonIgnore
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "jpda_id")
+  private Long jpaId;
+
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")
   private String type = null;
 
   @JsonProperty("@valueSchemaLocation")
+  @Column(name = "value_schema_location")
   private String valueSchemaLocation = null;
 
   @JsonProperty("configurable")
@@ -48,12 +61,15 @@ public class ResourceSpecCharacteristic   {
   private String href = null;
 
   @JsonProperty("isUnique")
+  @Column(name = "is_unique")
   private Boolean isUnique = null;
 
   @JsonProperty("maxCardinality")
+  @Column(name = "max_cardinality")
   private Integer maxCardinality = null;
 
   @JsonProperty("minCardinality")
+  @Column(name = "min_cardinality")
   private Integer minCardinality = null;
 
   @JsonProperty("name")
@@ -64,20 +80,32 @@ public class ResourceSpecCharacteristic   {
 
   @JsonProperty("resourceSpecCharRelationship")
   @Valid
+  @Column(name = "resource_spec_char_relationship")
+  @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy = "resourceSpecCharacteristic")
   private List<ResourceSpecCharRelationship> resourceSpecCharRelationship = null;
 
   @JsonProperty("resourceSpecCharacteristicValue")
   @Valid
+  @Column(name = "resource_spec_characteristic_value")
+  @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy = "resourceSpecCharacteristic")
   private List<ResourceSpecCharacteristicValue> resourceSpecCharacteristicValue = null;
 
   @JsonProperty("uuid")
   private String uuid = null;
 
   @JsonProperty("validFor")
+  @Column(name = "valid_for")
+  @Embedded
   private TimePeriod validFor = null;
 
   @JsonProperty("valueType")
+  @Column(name = "value_type")
   private String valueType = null;
+
+  @JsonIgnore
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "resource_specification")
+  private ResourceSpecification resourceSpecification;
 
   public ResourceSpecCharacteristic baseType(String baseType) {
     this.baseType = baseType;

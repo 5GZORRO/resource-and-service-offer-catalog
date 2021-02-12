@@ -1,6 +1,8 @@
 package it.nextworks.tmf_offering_catalogue.information_models.resource;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -11,6 +13,8 @@ import java.util.List;
 import it.nextworks.tmf_offering_catalogue.information_models.ResourceSpecificationRef;
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 
 /**
@@ -20,14 +24,22 @@ import javax.validation.Valid;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-10T10:00:31.056Z")
 
+@Entity
+@Table(name = "resource_candidates")
+public class ResourceCandidate {
 
+  @JsonIgnore
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "jpda_id")
+  private Long jpaId;
 
-
-public class ResourceCandidate   {
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")
@@ -35,6 +47,7 @@ public class ResourceCandidate   {
 
   @JsonProperty("category")
   @Valid
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "resourceCandidate")
   private List<ResourceCategoryRef> category = null;
 
   @JsonProperty("description")
@@ -47,21 +60,27 @@ public class ResourceCandidate   {
   private String id = null;
 
   @JsonProperty("lastUpdate")
+  @Column(name = "last_update")
   private String lastUpdate = null;
 
   @JsonProperty("lifecycleStatus")
+  @Column(name = "lifecycle_status")
   private String lifecycleStatus = null;
 
   @JsonProperty("name")
   private String name = null;
 
   @JsonProperty("resourceSpecification")
+  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @JoinColumn(name = "resource_specification", referencedColumnName = "jpaId")
   private ResourceSpecificationRef resourceSpecification = null;
 
   @JsonProperty("uuid")
   private String uuid = null;
 
   @JsonProperty("validFor")
+  @Column(name = "valid_for")
+  @Embedded
   private TimePeriod validFor = null;
 
   @JsonProperty("version")

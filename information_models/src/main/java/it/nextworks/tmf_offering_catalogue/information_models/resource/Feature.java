@@ -1,11 +1,15 @@
 package it.nextworks.tmf_offering_catalogue.information_models.resource;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 
 /**
@@ -15,14 +19,22 @@ import javax.validation.Valid;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-10T10:00:31.056Z")
 
+@Entity
+@Table(name = "features")
+public class Feature {
 
+  @JsonIgnore
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "jpda_id")
+  private Long jpaId;
 
-
-public class Feature   {
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")
@@ -35,9 +47,11 @@ public class Feature   {
   private String id = null;
 
   @JsonProperty("isBundle")
+  @Column(name = "is_bundle")
   private Boolean isBundle = null;
 
   @JsonProperty("isEnabled")
+  @Column(name = "is_enabled")
   private Boolean isEnabled = null;
 
   @JsonProperty("name")
@@ -47,10 +61,17 @@ public class Feature   {
   private String uuid = null;
 
   @JsonProperty("validFor")
+  @Column(name = "valid_for")
+  @Embedded
   private TimePeriod validFor = null;
 
   @JsonProperty("version")
   private String version = null;
+
+  @JsonIgnore
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "resource_specification_id")
+  private ResourceSpecification resourceSpecification;
 
   public Feature baseType(String baseType) {
     this.baseType = baseType;

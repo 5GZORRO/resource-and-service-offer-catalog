@@ -1,6 +1,8 @@
 package it.nextworks.tmf_offering_catalogue.information_models.resource;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -10,6 +12,8 @@ import java.util.List;
 
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 
 /**
@@ -19,14 +23,22 @@ import javax.validation.Valid;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-10T10:00:31.056Z")
 
+@Entity
+@Table(name = "resource_categories")
+public class ResourceCategory {
 
+  @JsonIgnore
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "jpda_id")
+  private Long jpaId;
 
-
-public class ResourceCategory   {
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")
@@ -34,6 +46,8 @@ public class ResourceCategory   {
 
   @JsonProperty("category")
   @Valid
+  @Column(name = "category")
+  @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy = "resourceCategory")
   private List<ResourceCategoryRef> category = null;
 
   @JsonProperty("description")
@@ -46,28 +60,36 @@ public class ResourceCategory   {
   private String id = null;
 
   @JsonProperty("isRoot")
+  @Column(name = "is_root")
   private Boolean isRoot = null;
 
   @JsonProperty("lastUpdate")
+  @Column(name = "last_update")
   private String lastUpdate = null;
 
   @JsonProperty("lifecycleStatus")
+  @Column(name = "lifecycle_status")
   private String lifecycleStatus = null;
 
   @JsonProperty("name")
   private String name = null;
 
   @JsonProperty("parentId")
+  @Column(name = "parent_id")
   private String parentId = null;
 
   @JsonProperty("resourceCandidate")
   @Valid
+  @Column(name = "resource_candidate")
+  @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy = "resourceCategory")
   private List<ResourceCandidateRef> resourceCandidate = null;
 
   @JsonProperty("uuid")
   private String uuid = null;
 
   @JsonProperty("validFor")
+  @Column(name = "valid_for")
+  @Embedded
   private TimePeriod validFor = null;
 
   @JsonProperty("version")

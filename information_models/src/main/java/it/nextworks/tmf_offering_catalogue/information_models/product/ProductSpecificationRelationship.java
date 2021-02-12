@@ -1,11 +1,15 @@
 package it.nextworks.tmf_offering_catalogue.information_models.product;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 
 /**
@@ -15,14 +19,22 @@ import javax.validation.Valid;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-09T15:56:41.618Z")
 
+@Entity
+@Table(name = "product_specification_relationships")
+public class ProductSpecificationRelationship {
 
+  @JsonIgnore
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "jpda_id")
+  private Long jpaId;
 
-
-public class ProductSpecificationRelationship   {
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")
@@ -35,13 +47,21 @@ public class ProductSpecificationRelationship   {
   private String id = null;
 
   @JsonProperty("relationshipType")
+  @Column(name = "relationship_type")
   private String relationshipType = null;
 
   @JsonProperty("uuid")
   private String uuid = null;
 
   @JsonProperty("validFor")
+  @Column(name = "valid_for")
+  @Embedded
   private TimePeriod validFor = null;
+
+  @JsonIgnore
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "product_specification_id")
+  private ProductSpecification productSpecification;
 
   public ProductSpecificationRelationship baseType(String baseType) {
     this.baseType = baseType;

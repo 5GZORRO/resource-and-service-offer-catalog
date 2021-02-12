@@ -1,10 +1,14 @@
 package it.nextworks.tmf_offering_catalogue.information_models.product;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 
 /**
  * A set of numbers that specifies the lower and upper limits for a ProductOffering that can be procured as part of the related BundledProductOffering. Values can range from 0 to unbounded
@@ -13,14 +17,22 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-09T15:56:41.618Z")
 
+@Entity
+@Table(name = "bundled_product_offering_options")
+public class BundledProductOfferingOption {
 
+  @JsonIgnore
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "jpda_id")
+  private Long jpaId;
 
-
-public class BundledProductOfferingOption   {
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")
@@ -30,12 +42,15 @@ public class BundledProductOfferingOption   {
   private String href = null;
 
   @JsonProperty("numberRelOfferDefault")
+  @Column(name = "number_rel_offer_default")
   private Integer numberRelOfferDefault = null;
 
   @JsonProperty("numberRelOfferLowerLimit")
+  @Column(name = "number_rel_offer_lower_limit")
   private Integer numberRelOfferLowerLimit = null;
 
   @JsonProperty("numberRelOfferUpperLimit")
+  @Column(name = "number_rel_offer_upper_limit")
   private Integer numberRelOfferUpperLimit = null;
 
   @JsonProperty("uuid")

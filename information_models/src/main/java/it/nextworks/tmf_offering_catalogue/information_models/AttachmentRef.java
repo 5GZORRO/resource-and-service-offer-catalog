@@ -1,10 +1,15 @@
 package it.nextworks.tmf_offering_catalogue.information_models;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import it.nextworks.tmf_offering_catalogue.information_models.resource.ResourceSpecification;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 
 /**
  * Attachment reference. An attachment complements the description of an element (for instance a product) through video, pictures
@@ -13,17 +18,26 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-10T10:00:31.056Z")
 
+@Entity
+@Table(name = "attachment_refs")
+public class AttachmentRef {
 
+  @JsonIgnore
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "jpda_id")
+  private Long jpaId;
 
-
-public class AttachmentRef   {
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@referredType")
+  @Column(name = "referred_type")
   private String referredType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")
@@ -46,6 +60,11 @@ public class AttachmentRef   {
 
   @JsonProperty("uuid")
   private String uuid = null;
+
+  @JsonIgnore
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "resource_specification_id")
+  private ResourceSpecification resourceSpecification;
 
   public AttachmentRef baseType(String baseType) {
     this.baseType = baseType;

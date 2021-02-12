@@ -1,6 +1,9 @@
 package it.nextworks.tmf_offering_catalogue.information_models.product;
 
+import java.beans.ConstructorProperties;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -10,8 +13,11 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.nextworks.tmf_offering_catalogue.information_models.LifecycleStatusEnumEnum;
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 
 /**
@@ -21,14 +27,22 @@ import javax.validation.Valid;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-09T15:56:41.618Z")
 
+@Entity
+@Table(name = "categories")
+public class Category {
 
+  @JsonIgnore
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "jpda_id")
+  private Long jpaId;
 
-
-public class Category   {
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")
@@ -44,78 +58,46 @@ public class Category   {
   private String id = null;
 
   @JsonProperty("isRoot")
+  @Column(name = "is_root")
   private Boolean isRoot = null;
 
   @JsonProperty("lastUpdate")
+  @Column(name = "last_update")
   private String lastUpdate = null;
 
   @JsonProperty("lifecycleStatus")
+  @Column(name = "lifecycle_status")
   private String lifecycleStatus = null;
 
-  /**
-   * Gets or Sets lifecycleStatusEnum
-   */
-  public enum LifecycleStatusEnumEnum {
-    IN_STUDY("In study"),
-    
-    IN_DESIGN("In design"),
-    
-    IN_TEST("In test"),
-    
-    ACTIVE("Active"),
-    
-    LAUNCHED("Launched"),
-    
-    RETIRED("Retired"),
-    
-    OBSOLETE("Obsolete"),
-    
-    REJECTED("Rejected");
-
-    private String value;
-
-    LifecycleStatusEnumEnum(String value) {
-      this.value = value;
-    }
-
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static LifecycleStatusEnumEnum fromValue(String text) {
-      for (LifecycleStatusEnumEnum b : LifecycleStatusEnumEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
-
   @JsonProperty("lifecycleStatusEnum")
+  @Column(name = "lifecycle_status_enum")
   private LifecycleStatusEnumEnum lifecycleStatusEnum = null;
 
   @JsonProperty("name")
   private String name = null;
 
   @JsonProperty("parentId")
+  @Column(name = "parent_id")
   private String parentId = null;
 
   @JsonProperty("productOffering")
   @Valid
+  @Column(name = "product_offering")
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "category")
   private List<ProductOfferingRef> productOffering = null;
 
   @JsonProperty("subCategory")
   @Valid
+  @Column(name = "sub_category")
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "category")
   private List<CategoryRef> subCategory = null;
 
   @JsonProperty("uuid")
   private String uuid = null;
 
   @JsonProperty("validFor")
+  @Column(name = "valid_for")
+  @Embedded
   private TimePeriod validFor = null;
 
   @JsonProperty("version")

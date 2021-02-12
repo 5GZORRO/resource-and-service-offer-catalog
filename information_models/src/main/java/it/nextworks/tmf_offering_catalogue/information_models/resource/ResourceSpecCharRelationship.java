@@ -1,11 +1,15 @@
 package it.nextworks.tmf_offering_catalogue.information_models.resource;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 
 /**
@@ -15,10 +19,16 @@ import javax.validation.Valid;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-10T10:00:31.056Z")
 
+@Entity
+@Table(name = "resource_spec_char_relationships")
+public class ResourceSpecCharRelationship {
 
+  @JsonIgnore
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "jpda_id")
+  private Long jpaId;
 
-
-public class ResourceSpecCharRelationship   {
   @JsonProperty("@type")
   private String type = null;
 
@@ -32,13 +42,21 @@ public class ResourceSpecCharRelationship   {
   private String name = null;
 
   @JsonProperty("relationshipType")
+  @Column(name = "relationship_type")
   private String relationshipType = null;
 
   @JsonProperty("uuid")
   private String uuid = null;
 
   @JsonProperty("validFor")
+  @Column(name = "valid_for")
+  @Embedded
   private TimePeriod validFor = null;
+
+  @JsonIgnore
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "resource_spec_characteristic_id")
+  private ResourceSpecCharacteristic resourceSpecCharacteristic;
 
   public ResourceSpecCharRelationship type(String type) {
     this.type = type;

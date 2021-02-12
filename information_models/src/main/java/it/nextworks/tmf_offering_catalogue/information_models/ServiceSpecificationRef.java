@@ -1,10 +1,15 @@
 package it.nextworks.tmf_offering_catalogue.information_models;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import it.nextworks.tmf_offering_catalogue.information_models.product.ProductSpecification;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 
 /**
@@ -14,17 +19,26 @@ import javax.validation.Valid;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-09T15:56:41.618Z")
 
+@Entity
+@Table(name = "service_specification_refs")
+public class ServiceSpecificationRef {
 
+  @JsonIgnore
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "jpda_id")
+  private Long jpaId;
 
-
-public class ServiceSpecificationRef   {
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@referredType")
+  @Column(name = "referred_type")
   private String referredType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")
@@ -40,6 +54,8 @@ public class ServiceSpecificationRef   {
   private String name = null;
 
   @JsonProperty("targetServiceSchema")
+  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @JoinColumn(name = "target_service_schema", referencedColumnName = "jpaId")
   private TargetServiceSchema targetServiceSchema = null;
 
   @JsonProperty("uuid")
@@ -47,6 +63,11 @@ public class ServiceSpecificationRef   {
 
   @JsonProperty("version")
   private String version = null;
+
+  @JsonIgnore
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "product_specification_id")
+  private ProductSpecification productSpecification;
 
   public ServiceSpecificationRef baseType(String baseType) {
     this.baseType = baseType;

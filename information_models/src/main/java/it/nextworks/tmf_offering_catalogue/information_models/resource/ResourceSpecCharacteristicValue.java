@@ -1,12 +1,16 @@
 package it.nextworks.tmf_offering_catalogue.information_models.resource;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import it.nextworks.tmf_offering_catalogue.information_models.Any;
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 
 /**
@@ -16,14 +20,22 @@ import javax.validation.Valid;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-10T10:00:31.056Z")
 
+@Entity
+@Table(name = "resource_spec_characteristic_values")
+public class ResourceSpecCharacteristicValue {
 
+  @JsonIgnore
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "jpda_id")
+  private Long jpaId;
 
-
-public class ResourceSpecCharacteristicValue   {
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")
@@ -33,34 +45,48 @@ public class ResourceSpecCharacteristicValue   {
   private String href = null;
 
   @JsonProperty("isDefault")
+  @Column(name = "is_default")
   private Boolean isDefault = null;
 
   @JsonProperty("rangeInterval")
+  @Column(name = "range_interval")
   private String rangeInterval = null;
 
   @JsonProperty("regex")
   private String regex = null;
 
   @JsonProperty("unitOfMeasure")
+  @Column(name = "unit_of_measure")
   private String unitOfMeasure = null;
 
   @JsonProperty("uuid")
   private String uuid = null;
 
   @JsonProperty("validFor")
+  @Column(name = "valid_for")
+  @Embedded
   private TimePeriod validFor = null;
 
   @JsonProperty("value")
+  @Embedded
   private Any value = null;
 
   @JsonProperty("valueFrom")
+  @Column(name = "value_from")
   private Integer valueFrom = null;
 
   @JsonProperty("valueTo")
+  @Column(name = "value_to")
   private Integer valueTo = null;
 
   @JsonProperty("valueType")
+  @Column(name = "value_type")
   private String valueType = null;
+
+  @JsonIgnore
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "resource_spec_characteristic_id")
+  private ResourceSpecCharacteristic resourceSpecCharacteristic;
 
   public ResourceSpecCharacteristicValue baseType(String baseType) {
     this.baseType = baseType;

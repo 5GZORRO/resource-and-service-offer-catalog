@@ -1,12 +1,16 @@
 package it.nextworks.tmf_offering_catalogue.information_models.product;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import it.nextworks.tmf_offering_catalogue.information_models.Any;
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 
 /**
@@ -16,14 +20,22 @@ import javax.validation.Valid;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-09T15:56:41.618Z")
 
+@Entity
+@Table(name = "product_specification_characteristic_values")
+public class ProductSpecificationCharacteristicValue {
 
+  @JsonIgnore
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "jpda_id")
+  private Long jpaId;
 
-
-public class ProductSpecificationCharacteristicValue   {
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")
@@ -33,34 +45,53 @@ public class ProductSpecificationCharacteristicValue   {
   private String href = null;
 
   @JsonProperty("isDefault")
+  @Column(name = "is_default")
   private Boolean isDefault = null;
 
   @JsonProperty("rangeInterval")
+  @Column(name = "range_interval")
   private String rangeInterval = null;
 
   @JsonProperty("regex")
   private String regex = null;
 
   @JsonProperty("unitOfMeasure")
+  @Column(name = "unit_of_measure")
   private String unitOfMeasure = null;
 
   @JsonProperty("uuid")
   private String uuid = null;
 
   @JsonProperty("validFor")
+  @Column(name = "valid_for")
+  @Embedded
   private TimePeriod validFor = null;
 
   @JsonProperty("value")
+  @Embedded
   private Any value = null;
 
   @JsonProperty("valueFrom")
+  @Column(name = "value_from")
   private String valueFrom = null;
 
   @JsonProperty("valueTo")
+  @Column(name = "value_to")
   private String valueTo = null;
 
   @JsonProperty("valueType")
+  @Column(name = "value_type")
   private String valueType = null;
+
+  @JsonIgnore
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "product_specification_characteristic_value_use_id")
+  private ProductSpecificationCharacteristicValueUse productSpecificationCharacteristicValueUse;
+
+  @JsonIgnore
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "product_specification_characteristic_id")
+  private ProductSpecificationCharacteristic productSpecificationCharacteristic;
 
   public ProductSpecificationCharacteristicValue baseType(String baseType) {
     this.baseType = baseType;

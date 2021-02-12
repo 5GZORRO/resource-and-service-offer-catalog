@@ -1,6 +1,8 @@
 package it.nextworks.tmf_offering_catalogue.information_models.product;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -13,6 +15,8 @@ import it.nextworks.tmf_offering_catalogue.information_models.ResourceSpecificat
 import it.nextworks.tmf_offering_catalogue.information_models.ServiceSpecificationRef;
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 
 /**
@@ -22,14 +26,22 @@ import javax.validation.Valid;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-09T15:56:41.618Z")
 
+@Entity
+@Table(name = "product_specifications")
+public class ProductSpecification {
 
+  @JsonIgnore
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "jpda_id")
+  private Long jpaId;
 
-
-public class ProductSpecification   {
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")
@@ -37,6 +49,7 @@ public class ProductSpecification   {
 
   @JsonProperty("attachment")
   @Valid
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productSpecification")
   private List<AttachmentRefOrValue> attachment = null;
 
   @JsonProperty("brand")
@@ -44,6 +57,8 @@ public class ProductSpecification   {
 
   @JsonProperty("bundledProductSpecification")
   @Valid
+  @Column(name = "bundled_product_specification")
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productSpecification")
   private List<BundledProductSpecification> bundledProductSpecification = null;
 
   @JsonProperty("description")
@@ -56,47 +71,65 @@ public class ProductSpecification   {
   private String id = null;
 
   @JsonProperty("isBundle")
+  @Column(name = "is_bundle")
   private Boolean isBundle = null;
 
   @JsonProperty("lastUpdate")
+  @Column(name = "last_update")
   private String lastUpdate = null;
 
   @JsonProperty("lifecycleStatus")
+  @Column(name = "lifecycle_status")
   private String lifecycleStatus = null;
 
   @JsonProperty("name")
   private String name = null;
 
   @JsonProperty("productNumber")
+  @Column(name = "product_number")
   private String productNumber = null;
 
   @JsonProperty("productSpecCharacteristic")
   @Valid
+  @Column(name = "product_spec_characteristic")
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productSpecification")
   private List<ProductSpecificationCharacteristic> productSpecCharacteristic = null;
 
   @JsonProperty("productSpecificationRelationship")
   @Valid
+  @Column(name = "product_specification_relationship")
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productSpecification")
   private List<ProductSpecificationRelationship> productSpecificationRelationship = null;
 
   @JsonProperty("relatedParty")
   @Valid
+  @Column(name = "related_party")
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productSpecification")
   private List<RelatedParty> relatedParty = null;
 
   @JsonProperty("resourceSpecification")
   @Valid
+  @Column(name = "resource_specification")
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productSpecification")
   private List<ResourceSpecificationRef> resourceSpecification = null;
 
   @JsonProperty("serviceSpecification")
   @Valid
+  @Column(name = "service_specification")
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productSpecification")
   private List<ServiceSpecificationRef> serviceSpecification = null;
 
   @JsonProperty("targetProductSchema")
+  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @JoinColumn(name = "target_product_schema", referencedColumnName = "jpaId")
   private TargetProductSchema targetProductSchema = null;
 
   @JsonProperty("uuid")
   private String uuid = null;
 
   @JsonProperty("validFor")
+  @Column(name = "valid_for")
+  @Embedded
   private TimePeriod validFor = null;
 
   @JsonProperty("version")

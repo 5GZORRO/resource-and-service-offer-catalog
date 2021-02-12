@@ -6,6 +6,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
 
+import javax.persistence.Embeddable;
+
 /**
  * An amount in a given unit
  */
@@ -13,10 +15,9 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-09T15:56:41.618Z")
 
+@Embeddable
+public class Quantity {
 
-
-
-public class Quantity   {
   @JsonProperty("amount")
   private Float amount = null;
 

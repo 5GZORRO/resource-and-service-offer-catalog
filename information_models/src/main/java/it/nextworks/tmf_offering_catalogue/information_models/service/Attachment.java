@@ -1,12 +1,16 @@
 package it.nextworks.tmf_offering_catalogue.information_models.service;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import it.nextworks.tmf_offering_catalogue.information_models.Quantity;
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 
 /**
@@ -16,20 +20,29 @@ import javax.validation.Valid;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-10T10:03:19.238Z")
 
+@Entity
+@Table(name = "attachments")
+public class Attachment {
 
+  @JsonIgnore
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "jpda_id")
+  private Long jpaId;
 
-
-public class Attachment   {
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")
   private String type = null;
 
   @JsonProperty("attachmentType")
+  @Column(name = "attachment_type")
   private String attachmentType = null;
 
   @JsonProperty("content")
@@ -45,12 +58,14 @@ public class Attachment   {
   private String id = null;
 
   @JsonProperty("mimeType")
+  @Column(name = "mime_type")
   private String mimeType = null;
 
   @JsonProperty("name")
   private String name = null;
 
   @JsonProperty("size")
+  @Embedded
   private Quantity size = null;
 
   @JsonProperty("url")
@@ -60,6 +75,8 @@ public class Attachment   {
   private String uuid = null;
 
   @JsonProperty("validFor")
+  @Column(name = "valid_for")
+  @Embedded
   private TimePeriod validFor = null;
 
   public Attachment baseType(String baseType) {

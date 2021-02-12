@@ -1,6 +1,8 @@
 package it.nextworks.tmf_offering_catalogue.information_models.resource;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -12,6 +14,8 @@ import it.nextworks.tmf_offering_catalogue.information_models.AttachmentRef;
 import it.nextworks.tmf_offering_catalogue.information_models.RelatedParty;
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 
 /**
@@ -21,14 +25,22 @@ import javax.validation.Valid;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-10T10:00:31.056Z")
 
-
-
-
+@Entity
+@Table(name = "resource_specifications")
 public class ResourceSpecification   {
+
+  @JsonIgnore
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "jpda_id")
+  private Long jpaId;
+
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")
@@ -36,6 +48,7 @@ public class ResourceSpecification   {
 
   @JsonProperty("attachment")
   @Valid
+  @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy = "resourceSpecification")
   private List<AttachmentRef> attachment = null;
 
   @JsonProperty("category")
@@ -46,6 +59,7 @@ public class ResourceSpecification   {
 
   @JsonProperty("feature")
   @Valid
+  @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy = "resourceSpecification")
   private List<Feature> feature = null;
 
   @JsonProperty("href")
@@ -55,12 +69,15 @@ public class ResourceSpecification   {
   private String id = null;
 
   @JsonProperty("isBundle")
+  @Column(name = "is_bundle")
   private Boolean isBundle = null;
 
   @JsonProperty("lastUpdate")
+  @Column(name = "last_update")
   private String lastUpdate = null;
 
   @JsonProperty("lifecycleStatus")
+  @Column(name = "lifecycle_status")
   private String lifecycleStatus = null;
 
   @JsonProperty("name")
@@ -68,23 +85,33 @@ public class ResourceSpecification   {
 
   @JsonProperty("relatedParty")
   @Valid
+  @Column(name = "related_party")
+  @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy = "resourceSpecification")
   private List<RelatedParty> relatedParty = null;
 
   @JsonProperty("resourceSpecCharacteristic")
   @Valid
+  @Column(name = "resource_spec_characteristic")
+  @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy = "resourceSpecification")
   private List<ResourceSpecCharacteristic> resourceSpecCharacteristic = null;
 
   @JsonProperty("resourceSpecRelationship")
   @Valid
+  @Column(name = "resource_spec_relationship")
+  @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy = "resourceSpecification")
   private List<ResourceSpecRelationship> resourceSpecRelationship = null;
 
   @JsonProperty("targetResourceSchema")
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "target_resource_schema", referencedColumnName = "jpaId")
   private TargetResourceSchemaRef targetResourceSchema = null;
 
   @JsonProperty("uuid")
   private String uuid = null;
 
   @JsonProperty("validFor")
+  @Column(name = "valid_for")
+  @Embedded
   private TimePeriod validFor = null;
 
   @JsonProperty("version")

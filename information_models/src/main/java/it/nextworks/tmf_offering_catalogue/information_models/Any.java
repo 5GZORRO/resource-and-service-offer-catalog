@@ -5,16 +5,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
 
+import javax.persistence.Embeddable;
+
 /**
  * Any
  */
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-10T10:00:31.056Z")
 
+@Embeddable
+public class Any {
 
-
-
-public class Any   {
   @JsonProperty("alias")
   private String alias = null;
 

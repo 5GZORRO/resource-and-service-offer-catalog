@@ -1,10 +1,14 @@
 package it.nextworks.tmf_offering_catalogue.information_models.service;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 
 /**
  * The (service) category resource is used to group service candidates in logical containers. Categories can contain other categories.
@@ -13,17 +17,26 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-10T10:03:19.238Z")
 
+@Entity
+@Table(name = "service_category_refs")
+public class ServiceCategoryRef {
 
+  @JsonIgnore
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "jpda_id")
+  private Long jpaId;
 
-
-public class ServiceCategoryRef   {
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@referredType")
+  @Column(name = "referred_type")
   private String referredType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")
@@ -40,6 +53,11 @@ public class ServiceCategoryRef   {
 
   @JsonProperty("uuid")
   private String uuid = null;
+
+  @JsonIgnore
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "service_candidate_id")
+  private ServiceCandidate serviceCandidate;
 
   public ServiceCategoryRef baseType(String baseType) {
     this.baseType = baseType;

@@ -58,35 +58,35 @@ public class ExportJob   {
    * Status of the export job (not started, running, succeeded, failed)
    */
   public enum StatusEnum {
-    NOT_STARTED("Not Started"),
-    
-    RUNNING("Running"),
-    
-    SUCCEEDED("Succeeded"),
-    
-    FAILED("Failed");
+	NOT_STARTED("Not Started"),
 
-    private String value;
+	RUNNING("Running"),
 
-    StatusEnum(String value) {
-      this.value = value;
-    }
+	SUCCEEDED("Succeeded"),
 
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
+	FAILED("Failed");
 
-    @JsonCreator
-    public static StatusEnum fromValue(String text) {
-      for (StatusEnum b : StatusEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
+	private String value;
+
+	StatusEnum(String value) {
+	  this.value = value;
+	}
+
+	@Override
+	@JsonValue
+	public String toString() {
+	  return String.valueOf(value);
+	}
+
+	@JsonCreator
+	public static StatusEnum fromValue(String text) {
+	  for (StatusEnum b : StatusEnum.values()) {
+		if (String.valueOf(b.value).equals(text)) {
+		  return b;
+		}
+	  }
+	  return null;
+	}
   }
 
   @JsonProperty("status")
@@ -96,8 +96,8 @@ public class ExportJob   {
   private String url = null;
 
   public ExportJob baseType(String baseType) {
-    this.baseType = baseType;
-    return this;
+	this.baseType = baseType;
+	return this;
   }
 
   /**
@@ -108,16 +108,16 @@ public class ExportJob   {
 
 
   public String getBaseType() {
-    return baseType;
+	return baseType;
   }
 
   public void setBaseType(String baseType) {
-    this.baseType = baseType;
+	this.baseType = baseType;
   }
 
   public ExportJob schemaLocation(String schemaLocation) {
-    this.schemaLocation = schemaLocation;
-    return this;
+	this.schemaLocation = schemaLocation;
+	return this;
   }
 
   /**
@@ -128,16 +128,16 @@ public class ExportJob   {
 
 
   public String getSchemaLocation() {
-    return schemaLocation;
+	return schemaLocation;
   }
 
   public void setSchemaLocation(String schemaLocation) {
-    this.schemaLocation = schemaLocation;
+	this.schemaLocation = schemaLocation;
   }
 
   public ExportJob type(String type) {
-    this.type = type;
-    return this;
+	this.type = type;
+	return this;
   }
 
   /**
@@ -148,16 +148,16 @@ public class ExportJob   {
 
 
   public String getType() {
-    return type;
+	return type;
   }
 
   public void setType(String type) {
-    this.type = type;
+	this.type = type;
   }
 
   public ExportJob completionDate(OffsetDateTime completionDate) {
-    this.completionDate = completionDate;
-    return this;
+	this.completionDate = completionDate;
+	return this;
   }
 
   /**
@@ -169,16 +169,16 @@ public class ExportJob   {
   @Valid
 
   public OffsetDateTime getCompletionDate() {
-    return completionDate;
+	return completionDate;
   }
 
   public void setCompletionDate(OffsetDateTime completionDate) {
-    this.completionDate = completionDate;
+	this.completionDate = completionDate;
   }
 
   public ExportJob contentType(String contentType) {
-    this.contentType = contentType;
-    return this;
+	this.contentType = contentType;
+	return this;
   }
 
   /**
@@ -189,16 +189,16 @@ public class ExportJob   {
 
 
   public String getContentType() {
-    return contentType;
+	return contentType;
   }
 
   public void setContentType(String contentType) {
-    this.contentType = contentType;
+	this.contentType = contentType;
   }
 
   public ExportJob creationDate(OffsetDateTime creationDate) {
-    this.creationDate = creationDate;
-    return this;
+	this.creationDate = creationDate;
+	return this;
   }
 
   /**
@@ -210,16 +210,16 @@ public class ExportJob   {
   @Valid
 
   public OffsetDateTime getCreationDate() {
-    return creationDate;
+	return creationDate;
   }
 
   public void setCreationDate(OffsetDateTime creationDate) {
-    this.creationDate = creationDate;
+	this.creationDate = creationDate;
   }
 
   public ExportJob errorLog(String errorLog) {
-    this.errorLog = errorLog;
-    return this;
+	this.errorLog = errorLog;
+	return this;
   }
 
   /**
@@ -230,16 +230,16 @@ public class ExportJob   {
 
 
   public String getErrorLog() {
-    return errorLog;
+	return errorLog;
   }
 
   public void setErrorLog(String errorLog) {
-    this.errorLog = errorLog;
+	this.errorLog = errorLog;
   }
 
   public ExportJob href(String href) {
-    this.href = href;
-    return this;
+	this.href = href;
+	return this;
   }
 
   /**
@@ -250,16 +250,16 @@ public class ExportJob   {
 
 
   public String getHref() {
-    return href;
+	return href;
   }
 
   public void setHref(String href) {
-    this.href = href;
+	this.href = href;
   }
 
   public ExportJob id(String id) {
-    this.id = id;
-    return this;
+	this.id = id;
+	return this;
   }
 
   /**
@@ -270,16 +270,16 @@ public class ExportJob   {
 
 
   public String getId() {
-    return id;
+	return id;
   }
 
   public void setId(String id) {
-    this.id = id;
+	this.id = id;
   }
 
   public ExportJob path(String path) {
-    this.path = path;
-    return this;
+	this.path = path;
+	return this;
   }
 
   /**
@@ -290,16 +290,16 @@ public class ExportJob   {
 
 
   public String getPath() {
-    return path;
+	return path;
   }
 
   public void setPath(String path) {
-    this.path = path;
+	this.path = path;
   }
 
   public ExportJob query(String query) {
-    this.query = query;
-    return this;
+	this.query = query;
+	return this;
   }
 
   /**
@@ -310,16 +310,16 @@ public class ExportJob   {
 
 
   public String getQuery() {
-    return query;
+	return query;
   }
 
   public void setQuery(String query) {
-    this.query = query;
+	this.query = query;
   }
 
   public ExportJob status(StatusEnum status) {
-    this.status = status;
-    return this;
+	this.status = status;
+	return this;
   }
 
   /**
@@ -330,16 +330,16 @@ public class ExportJob   {
 
 
   public StatusEnum getStatus() {
-    return status;
+	return status;
   }
 
   public void setStatus(StatusEnum status) {
-    this.status = status;
+	this.status = status;
   }
 
   public ExportJob url(String url) {
-    this.url = url;
-    return this;
+	this.url = url;
+	return this;
   }
 
   /**
@@ -350,63 +350,63 @@ public class ExportJob   {
 
 
   public String getUrl() {
-    return url;
+	return url;
   }
 
   public void setUrl(String url) {
-    this.url = url;
+	this.url = url;
   }
 
 
   @Override
   public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    ExportJob exportJob = (ExportJob) o;
-    return Objects.equals(this.baseType, exportJob.baseType) &&
-        Objects.equals(this.schemaLocation, exportJob.schemaLocation) &&
-        Objects.equals(this.type, exportJob.type) &&
-        Objects.equals(this.completionDate, exportJob.completionDate) &&
-        Objects.equals(this.contentType, exportJob.contentType) &&
-        Objects.equals(this.creationDate, exportJob.creationDate) &&
-        Objects.equals(this.errorLog, exportJob.errorLog) &&
-        Objects.equals(this.href, exportJob.href) &&
-        Objects.equals(this.id, exportJob.id) &&
-        Objects.equals(this.path, exportJob.path) &&
-        Objects.equals(this.query, exportJob.query) &&
-        Objects.equals(this.status, exportJob.status) &&
-        Objects.equals(this.url, exportJob.url);
+	if (this == o) {
+	  return true;
+	}
+	if (o == null || getClass() != o.getClass()) {
+	  return false;
+	}
+	ExportJob exportJob = (ExportJob) o;
+	return Objects.equals(this.baseType, exportJob.baseType) &&
+		Objects.equals(this.schemaLocation, exportJob.schemaLocation) &&
+		Objects.equals(this.type, exportJob.type) &&
+		Objects.equals(this.completionDate, exportJob.completionDate) &&
+		Objects.equals(this.contentType, exportJob.contentType) &&
+		Objects.equals(this.creationDate, exportJob.creationDate) &&
+		Objects.equals(this.errorLog, exportJob.errorLog) &&
+		Objects.equals(this.href, exportJob.href) &&
+		Objects.equals(this.id, exportJob.id) &&
+		Objects.equals(this.path, exportJob.path) &&
+		Objects.equals(this.query, exportJob.query) &&
+		Objects.equals(this.status, exportJob.status) &&
+		Objects.equals(this.url, exportJob.url);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(baseType, schemaLocation, type, completionDate, contentType, creationDate, errorLog, href, id, path, query, status, url);
+	return Objects.hash(baseType, schemaLocation, type, completionDate, contentType, creationDate, errorLog, href, id, path, query, status, url);
   }
 
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class ExportJob {\n");
-    
-    sb.append("    baseType: ").append(toIndentedString(baseType)).append("\n");
-    sb.append("    schemaLocation: ").append(toIndentedString(schemaLocation)).append("\n");
-    sb.append("    type: ").append(toIndentedString(type)).append("\n");
-    sb.append("    completionDate: ").append(toIndentedString(completionDate)).append("\n");
-    sb.append("    contentType: ").append(toIndentedString(contentType)).append("\n");
-    sb.append("    creationDate: ").append(toIndentedString(creationDate)).append("\n");
-    sb.append("    errorLog: ").append(toIndentedString(errorLog)).append("\n");
-    sb.append("    href: ").append(toIndentedString(href)).append("\n");
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    path: ").append(toIndentedString(path)).append("\n");
-    sb.append("    query: ").append(toIndentedString(query)).append("\n");
-    sb.append("    status: ").append(toIndentedString(status)).append("\n");
-    sb.append("    url: ").append(toIndentedString(url)).append("\n");
-    sb.append("}");
-    return sb.toString();
+	StringBuilder sb = new StringBuilder();
+	sb.append("class ExportJob {\n");
+
+	sb.append("    baseType: ").append(toIndentedString(baseType)).append("\n");
+	sb.append("    schemaLocation: ").append(toIndentedString(schemaLocation)).append("\n");
+	sb.append("    type: ").append(toIndentedString(type)).append("\n");
+	sb.append("    completionDate: ").append(toIndentedString(completionDate)).append("\n");
+	sb.append("    contentType: ").append(toIndentedString(contentType)).append("\n");
+	sb.append("    creationDate: ").append(toIndentedString(creationDate)).append("\n");
+	sb.append("    errorLog: ").append(toIndentedString(errorLog)).append("\n");
+	sb.append("    href: ").append(toIndentedString(href)).append("\n");
+	sb.append("    id: ").append(toIndentedString(id)).append("\n");
+	sb.append("    path: ").append(toIndentedString(path)).append("\n");
+	sb.append("    query: ").append(toIndentedString(query)).append("\n");
+	sb.append("    status: ").append(toIndentedString(status)).append("\n");
+	sb.append("    url: ").append(toIndentedString(url)).append("\n");
+	sb.append("}");
+	return sb.toString();
   }
 
   /**
@@ -414,10 +414,10 @@ public class ExportJob   {
    * (except the first line).
    */
   private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
+	if (o == null) {
+	  return "null";
+	}
+	return o.toString().replace("\n", "\n    ");
   }
 }
 

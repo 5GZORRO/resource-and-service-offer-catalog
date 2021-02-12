@@ -6,6 +6,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
 
+import javax.persistence.Embeddable;
+
 /**
  * A period of time, either as a deadline (endDateTime only) a startDateTime only, or both
  */
@@ -13,10 +15,9 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-09T15:56:41.618Z")
 
+@Embeddable
+public class TimePeriod {
 
-
-
-public class TimePeriod   {
   @JsonProperty("endDateTime")
   private String endDateTime = null;
 
