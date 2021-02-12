@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import it.nextworks.tmf_offering_catalogue.information_models.StatusEnum;
 import org.threeten.bp.OffsetDateTime;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
@@ -53,41 +54,6 @@ public class ExportJob   {
 
   @JsonProperty("query")
   private String query = null;
-
-  /**
-   * Status of the export job (not started, running, succeeded, failed)
-   */
-  public enum StatusEnum {
-	NOT_STARTED("Not Started"),
-
-	RUNNING("Running"),
-
-	SUCCEEDED("Succeeded"),
-
-	FAILED("Failed");
-
-	private String value;
-
-	StatusEnum(String value) {
-	  this.value = value;
-	}
-
-	@Override
-	@JsonValue
-	public String toString() {
-	  return String.valueOf(value);
-	}
-
-	@JsonCreator
-	public static StatusEnum fromValue(String text) {
-	  for (StatusEnum b : StatusEnum.values()) {
-		if (String.valueOf(b.value).equals(text)) {
-		  return b;
-		}
-	  }
-	  return null;
-	}
-  }
 
   @JsonProperty("status")
   private StatusEnum status = null;
