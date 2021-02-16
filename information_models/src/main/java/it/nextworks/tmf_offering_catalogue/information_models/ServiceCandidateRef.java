@@ -1,15 +1,10 @@
-package it.nextworks.tmf_offering_catalogue.information_models.product;
+package it.nextworks.tmf_offering_catalogue.information_models;
 
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import it.nextworks.tmf_offering_catalogue.information_models.LifecycleStatusEnumEnum;
-import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 

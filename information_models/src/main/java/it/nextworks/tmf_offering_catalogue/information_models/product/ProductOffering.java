@@ -2,7 +2,6 @@ package it.nextworks.tmf_offering_catalogue.information_models.product;
 
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -10,7 +9,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.nextworks.tmf_offering_catalogue.information_models.PlaceRef;
 import it.nextworks.tmf_offering_catalogue.information_models.ResourceCandidateRef;
+import it.nextworks.tmf_offering_catalogue.information_models.ServiceCandidateRef;
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;

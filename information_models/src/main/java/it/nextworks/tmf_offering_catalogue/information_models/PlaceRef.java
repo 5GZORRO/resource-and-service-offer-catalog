@@ -1,29 +1,40 @@
-package it.nextworks.tmf_offering_catalogue.information_models.service;
+package it.nextworks.tmf_offering_catalogue.information_models;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import it.nextworks.tmf_offering_catalogue.information_models.product.ProductOffering;
+import it.nextworks.tmf_offering_catalogue.information_models.product.ProductOfferingPrice;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 
+import javax.persistence.*;
+import javax.validation.constraints.*;
+
 /**
- * ServiceCandidate reference. ServiceCandidate is an entity that makes a ServiceSpecification available to a catalog.
+ * Place reference. PlaceRef defines the placeRefs where the products are sold or delivered.
  */
-@ApiModel(description = "ServiceCandidate reference. ServiceCandidate is an entity that makes a ServiceSpecification available to a catalog.")
+@ApiModel(description = "Place reference. PlaceRef defines the placeRefs where the products are sold or delivered.")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-10T10:03:19.238Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-09T15:56:41.618Z")
 
+@Entity
+@Table(name = "plafe_refs")
+public class PlaceRef {
 
-
-
-public class ServiceCandidateRef   {
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@referredType")
+  @Column(name = "referred_type")
   private String referredType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")
@@ -38,13 +49,26 @@ public class ServiceCandidateRef   {
   @JsonProperty("name")
   private String name = null;
 
+  @JsonProperty("role")
+  private String role = null;
+
   @JsonProperty("uuid")
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
-  @JsonProperty("version")
-  private String version = null;
+  @JsonIgnore
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "product_offering_id")
+  private ProductOffering productOffering;
 
-  public ServiceCandidateRef baseType(String baseType) {
+  @JsonIgnore
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "product_offering_price_id")
+  private ProductOfferingPrice productOfferingPrice;
+
+  public PlaceRef baseType(String baseType) {
     this.baseType = baseType;
     return this;
   }
@@ -64,7 +88,7 @@ public class ServiceCandidateRef   {
     this.baseType = baseType;
   }
 
-  public ServiceCandidateRef referredType(String referredType) {
+  public PlaceRef referredType(String referredType) {
     this.referredType = referredType;
     return this;
   }
@@ -84,7 +108,7 @@ public class ServiceCandidateRef   {
     this.referredType = referredType;
   }
 
-  public ServiceCandidateRef schemaLocation(String schemaLocation) {
+  public PlaceRef schemaLocation(String schemaLocation) {
     this.schemaLocation = schemaLocation;
     return this;
   }
@@ -104,7 +128,7 @@ public class ServiceCandidateRef   {
     this.schemaLocation = schemaLocation;
   }
 
-  public ServiceCandidateRef type(String type) {
+  public PlaceRef type(String type) {
     this.type = type;
     return this;
   }
@@ -124,7 +148,7 @@ public class ServiceCandidateRef   {
     this.type = type;
   }
 
-  public ServiceCandidateRef href(String href) {
+  public PlaceRef href(String href) {
     this.href = href;
     return this;
   }
@@ -144,16 +168,17 @@ public class ServiceCandidateRef   {
     this.href = href;
   }
 
-  public ServiceCandidateRef id(String id) {
+  public PlaceRef id(String id) {
     this.id = id;
     return this;
   }
 
   /**
-   * Get id
+   * Unique identifier of a related entity.
    * @return id
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "Unique identifier of a related entity.")
+  @NotNull
 
 
   public String getId() {
@@ -164,7 +189,7 @@ public class ServiceCandidateRef   {
     this.id = id;
   }
 
-  public ServiceCandidateRef name(String name) {
+  public PlaceRef name(String name) {
     this.name = name;
     return this;
   }
@@ -184,7 +209,27 @@ public class ServiceCandidateRef   {
     this.name = name;
   }
 
-  public ServiceCandidateRef uuid(String uuid) {
+  public PlaceRef role(String role) {
+    this.role = role;
+    return this;
+  }
+
+  /**
+   * Role of the place (for instance: 'home delivery', 'shop retrieval')
+   * @return role
+   **/
+  @ApiModelProperty(value = "Role of the place (for instance: 'home delivery', 'shop retrieval')")
+
+
+  public String getRole() {
+    return role;
+  }
+
+  public void setRole(String role) {
+    this.role = role;
+  }
+
+  public PlaceRef uuid(String uuid) {
     this.uuid = uuid;
     return this;
   }
@@ -204,26 +249,6 @@ public class ServiceCandidateRef   {
     this.uuid = uuid;
   }
 
-  public ServiceCandidateRef version(String version) {
-    this.version = version;
-    return this;
-  }
-
-  /**
-   * Version of the service candidate
-   * @return version
-  **/
-  @ApiModelProperty(value = "Version of the service candidate")
-
-
-  public String getVersion() {
-    return version;
-  }
-
-  public void setVersion(String version) {
-    this.version = version;
-  }
-
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -233,27 +258,27 @@ public class ServiceCandidateRef   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ServiceCandidateRef serviceCandidateRef = (ServiceCandidateRef) o;
-    return Objects.equals(this.baseType, serviceCandidateRef.baseType) &&
-        Objects.equals(this.referredType, serviceCandidateRef.referredType) &&
-        Objects.equals(this.schemaLocation, serviceCandidateRef.schemaLocation) &&
-        Objects.equals(this.type, serviceCandidateRef.type) &&
-        Objects.equals(this.href, serviceCandidateRef.href) &&
-        Objects.equals(this.id, serviceCandidateRef.id) &&
-        Objects.equals(this.name, serviceCandidateRef.name) &&
-        Objects.equals(this.uuid, serviceCandidateRef.uuid) &&
-        Objects.equals(this.version, serviceCandidateRef.version);
+    PlaceRef placeRef = (PlaceRef) o;
+    return Objects.equals(this.baseType, placeRef.baseType) &&
+        Objects.equals(this.referredType, placeRef.referredType) &&
+        Objects.equals(this.schemaLocation, placeRef.schemaLocation) &&
+        Objects.equals(this.type, placeRef.type) &&
+        Objects.equals(this.href, placeRef.href) &&
+        Objects.equals(this.id, placeRef.id) &&
+        Objects.equals(this.name, placeRef.name) &&
+        Objects.equals(this.role, placeRef.role) &&
+        Objects.equals(this.uuid, placeRef.uuid);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(baseType, referredType, schemaLocation, type, href, id, name, uuid, version);
+    return Objects.hash(baseType, referredType, schemaLocation, type, href, id, name, role, uuid);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ServiceCandidateRef {\n");
+    sb.append("class PlaceRef {\n");
     
     sb.append("    baseType: ").append(toIndentedString(baseType)).append("\n");
     sb.append("    referredType: ").append(toIndentedString(referredType)).append("\n");
@@ -262,8 +287,8 @@ public class ServiceCandidateRef   {
     sb.append("    href: ").append(toIndentedString(href)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    role: ").append(toIndentedString(role)).append("\n");
     sb.append("    uuid: ").append(toIndentedString(uuid)).append("\n");
-    sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("}");
     return sb.toString();
   }

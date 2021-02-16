@@ -1,6 +1,5 @@
 package it.nextworks.tmf_offering_catalogue.repo;
 
-import it.nextworks.tmf_offering_catalogue.information_models.ResourceSpecificationRef;
 import it.nextworks.tmf_offering_catalogue.information_models.resource.ResourceCandidate;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -14,8 +13,6 @@ public interface ResourceCandidateRepository extends JpaRepository<ResourceCandi
     Optional<ResourceCandidate> findById(String id);
 
     List<ResourceCandidate> findByName(String name);
-
-    Optional<ResourceCandidate> findByResourceSpecification(ResourceSpecificationRef resourceSpecification);
 
     Optional<ResourceCandidate> findByUuid(String uuid);
 

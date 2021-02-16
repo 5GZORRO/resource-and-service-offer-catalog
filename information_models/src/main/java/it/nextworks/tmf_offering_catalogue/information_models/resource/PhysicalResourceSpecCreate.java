@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.nextworks.tmf_offering_catalogue.information_models.AttachmentRef;
+import it.nextworks.tmf_offering_catalogue.information_models.PlaceRef;
 import it.nextworks.tmf_offering_catalogue.information_models.RelatedParty;
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
 import org.threeten.bp.OffsetDateTime;
