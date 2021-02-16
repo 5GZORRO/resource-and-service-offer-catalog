@@ -49,9 +49,6 @@ public class ProductSpecificationCharacteristicRelationship {
   private String href = null;
 
   @JsonProperty("id")
-  @Id
-  @GeneratedValue(generator = "uuid")
-  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String id = null;
 
   @JsonProperty("lastUpdate")
@@ -74,6 +71,9 @@ public class ProductSpecificationCharacteristicRelationship {
   private String relationshipType = null;
 
   @JsonProperty("uuid")
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
   @JsonProperty("validFor")

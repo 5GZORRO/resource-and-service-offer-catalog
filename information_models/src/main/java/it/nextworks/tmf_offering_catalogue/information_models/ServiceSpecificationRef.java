@@ -43,9 +43,6 @@ public class ServiceSpecificationRef {
   private String href = null;
 
   @JsonProperty("id")
-  @Id
-  @GeneratedValue(generator = "uuid")
-  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String id = null;
 
   @JsonProperty("name")
@@ -53,10 +50,13 @@ public class ServiceSpecificationRef {
 
   @JsonProperty("targetServiceSchema")
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "target_service_schema_id", referencedColumnName = "id")
+  @JoinColumn(name = "target_service_schema_id", referencedColumnName = "uuid")
   private TargetServiceSchema targetServiceSchema = null;
 
   @JsonProperty("uuid")
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
   @JsonProperty("version")

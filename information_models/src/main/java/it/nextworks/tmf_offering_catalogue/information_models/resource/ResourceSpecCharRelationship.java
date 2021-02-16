@@ -31,9 +31,6 @@ public class ResourceSpecCharRelationship {
   private String href = null;
 
   @JsonProperty("id")
-  @Id
-  @GeneratedValue(generator = "uuid")
-  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String id = null;
 
   @JsonProperty("name")
@@ -44,6 +41,9 @@ public class ResourceSpecCharRelationship {
   private String relationshipType = null;
 
   @JsonProperty("uuid")
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
   @JsonProperty("validFor")

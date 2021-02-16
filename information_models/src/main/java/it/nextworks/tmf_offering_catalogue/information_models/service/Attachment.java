@@ -50,9 +50,6 @@ public class Attachment {
   private String href = null;
 
   @JsonProperty("id")
-  @Id
-  @GeneratedValue(generator = "uuid")
-  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String id = null;
 
   @JsonProperty("mimeType")
@@ -70,6 +67,9 @@ public class Attachment {
   private String url = null;
 
   @JsonProperty("uuid")
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
   @JsonProperty("validFor")

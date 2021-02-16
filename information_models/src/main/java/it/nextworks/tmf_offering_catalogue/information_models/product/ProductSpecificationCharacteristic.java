@@ -54,12 +54,6 @@ public class ProductSpecificationCharacteristic {
   @JsonProperty("href")
   private String href = null;
 
-  @JsonIgnore
-  @Id
-  @GeneratedValue(generator = "uuid")
-  @GenericGenerator(name = "uuid", strategy = "uuid2")
-  private String id = null;
-
   @JsonProperty("isUnique")
   @Column(name = "is_unique")
   private Boolean isUnique = null;
@@ -103,6 +97,9 @@ public class ProductSpecificationCharacteristic {
   private String regex = null;
 
   @JsonProperty("uuid")
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
   @JsonProperty("validFor")

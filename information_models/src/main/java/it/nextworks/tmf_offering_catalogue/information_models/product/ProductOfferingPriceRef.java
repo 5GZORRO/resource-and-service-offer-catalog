@@ -50,9 +50,6 @@ public class ProductOfferingPriceRef {
   private String href = null;
 
   @JsonProperty("id")
-  @Id
-  @GeneratedValue(generator = "uuid")
-  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String id = null;
 
   @JsonProperty("lastUpdate")
@@ -71,6 +68,9 @@ public class ProductOfferingPriceRef {
   private String name = null;
 
   @JsonProperty("uuid")
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
   @JsonProperty("validFor")

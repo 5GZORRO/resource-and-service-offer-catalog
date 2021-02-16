@@ -1,4 +1,4 @@
-package it.nextworks.tmf_offering_catalogue.repo;
+package it.nextworks.tmf_offering_catalogue.converters;
 
 import it.nextworks.tmf_offering_catalogue.information_models.StatusEnum;
 

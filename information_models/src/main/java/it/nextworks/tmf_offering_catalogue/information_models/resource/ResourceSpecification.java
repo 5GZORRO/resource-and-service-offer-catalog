@@ -2,7 +2,6 @@ package it.nextworks.tmf_offering_catalogue.information_models.resource;
 
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -61,9 +60,6 @@ public class ResourceSpecification   {
   private String href = null;
 
   @JsonProperty("id")
-  @Id
-  @GeneratedValue(generator = "uuid")
-  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String id = null;
 
   @JsonProperty("isBundle")
@@ -101,10 +97,13 @@ public class ResourceSpecification   {
 
   @JsonProperty("targetResourceSchema")
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "target_resource_schema_id", referencedColumnName = "id")
+  @JoinColumn(name = "target_resource_schema_id", referencedColumnName = "uuid")
   private TargetResourceSchemaRef targetResourceSchema = null;
 
   @JsonProperty("uuid")
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
   @JsonProperty("validFor")

@@ -48,12 +48,6 @@ public class ProductOfferingTerm {
   @JsonProperty("href")
   private String href = null;
 
-  @JsonIgnore
-  @Id
-  @GeneratedValue(generator = "uuid")
-  @GenericGenerator(name = "uuid", strategy = "uuid2")
-  private String id = null;
-
   @JsonProperty("lastUpdate")
   @Column(name = "last_update")
   private String lastUpdate = null;
@@ -70,6 +64,9 @@ public class ProductOfferingTerm {
   private String name = null;
 
   @JsonProperty("uuid")
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
   @JsonProperty("validFor")

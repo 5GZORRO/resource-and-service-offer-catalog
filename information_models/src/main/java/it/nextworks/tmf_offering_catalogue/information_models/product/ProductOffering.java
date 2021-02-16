@@ -75,9 +75,6 @@ public class ProductOffering {
   private String href = null;
 
   @JsonProperty("id")
-  @Id
-  @GeneratedValue(generator = "uuid")
-  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String id = null;
 
   @JsonProperty("isBundle")
@@ -130,22 +127,22 @@ public class ProductOffering {
 
   @JsonProperty("productSpecification")
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "product_specification_id", referencedColumnName = "id")
+  @JoinColumn(name = "product_specification_id", referencedColumnName = "uuid")
   private ProductSpecificationRef productSpecification = null;
 
   @JsonProperty("resourceCandidate")
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "resource_candidate_id", referencedColumnName = "id")
+  @JoinColumn(name = "resource_candidate_id", referencedColumnName = "uuid")
   private ResourceCandidateRef resourceCandidate = null;
 
   @JsonProperty("serviceCandidate")
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "service_candidate_id", referencedColumnName = "id")
+  @JoinColumn(name = "service_candidate_id", referencedColumnName = "uuid")
   private ServiceCandidateRef serviceCandidate = null;
 
   @JsonProperty("serviceLevelAgreement")
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "service_level_agreement_id", referencedColumnName = "id")
+  @JoinColumn(name = "service_level_agreement_id", referencedColumnName = "uuid")
   private SLARef serviceLevelAgreement = null;
 
   @JsonProperty("statusReason")
@@ -153,6 +150,9 @@ public class ProductOffering {
   private String statusReason = null;
 
   @JsonProperty("uuid")
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
   @JsonProperty("validFor")

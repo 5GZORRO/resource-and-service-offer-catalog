@@ -50,9 +50,6 @@ public class ProductSpecificationRef {
   private String href = null;
 
   @JsonProperty("id")
-  @Id
-  @GeneratedValue(generator = "uuid")
-  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String id = null;
 
   @JsonProperty("lastUpdate")
@@ -72,10 +69,13 @@ public class ProductSpecificationRef {
 
   @JsonProperty("targetProductSchema")
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "target_product_schema_id", referencedColumnName = "id")
+  @JoinColumn(name = "target_product_schema_id", referencedColumnName = "uuid")
   private TargetProductSchema targetProductSchema = null;
 
   @JsonProperty("uuid")
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
   @JsonProperty("validFor")

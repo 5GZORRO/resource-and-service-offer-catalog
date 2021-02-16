@@ -36,12 +36,6 @@ public class BundledProductOfferingOption {
   @JsonProperty("href")
   private String href = null;
 
-  @JsonIgnore
-  @Id
-  @GeneratedValue(generator = "uuid")
-  @GenericGenerator(name = "uuid", strategy = "uuid2")
-  private String id = null;
-
   @JsonProperty("numberRelOfferDefault")
   @Column(name = "number_rel_offer_default")
   private Integer numberRelOfferDefault = null;
@@ -55,6 +49,9 @@ public class BundledProductOfferingOption {
   private Integer numberRelOfferUpperLimit = null;
 
   @JsonProperty("uuid")
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
   public BundledProductOfferingOption baseType(String baseType) {

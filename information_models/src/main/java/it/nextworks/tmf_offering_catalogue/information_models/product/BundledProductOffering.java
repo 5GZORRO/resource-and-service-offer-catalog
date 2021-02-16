@@ -41,7 +41,7 @@ public class BundledProductOffering {
 
   @JsonProperty("bundledProductOfferingOption")
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "bundled_product_offering_option_id", referencedColumnName = "id")
+  @JoinColumn(name = "bundled_product_offering_option_id", referencedColumnName = "uuid")
   private BundledProductOfferingOption bundledProductOfferingOption = null;
 
   @JsonProperty("description")
@@ -51,9 +51,6 @@ public class BundledProductOffering {
   private String href = null;
 
   @JsonProperty("id")
-  @Id
-  @GeneratedValue(generator = "uuid")
-  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String id = null;
 
   @JsonProperty("lastUpdate")
@@ -72,6 +69,9 @@ public class BundledProductOffering {
   private String name = null;
 
   @JsonProperty("uuid")
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
   @JsonProperty("validFor")

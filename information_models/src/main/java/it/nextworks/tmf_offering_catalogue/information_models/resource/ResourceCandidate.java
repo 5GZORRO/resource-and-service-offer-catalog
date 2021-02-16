@@ -41,7 +41,7 @@ public class ResourceCandidate {
 
   @JsonProperty("category")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "resourceCandidate")
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "resourceCandidate")
   private List<ResourceCategoryRef> category = null;
 
   @JsonProperty("description")
@@ -51,9 +51,6 @@ public class ResourceCandidate {
   private String href = null;
 
   @JsonProperty("id")
-  @Id
-  @GeneratedValue(generator = "uuid")
-  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String id = null;
 
   @JsonProperty("lastUpdate")
@@ -69,10 +66,13 @@ public class ResourceCandidate {
 
   @JsonProperty("resourceSpecification")
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "resource_specification_id", referencedColumnName = "id")
+  @JoinColumn(name = "resource_specification_id", referencedColumnName = "uuid")
   private ResourceSpecificationRef resourceSpecification = null;
 
   @JsonProperty("uuid")
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
   @JsonProperty("validFor")

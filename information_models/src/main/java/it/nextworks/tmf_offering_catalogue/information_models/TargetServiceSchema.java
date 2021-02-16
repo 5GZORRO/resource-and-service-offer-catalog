@@ -36,13 +36,10 @@ public class TargetServiceSchema {
   @JsonProperty("href")
   private String href = null;
 
-  @JsonIgnore
+  @JsonProperty("uuid")
   @Id
   @GeneratedValue(generator = "uuid")
   @GenericGenerator(name = "uuid", strategy = "uuid2")
-  private String id = null;
-
-  @JsonProperty("uuid")
   private String uuid = null;
 
   public TargetServiceSchema baseType(String baseType) {

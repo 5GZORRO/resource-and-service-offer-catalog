@@ -39,12 +39,6 @@ public class ProductSpecificationCharacteristicValue {
   @JsonProperty("href")
   private String href = null;
 
-  @JsonIgnore
-  @Id
-  @GeneratedValue(generator = "uuid")
-  @GenericGenerator(name = "uuid", strategy = "uuid2")
-  private String id = null;
-
   @JsonProperty("isDefault")
   @Column(name = "is_default")
   private Boolean isDefault = null;
@@ -61,6 +55,9 @@ public class ProductSpecificationCharacteristicValue {
   private String unitOfMeasure = null;
 
   @JsonProperty("uuid")
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
   @JsonProperty("validFor")

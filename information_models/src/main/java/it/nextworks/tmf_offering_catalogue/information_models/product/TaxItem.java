@@ -37,12 +37,6 @@ public class TaxItem {
   @JsonProperty("href")
   private String href = null;
 
-  @JsonIgnore
-  @Id
-  @GeneratedValue(generator = "uuid")
-  @GenericGenerator(name = "uuid", strategy = "uuid2")
-  private String id = null;
-
   @JsonProperty("taxAmount")
   @Column(name = "tax_amount")
   @Embedded
@@ -57,6 +51,9 @@ public class TaxItem {
   private Float taxRate = null;
 
   @JsonProperty("uuid")
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
   @JsonIgnore

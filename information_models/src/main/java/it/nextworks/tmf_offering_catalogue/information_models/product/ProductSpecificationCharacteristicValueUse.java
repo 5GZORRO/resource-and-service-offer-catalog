@@ -48,12 +48,6 @@ public class ProductSpecificationCharacteristicValueUse {
   @JsonProperty("href")
   private String href = null;
 
-  @JsonIgnore
-  @Id
-  @GeneratedValue(generator = "uuid")
-  @GenericGenerator(name = "uuid", strategy = "uuid2")
-  private String id = null;
-
   @JsonProperty("lastUpdate")
   @Column(name = "last_update")
   private String lastUpdate = null;
@@ -85,10 +79,13 @@ public class ProductSpecificationCharacteristicValueUse {
 
   @JsonProperty("productSpecification")
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "product_specification_id", referencedColumnName = "id")
+  @JoinColumn(name = "product_specification_id", referencedColumnName = "uuid")
   private ProductSpecificationRef productSpecification = null;
 
   @JsonProperty("uuid")
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
   @JsonProperty("validFor")
