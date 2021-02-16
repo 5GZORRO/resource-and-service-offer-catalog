@@ -14,6 +14,7 @@ import java.util.List;
 
 import it.nextworks.tmf_offering_catalogue.information_models.LifecycleStatusEnumEnum;
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
@@ -29,12 +30,6 @@ import javax.validation.Valid;
 @Entity
 @Table(name = "product_specification_characteristics")
 public class ProductSpecificationCharacteristic {
-
-  @JsonIgnore
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "jpa_id")
-  private Long jpaId;
 
   @JsonProperty("@baseType")
   @Column(name = "base_type")
@@ -58,6 +53,12 @@ public class ProductSpecificationCharacteristic {
 
   @JsonProperty("href")
   private String href = null;
+
+  @JsonIgnore
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
+  private String id = null;
 
   @JsonProperty("isUnique")
   @Column(name = "is_unique")

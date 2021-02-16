@@ -12,6 +12,7 @@ import java.util.List;
 
 import it.nextworks.tmf_offering_catalogue.information_models.ServiceSpecificationRef;
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
@@ -27,12 +28,6 @@ import javax.validation.Valid;
 @Entity
 @Table(name = "service_candidates")
 public class ServiceCandidate {
-
-  @JsonIgnore
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "jpa_id")
-  private Long jpaId;
 
   @JsonProperty("@baseType")
   @Column(name = "base_type")
@@ -57,6 +52,9 @@ public class ServiceCandidate {
   private String href = null;
 
   @JsonProperty("id")
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String id = null;
 
   @JsonProperty("lastUpdate")
@@ -72,7 +70,7 @@ public class ServiceCandidate {
 
   @JsonProperty("serviceSpecification")
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "service_specification_id", referencedColumnName = "jpa_id")
+  @JoinColumn(name = "service_specification_id", referencedColumnName = "id")
   private ServiceSpecificationRef serviceSpecification = null;
 
   @JsonProperty("uuid")

@@ -14,6 +14,7 @@ import java.util.List;
 
 import it.nextworks.tmf_offering_catalogue.information_models.LifecycleStatusEnumEnum;
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
@@ -29,12 +30,6 @@ import javax.validation.Valid;
 @Entity
 @Table(name = "product_specification_characteristic_value_uses")
 public class ProductSpecificationCharacteristicValueUse {
-
-  @JsonIgnore
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "jpa_id")
-  private Long jpaId;
 
   @JsonProperty("@baseType")
   @Column(name = "base_type")
@@ -52,6 +47,12 @@ public class ProductSpecificationCharacteristicValueUse {
 
   @JsonProperty("href")
   private String href = null;
+
+  @JsonIgnore
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
+  private String id = null;
 
   @JsonProperty("lastUpdate")
   @Column(name = "last_update")
@@ -84,7 +85,7 @@ public class ProductSpecificationCharacteristicValueUse {
 
   @JsonProperty("productSpecification")
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "product_specification_id", referencedColumnName = "jpa_id")
+  @JoinColumn(name = "product_specification_id", referencedColumnName = "id")
   private ProductSpecificationRef productSpecification = null;
 
   @JsonProperty("uuid")

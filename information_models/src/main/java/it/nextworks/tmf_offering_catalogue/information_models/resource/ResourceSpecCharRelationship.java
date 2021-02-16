@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
@@ -23,12 +24,6 @@ import javax.validation.Valid;
 @Table(name = "resource_spec_char_relationships")
 public class ResourceSpecCharRelationship {
 
-  @JsonIgnore
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "jpa_id")
-  private Long jpaId;
-
   @JsonProperty("@type")
   private String type = null;
 
@@ -36,6 +31,9 @@ public class ResourceSpecCharRelationship {
   private String href = null;
 
   @JsonProperty("id")
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String id = null;
 
   @JsonProperty("name")

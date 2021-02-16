@@ -12,6 +12,7 @@ import java.util.List;
 
 import it.nextworks.tmf_offering_catalogue.information_models.ResourceCandidateRef;
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
@@ -27,12 +28,6 @@ import javax.validation.Valid;
 @Entity
 @Table(name = "product_offerings")
 public class ProductOffering {
-
-  @JsonIgnore
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "jpa_id")
-  private Long jpaId;
 
   @JsonProperty("@baseType")
   @Column(name = "base_type")
@@ -80,6 +75,9 @@ public class ProductOffering {
   private String href = null;
 
   @JsonProperty("id")
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String id = null;
 
   @JsonProperty("isBundle")
@@ -132,7 +130,7 @@ public class ProductOffering {
 
   @JsonProperty("productSpecification")
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "product_specification_id", referencedColumnName = "jpa_id")
+  @JoinColumn(name = "product_specification_id", referencedColumnName = "id")
   private ProductSpecificationRef productSpecification = null;
 
   @JsonProperty("resourceCandidate")
@@ -142,12 +140,12 @@ public class ProductOffering {
 
   @JsonProperty("serviceCandidate")
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "service_candidate_id", referencedColumnName = "jpa_id")
+  @JoinColumn(name = "service_candidate_id", referencedColumnName = "id")
   private ServiceCandidateRef serviceCandidate = null;
 
   @JsonProperty("serviceLevelAgreement")
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "service_level_agreement_id", referencedColumnName = "jpa_id")
+  @JoinColumn(name = "service_level_agreement_id", referencedColumnName = "id")
   private SLARef serviceLevelAgreement = null;
 
   @JsonProperty("statusReason")

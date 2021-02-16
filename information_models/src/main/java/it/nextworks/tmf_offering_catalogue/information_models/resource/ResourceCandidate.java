@@ -69,7 +69,7 @@ public class ResourceCandidate {
 
   @JsonProperty("resourceSpecification")
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "resource_specification_id", referencedColumnName = "jpa_id")
+  @JoinColumn(name = "resource_specification_id", referencedColumnName = "id")
   private ResourceSpecificationRef resourceSpecification = null;
 
   @JsonProperty("uuid")

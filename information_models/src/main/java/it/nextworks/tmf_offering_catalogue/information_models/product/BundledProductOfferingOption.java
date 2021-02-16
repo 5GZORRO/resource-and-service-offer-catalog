@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
@@ -21,12 +22,6 @@ import javax.persistence.*;
 @Table(name = "bundled_product_offering_options")
 public class BundledProductOfferingOption {
 
-  @JsonIgnore
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "jpa_id")
-  private Long jpaId;
-
   @JsonProperty("@baseType")
   @Column(name = "base_type")
   private String baseType = null;
@@ -40,6 +35,12 @@ public class BundledProductOfferingOption {
 
   @JsonProperty("href")
   private String href = null;
+
+  @JsonIgnore
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
+  private String id = null;
 
   @JsonProperty("numberRelOfferDefault")
   @Column(name = "number_rel_offer_default")

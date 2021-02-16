@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import it.nextworks.tmf_offering_catalogue.information_models.product.ProductSpecification;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
@@ -22,12 +23,6 @@ import javax.validation.Valid;
 @Entity
 @Table(name = "service_specification_refs")
 public class ServiceSpecificationRef {
-
-  @JsonIgnore
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "jpa_id")
-  private Long jpaId;
 
   @JsonProperty("@baseType")
   @Column(name = "base_type")
@@ -48,6 +43,9 @@ public class ServiceSpecificationRef {
   private String href = null;
 
   @JsonProperty("id")
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String id = null;
 
   @JsonProperty("name")
@@ -55,7 +53,7 @@ public class ServiceSpecificationRef {
 
   @JsonProperty("targetServiceSchema")
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "target_service_schema_id", referencedColumnName = "jpa_id")
+  @JoinColumn(name = "target_service_schema_id", referencedColumnName = "id")
   private TargetServiceSchema targetServiceSchema = null;
 
   @JsonProperty("uuid")

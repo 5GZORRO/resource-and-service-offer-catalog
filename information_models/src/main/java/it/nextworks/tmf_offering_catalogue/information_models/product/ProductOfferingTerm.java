@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiModelProperty;
 import it.nextworks.tmf_offering_catalogue.information_models.LifecycleStatusEnumEnum;
 import it.nextworks.tmf_offering_catalogue.information_models.Quantity;
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
@@ -26,12 +27,6 @@ import javax.validation.Valid;
 @Entity
 @Table(name = "product_offering_terms")
 public class ProductOfferingTerm {
-
-  @JsonIgnore
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "jpa_id")
-  private Long jpaId;
 
   @JsonProperty("@baseType")
   @Column(name = "base_type")
@@ -52,6 +47,12 @@ public class ProductOfferingTerm {
 
   @JsonProperty("href")
   private String href = null;
+
+  @JsonIgnore
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
+  private String id = null;
 
   @JsonProperty("lastUpdate")
   @Column(name = "last_update")

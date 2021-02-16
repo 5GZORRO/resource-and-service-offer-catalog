@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import it.nextworks.tmf_offering_catalogue.information_models.Any;
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
@@ -24,12 +25,6 @@ import javax.validation.Valid;
 @Table(name = "resource_spec_characteristic_values")
 public class ResourceSpecCharacteristicValue {
 
-  @JsonIgnore
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "jpa_id")
-  private Long jpaId;
-
   @JsonProperty("@baseType")
   @Column(name = "base_type")
   private String baseType = null;
@@ -43,6 +38,12 @@ public class ResourceSpecCharacteristicValue {
 
   @JsonProperty("href")
   private String href = null;
+
+  @JsonIgnore
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
+  private String id = null;
 
   @JsonProperty("isDefault")
   @Column(name = "is_default")

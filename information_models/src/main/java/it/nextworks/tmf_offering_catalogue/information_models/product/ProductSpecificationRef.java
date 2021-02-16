@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import it.nextworks.tmf_offering_catalogue.information_models.LifecycleStatusEnumEnum;
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
@@ -26,12 +27,6 @@ import javax.validation.constraints.*;
 @Entity
 @Table(name = "product_specification_refs")
 public class ProductSpecificationRef {
-
-  @JsonIgnore
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "jpa_id")
-  private Long jpaId;
 
   @JsonProperty("@baseType")
   @Column(name = "base_type")
@@ -55,6 +50,9 @@ public class ProductSpecificationRef {
   private String href = null;
 
   @JsonProperty("id")
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String id = null;
 
   @JsonProperty("lastUpdate")
@@ -74,7 +72,7 @@ public class ProductSpecificationRef {
 
   @JsonProperty("targetProductSchema")
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "target_product_schema_id", referencedColumnName = "jpa_id")
+  @JoinColumn(name = "target_product_schema_id", referencedColumnName = "id")
   private TargetProductSchema targetProductSchema = null;
 
   @JsonProperty("uuid")

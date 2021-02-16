@@ -13,6 +13,7 @@ import java.util.List;
 import it.nextworks.tmf_offering_catalogue.information_models.AttachmentRef;
 import it.nextworks.tmf_offering_catalogue.information_models.RelatedParty;
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
@@ -28,12 +29,6 @@ import javax.validation.Valid;
 @Entity
 @Table(name = "resource_specifications")
 public class ResourceSpecification   {
-
-  @JsonIgnore
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "jpa_id")
-  private Long jpaId;
 
   @JsonProperty("@baseType")
   @Column(name = "base_type")
@@ -66,6 +61,9 @@ public class ResourceSpecification   {
   private String href = null;
 
   @JsonProperty("id")
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String id = null;
 
   @JsonProperty("isBundle")
@@ -103,7 +101,7 @@ public class ResourceSpecification   {
 
   @JsonProperty("targetResourceSchema")
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "target_resource_schema_id", referencedColumnName = "jpa_id")
+  @JoinColumn(name = "target_resource_schema_id", referencedColumnName = "id")
   private TargetResourceSchemaRef targetResourceSchema = null;
 
   @JsonProperty("uuid")
