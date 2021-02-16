@@ -31,7 +31,7 @@ public class ProductOfferingPrice {
   @JsonIgnore
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "jpda_id")
+  @Column(name = "jpa_id")
   private Long jpaId;
 
   @JsonProperty("@baseType")
@@ -48,12 +48,12 @@ public class ProductOfferingPrice {
   @JsonProperty("bundledPopRelationship")
   @Valid
   @Column(name = "bundled_pop_relationship")
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productOfferingPrice")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productOfferingPrice")
   private List<BundledProductOfferingPriceRelationship> bundledPopRelationship = null;
 
   @JsonProperty("constraint")
   @Valid
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productOfferingPrice")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productOfferingPrice")
   private List<ConstraintRef> constraint = null;
 
   @JsonProperty("description")
@@ -85,13 +85,13 @@ public class ProductOfferingPrice {
 
   @JsonProperty("place")
   @Valid
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productOfferingPrice")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productOfferingPrice")
   private List<PlaceRef> place = null;
 
   @JsonProperty("popRelationship")
   @Valid
   @Column(name = "pop_relationship")
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productOfferingPrice")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productOfferingPrice")
   private List<ProductOfferingPriceRelationship> popRelationship = null;
 
   @JsonProperty("price")
@@ -105,19 +105,19 @@ public class ProductOfferingPrice {
   @JsonProperty("pricingLogicAlgorithm")
   @Valid
   @Column(name = "pricing_logic_algorithm")
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productOfferingPrice")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productOfferingPrice")
   private List<PricingLogicAlgorithm> pricingLogicAlgorithm = null;
 
   @JsonProperty("prodSpecCharValueUse")
   @Valid
   @Column(name = "prod_spec_char_value_use")
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productOfferingPrice")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productOfferingPrice")
   private List<ProductSpecificationCharacteristicValueUse> prodSpecCharValueUse = null;
 
   @JsonProperty("productOfferingTerm")
   @Valid
   @Column(name = "product_offering_term")
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productOfferingPrice")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productOfferingPrice")
   private List<ProductOfferingTerm> productOfferingTerm = null;
 
   @JsonProperty("recurringChargePeriodLength")
@@ -130,7 +130,7 @@ public class ProductOfferingPrice {
 
   @JsonProperty("tax")
   @Valid
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productOfferingPrice")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productOfferingPrice")
   private List<TaxItem> tax = null;
 
   @JsonProperty("unitOfMeasure")

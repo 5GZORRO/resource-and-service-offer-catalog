@@ -2,7 +2,6 @@ package it.nextworks.tmf_offering_catalogue.information_models.resource;
 
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -12,6 +11,7 @@ import java.util.List;
 
 import it.nextworks.tmf_offering_catalogue.information_models.ResourceSpecificationRef;
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
@@ -28,12 +28,6 @@ import javax.validation.Valid;
 @Table(name = "resource_candidates")
 public class ResourceCandidate {
 
-  @JsonIgnore
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "jpda_id")
-  private Long jpaId;
-
   @JsonProperty("@baseType")
   @Column(name = "base_type")
   private String baseType = null;
@@ -47,7 +41,7 @@ public class ResourceCandidate {
 
   @JsonProperty("category")
   @Valid
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "resourceCandidate")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "resourceCandidate")
   private List<ResourceCategoryRef> category = null;
 
   @JsonProperty("description")
@@ -57,6 +51,9 @@ public class ResourceCandidate {
   private String href = null;
 
   @JsonProperty("id")
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String id = null;
 
   @JsonProperty("lastUpdate")
@@ -71,8 +68,8 @@ public class ResourceCandidate {
   private String name = null;
 
   @JsonProperty("resourceSpecification")
-  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  @JoinColumn(name = "resource_specification", referencedColumnName = "jpaId")
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "resource_specification_id", referencedColumnName = "jpa_id")
   private ResourceSpecificationRef resourceSpecification = null;
 
   @JsonProperty("uuid")

@@ -30,7 +30,7 @@ public class ResourceSpecCharacteristic   {
   @JsonIgnore
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "jpda_id")
+  @Column(name = "jpa_id")
   private Long jpaId;
 
   @JsonProperty("@baseType")
@@ -81,13 +81,13 @@ public class ResourceSpecCharacteristic   {
   @JsonProperty("resourceSpecCharRelationship")
   @Valid
   @Column(name = "resource_spec_char_relationship")
-  @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy = "resourceSpecCharacteristic")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "resourceSpecCharacteristic")
   private List<ResourceSpecCharRelationship> resourceSpecCharRelationship = null;
 
   @JsonProperty("resourceSpecCharacteristicValue")
   @Valid
   @Column(name = "resource_spec_characteristic_value")
-  @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy = "resourceSpecCharacteristic")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "resourceSpecCharacteristic")
   private List<ResourceSpecCharacteristicValue> resourceSpecCharacteristicValue = null;
 
   @JsonProperty("uuid")
@@ -104,7 +104,7 @@ public class ResourceSpecCharacteristic   {
 
   @JsonIgnore
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "resource_specification")
+  @JoinColumn(name = "resource_specification_id")
   private ResourceSpecification resourceSpecification;
 
   public ResourceSpecCharacteristic baseType(String baseType) {

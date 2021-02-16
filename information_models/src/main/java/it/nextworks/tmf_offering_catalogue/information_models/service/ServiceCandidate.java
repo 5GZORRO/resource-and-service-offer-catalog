@@ -31,7 +31,7 @@ public class ServiceCandidate {
   @JsonIgnore
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "jpda_id")
+  @Column(name = "jpa_id")
   private Long jpaId;
 
   @JsonProperty("@baseType")
@@ -47,7 +47,7 @@ public class ServiceCandidate {
 
   @JsonProperty("category")
   @Valid
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "serviceCandidate")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "serviceCandidate")
   private List<ServiceCategoryRef> category = null;
 
   @JsonProperty("description")
@@ -71,8 +71,8 @@ public class ServiceCandidate {
   private String name = null;
 
   @JsonProperty("serviceSpecification")
-  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  @JoinColumn(name = "service_specification", referencedColumnName = "jpaId")
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "service_specification_id", referencedColumnName = "jpa_id")
   private ServiceSpecificationRef serviceSpecification = null;
 
   @JsonProperty("uuid")

@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.nextworks.tmf_offering_catalogue.information_models.ResourceCandidateRef;
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
 import org.springframework.validation.annotation.Validated;
 
@@ -30,7 +31,7 @@ public class ProductOffering {
   @JsonIgnore
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "jpda_id")
+  @Column(name = "jpa_id")
   private Long jpaId;
 
   @JsonProperty("@baseType")
@@ -47,29 +48,29 @@ public class ProductOffering {
   @JsonProperty("agreement")
   @Valid
   @Column(name = "agreement")
-  @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy = "productOffering")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productOffering")
   private List<AgreementRef> agreement = null;
 
   @JsonProperty("attachment")
   @Valid
   @Column(name = "attachment")
-  @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy = "productOffering")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productOffering")
   private List<AttachmentRefOrValue> attachment = null;
 
   @JsonProperty("bundledProductOffering")
   @Valid
   @Column(name = "bundled_product_offering")
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productOffering")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productOffering")
   private List<BundledProductOffering> bundledProductOffering = null;
 
   @JsonProperty("category")
   @Valid
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productOffering")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productOffering")
   private List<CategoryRef> category = null;
 
   @JsonProperty("channel")
   @Valid
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productOffering")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productOffering")
   private List<ChannelRef> channel = null;
 
   @JsonProperty("description")
@@ -100,7 +101,7 @@ public class ProductOffering {
   @JsonProperty("marketSegment")
   @Valid
   @Column(name = "market_segment")
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productOffering")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productOffering")
   private List<MarketSegmentRef> marketSegment = null;
 
   @JsonProperty("name")
@@ -108,45 +109,45 @@ public class ProductOffering {
 
   @JsonProperty("place")
   @Valid
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productOffering")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productOffering")
   private List<PlaceRef> place = null;
 
   @JsonProperty("prodSpecCharValueUse")
   @Valid
   @Column(name = "prod_spec_char_value_use")
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productOffering")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productOffering")
   private List<ProductSpecificationCharacteristicValueUse> prodSpecCharValueUse = null;
 
   @JsonProperty("productOfferingPrice")
   @Valid
   @Column(name = "product_offering_price")
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productOffering")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productOffering")
   private List<ProductOfferingPriceRef> productOfferingPrice = null;
 
   @JsonProperty("productOfferingTerm")
   @Valid
   @Column(name = "product_offering_term")
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productOffering")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productOffering")
   private List<ProductOfferingTerm> productOfferingTerm = null;
 
   @JsonProperty("productSpecification")
-  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  @JoinColumn(name = "product_specification", referencedColumnName = "jpaId")
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "product_specification_id", referencedColumnName = "jpa_id")
   private ProductSpecificationRef productSpecification = null;
 
   @JsonProperty("resourceCandidate")
-  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  @JoinColumn(name = "resource_candidate", referencedColumnName = "jpaId")
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "resource_candidate_id", referencedColumnName = "id")
   private ResourceCandidateRef resourceCandidate = null;
 
   @JsonProperty("serviceCandidate")
-  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  @JoinColumn(name = "service_candidate", referencedColumnName = "jpaId")
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "service_candidate_id", referencedColumnName = "jpa_id")
   private ServiceCandidateRef serviceCandidate = null;
 
   @JsonProperty("serviceLevelAgreement")
-  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  @JoinColumn(name = "service_level_agreement", referencedColumnName = "jpaId")
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "service_level_agreement_id", referencedColumnName = "jpa_id")
   private SLARef serviceLevelAgreement = null;
 
   @JsonProperty("statusReason")

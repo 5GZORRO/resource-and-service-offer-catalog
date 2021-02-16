@@ -25,7 +25,7 @@ public class ResourceCategoryRef {
   @JsonIgnore
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "jpda_id")
+  @Column(name = "jpa_id")
   private Long jpaId;
 
   @JsonProperty("@baseType")
@@ -224,6 +224,10 @@ public class ResourceCategoryRef {
     this.version = version;
   }
 
+  public ResourceCategoryRef resourceCandidate(ResourceCandidate resourceCandidate){
+    this.resourceCandidate = resourceCandidate;
+    return this;
+  }
 
   @Override
   public boolean equals(java.lang.Object o) {

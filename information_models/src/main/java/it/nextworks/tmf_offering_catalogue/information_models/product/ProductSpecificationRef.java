@@ -30,7 +30,7 @@ public class ProductSpecificationRef {
   @JsonIgnore
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "jpda_id")
+  @Column(name = "jpa_id")
   private Long jpaId;
 
   @JsonProperty("@baseType")
@@ -73,8 +73,8 @@ public class ProductSpecificationRef {
   private String name = null;
 
   @JsonProperty("targetProductSchema")
-  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  @JoinColumn(name = "target_product_schema", referencedColumnName = "jpaId")
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "target_product_schema_id", referencedColumnName = "jpa_id")
   private TargetProductSchema targetProductSchema = null;
 
   @JsonProperty("uuid")

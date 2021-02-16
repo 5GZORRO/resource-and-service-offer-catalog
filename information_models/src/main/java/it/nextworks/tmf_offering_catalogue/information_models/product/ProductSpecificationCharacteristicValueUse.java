@@ -33,7 +33,7 @@ public class ProductSpecificationCharacteristicValueUse {
   @JsonIgnore
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "jpda_id")
+  @Column(name = "jpa_id")
   private Long jpaId;
 
   @JsonProperty("@baseType")
@@ -79,12 +79,12 @@ public class ProductSpecificationCharacteristicValueUse {
   @JsonProperty("productSpecCharacteristicValue")
   @Valid
   @Column(name = "product_spec_characteristic_value")
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "productSpecificationCharacteristicValueUse")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productSpecificationCharacteristicValueUse")
   private List<ProductSpecificationCharacteristicValue> productSpecCharacteristicValue = null;
 
   @JsonProperty("productSpecification")
-  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  @JoinColumn(name = "product_specification", referencedColumnName = "jpaId")
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "product_specification_id", referencedColumnName = "jpa_id")
   private ProductSpecificationRef productSpecification = null;
 
   @JsonProperty("uuid")

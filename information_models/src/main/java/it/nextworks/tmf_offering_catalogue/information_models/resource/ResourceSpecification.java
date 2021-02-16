@@ -32,7 +32,7 @@ public class ResourceSpecification   {
   @JsonIgnore
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "jpda_id")
+  @Column(name = "jpa_id")
   private Long jpaId;
 
   @JsonProperty("@baseType")
@@ -48,7 +48,7 @@ public class ResourceSpecification   {
 
   @JsonProperty("attachment")
   @Valid
-  @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy = "resourceSpecification")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "resourceSpecification")
   private List<AttachmentRef> attachment = null;
 
   @JsonProperty("category")
@@ -59,7 +59,7 @@ public class ResourceSpecification   {
 
   @JsonProperty("feature")
   @Valid
-  @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy = "resourceSpecification")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "resourceSpecification")
   private List<Feature> feature = null;
 
   @JsonProperty("href")
@@ -86,24 +86,24 @@ public class ResourceSpecification   {
   @JsonProperty("relatedParty")
   @Valid
   @Column(name = "related_party")
-  @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy = "resourceSpecification")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "resourceSpecification")
   private List<RelatedParty> relatedParty = null;
 
   @JsonProperty("resourceSpecCharacteristic")
   @Valid
   @Column(name = "resource_spec_characteristic")
-  @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy = "resourceSpecification")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "resourceSpecification")
   private List<ResourceSpecCharacteristic> resourceSpecCharacteristic = null;
 
   @JsonProperty("resourceSpecRelationship")
   @Valid
   @Column(name = "resource_spec_relationship")
-  @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy = "resourceSpecification")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "resourceSpecification")
   private List<ResourceSpecRelationship> resourceSpecRelationship = null;
 
   @JsonProperty("targetResourceSchema")
-  @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "target_resource_schema", referencedColumnName = "jpaId")
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "target_resource_schema_id", referencedColumnName = "jpa_id")
   private TargetResourceSchemaRef targetResourceSchema = null;
 
   @JsonProperty("uuid")

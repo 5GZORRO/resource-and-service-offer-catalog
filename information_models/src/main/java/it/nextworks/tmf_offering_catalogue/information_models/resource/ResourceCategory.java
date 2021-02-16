@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.nextworks.tmf_offering_catalogue.information_models.ResourceCandidateRef;
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
 import org.springframework.validation.annotation.Validated;
 
@@ -30,7 +31,7 @@ public class ResourceCategory {
   @JsonIgnore
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "jpda_id")
+  @Column(name = "jpa_id")
   private Long jpaId;
 
   @JsonProperty("@baseType")
@@ -47,7 +48,7 @@ public class ResourceCategory {
   @JsonProperty("category")
   @Valid
   @Column(name = "category")
-  @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy = "resourceCategory")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "resourceCategory")
   private List<ResourceCategoryRef> category = null;
 
   @JsonProperty("description")
@@ -81,7 +82,7 @@ public class ResourceCategory {
   @JsonProperty("resourceCandidate")
   @Valid
   @Column(name = "resource_candidate")
-  @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy = "resourceCategory")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "resourceCategory")
   private List<ResourceCandidateRef> resourceCandidate = null;
 
   @JsonProperty("uuid")

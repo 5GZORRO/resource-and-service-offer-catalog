@@ -30,7 +30,7 @@ public class BundledProductOffering {
   @JsonIgnore
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "jpda_id")
+  @Column(name = "jpa_id")
   private Long jpaId;
 
   @JsonProperty("@baseType")
@@ -45,8 +45,8 @@ public class BundledProductOffering {
   private String type = null;
 
   @JsonProperty("bundledProductOfferingOption")
-  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  @JoinColumn(name = "bundled_product_offering_option", referencedColumnName = "jpaId")
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "bundled_product_offering_option_id", referencedColumnName = "jpa_id")
   private BundledProductOfferingOption bundledProductOfferingOption = null;
 
   @JsonProperty("description")

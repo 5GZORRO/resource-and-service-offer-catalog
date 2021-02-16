@@ -26,7 +26,7 @@ public class ServiceSpecificationRef {
   @JsonIgnore
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "jpda_id")
+  @Column(name = "jpa_id")
   private Long jpaId;
 
   @JsonProperty("@baseType")
@@ -54,8 +54,8 @@ public class ServiceSpecificationRef {
   private String name = null;
 
   @JsonProperty("targetServiceSchema")
-  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  @JoinColumn(name = "target_service_schema", referencedColumnName = "jpaId")
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "target_service_schema_id", referencedColumnName = "jpa_id")
   private TargetServiceSchema targetServiceSchema = null;
 
   @JsonProperty("uuid")

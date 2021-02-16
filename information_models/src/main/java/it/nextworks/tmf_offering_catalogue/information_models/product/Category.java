@@ -34,7 +34,7 @@ public class Category {
   @JsonIgnore
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "jpda_id")
+  @Column(name = "jpa_id")
   private Long jpaId;
 
   @JsonProperty("@baseType")
@@ -83,13 +83,13 @@ public class Category {
   @JsonProperty("productOffering")
   @Valid
   @Column(name = "product_offering")
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "category")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "category")
   private List<ProductOfferingRef> productOffering = null;
 
   @JsonProperty("subCategory")
   @Valid
   @Column(name = "sub_category")
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "category")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "category")
   private List<CategoryRef> subCategory = null;
 
   @JsonProperty("uuid")
