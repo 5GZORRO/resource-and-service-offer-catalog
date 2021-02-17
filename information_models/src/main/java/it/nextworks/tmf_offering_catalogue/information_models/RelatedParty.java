@@ -271,6 +271,23 @@ public class RelatedParty {
     this.uuid = uuid;
   }
 
+  public RelatedParty resourceSpecification(ResourceSpecification resourceSpecification){
+    this.resourceSpecification = resourceSpecification;
+    return this;
+  }
+
+  public ResourceSpecification getResourceSpecification(){ return resourceSpecification; }
+
+  public void setResourceSpecification(ResourceSpecification resourceSpecification){ this.resourceSpecification = resourceSpecification; }
+
+  public RelatedParty productSpecification(ProductSpecification productSpecification){
+    this.productSpecification = productSpecification;
+    return this;
+  }
+
+  public ProductSpecification getProductSpecification(){ return productSpecification; }
+
+  public void setProductSpecification(ProductSpecification productSpecification){ this.productSpecification = productSpecification; }
 
   @Override
   public boolean equals(java.lang.Object o) {

@@ -363,6 +363,14 @@ public class ResourceCandidateRef {
     this.version = version;
   }
 
+  public ResourceCandidateRef resourceCategory(ResourceCategory resourceCategory){
+    this.resourceCategory = resourceCategory;
+    return this;
+  }
+
+  public ResourceCategory getResourceCategory(){ return resourceCategory; }
+
+  public void setResourceCategory(ResourceCategory resourceCategory){ this.resourceCategory = resourceCategory; }
 
   @Override
   public boolean equals(java.lang.Object o) {

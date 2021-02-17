@@ -241,6 +241,14 @@ public class ResourceSpecificationRef   {
     this.version = version;
   }
 
+  public ResourceSpecificationRef productSpecification(ProductSpecification productSpecification){
+    this.productSpecification = productSpecification;
+    return this;
+  }
+
+  public ProductSpecification getProductSpecification(){ return productSpecification; }
+
+  public void setProductSpecification(ProductSpecification productSpecification){ this.productSpecification = productSpecification; }
 
   @Override
   public boolean equals(java.lang.Object o) {

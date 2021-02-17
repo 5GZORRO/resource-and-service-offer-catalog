@@ -10,11 +10,9 @@ public interface ResourceCandidateRepository extends JpaRepository<ResourceCandi
 
     Optional<ResourceCandidate> findByHref(String href);
 
-    Optional<ResourceCandidate> findById(String id);
-
     List<ResourceCandidate> findByName(String name);
 
-    Optional<ResourceCandidate> findByUuid(String uuid);
+    Optional<ResourceCandidate> findById(String uuid);
 
     List<ResourceCandidate> findAll();
 }

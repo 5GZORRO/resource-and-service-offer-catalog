@@ -197,6 +197,16 @@ public class ResourceSpecCharRelationship {
     this.validFor = validFor;
   }
 
+  public ResourceSpecCharRelationship resourceSpecCharacteristic(ResourceSpecCharacteristic resourceSpecCharacteristic){
+    this.resourceSpecCharacteristic = resourceSpecCharacteristic;
+    return this;
+  }
+
+  public ResourceSpecCharacteristic getResourceSpecCharacteristic(){ return resourceSpecCharacteristic; }
+
+  public void setResourceSpecCharacteristic(ResourceSpecCharacteristic resourceSpecCharacteristic){
+    this.resourceSpecCharacteristic = resourceSpecCharacteristic;
+  }
 
   @Override
   public boolean equals(java.lang.Object o) {

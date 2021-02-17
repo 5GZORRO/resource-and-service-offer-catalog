@@ -227,6 +227,19 @@ public class ResourceCategoryRef {
     return this;
   }
 
+  public ResourceCandidate getResourceCandidate() { return resourceCandidate; }
+
+  public void setResourceCandidate(ResourceCandidate resourceCandidate) { this.resourceCandidate = resourceCandidate; }
+
+  public ResourceCategoryRef resourceCategory(ResourceCategory resourceCategory){
+    this.resourceCategory = resourceCategory;
+    return this;
+  }
+
+  public ResourceCategory getResourceCategory(){ return resourceCategory; }
+
+  public void setResourceCategory(ResourceCategory resourceCategory){ this.resourceCategory = resourceCategory; }
+
   @Override
   public boolean equals(java.lang.Object o) {
     if (this == o) {

@@ -41,7 +41,7 @@ public class ResourceCandidate {
 
   @JsonProperty("category")
   @Valid
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "resourceCandidate")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "resourceCandidate")
   private List<ResourceCategoryRef> category = null;
 
   @JsonProperty("description")

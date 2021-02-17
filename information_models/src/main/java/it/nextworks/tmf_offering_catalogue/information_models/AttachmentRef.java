@@ -264,6 +264,14 @@ public class AttachmentRef {
     this.uuid = uuid;
   }
 
+  public AttachmentRef resourceSpecification(ResourceSpecification resourceSpecification){
+    this.resourceSpecification = resourceSpecification;
+    return this;
+  }
+
+  public ResourceSpecification getResourceSpecification(){ return resourceSpecification; }
+
+  public void setResourceSpecification(ResourceSpecification resourceSpecification){ this.resourceSpecification = resourceSpecification; }
 
   @Override
   public boolean equals(java.lang.Object o) {
