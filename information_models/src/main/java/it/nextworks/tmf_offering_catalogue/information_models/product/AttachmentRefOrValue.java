@@ -100,16 +100,6 @@ public class AttachmentRefOrValue {
   @JsonProperty("version")
   private String version = null;
 
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_offering_id")
-  private ProductOffering productOffering;
-
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_specification_id")
-  private ProductSpecification productSpecification;
-
   public AttachmentRefOrValue baseType(String baseType) {
     this.baseType = baseType;
     return this;

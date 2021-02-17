@@ -44,7 +44,8 @@ public class ProductSpecification {
 
   @JsonProperty("attachment")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productSpecification")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "product_specification_fk", referencedColumnName = "uuid")
   private List<AttachmentRefOrValue> attachment = null;
 
   @JsonProperty("brand")
@@ -52,8 +53,8 @@ public class ProductSpecification {
 
   @JsonProperty("bundledProductSpecification")
   @Valid
-  @Column(name = "bundled_product_specification")
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productSpecification")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "product_specification_fk", referencedColumnName = "uuid")
   private List<BundledProductSpecification> bundledProductSpecification = null;
 
   @JsonProperty("description")
@@ -86,32 +87,32 @@ public class ProductSpecification {
 
   @JsonProperty("productSpecCharacteristic")
   @Valid
-  @Column(name = "product_spec_characteristic")
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productSpecification")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "product_specification_fk", referencedColumnName = "uuid")
   private List<ProductSpecificationCharacteristic> productSpecCharacteristic = null;
 
   @JsonProperty("productSpecificationRelationship")
   @Valid
-  @Column(name = "product_specification_relationship")
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productSpecification")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "product_specification_fk", referencedColumnName = "uuid")
   private List<ProductSpecificationRelationship> productSpecificationRelationship = null;
 
   @JsonProperty("relatedParty")
   @Valid
-  @Column(name = "related_party")
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productSpecification")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "product_specification_fk", referencedColumnName = "uuid")
   private List<RelatedParty> relatedParty = null;
 
   @JsonProperty("resourceSpecification")
   @Valid
-  @Column(name = "resource_specification")
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productSpecification")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "product_specification_fk", referencedColumnName = "uuid")
   private List<ResourceSpecificationRef> resourceSpecification = null;
 
   @JsonProperty("serviceSpecification")
   @Valid
-  @Column(name = "service_specification")
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productSpecification")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "product_specification_fk", referencedColumnName = "uuid")
   private List<ServiceSpecificationRef> serviceSpecification = null;
 
   @JsonProperty("targetProductSchema")

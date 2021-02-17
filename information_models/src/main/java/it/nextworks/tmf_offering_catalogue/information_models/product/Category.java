@@ -73,14 +73,14 @@ public class Category {
 
   @JsonProperty("productOffering")
   @Valid
-  @Column(name = "product_offering")
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "category")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "category_fk", referencedColumnName = "uuid")
   private List<ProductOfferingRef> productOffering = null;
 
   @JsonProperty("subCategory")
   @Valid
-  @Column(name = "sub_category")
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "category")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "category_fk", referencedColumnName = "uuid")
   private List<CategoryRef> subCategory = null;
 
   @JsonProperty("uuid")

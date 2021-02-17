@@ -42,8 +42,8 @@ public class ResourceCategory {
 
   @JsonProperty("category")
   @Valid
-  @Column(name = "category")
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "resourceCategory")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "resource_category_fk", referencedColumnName = "uuid")
   private List<ResourceCategoryRef> category = null;
 
   @JsonProperty("description")
@@ -76,8 +76,8 @@ public class ResourceCategory {
 
   @JsonProperty("resourceCandidate")
   @Valid
-  @Column(name = "resource_candidate")
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "resourceCategory")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "resource_category_fk", referencedColumnName = "uuid")
   private List<ResourceCandidateRef> resourceCandidate = null;
 
   @JsonProperty("uuid")

@@ -76,11 +76,6 @@ public class BundledProductSpecification {
   @JsonProperty("version")
   private String version = null;
 
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_specification_id")
-  private ProductSpecification productSpecification;
-
   public BundledProductSpecification baseType(String baseType) {
     this.baseType = baseType;
     return this;

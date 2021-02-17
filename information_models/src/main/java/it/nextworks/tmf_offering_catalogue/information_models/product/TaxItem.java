@@ -56,11 +56,6 @@ public class TaxItem {
   @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_offering_price_id")
-  private ProductOfferingPrice productOfferingPrice;
-
   public TaxItem baseType(String baseType) {
     this.baseType = baseType;
     return this;

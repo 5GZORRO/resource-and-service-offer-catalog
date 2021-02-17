@@ -81,11 +81,6 @@ public class ProductOfferingPriceRef {
   @JsonProperty("version")
   private String version = null;
 
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_offering_id")
-  private ProductOffering productOffering;
-
   public ProductOfferingPriceRef baseType(String baseType) {
     this.baseType = baseType;
     return this;

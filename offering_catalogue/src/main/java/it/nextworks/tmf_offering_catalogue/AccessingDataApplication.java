@@ -29,17 +29,17 @@ public class AccessingDataApplication {
                                   ResourceCategoryRefRepository resourceCategoryRefRepository) {
         return(args) -> {
             ResourceCandidate resourceCandidate = new ResourceCandidate();
-            ResourceCategoryRef resourceCategoryRef = new ResourceCategoryRef().name("pluto").resourceCandidate(resourceCandidate);
+            ResourceCategoryRef resourceCategoryRef = new ResourceCategoryRef().name("pluto");
             ArrayList<ResourceCategoryRef> lst = new ArrayList<>();
             lst.add(resourceCategoryRef);
             resourceCandidate = resourceCandidate.category(lst);
-            resourceCandidateRepository.saveAndFlush(resourceCandidate);
+            resourceCandidateRepository.save(resourceCandidate);
 
             // fetch all customers
             log.info("ResourceCandidate found with findAll():");
             log.info("-------------------------------");
             for(ResourceCandidate tmp : resourceCandidateRepository.findAll()) {
-                log.info(tmp.getId());
+                log.info(tmp.getUuid());
                 log.info(tmp.getCategory().toString());
             }
             log.info("");

@@ -56,11 +56,6 @@ public class ResourceSpecificationRef   {
   @JsonProperty("version")
   private String version = null;
 
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_specification_id")
-  private ProductSpecification productSpecification;
-
   public ResourceSpecificationRef baseType(String baseType) {
     this.baseType = baseType;
     return this;
@@ -240,15 +235,6 @@ public class ResourceSpecificationRef   {
   public void setVersion(String version) {
     this.version = version;
   }
-
-  public ResourceSpecificationRef productSpecification(ProductSpecification productSpecification){
-    this.productSpecification = productSpecification;
-    return this;
-  }
-
-  public ProductSpecification getProductSpecification(){ return productSpecification; }
-
-  public void setProductSpecification(ProductSpecification productSpecification){ this.productSpecification = productSpecification; }
 
   @Override
   public boolean equals(java.lang.Object o) {

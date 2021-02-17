@@ -58,11 +58,6 @@ public class ResourceSpecRelationship {
   @Embedded
   private TimePeriod validFor = null;
 
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "resource_specification_id")
-  private ResourceSpecification resourceSpecification;
-
   public ResourceSpecRelationship baseType(String baseType) {
     this.baseType = baseType;
     return this;
@@ -243,15 +238,6 @@ public class ResourceSpecRelationship {
   public void setValidFor(TimePeriod validFor) {
     this.validFor = validFor;
   }
-
-  public ResourceSpecRelationship resourceSpecification(ResourceSpecification resourceSpecification){
-    this.resourceSpecification = resourceSpecification;
-    return this;
-  }
-
-  public ResourceSpecification getResourceSpecification(){ return resourceSpecification; }
-
-  public void setResourceSpecification(ResourceSpecification resourceSpecification){ this.resourceSpecification = resourceSpecification; }
 
   @Override
   public boolean equals(java.lang.Object o) {

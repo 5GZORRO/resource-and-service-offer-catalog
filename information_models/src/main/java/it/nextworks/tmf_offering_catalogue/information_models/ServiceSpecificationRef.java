@@ -62,11 +62,6 @@ public class ServiceSpecificationRef {
   @JsonProperty("version")
   private String version = null;
 
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_specification_id")
-  private ProductSpecification productSpecification;
-
   public ServiceSpecificationRef baseType(String baseType) {
     this.baseType = baseType;
     return this;

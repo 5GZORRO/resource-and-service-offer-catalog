@@ -53,11 +53,6 @@ public class AgreementRef {
   @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_offering_id")
-  private ProductOffering productOffering;
-
   public AgreementRef baseType(String baseType) {
     this.baseType = baseType;
     return this;

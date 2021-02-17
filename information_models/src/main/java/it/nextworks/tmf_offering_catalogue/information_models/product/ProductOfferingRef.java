@@ -53,11 +53,6 @@ public class ProductOfferingRef {
   @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "category_id")
-  private Category category;
-
   public ProductOfferingRef baseType(String baseType) {
     this.baseType = baseType;
     return this;

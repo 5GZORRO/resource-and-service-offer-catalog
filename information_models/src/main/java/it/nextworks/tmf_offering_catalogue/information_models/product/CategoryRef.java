@@ -56,16 +56,6 @@ public class CategoryRef {
   @JsonProperty("version")
   private String version = null;
 
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_offering_id")
-  private ProductOffering productOffering;
-
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "category_id")
-  private Category category;
-
   public CategoryRef baseType(String baseType) {
     this.baseType = baseType;
     return this;

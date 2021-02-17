@@ -83,14 +83,14 @@ public class ProductSpecificationCharacteristic {
 
   @JsonProperty("productSpecCharRelationship")
   @Valid
-  @Column(name = "product_spec_char_relationship")
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productSpecificationCharacteristic")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "product_specification_characteristic_fk", referencedColumnName = "uuid")
   private List<ProductSpecificationCharacteristicRelationship> productSpecCharRelationship = null;
 
   @JsonProperty("productSpecCharacteristicValue")
   @Valid
-  @Column(name = "product_spec_characteristic_value")
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productSpecificationCharacteristic")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "product_specification_characteristic_fk", referencedColumnName = "uuid")
   private List<ProductSpecificationCharacteristicValue> productSpecCharacteristicValue = null;
 
   @JsonProperty("regex")
@@ -113,11 +113,6 @@ public class ProductSpecificationCharacteristic {
 
   @JsonProperty("version")
   private String version = null;
-
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_specification_id")
-  private ProductSpecification productSpecification;
 
   public ProductSpecificationCharacteristic baseType(String baseType) {
     this.baseType = baseType;

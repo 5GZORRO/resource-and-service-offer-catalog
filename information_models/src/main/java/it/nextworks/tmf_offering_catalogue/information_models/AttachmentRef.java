@@ -59,11 +59,6 @@ public class AttachmentRef {
   @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "resource_specification_id")
-  private ResourceSpecification resourceSpecification;
-
   public AttachmentRef baseType(String baseType) {
     this.baseType = baseType;
     return this;
@@ -263,15 +258,6 @@ public class AttachmentRef {
   public void setUuid(String uuid) {
     this.uuid = uuid;
   }
-
-  public AttachmentRef resourceSpecification(ResourceSpecification resourceSpecification){
-    this.resourceSpecification = resourceSpecification;
-    return this;
-  }
-
-  public ResourceSpecification getResourceSpecification(){ return resourceSpecification; }
-
-  public void setResourceSpecification(ResourceSpecification resourceSpecification){ this.resourceSpecification = resourceSpecification; }
 
   @Override
   public boolean equals(java.lang.Object o) {

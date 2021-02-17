@@ -52,16 +52,6 @@ public class ResourceCategoryRef {
   @JsonProperty("version")
   private String version = null;
 
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "resource_candidate_id")
-  private ResourceCandidate resourceCandidate;
-
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "resource_category_id")
-  private ResourceCategory resourceCategory;
-
   public ResourceCategoryRef baseType(String baseType) {
     this.baseType = baseType;
     return this;
@@ -221,24 +211,6 @@ public class ResourceCategoryRef {
   public void setVersion(String version) {
     this.version = version;
   }
-
-  public ResourceCategoryRef resourceCandidate(ResourceCandidate resourceCandidate){
-    this.resourceCandidate = resourceCandidate;
-    return this;
-  }
-
-  public ResourceCandidate getResourceCandidate() { return resourceCandidate; }
-
-  public void setResourceCandidate(ResourceCandidate resourceCandidate) { this.resourceCandidate = resourceCandidate; }
-
-  public ResourceCategoryRef resourceCategory(ResourceCategory resourceCategory){
-    this.resourceCategory = resourceCategory;
-    return this;
-  }
-
-  public ResourceCategory getResourceCategory(){ return resourceCategory; }
-
-  public void setResourceCategory(ResourceCategory resourceCategory){ this.resourceCategory = resourceCategory; }
 
   @Override
   public boolean equals(java.lang.Object o) {

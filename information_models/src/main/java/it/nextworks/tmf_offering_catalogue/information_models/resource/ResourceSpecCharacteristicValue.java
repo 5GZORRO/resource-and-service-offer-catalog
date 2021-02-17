@@ -81,11 +81,6 @@ public class ResourceSpecCharacteristicValue {
   @Column(name = "value_type")
   private String valueType = null;
 
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "resource_spec_characteristic_id")
-  private ResourceSpecCharacteristic resourceSpecCharacteristic;
-
   public ResourceSpecCharacteristicValue baseType(String baseType) {
     this.baseType = baseType;
     return this;
@@ -366,17 +361,6 @@ public class ResourceSpecCharacteristicValue {
 
   public void setValueType(String valueType) {
     this.valueType = valueType;
-  }
-
-  public ResourceSpecCharacteristicValue resourceSpecCharacteristic(ResourceSpecCharacteristic resourceSpecCharacteristic){
-    this.resourceSpecCharacteristic = resourceSpecCharacteristic;
-    return this;
-  }
-
-  public ResourceSpecCharacteristic getResourceSpecCharacteristic(){ return resourceSpecCharacteristic; }
-
-  public void setResourceSpecCharacteristic(ResourceSpecCharacteristic resourceSpecCharacteristic){
-    this.resourceSpecCharacteristic = resourceSpecCharacteristic;
   }
 
   @Override

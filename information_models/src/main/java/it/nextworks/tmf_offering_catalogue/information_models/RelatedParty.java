@@ -61,16 +61,6 @@ public class RelatedParty {
   @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "resource_specification_id")
-  private ResourceSpecification resourceSpecification;
-
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_specification_id")
-  private ProductSpecification productSpecification;
-
   public RelatedParty baseType(String baseType) {
     this.baseType = baseType;
     return this;
@@ -270,24 +260,6 @@ public class RelatedParty {
   public void setUuid(String uuid) {
     this.uuid = uuid;
   }
-
-  public RelatedParty resourceSpecification(ResourceSpecification resourceSpecification){
-    this.resourceSpecification = resourceSpecification;
-    return this;
-  }
-
-  public ResourceSpecification getResourceSpecification(){ return resourceSpecification; }
-
-  public void setResourceSpecification(ResourceSpecification resourceSpecification){ this.resourceSpecification = resourceSpecification; }
-
-  public RelatedParty productSpecification(ProductSpecification productSpecification){
-    this.productSpecification = productSpecification;
-    return this;
-  }
-
-  public ProductSpecification getProductSpecification(){ return productSpecification; }
-
-  public void setProductSpecification(ProductSpecification productSpecification){ this.productSpecification = productSpecification; }
 
   @Override
   public boolean equals(java.lang.Object o) {

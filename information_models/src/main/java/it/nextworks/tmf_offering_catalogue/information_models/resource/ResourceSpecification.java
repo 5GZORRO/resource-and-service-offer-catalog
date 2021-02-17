@@ -42,7 +42,8 @@ public class ResourceSpecification   {
 
   @JsonProperty("attachment")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "resourceSpecification")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "resource_specification_fk", referencedColumnName = "uuid")
   private List<AttachmentRef> attachment = null;
 
   @JsonProperty("category")
@@ -53,7 +54,8 @@ public class ResourceSpecification   {
 
   @JsonProperty("feature")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "resourceSpecification")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "resource_specification_fk", referencedColumnName = "uuid")
   private List<Feature> feature = null;
 
   @JsonProperty("href")
@@ -79,20 +81,20 @@ public class ResourceSpecification   {
 
   @JsonProperty("relatedParty")
   @Valid
-  @Column(name = "related_party")
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "resourceSpecification")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "resource_specification_fk", referencedColumnName = "uuid")
   private List<RelatedParty> relatedParty = null;
 
   @JsonProperty("resourceSpecCharacteristic")
   @Valid
-  @Column(name = "resource_spec_characteristic")
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "resourceSpecification")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "resource_specification_fk", referencedColumnName = "uuid")
   private List<ResourceSpecCharacteristic> resourceSpecCharacteristic = null;
 
   @JsonProperty("resourceSpecRelationship")
   @Valid
-  @Column(name = "resource_spec_relationship")
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "resourceSpecification")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "resource_specification_fk", referencedColumnName = "uuid")
   private List<ResourceSpecRelationship> resourceSpecRelationship = null;
 
   @JsonProperty("targetResourceSchema")

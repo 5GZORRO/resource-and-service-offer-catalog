@@ -75,14 +75,14 @@ public class ResourceSpecCharacteristic   {
 
   @JsonProperty("resourceSpecCharRelationship")
   @Valid
-  @Column(name = "resource_spec_char_relationship")
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "resourceSpecCharacteristic")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "resource_spec_characteristic_fk", referencedColumnName = "uuid")
   private List<ResourceSpecCharRelationship> resourceSpecCharRelationship = null;
 
   @JsonProperty("resourceSpecCharacteristicValue")
   @Valid
-  @Column(name = "resource_spec_characteristic_value")
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "resourceSpecCharacteristic")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "resource_spec_characteristic_fk", referencedColumnName = "uuid")
   private List<ResourceSpecCharacteristicValue> resourceSpecCharacteristicValue = null;
 
   @JsonProperty("uuid")
@@ -99,11 +99,6 @@ public class ResourceSpecCharacteristic   {
   @JsonProperty("valueType")
   @Column(name = "value_type")
   private String valueType = null;
-
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "resource_specification_id")
-  private ResourceSpecification resourceSpecification;
 
   public ResourceSpecCharacteristic baseType(String baseType) {
     this.baseType = baseType;
@@ -483,15 +478,6 @@ public class ResourceSpecCharacteristic   {
   public void setValueType(String valueType) {
     this.valueType = valueType;
   }
-
-  public ResourceSpecCharacteristic resourceSpecification(ResourceSpecification resourceSpecification){
-    this.resourceSpecification = resourceSpecification;
-    return this;
-  }
-
-  public ResourceSpecification getResourceSpecification(){ return resourceSpecification; }
-
-  public void setResourceSpecification(ResourceSpecification resourceSpecification){ this.resourceSpecification = resourceSpecification; }
 
   @Override
   public boolean equals(java.lang.Object o) {

@@ -42,7 +42,8 @@ public class ServiceCandidate {
 
   @JsonProperty("category")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "serviceCandidate")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "service_candidate_fk", referencedColumnName = "uuid")
   private List<ServiceCategoryRef> category = null;
 
   @JsonProperty("description")

@@ -52,11 +52,6 @@ public class ServiceCategoryRef {
   @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "service_candidate_id")
-  private ServiceCandidate serviceCandidate;
-
   public ServiceCategoryRef baseType(String baseType) {
     this.baseType = baseType;
     return this;

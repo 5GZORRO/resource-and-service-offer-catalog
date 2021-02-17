@@ -58,16 +58,6 @@ public class PlaceRef {
   @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_offering_id")
-  private ProductOffering productOffering;
-
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_offering_price_id")
-  private ProductOfferingPrice productOfferingPrice;
-
   public PlaceRef baseType(String baseType) {
     this.baseType = baseType;
     return this;

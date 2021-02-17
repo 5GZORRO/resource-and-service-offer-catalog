@@ -81,16 +81,6 @@ public class ProductSpecificationCharacteristicValue {
   @Column(name = "value_type")
   private String valueType = null;
 
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_specification_characteristic_value_use_id")
-  private ProductSpecificationCharacteristicValueUse productSpecificationCharacteristicValueUse;
-
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_specification_characteristic_id")
-  private ProductSpecificationCharacteristic productSpecificationCharacteristic;
-
   public ProductSpecificationCharacteristicValue baseType(String baseType) {
     this.baseType = baseType;
     return this;

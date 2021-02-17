@@ -73,8 +73,8 @@ public class ProductSpecificationCharacteristicValueUse {
 
   @JsonProperty("productSpecCharacteristicValue")
   @Valid
-  @Column(name = "product_spec_characteristic_value")
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "productSpecificationCharacteristicValueUse")
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "product_specification_characteristic_value_use_fk", referencedColumnName = "uuid")
   private List<ProductSpecificationCharacteristicValue> productSpecCharacteristicValue = null;
 
   @JsonProperty("productSpecification")
@@ -99,16 +99,6 @@ public class ProductSpecificationCharacteristicValueUse {
 
   @JsonProperty("version")
   private String version = null;
-
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_offering_id")
-  private ProductOffering productOffering;
-
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_offering_price_id")
-  private ProductOfferingPrice productOfferingPrice;
 
   public ProductSpecificationCharacteristicValueUse baseType(String baseType) {
     this.baseType = baseType;

@@ -66,11 +66,6 @@ public class Feature {
   @JsonProperty("version")
   private String version = null;
 
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "resource_specification_id")
-  private ResourceSpecification resourceSpecification;
-
   public Feature baseType(String baseType) {
     this.baseType = baseType;
     return this;
@@ -291,15 +286,6 @@ public class Feature {
   public void setVersion(String version) {
     this.version = version;
   }
-
-  public Feature resourceSpecification(ResourceSpecification resourceSpecification){
-    this.resourceSpecification = resourceSpecification;
-    return this;
-  }
-
-  public ResourceSpecification getResourceSpecification(){ return resourceSpecification; }
-
-  public void setResourceSpecification(ResourceSpecification resourceSpecification){ this.resourceSpecification = resourceSpecification; }
 
   @Override
   public boolean equals(java.lang.Object o) {

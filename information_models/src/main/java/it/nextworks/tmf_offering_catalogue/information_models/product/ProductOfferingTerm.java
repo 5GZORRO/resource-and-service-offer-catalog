@@ -77,16 +77,6 @@ public class ProductOfferingTerm {
   @JsonProperty("version")
   private String version = null;
 
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_offering_price_id")
-  private ProductOfferingPrice productOfferingPrice;
-
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_offering_id")
-  private ProductOffering productOffering;
-
   public ProductOfferingTerm baseType(String baseType) {
     this.baseType = baseType;
     return this;

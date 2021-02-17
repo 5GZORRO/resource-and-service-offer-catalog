@@ -84,11 +84,6 @@ public class ProductSpecificationCharacteristicRelationship {
   @JsonProperty("version")
   private String version = null;
 
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "product_specification_characteristic_id")
-  private ProductSpecificationCharacteristic productSpecificationCharacteristic;
-
   public ProductSpecificationCharacteristicRelationship baseType(String baseType) {
     this.baseType = baseType;
     return this;

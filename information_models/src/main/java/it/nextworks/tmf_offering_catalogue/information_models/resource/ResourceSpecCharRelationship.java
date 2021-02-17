@@ -51,11 +51,6 @@ public class ResourceSpecCharRelationship {
   @Embedded
   private TimePeriod validFor = null;
 
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "resource_spec_characteristic_id")
-  private ResourceSpecCharacteristic resourceSpecCharacteristic;
-
   public ResourceSpecCharRelationship type(String type) {
     this.type = type;
     return this;
@@ -195,17 +190,6 @@ public class ResourceSpecCharRelationship {
 
   public void setValidFor(TimePeriod validFor) {
     this.validFor = validFor;
-  }
-
-  public ResourceSpecCharRelationship resourceSpecCharacteristic(ResourceSpecCharacteristic resourceSpecCharacteristic){
-    this.resourceSpecCharacteristic = resourceSpecCharacteristic;
-    return this;
-  }
-
-  public ResourceSpecCharacteristic getResourceSpecCharacteristic(){ return resourceSpecCharacteristic; }
-
-  public void setResourceSpecCharacteristic(ResourceSpecCharacteristic resourceSpecCharacteristic){
-    this.resourceSpecCharacteristic = resourceSpecCharacteristic;
   }
 
   @Override
