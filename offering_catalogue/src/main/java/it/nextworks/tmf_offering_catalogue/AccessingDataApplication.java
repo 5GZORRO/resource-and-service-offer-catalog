@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 @SpringBootApplication
 @Transactional
@@ -32,17 +33,15 @@ public class AccessingDataApplication {
             ResourceCategoryRef resourceCategoryRef = new ResourceCategoryRef().name("pluto");
             ArrayList<ResourceCategoryRef> lst = new ArrayList<>();
             lst.add(resourceCategoryRef);
-            resourceCandidate = resourceCandidate.category(lst);
-            resourceCandidateRepository.save(resourceCandidate);
+            resourceCandidate = resourceCandidate.category(lst).id("12345");
+            ResourceCandidate saved = resourceCandidateRepository.save(resourceCandidate);
 
             // fetch all customers
             log.info("ResourceCandidate found with findAll():");
             log.info("-------------------------------");
-            for(ResourceCandidate tmp : resourceCandidateRepository.findAll()) {
-                log.info(tmp.getUuid());
-                log.info(tmp.getCategory().toString());
-            }
-            log.info("");
+            ResourceCandidate tmp = resourceCandidateRepository.findByResourceCandidateId("12345").get();
+            log.info(tmp.getUuid());
+            log.info("-------------------------------");
         };
     }
 }
