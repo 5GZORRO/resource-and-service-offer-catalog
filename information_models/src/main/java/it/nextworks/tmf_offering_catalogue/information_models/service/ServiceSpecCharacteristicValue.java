@@ -6,7 +6,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import it.nextworks.tmf_offering_catalogue.information_models.Any;
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 
 /**
@@ -16,14 +19,16 @@ import javax.validation.Valid;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-10T10:03:19.238Z")
 
+@Entity
+@Table(name = "service_spec_characteristic_values")
+public class ServiceSpecCharacteristicValue {
 
-
-
-public class ServiceSpecCharacteristicValue   {
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")
@@ -33,33 +38,45 @@ public class ServiceSpecCharacteristicValue   {
   private String href = null;
 
   @JsonProperty("isDefault")
+  @Column(name = "is_default")
   private Boolean isDefault = null;
 
   @JsonProperty("rangeInterval")
+  @Column(name = "range_interval")
   private String rangeInterval = null;
 
   @JsonProperty("regex")
   private String regex = null;
 
   @JsonProperty("unitOfMeasure")
+  @Column(name = "unit_of_measure")
   private String unitOfMeasure = null;
 
   @JsonProperty("uuid")
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
   @JsonProperty("validFor")
+  @Column(name = "valid_for")
+  @Embedded
   private TimePeriod validFor = null;
 
   @JsonProperty("value")
+  @Embedded
   private Any value = null;
 
   @JsonProperty("valueFrom")
+  @Column(name = "value_from")
   private Integer valueFrom = null;
 
   @JsonProperty("valueTo")
+  @Column(name = "value_to")
   private Integer valueTo = null;
 
   @JsonProperty("valueType")
+  @Column(name = "value_type")
   private String valueType = null;
 
   public ServiceSpecCharacteristicValue baseType(String baseType) {

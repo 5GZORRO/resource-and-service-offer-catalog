@@ -10,7 +10,10 @@ import java.util.List;
 
 import it.nextworks.tmf_offering_catalogue.information_models.ServiceCandidateRef;
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 
 /**
@@ -20,14 +23,16 @@ import javax.validation.Valid;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-10T10:03:19.238Z")
 
+@Entity
+@Table(name = "service_categories")
+public class ServiceCategory {
 
-
-
-public class ServiceCategory   {
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")
@@ -35,6 +40,8 @@ public class ServiceCategory   {
 
   @JsonProperty("category")
   @Valid
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "service_category_fk", referencedColumnName = "uuid")
   private List<ServiceCategoryRef> category = null;
 
   @JsonProperty("description")
@@ -50,25 +57,35 @@ public class ServiceCategory   {
   private Boolean isRoot = null;
 
   @JsonProperty("lastUpdate")
+  @Column(name = "last_update")
   private String lastUpdate = null;
 
   @JsonProperty("lifecycleStatus")
+  @Column(name = "lifecycle_status")
   private String lifecycleStatus = null;
 
   @JsonProperty("name")
   private String name = null;
 
   @JsonProperty("parentId")
+  @Column(name = "parent_id")
   private String parentId = null;
 
   @JsonProperty("serviceCandidate")
   @Valid
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "service_category_fk", referencedColumnName = "uuid")
   private List<ServiceCandidateRef> serviceCandidate = null;
 
   @JsonProperty("uuid")
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
   @JsonProperty("validFor")
+  @Column(name = "valid_for")
+  @Embedded
   private TimePeriod validFor = null;
 
   @JsonProperty("version")

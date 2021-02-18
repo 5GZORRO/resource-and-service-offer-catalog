@@ -9,7 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 
 /**
@@ -19,20 +22,23 @@ import javax.validation.Valid;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-10T10:03:19.238Z")
 
+@Entity
+@Table(name = "service_spec_characteristics")
+public class ServiceSpecCharacteristic {
 
-
-
-public class ServiceSpecCharacteristic   {
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")
   private String type = null;
 
   @JsonProperty("@valueSchemaLocation")
+  @Column(name = "value_schema_location")
   private String valueSchemaLocation = null;
 
   @JsonProperty("configurable")
@@ -51,12 +57,15 @@ public class ServiceSpecCharacteristic   {
   private String id = null;
 
   @JsonProperty("isUnique")
+  @Column(name = "is_unique")
   private Boolean isUnique = null;
 
   @JsonProperty("maxCardinality")
+  @Column(name = "max_cardinality")
   private Integer maxCardinality = null;
 
   @JsonProperty("minCardinality")
+  @Column(name = "min_cardinality")
   private Integer minCardinality = null;
 
   @JsonProperty("name")
@@ -67,19 +76,29 @@ public class ServiceSpecCharacteristic   {
 
   @JsonProperty("serviceSpecCharRelationship")
   @Valid
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "service_spec_characteristic_fk", referencedColumnName = "uuid")
   private List<ServiceSpecCharRelationship> serviceSpecCharRelationship = null;
 
   @JsonProperty("serviceSpecCharacteristicValue")
   @Valid
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "service_spec_characteristic_fk", referencedColumnName = "uuid")
   private List<ServiceSpecCharacteristicValue> serviceSpecCharacteristicValue = null;
 
   @JsonProperty("uuid")
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
   @JsonProperty("validFor")
+  @Column(name = "valid_for")
+  @Embedded
   private TimePeriod validFor = null;
 
   @JsonProperty("valueType")
+  @Column(name = "value_type")
   private String valueType = null;
 
   public ServiceSpecCharacteristic baseType(String baseType) {

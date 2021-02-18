@@ -43,6 +43,7 @@ public class ProductOfferingTerm {
   private String description = null;
 
   @JsonProperty("duration")
+  @Embedded
   private Quantity duration = null;
 
   @JsonProperty("href")

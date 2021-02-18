@@ -9,7 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.nextworks.tmf_offering_catalogue.information_models.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 
 /**
@@ -19,14 +22,16 @@ import javax.validation.Valid;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-10T10:03:19.238Z")
 
+@Entity
+@Table(name = "service_specifications")
+public class ServiceSpecification {
 
-
-
-public class ServiceSpecification   {
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")
@@ -34,6 +39,8 @@ public class ServiceSpecification   {
 
   @JsonProperty("attachment")
   @Valid
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "service_specification_fk", referencedColumnName = "uuid")
   private List<AttachmentRef> attachment = null;
 
   @JsonProperty("description")
@@ -46,12 +53,15 @@ public class ServiceSpecification   {
   private String id = null;
 
   @JsonProperty("isBundle")
+  @Column(name = "is_bundle")
   private Boolean isBundle = null;
 
   @JsonProperty("lastUpdate")
+  @Column(name = "last_update")
   private String lastUpdate = null;
 
   @JsonProperty("lifecycleStatus")
+  @Column(name = "lifecycle_status")
   private String lifecycleStatus = null;
 
   @JsonProperty("name")
@@ -59,31 +69,48 @@ public class ServiceSpecification   {
 
   @JsonProperty("relatedParty")
   @Valid
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "service_specification_fk", referencedColumnName = "uuid")
   private List<RelatedParty> relatedParty = null;
 
   @JsonProperty("resourceSpecification")
   @Valid
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "service_specification_fk", referencedColumnName = "uuid")
   private List<ResourceSpecificationRef> resourceSpecification = null;
 
   @JsonProperty("serviceLevelSpecification")
   @Valid
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "service_specification_fk", referencedColumnName = "uuid")
   private List<ServiceLevelSpecificationRef> serviceLevelSpecification = null;
 
   @JsonProperty("serviceSpecCharacteristic")
   @Valid
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "service_specification_fk", referencedColumnName = "uuid")
   private List<ServiceSpecCharacteristic> serviceSpecCharacteristic = null;
 
   @JsonProperty("serviceSpecRelationship")
   @Valid
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "service_specification_fk", referencedColumnName = "uuid")
   private List<ServiceSpecRelationship> serviceSpecRelationship = null;
 
   @JsonProperty("targetServiceSchema")
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "target_service_schema_id", referencedColumnName = "uuid")
   private TargetServiceSchema targetServiceSchema = null;
 
   @JsonProperty("uuid")
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
   @JsonProperty("validFor")
+  @Column(name = "valid_for")
+  @Embedded
   private TimePeriod validFor = null;
 
   @JsonProperty("version")
