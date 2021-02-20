@@ -37,7 +37,7 @@ public class ResourceSpecificationService {
 
     public ResourceSpecification create(ResourceSpecificationCreate resourceSpecificationCreate) {
 
-        log.info("Received request to create a Resource Specification");
+        log.info("Received request to create a Resource Specification.");
 
         final String id = UUID.randomUUID().toString();
         ResourceSpecification resourceSpecification = new ResourceSpecification()
@@ -66,14 +66,14 @@ public class ResourceSpecificationService {
 
         resourceSpecificationRepository.save(resourceSpecification);
 
-        log.info("Resource Specification created.");
+        log.info("Resource Specification created with id " + resourceSpecification.getId() + ".");
 
         return resourceSpecification;
     }
 
     public void delete(String id) throws NotExistingEntityException {
 
-        log.info("Received request to delete a Resource Specification");
+        log.info("Received request to delete Resource Specification with id " + id + ".");
 
         Optional<ResourceSpecification> toDelete = resourceSpecificationRepository.findByResourceSpecificationId(id);
         if(!toDelete.isPresent())
@@ -81,13 +81,13 @@ public class ResourceSpecificationService {
 
         resourceSpecificationRepository.delete(toDelete.get());
 
-        log.info("Resource Specification deleted.");
+        log.info("Resource Specification " + id + " deleted.");
     }
 
     public List<ResourceSpecification> list() {
 
         List<ResourceSpecification> resourceSpecifications = resourceSpecificationRepository.findAll();
-        for(ResourceSpecification rs : resourceSpecifications){
+        for(ResourceSpecification rs : resourceSpecifications) {
             Hibernate.initialize(rs.getAttachment());
             Hibernate.initialize(rs.getFeature());
             Hibernate.initialize(rs.getRelatedParty());
@@ -107,7 +107,7 @@ public class ResourceSpecificationService {
     public ResourceSpecification patch(String id, ResourceSpecificationUpdate resourceSpecificationUpdate)
             throws NotExistingEntityException {
 
-        log.info("Received request to patch a Resource Specification.");
+        log.info("Received request to patch Resource Specification with id " + id + ".");
 
         Optional<ResourceSpecification> toUpdate = resourceSpecificationRepository.findByResourceSpecificationId(id);
         if(!toUpdate.isPresent())
@@ -179,7 +179,7 @@ public class ResourceSpecificationService {
 
         resourceSpecificationRepository.save(resourceSpecification);
 
-        log.info("Resource Specification patched.");
+        log.info("Resource Specification " + id + " patched.");
 
         return resourceSpecification;
     }

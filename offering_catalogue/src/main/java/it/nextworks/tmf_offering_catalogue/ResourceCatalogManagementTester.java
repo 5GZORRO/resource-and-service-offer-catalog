@@ -13,13 +13,11 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
-@Transactional
 public class ResourceCatalogManagementTester {
 
     private static final Logger log = LoggerFactory.getLogger(ResourceCatalogManagementTester.class);
@@ -35,7 +33,7 @@ public class ResourceCatalogManagementTester {
     }
 
     @Bean
-    public CommandLineRunner demo() {
+    public CommandLineRunner resourceCatalogManagementDemo() {
         return(args) -> {
 
             ResourceSpecCharacteristicValue resourceSpecCharacteristicValue = new ResourceSpecCharacteristicValue()
@@ -63,7 +61,7 @@ public class ResourceCatalogManagementTester {
             TimePeriod validFor1 = new TimePeriod().startDateTime("2014-01-23T00:00").endDateTime("2022-05-07T00:00");
             ResourceSpecCharacteristic resourceSpecCharacteristic1 = new ResourceSpecCharacteristic()
                     .configurable(false)
-                        .description("my_vnf_provider")
+                    .description("my_vnf_provider")
                     .isUnique(true)
                     .name("my_vnf_provider")
                     .resourceSpecCharacteristicValue(values1)
@@ -75,8 +73,6 @@ public class ResourceCatalogManagementTester {
                     .name("my_resource_specification")
                     .resourceSpecCharacteristic(resourceSpecCharacteristics);
             ResourceSpecification rsSaved = resourceSpecificationService.create(resourceSpecification);
-
-            System.out.println(resourceSpecificationService.list().size());
 
             log.info("ResourceSpecification found with findByResourceSpecificationId:");
             log.info("-----------------------------------------------");

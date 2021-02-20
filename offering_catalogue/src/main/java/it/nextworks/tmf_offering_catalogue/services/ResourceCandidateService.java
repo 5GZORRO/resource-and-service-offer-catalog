@@ -62,14 +62,14 @@ public class ResourceCandidateService {
 
         resourceCandidateRepository.save(resourceCandidate);
 
-        log.info("Resource Candidate created.");
+        log.info("Resource Candidate created with id " + resourceCandidate.getId() + ".");
 
         return resourceCandidate;
     }
 
     public void delete(String id) throws NotExistingEntityException {
 
-        log.info("Received request to delete a Resource Candidate.");
+        log.info("Received request to delete Resource Candidate with id " + id + ".");
 
         Optional<ResourceCandidate> toDelete = resourceCandidateRepository.findByResourceCandidateId(id);
         if(!toDelete.isPresent())
@@ -77,13 +77,13 @@ public class ResourceCandidateService {
 
         resourceCandidateRepository.delete(toDelete.get());
 
-        log.info("Resource Candidate deleted.");
+        log.info("Resource Candidate " + id + " deleted.");
     }
 
     public List<ResourceCandidate> list() {
 
         List<ResourceCandidate> resourceCandidates = resourceCandidateRepository.findAll();
-        for(ResourceCandidate rc : resourceCandidates){
+        for(ResourceCandidate rc : resourceCandidates) {
             Hibernate.initialize(rc.getCategory());
             Hibernate.initialize(rc.getResourceSpecification());
         }
@@ -94,7 +94,7 @@ public class ResourceCandidateService {
     public ResourceCandidate patch(String id, ResourceCandidateUpdate resourceCandidateUpdate)
             throws NotExistingEntityException {
 
-        log.info("Received request to patch a Resource Candidate.");
+        log.info("Received request to patch Resource Candidate with id " + id + ".");
 
         Optional<ResourceCandidate> toUpdate = resourceCandidateRepository.findByResourceCandidateId(id);
         if(!toUpdate.isPresent())
@@ -148,7 +148,7 @@ public class ResourceCandidateService {
 
         resourceCandidateRepository.save(resourceCandidate);
 
-        log.info("Resource Candidate patched.");
+        log.info("Resource Candidate " + id + " patched.");
 
         return resourceCandidate;
     }
