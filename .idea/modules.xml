@@ -4,7 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/information_models/information_models.iml" filepath="$PROJECT_DIR$/information_models/information_models.iml" />
       <module fileurl="file://$PROJECT_DIR$/interfaces/interfaces.iml" filepath="$PROJECT_DIR$/interfaces/interfaces.iml" />
-      <module fileurl="file://$PROJECT_DIR$/offering_catalogue/offering_catalogue.iml" filepath="$PROJECT_DIR$/offering_catalogue/offering_catalogue.iml" />
+      <module fileurl="file://$PROJECT_DIR$/offering_catalog/offering_catalog.iml" filepath="$PROJECT_DIR$/offering_catalog/offering_catalog.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/tmf-offering-catalog.iml" filepath="$PROJECT_DIR$/.idea/tmf-offering-catalog.iml" />
     </modules>
   </component>
