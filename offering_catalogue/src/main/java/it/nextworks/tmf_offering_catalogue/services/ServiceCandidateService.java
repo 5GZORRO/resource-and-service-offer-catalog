@@ -2,6 +2,7 @@ package it.nextworks.tmf_offering_catalogue.services;
 
 import it.nextworks.tmf_offering_catalogue.common.exception.NotExistingEntityException;
 import it.nextworks.tmf_offering_catalogue.information_models.ServiceSpecificationRef;
+import it.nextworks.tmf_offering_catalogue.information_models.TargetServiceSchema;
 import it.nextworks.tmf_offering_catalogue.information_models.TimePeriod;
 import it.nextworks.tmf_offering_catalogue.information_models.service.ServiceCandidate;
 import it.nextworks.tmf_offering_catalogue.information_models.service.ServiceCandidateCreate;
@@ -32,7 +33,7 @@ public class ServiceCandidateService {
     private String hostname;
     @Value("${server.port}")
     private String port;
-    private static final String path = "/serviceCatalogManagement/v4/serviceCandidate/";
+    private static final String path = "/tmf-api/serviceCatalogManagement/v4/serviceCandidate/";
 
     @Autowired
     private ServiceCandidateRepository serviceCandidateRepository;
@@ -48,7 +49,7 @@ public class ServiceCandidateService {
                 .type(serviceCandidateCreate.getType())
                 .category(serviceCandidateCreate.getCategory())
                 .description(serviceCandidateCreate.getDescription())
-                .href(protocol + hostname + port + path + id)
+                .href(protocol + hostname + ":" + port + path + id)
                 .id(id)
                 .lifecycleStatus(serviceCandidateCreate.getLifecycleStatus())
                 .name(serviceCandidateCreate.getName())
@@ -82,11 +83,19 @@ public class ServiceCandidateService {
 
     public List<ServiceCandidate> list() {
 
+        log.info("Received request to retrieve all Service Candidates.");
+
         List<ServiceCandidate> serviceCandidates = serviceCandidateRepository.findAll();
         for(ServiceCandidate sc : serviceCandidates) {
-            Hibernate.initialize(sc.getCategory());
-            Hibernate.initialize(sc.getServiceSpecification().getTargetServiceSchema());
+            sc.setCategory((List<ServiceCategoryRef>) Hibernate.unproxy(sc.getCategory()));
+            sc.setServiceSpecification((ServiceSpecificationRef) Hibernate.unproxy(sc.getServiceSpecification()));
+
+            ServiceSpecificationRef ssr = sc.getServiceSpecification();
+            if(ssr != null)
+                ssr.setTargetServiceSchema((TargetServiceSchema) Hibernate.unproxy(ssr.getTargetServiceSchema()));
         }
+
+        log.info("Service Candidates retrieved.");
 
         return serviceCandidates;
     }
@@ -151,15 +160,23 @@ public class ServiceCandidateService {
 
     public ServiceCandidate get(String id) throws NotExistingEntityException {
 
+        log.info("Received request to retrieve Service Candidate with id " + id + ".");
+
         Optional<ServiceCandidate> retrieved = serviceCandidateRepository.findByServiceCandidateId(id);
         if(!retrieved.isPresent())
             throw new NotExistingEntityException("Service Candidate with id " + id + " not found in DB.");
 
-        ServiceCandidate serviceCandidate = retrieved.get();
+        ServiceCandidate sc = retrieved.get();
 
-        Hibernate.initialize(serviceCandidate.getCategory());
-        Hibernate.initialize(serviceCandidate.getServiceSpecification().getTargetServiceSchema());
+        sc.setCategory((List<ServiceCategoryRef>) Hibernate.unproxy(sc.getCategory()));
+        sc.setServiceSpecification((ServiceSpecificationRef) Hibernate.unproxy(sc.getServiceSpecification()));
 
-        return serviceCandidate;
+        ServiceSpecificationRef ssr = sc.getServiceSpecification();
+        if(ssr != null)
+            ssr.setTargetServiceSchema((TargetServiceSchema) Hibernate.unproxy(ssr.getTargetServiceSchema()));
+
+        log.info("Service Candidate " + id + " retrieved.");
+
+        return sc;
     }
 }

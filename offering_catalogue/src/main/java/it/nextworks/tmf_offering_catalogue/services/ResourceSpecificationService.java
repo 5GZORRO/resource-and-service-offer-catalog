@@ -30,7 +30,7 @@ public class ResourceSpecificationService {
     private String hostname;
     @Value("${server.port}")
     private String port;
-    private static final String path = "/resourceCatalogManagement/v2/resourceSpecification/";
+    private static final String path = "/tmf-api/resourceCatalogManagement/v2/resourceSpecification/";
 
     @Autowired
     private ResourceSpecificationRepository resourceSpecificationRepository;
@@ -48,7 +48,7 @@ public class ResourceSpecificationService {
                 .category(resourceSpecificationCreate.getCategory())
                 .description(resourceSpecificationCreate.getDescription())
                 .feature(resourceSpecificationCreate.getFeature())
-                .href(protocol + hostname + port + path + id)
+                .href(protocol + hostname + ":" + port + path + id)
                 .id(id)
                 .isBundle(resourceSpecificationCreate.isIsBundle())
                 .lifecycleStatus(resourceSpecificationCreate.getLifecycleStatus())
@@ -86,20 +86,29 @@ public class ResourceSpecificationService {
 
     public List<ResourceSpecification> list() {
 
+        log.info("Received request to retrieve all Resource Specifications.");
+
         List<ResourceSpecification> resourceSpecifications = resourceSpecificationRepository.findAll();
         for(ResourceSpecification rs : resourceSpecifications) {
-            Hibernate.initialize(rs.getAttachment());
-            Hibernate.initialize(rs.getFeature());
-            Hibernate.initialize(rs.getRelatedParty());
+            rs.setAttachment((List<AttachmentRef>) Hibernate.unproxy(rs.getAttachment()));
+            rs.setFeature((List<Feature>) Hibernate.unproxy(rs.getFeature()));
+            rs.setRelatedParty((List<RelatedParty>) Hibernate.unproxy(rs.getRelatedParty()));
 
+            rs.setResourceSpecCharacteristic((List<ResourceSpecCharacteristic>)
+                    Hibernate.unproxy(rs.getResourceSpecCharacteristic()));
             for(ResourceSpecCharacteristic rsc : rs.getResourceSpecCharacteristic()) {
-                Hibernate.initialize(rsc.getResourceSpecCharRelationship());
-                Hibernate.initialize(rsc.getResourceSpecCharacteristicValue());
+                rsc.setResourceSpecCharRelationship((List<ResourceSpecCharRelationship>)
+                        Hibernate.unproxy(rsc.getResourceSpecCharRelationship()));
+                rsc.setResourceSpecCharacteristicValue((List<ResourceSpecCharacteristicValue>)
+                        Hibernate.unproxy(rsc.getResourceSpecCharacteristicValue()));
             }
 
-            Hibernate.initialize(rs.getResourceSpecRelationship());
-            Hibernate.initialize(rs.getTargetResourceSchema());
+            rs.setResourceSpecRelationship((List<ResourceSpecRelationship>)
+                    Hibernate.unproxy(rs.getResourceSpecRelationship()));
+            rs.setTargetResourceSchema((TargetResourceSchemaRef) Hibernate.unproxy(rs.getTargetResourceSchema()));
         }
+
+        log.info("Resource Specifications retrieved.");
 
         return resourceSpecifications;
     }
@@ -186,24 +195,33 @@ public class ResourceSpecificationService {
 
     public ResourceSpecification get(String id) throws NotExistingEntityException {
 
+        log.info("Received request to retrieve Resource Specification with id " + id + ".");
+
         Optional<ResourceSpecification> retrieved = resourceSpecificationRepository.findByResourceSpecificationId(id);
         if(!retrieved.isPresent())
             throw new NotExistingEntityException("Resource Specification with id " + id + " not found in DB.");
 
-        ResourceSpecification resourceSpecification = retrieved.get();
+        ResourceSpecification rs = retrieved.get();
 
-        Hibernate.initialize(resourceSpecification.getAttachment());
-        Hibernate.initialize(resourceSpecification.getFeature());
-        Hibernate.initialize(resourceSpecification.getRelatedParty());
+        rs.setAttachment((List<AttachmentRef>) Hibernate.unproxy(rs.getAttachment()));
+        rs.setFeature((List<Feature>) Hibernate.unproxy(rs.getFeature()));
+        rs.setRelatedParty((List<RelatedParty>) Hibernate.unproxy(rs.getRelatedParty()));
 
-        for(ResourceSpecCharacteristic rsc : resourceSpecification.getResourceSpecCharacteristic()) {
-            Hibernate.initialize(rsc.getResourceSpecCharRelationship());
-            Hibernate.initialize(rsc.getResourceSpecCharacteristicValue());
+        rs.setResourceSpecCharacteristic((List<ResourceSpecCharacteristic>)
+                Hibernate.unproxy(rs.getResourceSpecCharacteristic()));
+        for(ResourceSpecCharacteristic rsc : rs.getResourceSpecCharacteristic()) {
+            rsc.setResourceSpecCharRelationship((List<ResourceSpecCharRelationship>)
+                    Hibernate.unproxy(rsc.getResourceSpecCharRelationship()));
+            rsc.setResourceSpecCharacteristicValue((List<ResourceSpecCharacteristicValue>)
+                    Hibernate.unproxy(rsc.getResourceSpecCharacteristicValue()));
         }
 
-        Hibernate.initialize(resourceSpecification.getResourceSpecRelationship());
-        Hibernate.initialize(resourceSpecification.getTargetResourceSchema());
+        rs.setResourceSpecRelationship((List<ResourceSpecRelationship>)
+                Hibernate.unproxy(rs.getResourceSpecRelationship()));
+        rs.setTargetResourceSchema((TargetResourceSchemaRef) Hibernate.unproxy(rs.getTargetResourceSchema()));
 
-        return resourceSpecification;
+        log.info("Resource Specification " + id + " retrieved.");
+
+        return rs;
     }
 }

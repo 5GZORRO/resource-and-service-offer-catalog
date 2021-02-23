@@ -28,7 +28,7 @@ public class ServiceSpecificationService {
     private String hostname;
     @Value("${server.port}")
     private String port;
-    private static final String path = "/serviceCatalogManagement/v4/serviceSpecification/";
+    private static final String path = "/tmf-api/serviceCatalogManagement/v4/serviceSpecification/";
 
     @Autowired
     private ServiceSpecificationRepository serviceSpecificationRepository;
@@ -44,7 +44,7 @@ public class ServiceSpecificationService {
                 .type(serviceSpecificationCreate.getType())
                 .attachment(serviceSpecificationCreate.getAttachment())
                 .description(serviceSpecificationCreate.getDescription())
-                .href(protocol + hostname + port + path + id)
+                .href(protocol + hostname + ":" + port + path + id)
                 .id(id)
                 .isBundle(serviceSpecificationCreate.isIsBundle())
                 .lifecycleStatus(serviceSpecificationCreate.getLifecycleStatus())
@@ -84,21 +84,32 @@ public class ServiceSpecificationService {
 
     public List<ServiceSpecification> list() {
 
+        log.info("Received request to retrieve all Service Specifications.");
+
         List<ServiceSpecification> serviceSpecifications = serviceSpecificationRepository.findAll();
         for(ServiceSpecification ss : serviceSpecifications) {
-            Hibernate.initialize(ss.getAttachment());
-            Hibernate.initialize(ss.getRelatedParty());
-            Hibernate.initialize(ss.getResourceSpecification());
-            Hibernate.initialize(ss.getServiceLevelSpecification());
+            ss.setAttachment((List<AttachmentRef>) Hibernate.unproxy(ss.getAttachment()));
+            ss.setRelatedParty((List<RelatedParty>) Hibernate.unproxy(ss.getRelatedParty()));
+            ss.setResourceSpecification((List<ResourceSpecificationRef>)
+                    Hibernate.unproxy(ss.getResourceSpecification()));
+            ss.setServiceLevelSpecification((List<ServiceLevelSpecificationRef>)
+                    Hibernate.unproxy(ss.getServiceLevelSpecification()));
 
+            ss.setServiceSpecCharacteristic((List<ServiceSpecCharacteristic>)
+                    Hibernate.unproxy(ss.getServiceSpecCharacteristic()));
             for(ServiceSpecCharacteristic ssc : ss.getServiceSpecCharacteristic()){
-                Hibernate.initialize(ssc.getServiceSpecCharRelationship());
-                Hibernate.initialize(ssc.getServiceSpecCharacteristicValue());
+                ssc.setServiceSpecCharRelationship((List<ServiceSpecCharRelationship>)
+                        Hibernate.unproxy(ssc.getServiceSpecCharRelationship()));
+                ssc.setServiceSpecCharacteristicValue((List<ServiceSpecCharacteristicValue>)
+                        Hibernate.unproxy(ssc.getServiceSpecCharacteristicValue()));
             }
 
-            Hibernate.initialize(ss.getServiceSpecRelationship());
-            Hibernate.initialize(ss.getTargetServiceSchema());
+            ss.setServiceSpecRelationship((List<ServiceSpecRelationship>)
+                    Hibernate.unproxy(ss.getServiceSpecRelationship()));
+            ss.setTargetServiceSchema((TargetServiceSchema) Hibernate.unproxy(ss.getTargetServiceSchema()));
         }
+
+        log.info("Service Specifications retrieved.");
 
         return serviceSpecifications;
     }
@@ -191,25 +202,36 @@ public class ServiceSpecificationService {
 
     public ServiceSpecification get(String id) throws NotExistingEntityException {
 
+        log.info("Received request to retrieve Service Specification with id " + id + ".");
+
         Optional<ServiceSpecification> retrieved = serviceSpecificationRepository.findByServiceSpecificationId(id);
         if(!retrieved.isPresent())
             throw new NotExistingEntityException("Service Specification with id " + id + " not found in DB.");
 
-        ServiceSpecification serviceSpecification = retrieved.get();
+        ServiceSpecification ss = retrieved.get();
 
-        Hibernate.initialize(serviceSpecification.getAttachment());
-        Hibernate.initialize(serviceSpecification.getRelatedParty());
-        Hibernate.initialize(serviceSpecification.getResourceSpecification());
-        Hibernate.initialize(serviceSpecification.getServiceLevelSpecification());
+        ss.setAttachment((List<AttachmentRef>) Hibernate.unproxy(ss.getAttachment()));
+        ss.setRelatedParty((List<RelatedParty>) Hibernate.unproxy(ss.getRelatedParty()));
+        ss.setResourceSpecification((List<ResourceSpecificationRef>)
+                Hibernate.unproxy(ss.getResourceSpecification()));
+        ss.setServiceLevelSpecification((List<ServiceLevelSpecificationRef>)
+                Hibernate.unproxy(ss.getServiceLevelSpecification()));
 
-        for(ServiceSpecCharacteristic ssc : serviceSpecification.getServiceSpecCharacteristic()){
-            Hibernate.initialize(ssc.getServiceSpecCharRelationship());
-            Hibernate.initialize(ssc.getServiceSpecCharacteristicValue());
+        ss.setServiceSpecCharacteristic((List<ServiceSpecCharacteristic>)
+                Hibernate.unproxy(ss.getServiceSpecCharacteristic()));
+        for(ServiceSpecCharacteristic ssc : ss.getServiceSpecCharacteristic()){
+            ssc.setServiceSpecCharRelationship((List<ServiceSpecCharRelationship>)
+                    Hibernate.unproxy(ssc.getServiceSpecCharRelationship()));
+            ssc.setServiceSpecCharacteristicValue((List<ServiceSpecCharacteristicValue>)
+                    Hibernate.unproxy(ssc.getServiceSpecCharacteristicValue()));
         }
 
-        Hibernate.initialize(serviceSpecification.getServiceSpecRelationship());
-        Hibernate.initialize(serviceSpecification.getTargetServiceSchema());
+        ss.setServiceSpecRelationship((List<ServiceSpecRelationship>)
+                Hibernate.unproxy(ss.getServiceSpecRelationship()));
+        ss.setTargetServiceSchema((TargetServiceSchema) Hibernate.unproxy(ss.getTargetServiceSchema()));
 
-        return serviceSpecification;
+        log.info("Service Specification " + id + " retrieved.");
+
+        return ss;
     }
 }

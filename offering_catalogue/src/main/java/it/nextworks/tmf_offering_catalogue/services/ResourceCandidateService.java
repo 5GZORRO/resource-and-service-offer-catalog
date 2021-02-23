@@ -32,7 +32,7 @@ public class ResourceCandidateService {
     private String hostname;
     @Value("${server.port}")
     private String port;
-    private static final String path = "/resourceCatalogManagement/v2/resourceCandidate/";
+    private static final String path = "/tmf-api/resourceCatalogManagement/v2/resourceCandidate/";
 
     @Autowired
     private ResourceCandidateRepository resourceCandidateRepository;
@@ -48,7 +48,7 @@ public class ResourceCandidateService {
                 .type(resourceCandidateCreate.getType())
                 .category(resourceCandidateCreate.getCategory())
                 .description(resourceCandidateCreate.getDescription())
-                .href(protocol + hostname + port + path + id)
+                .href(protocol + hostname + ":" + port + path + id)
                 .id(id)
                 .lifecycleStatus(resourceCandidateCreate.getLifecycleStatus())
                 .name(resourceCandidateCreate.getName())
@@ -82,11 +82,15 @@ public class ResourceCandidateService {
 
     public List<ResourceCandidate> list() {
 
+        log.info("Received request to retrieve all Resource Candidates.");
+
         List<ResourceCandidate> resourceCandidates = resourceCandidateRepository.findAll();
         for(ResourceCandidate rc : resourceCandidates) {
-            Hibernate.initialize(rc.getCategory());
-            Hibernate.initialize(rc.getResourceSpecification());
+            rc.setCategory((List<ResourceCategoryRef>) Hibernate.unproxy(rc.getCategory()));
+            rc.setResourceSpecification((ResourceSpecificationRef) Hibernate.unproxy(rc.getResourceSpecification()));
         }
+
+        log.info("Resource Candidates retrieved.");
 
         return resourceCandidates;
     }
@@ -155,15 +159,19 @@ public class ResourceCandidateService {
 
     public ResourceCandidate get(String id) throws NotExistingEntityException {
 
+        log.info("Received request to retrieve Resource Candidate with id " + id + ".");
+
         Optional<ResourceCandidate> retrieved = resourceCandidateRepository.findByResourceCandidateId(id);
         if(!retrieved.isPresent())
             throw new NotExistingEntityException("Resource Candidate with id " + id + " not found in DB.");
 
-        ResourceCandidate resourceCandidate = retrieved.get();
+        ResourceCandidate rc = retrieved.get();
 
-        Hibernate.initialize(resourceCandidate.getCategory());
-        Hibernate.initialize(resourceCandidate.getResourceSpecification());
+        rc.setCategory((List<ResourceCategoryRef>) Hibernate.unproxy(rc.getCategory()));
+        rc.setResourceSpecification((ResourceSpecificationRef) Hibernate.unproxy(rc.getResourceSpecification()));
 
-        return resourceCandidate;
+        log.info("Resource Candidate " + id + " retrieved.");
+
+        return rc;
     }
 }
