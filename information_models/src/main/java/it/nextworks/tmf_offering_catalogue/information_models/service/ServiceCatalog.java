@@ -1,6 +1,8 @@
 package it.nextworks.tmf_offering_catalogue.information_models.service;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -59,7 +61,7 @@ public class ServiceCatalog   {
   @Valid
   private List<RelatedParty> relatedParty = null;
 
-  @JsonProperty("uuid")
+  @JsonIgnore
   private String uuid = null;
 
   @JsonProperty("validFor")

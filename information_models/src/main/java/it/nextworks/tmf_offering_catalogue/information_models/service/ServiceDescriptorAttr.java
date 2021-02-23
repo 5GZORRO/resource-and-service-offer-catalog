@@ -1,6 +1,8 @@
 package it.nextworks.tmf_offering_catalogue.information_models.service;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
@@ -18,7 +20,7 @@ public class ServiceDescriptorAttr   {
   @JsonProperty("name")
   private String name = null;
 
-  @JsonProperty("uuid")
+  @JsonIgnore
   private String uuid = null;
 
   @JsonProperty("value")

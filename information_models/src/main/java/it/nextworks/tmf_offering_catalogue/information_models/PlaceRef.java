@@ -6,8 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import it.nextworks.tmf_offering_catalogue.information_models.product.ProductOffering;
-import it.nextworks.tmf_offering_catalogue.information_models.product.ProductOfferingPrice;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 
@@ -52,7 +50,7 @@ public class PlaceRef {
   @JsonProperty("role")
   private String role = null;
 
-  @JsonProperty("uuid")
+  @JsonIgnore
   @Id
   @GeneratedValue(generator = "uuid")
   @GenericGenerator(name = "uuid", strategy = "uuid2")

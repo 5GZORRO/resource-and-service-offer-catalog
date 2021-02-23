@@ -66,7 +66,7 @@ public class Attachment {
   @JsonProperty("url")
   private String url = null;
 
-  @JsonProperty("uuid")
+  @JsonIgnore
   @Id
   @GeneratedValue(generator = "uuid")
   @GenericGenerator(name = "uuid", strategy = "uuid2")

@@ -46,7 +46,7 @@ public class MarketSegmentRef {
   @JsonProperty("name")
   private String name = null;
 
-  @JsonProperty("uuid")
+  @JsonIgnore
   @Id
   @GeneratedValue(generator = "uuid")
   @GenericGenerator(name = "uuid", strategy = "uuid2")

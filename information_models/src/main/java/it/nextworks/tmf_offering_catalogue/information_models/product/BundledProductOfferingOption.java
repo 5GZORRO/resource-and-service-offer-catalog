@@ -48,7 +48,7 @@ public class BundledProductOfferingOption {
   @Column(name = "number_rel_offer_upper_limit")
   private Integer numberRelOfferUpperLimit = null;
 
-  @JsonProperty("uuid")
+  @JsonIgnore
   @Id
   @GeneratedValue(generator = "uuid")
   @GenericGenerator(name = "uuid", strategy = "uuid2")

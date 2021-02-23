@@ -2,6 +2,7 @@ package it.nextworks.tmf_offering_catalogue.information_models.product;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -49,7 +50,7 @@ public class TaxItem {
   @Column(name = "tax_rate")
   private Float taxRate = null;
 
-  @JsonProperty("uuid")
+  @JsonIgnore
   @Id
   @GeneratedValue(generator = "uuid")
   @GenericGenerator(name = "uuid", strategy = "uuid2")

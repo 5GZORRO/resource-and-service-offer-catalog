@@ -80,7 +80,7 @@ public class ResourceCategory {
   @JoinColumn(name = "resource_category_fk", referencedColumnName = "uuid")
   private List<ResourceCandidateRef> resourceCandidate = null;
 
-  @JsonProperty("uuid")
+  @JsonIgnore
   @Id
   @GeneratedValue(generator = "uuid")
   @GenericGenerator(name = "uuid", strategy = "uuid2")

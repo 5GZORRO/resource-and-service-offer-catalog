@@ -36,7 +36,7 @@ public class TargetProductSchema {
   @JsonProperty("href")
   private String href = null;
 
-  @JsonProperty("uuid")
+  @JsonIgnore
   @Id
   @GeneratedValue(generator = "uuid")
   @GenericGenerator(name = "uuid", strategy = "uuid2")

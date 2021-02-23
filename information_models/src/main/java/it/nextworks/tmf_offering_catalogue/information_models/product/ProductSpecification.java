@@ -120,7 +120,7 @@ public class ProductSpecification {
   @JoinColumn(name = "target_product_schema_id", referencedColumnName = "uuid")
   private TargetProductSchema targetProductSchema = null;
 
-  @JsonProperty("uuid")
+  @JsonIgnore
   @Id
   @GeneratedValue(generator = "uuid")
   @GenericGenerator(name = "uuid", strategy = "uuid2")

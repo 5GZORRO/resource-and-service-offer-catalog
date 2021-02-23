@@ -47,7 +47,7 @@ public class ResourceSpecRelationship {
   @JsonProperty("role")
   private String role = null;
 
-  @JsonProperty("uuid")
+  @JsonIgnore
   @Id
   @GeneratedValue(generator = "uuid")
   @GenericGenerator(name = "uuid", strategy = "uuid2")

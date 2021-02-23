@@ -54,7 +54,7 @@ public class ProductSpecificationCharacteristicValue {
   @Column(name = "unit_of_measure")
   private String unitOfMeasure = null;
 
-  @JsonProperty("uuid")
+  @JsonIgnore
   @Id
   @GeneratedValue(generator = "uuid")
   @GenericGenerator(name = "uuid", strategy = "uuid2")

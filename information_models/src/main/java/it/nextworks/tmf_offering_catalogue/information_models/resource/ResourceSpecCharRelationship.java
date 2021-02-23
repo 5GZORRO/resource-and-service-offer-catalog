@@ -40,7 +40,7 @@ public class ResourceSpecCharRelationship {
   @Column(name = "relationship_type")
   private String relationshipType = null;
 
-  @JsonProperty("uuid")
+  @JsonIgnore
   @Id
   @GeneratedValue(generator = "uuid")
   @GenericGenerator(name = "uuid", strategy = "uuid2")

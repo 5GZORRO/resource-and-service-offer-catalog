@@ -2,6 +2,7 @@ package it.nextworks.tmf_offering_catalogue.information_models.resource;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -102,7 +103,7 @@ public class ResourceSpecification   {
   @JoinColumn(name = "target_resource_schema_id", referencedColumnName = "uuid")
   private TargetResourceSchemaRef targetResourceSchema = null;
 
-  @JsonProperty("uuid")
+  @JsonIgnore
   @Id
   @GeneratedValue(generator = "uuid")
   @GenericGenerator(name = "uuid", strategy = "uuid2")
