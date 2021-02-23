@@ -74,13 +74,13 @@ public class ResourceSpecCharacteristic   {
 
   @JsonProperty("resourceSpecCharRelationship")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "resource_spec_characteristic_fk", referencedColumnName = "uuid")
   private List<ResourceSpecCharRelationship> resourceSpecCharRelationship = null;
 
   @JsonProperty("resourceSpecCharacteristicValue")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "resource_spec_characteristic_fk", referencedColumnName = "uuid")
   private List<ResourceSpecCharacteristicValue> resourceSpecCharacteristicValue = null;
 

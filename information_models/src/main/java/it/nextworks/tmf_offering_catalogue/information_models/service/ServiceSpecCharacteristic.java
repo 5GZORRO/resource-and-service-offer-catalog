@@ -76,13 +76,13 @@ public class ServiceSpecCharacteristic {
 
   @JsonProperty("serviceSpecCharRelationship")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "service_spec_characteristic_fk", referencedColumnName = "uuid")
   private List<ServiceSpecCharRelationship> serviceSpecCharRelationship = null;
 
   @JsonProperty("serviceSpecCharacteristicValue")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "service_spec_characteristic_fk", referencedColumnName = "uuid")
   private List<ServiceSpecCharacteristicValue> serviceSpecCharacteristicValue = null;
 

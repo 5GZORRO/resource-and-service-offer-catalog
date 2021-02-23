@@ -43,31 +43,31 @@ public class ProductOffering {
 
   @JsonProperty("agreement")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "product_offering_fk", referencedColumnName = "uuid")
   private List<AgreementRef> agreement = null;
 
   @JsonProperty("attachment")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "product_offering_fk", referencedColumnName = "uuid")
   private List<AttachmentRefOrValue> attachment = null;
 
   @JsonProperty("bundledProductOffering")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "product_offering_fk", referencedColumnName = "uuid")
   private List<BundledProductOffering> bundledProductOffering = null;
 
   @JsonProperty("category")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "product_offering_fk", referencedColumnName = "uuid")
   private List<CategoryRef> category = null;
 
   @JsonProperty("channel")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "product_offering_fk", referencedColumnName = "uuid")
   private List<ChannelRef> channel = null;
 
@@ -98,7 +98,7 @@ public class ProductOffering {
 
   @JsonProperty("marketSegment")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "product_offering_fk", referencedColumnName = "uuid")
   private List<MarketSegmentRef> marketSegment = null;
 
@@ -107,45 +107,45 @@ public class ProductOffering {
 
   @JsonProperty("place")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "product_offering_fk", referencedColumnName = "uuid")
   private List<PlaceRef> place = null;
 
   @JsonProperty("prodSpecCharValueUse")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "product_offering_fk", referencedColumnName = "uuid")
   private List<ProductSpecificationCharacteristicValueUse> prodSpecCharValueUse = null;
 
   @JsonProperty("productOfferingPrice")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "product_offering_fk", referencedColumnName = "uuid")
   private List<ProductOfferingPriceRef> productOfferingPrice = null;
 
   @JsonProperty("productOfferingTerm")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "product_offering_fk", referencedColumnName = "uuid")
   private List<ProductOfferingTerm> productOfferingTerm = null;
 
   @JsonProperty("productSpecification")
-  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "product_specification_id", referencedColumnName = "uuid")
   private ProductSpecificationRef productSpecification = null;
 
   @JsonProperty("resourceCandidate")
-  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "resource_candidate_id", referencedColumnName = "uuid")
   private ResourceCandidateRef resourceCandidate = null;
 
   @JsonProperty("serviceCandidate")
-  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "service_candidate_id", referencedColumnName = "uuid")
   private ServiceCandidateRef serviceCandidate = null;
 
   @JsonProperty("serviceLevelAgreement")
-  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "service_level_agreement_id", referencedColumnName = "uuid")
   private SLARef serviceLevelAgreement = null;
 

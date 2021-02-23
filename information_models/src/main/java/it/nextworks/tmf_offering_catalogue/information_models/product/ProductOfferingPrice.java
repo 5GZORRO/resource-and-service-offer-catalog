@@ -42,13 +42,13 @@ public class ProductOfferingPrice {
 
   @JsonProperty("bundledPopRelationship")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "product_offering_price_fk", referencedColumnName = "uuid")
   private List<BundledProductOfferingPriceRelationship> bundledPopRelationship = null;
 
   @JsonProperty("constraint")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "product_offering_price_fk", referencedColumnName = "uuid")
   private List<ConstraintRef> constraint = null;
 
@@ -81,13 +81,13 @@ public class ProductOfferingPrice {
 
   @JsonProperty("place")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "product_offering_price_fk", referencedColumnName = "uuid")
   private List<PlaceRef> place = null;
 
   @JsonProperty("popRelationship")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "product_offering_price_fk", referencedColumnName = "uuid")
   private List<ProductOfferingPriceRelationship> popRelationship = null;
 
@@ -101,19 +101,19 @@ public class ProductOfferingPrice {
 
   @JsonProperty("pricingLogicAlgorithm")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "product_offering_price_fk", referencedColumnName = "uuid")
   private List<PricingLogicAlgorithm> pricingLogicAlgorithm = null;
 
   @JsonProperty("prodSpecCharValueUse")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "product_offering_price_fk", referencedColumnName = "uuid")
   private List<ProductSpecificationCharacteristicValueUse> prodSpecCharValueUse = null;
 
   @JsonProperty("productOfferingTerm")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "product_offering_price_fk", referencedColumnName = "uuid")
   private List<ProductOfferingTerm> productOfferingTerm = null;
 
@@ -127,7 +127,7 @@ public class ProductOfferingPrice {
 
   @JsonProperty("tax")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "product_offering_price_fk", referencedColumnName = "uuid")
   private List<TaxItem> tax = null;
 

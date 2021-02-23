@@ -73,12 +73,12 @@ public class ProductSpecificationCharacteristicValueUse {
 
   @JsonProperty("productSpecCharacteristicValue")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "product_specification_characteristic_value_use_fk", referencedColumnName = "uuid")
   private List<ProductSpecificationCharacteristicValue> productSpecCharacteristicValue = null;
 
   @JsonProperty("productSpecification")
-  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "product_specification_id", referencedColumnName = "uuid")
   private ProductSpecificationRef productSpecification = null;
 

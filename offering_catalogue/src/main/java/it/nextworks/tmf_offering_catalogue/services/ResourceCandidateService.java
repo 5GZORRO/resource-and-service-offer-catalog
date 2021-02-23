@@ -119,8 +119,13 @@ public class ResourceCandidateService {
             resourceCandidate.setType(type);
 
         final List<ResourceCategoryRef> category = resourceCandidateUpdate.getCategory();
-        if(category != null)
-            resourceCandidate.setCategory(category);
+        if(category != null) {
+            resourceCandidate.getCategory().clear();
+            resourceCandidate.getCategory().addAll(category);
+        }
+        else
+            resourceCandidate.setCategory((List<ResourceCategoryRef>)
+                    Hibernate.unproxy(resourceCandidate.getCategory()));
 
         final String description = resourceCandidateUpdate.getDescription();
         if(description != null)
@@ -141,6 +146,9 @@ public class ResourceCandidateService {
         final ResourceSpecificationRef resourceSpecification = resourceCandidateUpdate.getResourceSpecification();
         if(resourceSpecification != null)
             resourceCandidate.setResourceSpecification(resourceSpecification);
+        else
+            resourceCandidate.setResourceSpecification((ResourceSpecificationRef)
+                    Hibernate.unproxy(resourceCandidate.getResourceSpecification()));
 
         final TimePeriod validFor = resourceCandidateUpdate.getValidFor();
         if(validFor != null)

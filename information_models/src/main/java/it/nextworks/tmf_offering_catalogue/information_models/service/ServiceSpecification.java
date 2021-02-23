@@ -39,7 +39,7 @@ public class ServiceSpecification {
 
   @JsonProperty("attachment")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "service_specification_fk", referencedColumnName = "uuid")
   private List<AttachmentRef> attachment = null;
 
@@ -69,36 +69,36 @@ public class ServiceSpecification {
 
   @JsonProperty("relatedParty")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "service_specification_fk", referencedColumnName = "uuid")
   private List<RelatedParty> relatedParty = null;
 
   @JsonProperty("resourceSpecification")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "service_specification_fk", referencedColumnName = "uuid")
   private List<ResourceSpecificationRef> resourceSpecification = null;
 
   @JsonProperty("serviceLevelSpecification")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "service_specification_fk", referencedColumnName = "uuid")
   private List<ServiceLevelSpecificationRef> serviceLevelSpecification = null;
 
   @JsonProperty("serviceSpecCharacteristic")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "service_specification_fk", referencedColumnName = "uuid")
   private List<ServiceSpecCharacteristic> serviceSpecCharacteristic = null;
 
   @JsonProperty("serviceSpecRelationship")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "service_specification_fk", referencedColumnName = "uuid")
   private List<ServiceSpecRelationship> serviceSpecRelationship = null;
 
   @JsonProperty("targetServiceSchema")
-  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "target_service_schema_id", referencedColumnName = "uuid")
   private TargetServiceSchema targetServiceSchema = null;
 

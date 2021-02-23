@@ -68,7 +68,7 @@ public class ProductSpecificationRef {
   private String name = null;
 
   @JsonProperty("targetProductSchema")
-  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "target_product_schema_id", referencedColumnName = "uuid")
   private TargetProductSchema targetProductSchema = null;
 

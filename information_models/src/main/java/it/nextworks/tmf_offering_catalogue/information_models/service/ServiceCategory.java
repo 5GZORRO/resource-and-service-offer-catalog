@@ -40,7 +40,7 @@ public class ServiceCategory {
 
   @JsonProperty("category")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "service_category_fk", referencedColumnName = "uuid")
   private List<ServiceCategoryRef> category = null;
 
@@ -73,7 +73,7 @@ public class ServiceCategory {
 
   @JsonProperty("serviceCandidate")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "service_category_fk", referencedColumnName = "uuid")
   private List<ServiceCandidateRef> serviceCandidate = null;
 

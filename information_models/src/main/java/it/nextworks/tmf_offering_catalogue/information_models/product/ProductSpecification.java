@@ -44,7 +44,7 @@ public class ProductSpecification {
 
   @JsonProperty("attachment")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "product_specification_fk", referencedColumnName = "uuid")
   private List<AttachmentRefOrValue> attachment = null;
 
@@ -53,7 +53,7 @@ public class ProductSpecification {
 
   @JsonProperty("bundledProductSpecification")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "product_specification_fk", referencedColumnName = "uuid")
   private List<BundledProductSpecification> bundledProductSpecification = null;
 
@@ -87,36 +87,36 @@ public class ProductSpecification {
 
   @JsonProperty("productSpecCharacteristic")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "product_specification_fk", referencedColumnName = "uuid")
   private List<ProductSpecificationCharacteristic> productSpecCharacteristic = null;
 
   @JsonProperty("productSpecificationRelationship")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "product_specification_fk", referencedColumnName = "uuid")
   private List<ProductSpecificationRelationship> productSpecificationRelationship = null;
 
   @JsonProperty("relatedParty")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "product_specification_fk", referencedColumnName = "uuid")
   private List<RelatedParty> relatedParty = null;
 
   @JsonProperty("resourceSpecification")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "product_specification_fk", referencedColumnName = "uuid")
   private List<ResourceSpecificationRef> resourceSpecification = null;
 
   @JsonProperty("serviceSpecification")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "product_specification_fk", referencedColumnName = "uuid")
   private List<ServiceSpecificationRef> serviceSpecification = null;
 
   @JsonProperty("targetProductSchema")
-  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "target_product_schema_id", referencedColumnName = "uuid")
   private TargetProductSchema targetProductSchema = null;
 

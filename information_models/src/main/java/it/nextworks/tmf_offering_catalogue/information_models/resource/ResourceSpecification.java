@@ -42,7 +42,7 @@ public class ResourceSpecification   {
 
   @JsonProperty("attachment")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "resource_specification_fk", referencedColumnName = "uuid")
   private List<AttachmentRef> attachment = null;
 
@@ -54,7 +54,7 @@ public class ResourceSpecification   {
 
   @JsonProperty("feature")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "resource_specification_fk", referencedColumnName = "uuid")
   private List<Feature> feature = null;
 
@@ -81,24 +81,24 @@ public class ResourceSpecification   {
 
   @JsonProperty("relatedParty")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "resource_specification_fk", referencedColumnName = "uuid")
   private List<RelatedParty> relatedParty = null;
 
   @JsonProperty("resourceSpecCharacteristic")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "resource_specification_fk", referencedColumnName = "uuid")
   private List<ResourceSpecCharacteristic> resourceSpecCharacteristic = null;
 
   @JsonProperty("resourceSpecRelationship")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "resource_specification_fk", referencedColumnName = "uuid")
   private List<ResourceSpecRelationship> resourceSpecRelationship = null;
 
   @JsonProperty("targetResourceSchema")
-  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "target_resource_schema_id", referencedColumnName = "uuid")
   private TargetResourceSchemaRef targetResourceSchema = null;
 

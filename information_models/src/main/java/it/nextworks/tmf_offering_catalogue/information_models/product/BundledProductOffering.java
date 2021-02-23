@@ -40,7 +40,7 @@ public class BundledProductOffering {
   private String type = null;
 
   @JsonProperty("bundledProductOfferingOption")
-  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "bundled_product_offering_option_id", referencedColumnName = "uuid")
   private BundledProductOfferingOption bundledProductOfferingOption = null;
 

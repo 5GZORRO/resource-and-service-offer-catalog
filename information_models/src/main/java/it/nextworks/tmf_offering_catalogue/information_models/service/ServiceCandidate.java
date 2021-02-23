@@ -41,7 +41,7 @@ public class ServiceCandidate {
 
   @JsonProperty("category")
   @Valid
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "service_candidate_fk", referencedColumnName = "uuid")
   private List<ServiceCategoryRef> category = null;
 
@@ -66,7 +66,7 @@ public class ServiceCandidate {
   private String name = null;
 
   @JsonProperty("serviceSpecification")
-  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "service_specification_id", referencedColumnName = "uuid")
   private ServiceSpecificationRef serviceSpecification = null;
 

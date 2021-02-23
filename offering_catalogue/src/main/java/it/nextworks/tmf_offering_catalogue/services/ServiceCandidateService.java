@@ -124,8 +124,12 @@ public class ServiceCandidateService {
             serviceCandidate.setType(type);
 
         final List<ServiceCategoryRef> category = serviceCandidateUpdate.getCategory();
-        if(category != null)
-            serviceCandidate.setCategory(category);
+        if(category != null) {
+            serviceCandidate.getCategory().clear();
+            serviceCandidate.getCategory().addAll(category);
+        }
+        else
+            serviceCandidate.setCategory((List<ServiceCategoryRef>) Hibernate.unproxy(serviceCandidate.getCategory()));
 
         final String description = serviceCandidateUpdate.getDescription();
         if(description != null)
@@ -142,6 +146,14 @@ public class ServiceCandidateService {
         final ServiceSpecificationRef serviceSpecification = serviceCandidateUpdate.getServiceSpecification();
         if(serviceSpecification != null)
             serviceCandidate.setServiceSpecification(serviceSpecification);
+        else {
+            serviceCandidate.setServiceSpecification((ServiceSpecificationRef)
+                    Hibernate.unproxy(serviceCandidate.getServiceSpecification()));
+
+            ServiceSpecificationRef ssr = serviceCandidate.getServiceSpecification();
+            if(ssr != null)
+                ssr.setTargetServiceSchema((TargetServiceSchema) Hibernate.unproxy(ssr.getTargetServiceSchema()));
+        }
 
         final TimePeriod validFor = serviceCandidateUpdate.getValidFor();
         if(validFor != null)

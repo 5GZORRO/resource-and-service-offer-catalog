@@ -47,7 +47,7 @@ public class ServiceSpecificationRef {
   private String name = null;
 
   @JsonProperty("targetServiceSchema")
-  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "target_service_schema_id", referencedColumnName = "uuid")
   private TargetServiceSchema targetServiceSchema = null;
 
