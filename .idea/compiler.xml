@@ -15,6 +15,7 @@
       <module name="information_models" target="8" />
       <module name="interfaces" target="8" />
       <module name="offering_catalog" target="8" />
+      <module name="tmf-offering-catalog" target="1.5" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

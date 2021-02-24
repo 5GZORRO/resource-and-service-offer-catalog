@@ -5,7 +5,8 @@
       <list>
         <option value="$PROJECT_DIR$/information_models/pom.xml" />
         <option value="$PROJECT_DIR$/interfaces/pom.xml" />
-        <option value="$PROJECT_DIR$/offering_catalogue/pom.xml" />
+        <option value="$PROJECT_DIR$/offering_catalog/pom.xml" />
+        <option value="$PROJECT_DIR$/pom.xml" />
       </list>
     </option>
   </component>
