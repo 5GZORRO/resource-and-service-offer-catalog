@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 public class serviceSpecificationController implements ServiceSpecificationInterface {
@@ -48,28 +47,30 @@ public class serviceSpecificationController implements ServiceSpecificationInter
             })
     })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK", response = ServiceSpecification.class),
+            //@ApiResponse(code = 200, message = "OK", response = ServiceSpecification.class),
             @ApiResponse(code = 201, message = "Created", response = ServiceSpecification.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found"),
-            @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-            @ApiResponse(code = 409, message = "Conflict", response = Error.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+            //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
+            //@ApiResponse(code = 404, message = "Not Found"),
+            //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
+            //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/serviceCatalogManagement/v4/serviceSpecification",
             produces = { "application/json;charset=utf-8" },
             consumes = { "application/json;charset=utf-8" },
             method = RequestMethod.POST)
-    public ResponseEntity<ServiceSpecification>
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<?>
     createServiceSpecification(@ApiParam(value = "The ServiceSpecification to be created", required = true )
                                @Valid @RequestBody ServiceSpecificationCreate serviceSpecification) {
 
         log.info("Web-Server: Received request to create a Service Specification.");
 
         if(serviceSpecification == null) {
-            log.error("Web-Server: Invalid request body (serviceSpecification) received'");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            log.error("Web-Server: Invalid request body (serviceSpecification) received.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Invalid request body (serviceSpecification) received.");
         }
 
         ServiceSpecification ss = serviceSpecificationService.create(serviceSpecification);
@@ -89,19 +90,20 @@ public class serviceSpecificationController implements ServiceSpecificationInter
             })
     })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK"),
+            //@ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 204, message = "Deleted"),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found", response = Error.class),
-            @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-            @ApiResponse(code = 409, message = "Conflict", response = Error.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+            //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
+            @ApiResponse(code = 404, message = "Not Found", response = String.class),
+            //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
+            //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/serviceCatalogManagement/v4/serviceSpecification/{id}",
             produces = { "application/json;charset=utf-8" },
             method = RequestMethod.DELETE)
-    public ResponseEntity<Void>
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public ResponseEntity<?>
     deleteServiceSpecification(@ApiParam(value = "Identifier of the ServiceSpecification", required = true)
                                @PathVariable("id") String id) {
 
@@ -109,15 +111,14 @@ public class serviceSpecificationController implements ServiceSpecificationInter
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
         }
 
         try {
             serviceSpecificationService.delete(id);
         } catch (NotExistingEntityException e) {
-            log.error("Web-Server: ");
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
         log.info("Web-Server: Service Specification " + id + " deleted.");
@@ -137,17 +138,17 @@ public class serviceSpecificationController implements ServiceSpecificationInter
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success", response = ServiceSpecification.class, responseContainer = "List"),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found", response = Error.class),
-            @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-            @ApiResponse(code = 409, message = "Conflict", response = Error.class),
+            //@ApiResponse(code = 400, message = "Bad Request", response = Error.class),
+            //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+            //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
+            //@ApiResponse(code = 404, message = "Not Found", response = Error.class),
+            //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
+            //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/serviceCatalogManagement/v4/serviceSpecification",
             produces = { "application/json;charset=utf-8" },
             method = RequestMethod.GET)
-    public ResponseEntity<List<ServiceSpecification>>
+    public ResponseEntity<?>
     listServiceSpecification(@ApiParam(value = "Comma-separated properties to be provided in response")
                              @Valid @RequestParam(value = "fields", required = false) String fields,
                              @ApiParam(value = "Requested number of resources to be provided in response")
@@ -169,19 +170,19 @@ public class serviceSpecificationController implements ServiceSpecificationInter
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Updated", response = ServiceSpecification.class),
-            @ApiResponse(code = 204, message = "No Content"),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found", response = Error.class),
-            @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-            @ApiResponse(code = 409, message = "Conflict", response = Error.class),
+            //@ApiResponse(code = 204, message = "No Content"),
+            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+            //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
+            @ApiResponse(code = 404, message = "Not Found", response = String.class),
+            //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
+            //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/serviceCatalogManagement/v4/serviceSpecification/{id}",
             produces = { "application/json;charset=utf-8" },
             consumes = { "application/json;charset=utf-8" },
             method = RequestMethod.PATCH)
-    public ResponseEntity<ServiceSpecification>
+    public ResponseEntity<?>
     patchServiceSpecification(@ApiParam(value = "Identifier of the ServiceSpecification",required = true)
                               @PathVariable("id") String id,
                               @ApiParam(value = "The ServiceSpecification to be updated" ,required = true )
@@ -191,26 +192,26 @@ public class serviceSpecificationController implements ServiceSpecificationInter
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
         }
 
         if(serviceSpecification == null) {
             log.error("Web-Server: Invalid request body (serviceSpecification) received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Invalid request body (serviceSpecification) received.");
         }
 
         ServiceSpecification ss;
         try {
             ss = serviceSpecificationService.patch(id, serviceSpecification);
         } catch (NotExistingEntityException e) {
-            log.error("Web-Server: ");
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
         log.info("Web-Server: Service Specification " + id + " patched.");
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(ss);
+        return ResponseEntity.status(HttpStatus.OK).body(ss);
     }
 
     @ApiOperation(value = "Retrieves a ServiceSpecification by ID", nickname = "retrieveServiceSpecification",
@@ -225,17 +226,17 @@ public class serviceSpecificationController implements ServiceSpecificationInter
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success", response = ServiceSpecification.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found", response = Error.class),
-            @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-            @ApiResponse(code = 409, message = "Conflict", response = Error.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+            //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
+            @ApiResponse(code = 404, message = "Not Found", response = String.class),
+            //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
+            //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/serviceCatalogManagement/v4/serviceSpecification/{id}",
             produces = { "application/json;charset=utf-8" },
             method = RequestMethod.GET)
-    public ResponseEntity<ServiceSpecification>
+    public ResponseEntity<?>
     retrieveServiceSpecification(@ApiParam(value = "Identifier of the ServiceSpecification", required = true)
                                  @PathVariable("id") String id,
                                  @ApiParam(value = "Comma-separated properties to provide in response")
@@ -245,16 +246,15 @@ public class serviceSpecificationController implements ServiceSpecificationInter
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
         }
 
         ServiceSpecification ss;
         try {
             ss = serviceSpecificationService.get(id);
         } catch (NotExistingEntityException e) {
-            log.error("Web-Server: ");
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
         log.info("Web-Server: Service Candidate " + id + " retrieved.");

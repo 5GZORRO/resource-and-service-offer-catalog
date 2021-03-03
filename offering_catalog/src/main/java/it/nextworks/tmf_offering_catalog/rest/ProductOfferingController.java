@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 public class ProductOfferingController implements ProductOfferingInterface {
@@ -50,20 +49,21 @@ public class ProductOfferingController implements ProductOfferingInterface {
             })
     })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK", response = ProductOffering.class),
+            //@ApiResponse(code = 200, message = "OK", response = ProductOffering.class),
             @ApiResponse(code = 201, message = "Created", response = ProductOffering.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found"),
-            @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-            @ApiResponse(code = 409, message = "Conflict", response = Error.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+            //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
+            //@ApiResponse(code = 404, message = "Not Found"),
+            //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
+            //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/productCatalogManagement/v4/productOffering",
             produces = { "application/json;charset=utf-8" },
             consumes = { "application/json;charset=utf-8" },
             method = RequestMethod.POST)
-    public ResponseEntity<ProductOffering>
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<?>
     createProductOffering(@ApiParam(value = "The ProductOffering to be created", required = true )
                           @Valid @RequestBody ProductOfferingCreate productOffering) {
 
@@ -71,7 +71,8 @@ public class ProductOfferingController implements ProductOfferingInterface {
 
         if(productOffering == null) {
             log.error("Web-Server: Invalid request body (productOffering) received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Invalid request body (productOffering) received.");
         }
 
         ProductOffering po = productOfferingService.create(productOffering);
@@ -91,19 +92,20 @@ public class ProductOfferingController implements ProductOfferingInterface {
             })
     })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK"),
+            //@ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 204, message = "Deleted"),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found", response = Error.class),
-            @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-            @ApiResponse(code = 409, message = "Conflict", response = Error.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+            //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
+            @ApiResponse(code = 404, message = "Not Found", response = String.class),
+            //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
+            //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/productCatalogManagement/v4/productOffering/{id}",
             produces = { "application/json;charset=utf-8" },
             method = RequestMethod.DELETE)
-    public ResponseEntity<Void>
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public ResponseEntity<?>
     deleteProductOffering(@ApiParam(value = "Identifier of the ProductOffering", required = true)
                           @PathVariable("id") String id) {
 
@@ -111,15 +113,14 @@ public class ProductOfferingController implements ProductOfferingInterface {
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
         }
 
         try {
             productOfferingService.delete(id);
         } catch (NotExistingEntityException e) {
-            log.error("Web-Server: ");
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
         log.info("Web-Server: Product Offering " + id + " deleted.");
@@ -139,17 +140,17 @@ public class ProductOfferingController implements ProductOfferingInterface {
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success", response = ProductOffering.class, responseContainer = "List"),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found", response = Error.class),
-            @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-            @ApiResponse(code = 409, message = "Conflict", response = Error.class),
+            //@ApiResponse(code = 400, message = "Bad Request", response = Error.class),
+            //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+            //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
+            //@ApiResponse(code = 404, message = "Not Found", response = Error.class),
+            //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
+            //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/productCatalogManagement/v4/productOffering",
             produces = { "application/json;charset=utf-8" },
             method = RequestMethod.GET)
-    public ResponseEntity<List<ProductOffering>>
+    public ResponseEntity<?>
     listProductOffering(@ApiParam(value = "Comma-separated properties to be provided in response")
                         @Valid @RequestParam(value = "fields", required = false) String fields,
                         @ApiParam(value = "Requested number of resources to be provided in response")
@@ -172,19 +173,19 @@ public class ProductOfferingController implements ProductOfferingInterface {
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Updated", response = ProductOffering.class),
-            @ApiResponse(code = 204, message = "No Content"),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found", response = Error.class),
-            @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-            @ApiResponse(code = 409, message = "Conflict", response = Error.class),
+            //@ApiResponse(code = 204, message = "No Content"),
+            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+            //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
+            @ApiResponse(code = 404, message = "Not Found", response = String.class),
+            //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
+            //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/productCatalogManagement/v4/productOffering/{id}",
             produces = { "application/json;charset=utf-8" },
             consumes = { "application/json;charset=utf-8" },
             method = RequestMethod.PATCH)
-    public ResponseEntity<ProductOffering>
+    public ResponseEntity<?>
     patchProductOffering(@ApiParam(value = "Identifier of the ProductOffering", required = true)
                          @PathVariable("id") String id,
                          @ApiParam(value = "The ProductOffering to be updated", required = true )
@@ -194,26 +195,26 @@ public class ProductOfferingController implements ProductOfferingInterface {
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
         }
 
         if(productOffering == null) {
             log.error("Web-Server: Invalid request body (productOffering) received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Invalid request body (productOffering) received.");
         }
 
         ProductOffering po;
         try {
             po = productOfferingService.patch(id, productOffering);
         } catch (NotExistingEntityException e) {
-            log.error("Web-Server: ");
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
         log.info("Web-Server: Product Offering " + id + " patched.");
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(po);
+        return ResponseEntity.status(HttpStatus.OK).body(po);
     }
 
     @ApiOperation(value = "Retrieves a ProductOffering by ID", nickname = "retrieveProductOffering",
@@ -228,17 +229,17 @@ public class ProductOfferingController implements ProductOfferingInterface {
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success", response = ProductOffering.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found", response = Error.class),
-            @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-            @ApiResponse(code = 409, message = "Conflict", response = Error.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+            //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
+            @ApiResponse(code = 404, message = "Not Found", response = String.class),
+            //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
+            //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/productCatalogManagement/v4/productOffering/{id}",
             produces = { "application/json;charset=utf-8" },
             method = RequestMethod.GET)
-    public ResponseEntity<ProductOffering>
+    public ResponseEntity<?>
     retrieveProductOffering(@ApiParam(value = "Identifier of the ProductOffering", required = true)
                             @PathVariable("id") String id,
                             @ApiParam(value = "Comma-separated properties to provide in response")
@@ -248,16 +249,15 @@ public class ProductOfferingController implements ProductOfferingInterface {
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
         }
 
         ProductOffering po;
         try {
             po = productOfferingService.get(id);
         } catch (NotExistingEntityException e) {
-            log.error("Web-Server: ");
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
         log.info("Web-Server: Product Offering " + id + " retrieved.");

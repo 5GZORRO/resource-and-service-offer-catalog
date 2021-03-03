@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 public class serviceCandidateController implements ServiceCandidateInterface {
@@ -50,27 +49,30 @@ public class serviceCandidateController implements ServiceCandidateInterface {
             })
     })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK", response = ServiceCandidate.class),
+            //@ApiResponse(code = 200, message = "OK", response = ServiceCandidate.class),
             @ApiResponse(code = 201, message = "Created", response = ServiceCandidate.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found"),
-            @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-            @ApiResponse(code = 409, message = "Conflict", response = Error.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+            //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
+            //@ApiResponse(code = 404, message = "Not Found"),
+            //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
+            //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/serviceCatalogManagement/v4/serviceCandidate",
             produces = { "application/json;charset=utf-8" },
             consumes = { "application/json;charset=utf-8" },
             method = RequestMethod.POST)
-    public ResponseEntity<ServiceCandidate> createServiceCandidate(@ApiParam(value = "The ServiceCandidate to be created",
-            required = true ) @Valid @RequestBody ServiceCandidateCreate serviceCandidate) {
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<?>
+    createServiceCandidate(@ApiParam(value = "The ServiceCandidate to be created", required = true )
+                           @Valid @RequestBody ServiceCandidateCreate serviceCandidate) {
 
         log.info("Web-Server: Received request to create a Service Specification.");
 
         if(serviceCandidate == null) {
             log.error("Web-Server: Invalid request body (serviceCandidate) received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Invalid request body (serviceCandidate) received.");
         }
 
         ServiceCandidate sc = serviceCandidateService.create(serviceCandidate);
@@ -90,34 +92,35 @@ public class serviceCandidateController implements ServiceCandidateInterface {
             })
     })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK"),
+            //@ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 204, message = "Deleted"),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found", response = Error.class),
-            @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-            @ApiResponse(code = 409, message = "Conflict", response = Error.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+            //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
+            @ApiResponse(code = 404, message = "Not Found", response = String.class),
+            //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
+            //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/serviceCatalogManagement/v4/serviceCandidate/{id}",
             produces = { "application/json;charset=utf-8" },
             method = RequestMethod.DELETE)
-    public ResponseEntity<Void> deleteServiceCandidate(@ApiParam(value = "Identifier of the ServiceCandidate",
-            required = true) @PathVariable("id") String id) {
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public ResponseEntity<?>
+    deleteServiceCandidate(@ApiParam(value = "Identifier of the ServiceCandidate", required = true)
+                           @PathVariable("id") String id) {
 
         log.info("Web-Server: Received request to delete Service Candidate with id " + id + ".");
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
         }
 
         try {
             serviceCandidateService.delete(id);
         } catch (NotExistingEntityException e) {
-            log.error("Web-Server: ");
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
         log.info("Web-Server: Service Candidate " + id + " deleted");
@@ -137,17 +140,17 @@ public class serviceCandidateController implements ServiceCandidateInterface {
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success", response = ServiceCandidate.class, responseContainer = "List"),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found", response = Error.class),
-            @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-            @ApiResponse(code = 409, message = "Conflict", response = Error.class),
+            //@ApiResponse(code = 400, message = "Bad Request", response = Error.class),
+            //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+            //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
+            //@ApiResponse(code = 404, message = "Not Found", response = Error.class),
+            //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
+            //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/serviceCatalogManagement/v4/serviceCandidate",
             produces = { "application/json;charset=utf-8" },
             method = RequestMethod.GET)
-    public ResponseEntity<List<ServiceCandidate>>
+    public ResponseEntity<?>
     listServiceCandidate(@ApiParam(value = "Comma-separated properties to be provided in response")
                          @Valid @RequestParam(value = "fields", required = false) String fields,
                          @ApiParam(value = "Requested number of resources to be provided in response")
@@ -169,19 +172,19 @@ public class serviceCandidateController implements ServiceCandidateInterface {
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Updated", response = ServiceCandidate.class),
-            @ApiResponse(code = 204, message = "No Content"),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found", response = Error.class),
-            @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-            @ApiResponse(code = 409, message = "Conflict", response = Error.class),
+            //@ApiResponse(code = 204, message = "No Content"),
+            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+            //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
+            @ApiResponse(code = 404, message = "Not Found", response = String.class),
+            //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
+            //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/serviceCatalogManagement/v4/serviceCandidate/{id}",
             produces = { "application/json;charset=utf-8" },
             consumes = { "application/json;charset=utf-8" },
             method = RequestMethod.PATCH)
-    public ResponseEntity<ServiceCandidate>
+    public ResponseEntity<?>
     patchServiceCandidate(@ApiParam(value = "Identifier of the ServiceCandidate",required = true)
                           @PathVariable("id") String id,
                           @ApiParam(value = "The ServiceCandidate to be updated" ,required = true )
@@ -191,26 +194,26 @@ public class serviceCandidateController implements ServiceCandidateInterface {
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
         }
 
         if(serviceCandidate == null) {
             log.error("Web-Server: Invalid request body (serviceCandidate) received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Invalid request body (serviceCandidate) received.");
         }
 
         ServiceCandidate sc;
         try {
             sc = serviceCandidateService.patch(id, serviceCandidate);
         } catch (NotExistingEntityException e) {
-            log.error("Web-Server: ");
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
         log.info("Web-Server: Service Candidate " + id + " patched.");
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(sc);
+        return ResponseEntity.status(HttpStatus.OK).body(sc);
     }
 
     @ApiOperation(value = "Retrieves a ServiceCandidate by ID", nickname = "retrieveServiceCandidate",
@@ -225,17 +228,17 @@ public class serviceCandidateController implements ServiceCandidateInterface {
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success", response = ServiceCandidate.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found", response = Error.class),
-            @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-            @ApiResponse(code = 409, message = "Conflict", response = Error.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+            //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
+            @ApiResponse(code = 404, message = "Not Found", response = String.class),
+            //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
+            //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/serviceCatalogManagement/v4/serviceCandidate/{id}",
             produces = { "application/json;charset=utf-8" },
             method = RequestMethod.GET)
-    public ResponseEntity<ServiceCandidate>
+    public ResponseEntity<?>
     retrieveServiceCandidate(@ApiParam(value = "Identifier of the ServiceCandidate", required = true)
                              @PathVariable("id") String id,
                              @ApiParam(value = "Comma-separated properties to provide in response")
@@ -245,16 +248,15 @@ public class serviceCandidateController implements ServiceCandidateInterface {
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
         }
 
         ServiceCandidate sc;
         try {
             sc = serviceCandidateService.get(id);
         } catch (NotExistingEntityException e) {
-            log.error("Web-Server: ");
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
         log.info("Web-Server: Service Candidate " + id + " retrieved.");

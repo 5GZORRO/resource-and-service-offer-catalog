@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 public class ServiceCategoryController implements ServiceCategoryInterface {
@@ -50,20 +49,21 @@ public class ServiceCategoryController implements ServiceCategoryInterface {
             })
     })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK", response = ServiceCategory.class),
+            //@ApiResponse(code = 200, message = "OK", response = ServiceCategory.class),
             @ApiResponse(code = 201, message = "Created", response = ServiceCategory.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found"),
-            @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-            @ApiResponse(code = 409, message = "Conflict", response = Error.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+            //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
+            //@ApiResponse(code = 404, message = "Not Found"),
+            //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
+            //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/serviceCatalogManagement/v4/serviceCategory",
             produces = { "application/json;charset=utf-8" },
             consumes = { "application/json;charset=utf-8" },
             method = RequestMethod.POST)
-    public ResponseEntity<ServiceCategory>
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<?>
     createServiceCategory(@ApiParam(value = "The ServiceCategory to be created", required = true )
                           @Valid @RequestBody ServiceCategoryCreate serviceCategory) {
 
@@ -71,7 +71,8 @@ public class ServiceCategoryController implements ServiceCategoryInterface {
 
         if(serviceCategory == null) {
             log.error("Web-Server: Invalid request body (serviceCategory) received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Invalid request body (serviceCategory) received.");
         }
 
         ServiceCategory sc = serviceCategoryService.create(serviceCategory);
@@ -91,19 +92,20 @@ public class ServiceCategoryController implements ServiceCategoryInterface {
             })
     })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK"),
+            //@ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 204, message = "Deleted"),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found", response = Error.class),
-            @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-            @ApiResponse(code = 409, message = "Conflict", response = Error.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+            //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
+            @ApiResponse(code = 404, message = "Not Found", response = String.class),
+            //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
+            //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/serviceCatalogManagement/v4/serviceCategory/{id}",
             produces = { "application/json;charset=utf-8" },
             method = RequestMethod.DELETE)
-    public ResponseEntity<Void>
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public ResponseEntity<?>
     deleteServiceCategory(@ApiParam(value = "Identifier of the ServiceCategory", required = true)
                           @PathVariable("id") String id) {
 
@@ -111,15 +113,14 @@ public class ServiceCategoryController implements ServiceCategoryInterface {
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
         }
 
         try {
             serviceCategoryService.delete(id);
         } catch (NotExistingEntityException e) {
-            log.error("Web-Server: ");
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
         log.info("Web-Server: Service Category " + id + " deleted.");
@@ -139,18 +140,18 @@ public class ServiceCategoryController implements ServiceCategoryInterface {
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success", response = ServiceCategory.class, responseContainer = "List"),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found", response = Error.class),
-            @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-            @ApiResponse(code = 409, message = "Conflict", response = Error.class),
-            @ApiResponse(code = 413, message = "Not modified", response = Error.class),
+            //@ApiResponse(code = 400, message = "Bad Request", response = Error.class),
+            //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+            //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
+            //@ApiResponse(code = 404, message = "Not Found", response = Error.class),
+            //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
+            //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
+            //@ApiResponse(code = 413, message = "Not modified", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/serviceCatalogManagement/v4/serviceCategory",
             produces = { "application/json;charset=utf-8" },
             method = RequestMethod.GET)
-    public ResponseEntity<List<ServiceCategory>>
+    public ResponseEntity<?>
     listServiceCategory(@ApiParam(value = "Comma-separated properties to be provided in response")
                         @Valid @RequestParam(value = "fields", required = false) String fields,
                         @ApiParam(value = "Requested number of resources to be provided in response")
@@ -173,19 +174,19 @@ public class ServiceCategoryController implements ServiceCategoryInterface {
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Updated", response = ServiceCategory.class),
-            @ApiResponse(code = 204, message = "No Content"),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found", response = Error.class),
-            @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-            @ApiResponse(code = 409, message = "Conflict", response = Error.class),
+            //@ApiResponse(code = 204, message = "No Content"),
+            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+            //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
+            @ApiResponse(code = 404, message = "Not Found", response = String.class),
+            //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
+            //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/serviceCatalogManagement/v4/serviceCategory/{id}",
             produces = { "application/json;charset=utf-8" },
             consumes = { "application/json;charset=utf-8" },
             method = RequestMethod.PATCH)
-    public ResponseEntity<ServiceCategory>
+    public ResponseEntity<?>
     patchServiceCategory(@ApiParam(value = "Identifier of the ServiceCategory", required = true)
                          @PathVariable("id") String id,
                          @ApiParam(value = "The ServiceCategory to be updated", required = true )
@@ -195,26 +196,26 @@ public class ServiceCategoryController implements ServiceCategoryInterface {
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
         }
 
         if(serviceCategory == null) {
             log.error("Web-Server: Invalid request body (serviceCategory) received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Invalid request body (serviceCategory) received.");
         }
 
         ServiceCategory sc;
         try {
             sc = serviceCategoryService.patch(id, serviceCategory);
         } catch (NotExistingEntityException e) {
-            log.error("Web-Server: ");
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
         log.info("Web-Server: Service Category " + id + " patched.");
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(sc);
+        return ResponseEntity.status(HttpStatus.OK).body(sc);
     }
 
     @ApiOperation(value = "Retrieves a ServiceCategory by ID", nickname = "retrieveServiceCategory",
@@ -229,17 +230,17 @@ public class ServiceCategoryController implements ServiceCategoryInterface {
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success", response = ServiceCategory.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found", response = Error.class),
-            @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-            @ApiResponse(code = 409, message = "Conflict", response = Error.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+            //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
+            @ApiResponse(code = 404, message = "Not Found", response = String.class),
+            //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
+            //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/serviceCatalogManagement/v4/serviceCategory/{id}",
             produces = { "application/json;charset=utf-8" },
             method = RequestMethod.GET)
-    public ResponseEntity<ServiceCategory>
+    public ResponseEntity<?>
     retrieveServiceCategory(@ApiParam(value = "Identifier of the ServiceCategory", required = true)
                             @PathVariable("id") String id,
                             @ApiParam(value = "Comma-separated properties to provide in response")
@@ -249,16 +250,15 @@ public class ServiceCategoryController implements ServiceCategoryInterface {
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
         }
 
         ServiceCategory sc;
         try {
             sc = serviceCategoryService.get(id);
         } catch (NotExistingEntityException e) {
-            log.error("Web-Server: ");
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
         log.info("Web-Server: Service Category " + id + " retrieved.");

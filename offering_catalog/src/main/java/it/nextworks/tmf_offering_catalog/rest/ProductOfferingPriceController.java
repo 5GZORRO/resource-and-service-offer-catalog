@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 public class ProductOfferingPriceController implements ProductOfferingPriceInterface {
@@ -50,20 +49,21 @@ public class ProductOfferingPriceController implements ProductOfferingPriceInter
             })
     })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK", response = ProductOfferingPrice.class),
+            //@ApiResponse(code = 200, message = "OK", response = ProductOfferingPrice.class),
             @ApiResponse(code = 201, message = "Created", response = ProductOfferingPrice.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found"),
-            @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-            @ApiResponse(code = 409, message = "Conflict", response = Error.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+            //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
+            //@ApiResponse(code = 404, message = "Not Found"),
+            //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
+            //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/productCatalogManagement/v4/productOfferingPrice",
             produces = { "application/json;charset=utf-8" },
             consumes = { "application/json;charset=utf-8" },
             method = RequestMethod.POST)
-    public ResponseEntity<ProductOfferingPrice>
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<?>
     createProductOfferingPrice(@ApiParam(value = "The ProductOfferingPrice to be created", required = true )
                                @Valid @RequestBody ProductOfferingPriceCreate productOfferingPrice) {
 
@@ -71,7 +71,8 @@ public class ProductOfferingPriceController implements ProductOfferingPriceInter
 
         if(productOfferingPrice == null) {
             log.error("Web-Server: Invalid request body (productOfferingPrice) received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Invalid request body (productOfferingPrice) received.");
         }
 
         ProductOfferingPrice pop = productOfferingPriceService.create(productOfferingPrice);
@@ -91,19 +92,20 @@ public class ProductOfferingPriceController implements ProductOfferingPriceInter
             })
     })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK"),
+            //@ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 204, message = "Deleted"),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found", response = Error.class),
-            @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-            @ApiResponse(code = 409, message = "Conflict", response = Error.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+            //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
+            @ApiResponse(code = 404, message = "Not Found", response = String.class),
+            //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
+            //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/productCatalogManagement/v4/productOfferingPrice/{id}",
             produces = { "application/json;charset=utf-8" },
             method = RequestMethod.DELETE)
-    public ResponseEntity<Void>
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public ResponseEntity<?>
     deleteProductOfferingPrice(@ApiParam(value = "Identifier of the ProductOfferingPrice", required = true)
                                @PathVariable("id") String id) {
 
@@ -111,15 +113,14 @@ public class ProductOfferingPriceController implements ProductOfferingPriceInter
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
         }
 
         try {
             productOfferingPriceService.delete(id);
         } catch (NotExistingEntityException e) {
-            log.error("Web-Server: ");
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
         log.info("Web-Server: Product Offering Price " + id + " deleted.");
@@ -139,17 +140,17 @@ public class ProductOfferingPriceController implements ProductOfferingPriceInter
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success", response = ProductOfferingPrice.class, responseContainer = "List"),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found", response = Error.class),
-            @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-            @ApiResponse(code = 409, message = "Conflict", response = Error.class),
+            //@ApiResponse(code = 400, message = "Bad Request", response = Error.class),
+            //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+            //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
+            //@ApiResponse(code = 404, message = "Not Found", response = Error.class),
+            //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
+            //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/productCatalogManagement/v4/productOfferingPrice",
             produces = { "application/json;charset=utf-8" },
             method = RequestMethod.GET)
-    public ResponseEntity<List<ProductOfferingPrice>>
+    public ResponseEntity<?>
     listProductOfferingPrice(@ApiParam(value = "Comma-separated properties to be provided in response")
                              @Valid @RequestParam(value = "fields", required = false) String fields,
                              @ApiParam(value = "Requested number of resources to be provided in response")
@@ -172,19 +173,19 @@ public class ProductOfferingPriceController implements ProductOfferingPriceInter
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Updated", response = ProductOfferingPrice.class),
-            @ApiResponse(code = 204, message = "No Content"),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found", response = Error.class),
-            @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-            @ApiResponse(code = 409, message = "Conflict", response = Error.class),
+            //@ApiResponse(code = 204, message = "No Content"),
+            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+            //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
+            @ApiResponse(code = 404, message = "Not Found", response = String.class),
+            //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
+            //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/productCatalogManagement/v4/productOfferingPrice/{id}",
             produces = { "application/json;charset=utf-8" },
             consumes = { "application/json;charset=utf-8" },
             method = RequestMethod.PATCH)
-    public ResponseEntity<ProductOfferingPrice>
+    public ResponseEntity<?>
     patchProductOfferingPrice(@ApiParam(value = "Identifier of the ProductOfferingPrice", required = true)
                               @PathVariable("id") String id,
                               @ApiParam(value = "The ProductOfferingPrice to be updated", required = true )
@@ -194,26 +195,26 @@ public class ProductOfferingPriceController implements ProductOfferingPriceInter
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
         }
 
         if(productOfferingPrice == null) {
             log.error("Web-Server: Invalid request body (productOfferingPrice) received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Invalid request body (productOfferingPrice) received.");
         }
 
         ProductOfferingPrice pop;
         try {
             pop = productOfferingPriceService.patch(id, productOfferingPrice);
         } catch (NotExistingEntityException e) {
-            log.error("Web-Server: ");
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
         log.info("Web-Server: Product Offering Price " + id + " patched.");
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(pop);
+        return ResponseEntity.status(HttpStatus.OK).body(pop);
     }
 
     @ApiOperation(value = "Retrieves a ProductOfferingPrice by ID", nickname = "retrieveProductOfferingPrice",
@@ -228,17 +229,17 @@ public class ProductOfferingPriceController implements ProductOfferingPriceInter
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success", response = ProductOfferingPrice.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found", response = Error.class),
-            @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-            @ApiResponse(code = 409, message = "Conflict", response = Error.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+            //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
+            @ApiResponse(code = 404, message = "Not Found", response = String.class),
+            //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
+            //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/productCatalogManagement/v4/productOfferingPrice/{id}",
             produces = { "application/json;charset=utf-8" },
             method = RequestMethod.GET)
-    public ResponseEntity<ProductOfferingPrice>
+    public ResponseEntity<?>
     retrieveProductOfferingPrice(@ApiParam(value = "Identifier of the ProductOfferingPrice", required = true)
                                  @PathVariable("id") String id,
                                  @ApiParam(value = "Comma-separated properties to provide in response")
@@ -248,16 +249,15 @@ public class ProductOfferingPriceController implements ProductOfferingPriceInter
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
         }
 
         ProductOfferingPrice pop;
         try {
             pop = productOfferingPriceService.get(id);
         } catch (NotExistingEntityException e) {
-            log.error("Web-Server: ");
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
         log.info("Web-Server: Product Offering Price " + id + " retrieved.");

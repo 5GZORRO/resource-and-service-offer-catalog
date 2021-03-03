@@ -51,18 +51,19 @@ public class ResourceCategoryController implements ResourceCategoryInterface {
             })
     })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK", response = ResourceCategory.class),
+            //@ApiResponse(code = 200, message = "OK", response = ResourceCategory.class),
             @ApiResponse(code = 201, message = "Created", response = ResourceCategory.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized"),
-            @ApiResponse(code = 403, message = "Forbidden"),
-            @ApiResponse(code = 404, message = "Not Found"),
+            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            //@ApiResponse(code = 401, message = "Unauthorized"),
+            //@ApiResponse(code = 403, message = "Forbidden"),
+            //@ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/resourceCatalogManagement/v2/resourceCategory",
             produces = { "application/json" },
             consumes = { "application/json" },
             method = RequestMethod.POST)
-    public ResponseEntity<ResourceCategory>
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<?>
     createResourceCategory(@ApiParam(value = "The ServiceCategory to be created", required = true )
                            @Valid @RequestBody ResourceCategoryCreate resCategory) {
 
@@ -70,7 +71,7 @@ public class ResourceCategoryController implements ResourceCategoryInterface {
 
         if(resCategory == null) {
             log.error("Web-Server: Invalid request body (resCategory) received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid request body (resCategory) received.");
         }
 
         ResourceCategory rc = resourceCategoryService.create(resCategory);
@@ -90,17 +91,18 @@ public class ResourceCategoryController implements ResourceCategoryInterface {
             })
     })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK"),
+            //@ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 204, message = "Deleted"),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized"),
-            @ApiResponse(code = 403, message = "Forbidden"),
-            @ApiResponse(code = 404, message = "Not Found", response = Error.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            //@ApiResponse(code = 401, message = "Unauthorized"),
+            //@ApiResponse(code = 403, message = "Forbidden"),
+            @ApiResponse(code = 404, message = "Not Found", response = String.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/resourceCatalogManagement/v2/resourceCategory/{id}",
             produces = { "application/json" },
             method = RequestMethod.DELETE)
-    public ResponseEntity<Void>
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public ResponseEntity<?>
     deleteResourceCategory(@ApiParam(value = "Identifier of the Resource Category", required = true)
                            @PathVariable("id") String id) {
 
@@ -108,15 +110,14 @@ public class ResourceCategoryController implements ResourceCategoryInterface {
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
         }
 
         try {
             resourceCategoryService.delete(id);
         } catch (NotExistingEntityException e) {
-            log.error("Web-Server: ");
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
         log.info("Web-Server: Resource Category " + id + " deleted.");
@@ -135,15 +136,15 @@ public class ResourceCategoryController implements ResourceCategoryInterface {
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok", response = ResourceCategory.class, responseContainer = "List"),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized"),
-            @ApiResponse(code = 403, message = "Forbidden"),
-            @ApiResponse(code = 404, message = "Not Found"),
+            //@ApiResponse(code = 400, message = "Bad Request", response = Error.class),
+            //@ApiResponse(code = 401, message = "Unauthorized"),
+            //@ApiResponse(code = 403, message = "Forbidden"),
+            //@ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/resourceCatalogManagement/v2/resourceCategory",
             produces = { "application/json" },
             method = RequestMethod.GET)
-    public ResponseEntity<List<ResourceCategory>>
+    public ResponseEntity<?>
     listResourceCategory(@ApiParam(value = "For filtering: Immediate base class type of this category")
                          @Valid @RequestParam(value = "@baseType", required = false) String baseType,
                          @ApiParam(value = "For filtering: This field provides a link to the schema describing this REST resource")
@@ -198,19 +199,18 @@ public class ResourceCategoryController implements ResourceCategoryInterface {
             })
     })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK", response = ResourceCategory.class),
-            @ApiResponse(code = 201, message = "Updated", response = ResourceCategory.class),
-            @ApiResponse(code = 204, message = "No Content"),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized"),
-            @ApiResponse(code = 403, message = "Forbidden"),
-            @ApiResponse(code = 404, message = "Not Found", response = Error.class),
+            @ApiResponse(code = 200, message = "Updated", response = ResourceCategory.class),
+            //@ApiResponse(code = 204, message = "No Content"),
+            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            //@ApiResponse(code = 401, message = "Unauthorized"),
+            //@ApiResponse(code = 403, message = "Forbidden"),
+            @ApiResponse(code = 404, message = "Not Found", response = String.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/resourceCatalogManagement/v2/resourceCategory/{id}",
             produces = { "application/json" },
             consumes = { "application/json" },
             method = RequestMethod.PATCH)
-    public ResponseEntity<ResourceCategory>
+    public ResponseEntity<?>
     patchResourceCategory(@ApiParam(value = "Identifier of the Resource Category", required = true)
                           @PathVariable("id") String id,
                           @ApiParam(value = "The Resource Category to be updated" ,required = true )
@@ -220,26 +220,26 @@ public class ResourceCategoryController implements ResourceCategoryInterface {
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
         }
 
         if(resourceCategory == null){
             log.error("Web-Server: Invalid request body (resourceCategory) received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Invalid request body (resourceCategory) received.");
         }
 
         ResourceCategory rc;
         try {
             rc = resourceCategoryService.patch(id, resourceCategory);
         } catch (NotExistingEntityException e) {
-            log.error("Web-Server: ");
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
         log.info("Web-Server: Resource Category " + id + " patched.");
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(rc);
+        return ResponseEntity.status(HttpStatus.OK).body(rc);
     }
 
     @ApiOperation(value = "Retrieves a 'ResourceCategory' by Id", nickname = "retrieveResourceCategory", notes = "",
@@ -253,15 +253,15 @@ public class ResourceCategoryController implements ResourceCategoryInterface {
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok", response = ResourceCategory.class, responseContainer = "List"),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized"),
-            @ApiResponse(code = 403, message = "Forbidden"),
-            @ApiResponse(code = 404, message = "Not Found", response = Error.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            //@ApiResponse(code = 401, message = "Unauthorized"),
+            //@ApiResponse(code = 403, message = "Forbidden"),
+            @ApiResponse(code = 404, message = "Not Found", response = String.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/resourceCatalogManagement/v2/resourceCategory/{id}",
             produces = { "application/json" },
             method = RequestMethod.GET)
-    public ResponseEntity<List<ResourceCategory>>
+    public ResponseEntity<?>
     retrieveResourceCategory(@ApiParam(value = "Identifier of the Resource Category",required = true)
                              @PathVariable("id") String id) {
 
@@ -269,16 +269,15 @@ public class ResourceCategoryController implements ResourceCategoryInterface {
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
         }
 
         List<ResourceCategory> rc = new ArrayList<>();
         try {
             rc.add(resourceCategoryService.get(id));
         } catch (NotExistingEntityException e) {
-            log.error("Web-Server: ");
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
         log.info("Web-Server: Resource Category " + id + " retrieved.");

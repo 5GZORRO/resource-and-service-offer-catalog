@@ -1,20 +1,17 @@
 package it.nextworks.tmf_offering_catalog.interfaces;
 
-import it.nextworks.tmf_offering_catalog.information_models.resource.ResourceCandidate;
 import it.nextworks.tmf_offering_catalog.information_models.resource.ResourceCandidateCreate;
 import it.nextworks.tmf_offering_catalog.information_models.resource.ResourceCandidateUpdate;
 import org.springframework.http.ResponseEntity;
 import org.threeten.bp.OffsetDateTime;
 
-import java.util.List;
-
 public interface ResourceCandidateInterface {
 
-    ResponseEntity<ResourceCandidate> createResourceCandidate(ResourceCandidateCreate resourceCandidate);
+    ResponseEntity<?> createResourceCandidate(ResourceCandidateCreate resourceCandidate);
 
-    ResponseEntity<Void> deleteResourceCandidate(String id);
+    ResponseEntity<?> deleteResourceCandidate(String id);
 
-    ResponseEntity<List<ResourceCandidate>> listResourceCandidate(String baseType,
+    ResponseEntity<?> listResourceCandidate(String baseType,
                                                                   String schemaLocation,
                                                                   String type,
                                                                   String categoryType,
@@ -31,7 +28,7 @@ public interface ResourceCandidateInterface {
                                                                   OffsetDateTime validForStartDateTime,
                                                                   String version);
 
-    ResponseEntity<ResourceCandidate> patchResourceCandidate(String id, ResourceCandidateUpdate resourceCandidate);
+    ResponseEntity<?> patchResourceCandidate(String id, ResourceCandidateUpdate resourceCandidate);
 
-    ResponseEntity<List<ResourceCandidate>> retrieveResourceCandidate(String id);
+    ResponseEntity<?> retrieveResourceCandidate(String id);
 }

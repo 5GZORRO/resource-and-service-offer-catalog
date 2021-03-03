@@ -1,20 +1,17 @@
 package it.nextworks.tmf_offering_catalog.interfaces;
 
-import it.nextworks.tmf_offering_catalog.information_models.resource.ResourceSpecification;
 import it.nextworks.tmf_offering_catalog.information_models.resource.ResourceSpecificationCreate;
 import it.nextworks.tmf_offering_catalog.information_models.resource.ResourceSpecificationUpdate;
 import org.springframework.http.ResponseEntity;
 import org.threeten.bp.OffsetDateTime;
 
-import java.util.List;
-
 public interface ResourceSpecificationInterface {
 
-    ResponseEntity<ResourceSpecification> createResourceSpecification(ResourceSpecificationCreate serviceSpecification);
+    ResponseEntity<?> createResourceSpecification(ResourceSpecificationCreate serviceSpecification);
 
-    ResponseEntity<Void> deleteResourceSpecification(String id);
+    ResponseEntity<?> deleteResourceSpecification(String id);
 
-    ResponseEntity<List<ResourceSpecification>> listResourceSpecification(String baseType,
+    ResponseEntity<?> listResourceSpecification(String baseType,
                                                                           String schemaLocation,
                                                                           String type,
                                                                           String attachmentType,
@@ -54,8 +51,8 @@ public interface ResourceSpecificationInterface {
                                                                           OffsetDateTime validForStartDateTime,
                                                                           String version);
 
-    ResponseEntity<ResourceSpecification> patchResourceSpecification(String id,
+    ResponseEntity<?> patchResourceSpecification(String id,
                                                                      ResourceSpecificationUpdate serviceSpecification);
 
-    ResponseEntity<List<ResourceSpecification>> retrieveResourceSpecification(String id);
+    ResponseEntity<?> retrieveResourceSpecification(String id);
 }

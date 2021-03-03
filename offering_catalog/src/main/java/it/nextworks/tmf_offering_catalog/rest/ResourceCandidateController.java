@@ -51,18 +51,19 @@ public class ResourceCandidateController implements ResourceCandidateInterface {
             })
     })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK", response = ResourceCandidate.class),
+            //@ApiResponse(code = 200, message = "OK", response = ResourceCandidate.class),
             @ApiResponse(code = 201, message = "Created", response = ResourceCandidate.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized"),
-            @ApiResponse(code = 403, message = "Forbidden"),
-            @ApiResponse(code = 404, message = "Not Found"),
+            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            //@ApiResponse(code = 401, message = "Unauthorized"),
+            //@ApiResponse(code = 403, message = "Forbidden"),
+            //@ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/resourceCatalogManagement/v2/resourceCandidate",
             produces = { "application/json" },
             consumes = { "application/json" },
             method = RequestMethod.POST)
-    public ResponseEntity<ResourceCandidate>
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<?>
     createResourceCandidate(@ApiParam(value = "The Resource Candidate to be created", required = true)
                             @Valid @RequestBody ResourceCandidateCreate resourceCandidate) {
 
@@ -70,7 +71,8 @@ public class ResourceCandidateController implements ResourceCandidateInterface {
 
         if(resourceCandidate == null) {
             log.error("Web-Server: Invalid request body (resourceCandidate) received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Invalid request body (resourceCandidate) received.");
         }
 
         ResourceCandidate rc = resourceCandidateService.create(resourceCandidate);
@@ -90,17 +92,18 @@ public class ResourceCandidateController implements ResourceCandidateInterface {
             })
     })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK"),
+            //@ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 204, message = "Deleted"),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized"),
-            @ApiResponse(code = 403, message = "Forbidden"),
-            @ApiResponse(code = 404, message = "Not Found", response = Error.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            //@ApiResponse(code = 401, message = "Unauthorized"),
+            //@ApiResponse(code = 403, message = "Forbidden"),
+            @ApiResponse(code = 404, message = "Not Found", response = String.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/resourceCatalogManagement/v2/resourceCandidate/{id}",
             produces = { "application/json" },
             method = RequestMethod.DELETE)
-    public ResponseEntity<Void>
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public ResponseEntity<?>
     deleteResourceCandidate(@ApiParam(value = "Identifier of the Resource Candidate", required=true)
                             @PathVariable("id") String id) {
 
@@ -108,15 +111,14 @@ public class ResourceCandidateController implements ResourceCandidateInterface {
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
         }
 
         try {
             resourceCandidateService.delete(id);
         } catch (NotExistingEntityException e) {
-            log.error("Web-Server: ");
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
         log.info("Web-Server: Resource Candidate " + id + " deleted.");
@@ -135,15 +137,15 @@ public class ResourceCandidateController implements ResourceCandidateInterface {
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok", response = ResourceCandidate.class, responseContainer = "List"),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized"),
-            @ApiResponse(code = 403, message = "Forbidden"),
-            @ApiResponse(code = 404, message = "Not Found"),
+            //@ApiResponse(code = 400, message = "Bad Request", response = Error.class),
+            //@ApiResponse(code = 401, message = "Unauthorized"),
+            //@ApiResponse(code = 403, message = "Forbidden"),
+            //@ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/resourceCatalogManagement/v2/resourceCandidate",
             produces = { "application/json" },
             method = RequestMethod.GET)
-    public ResponseEntity<List<ResourceCandidate>>
+    public ResponseEntity<?>
     listResourceCandidate(@ApiParam(value = "For filtering: The (immediate) base class type of this REST resource")
                           @Valid @RequestParam(value = "@baseType", required = false) String baseType,
                           @ApiParam(value = "For filtering: This field provides a link to the schema describing this REST resource")
@@ -190,19 +192,18 @@ public class ResourceCandidateController implements ResourceCandidateInterface {
             })
     })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK", response = ResourceCandidate.class),
-            @ApiResponse(code = 201, message = "Updated", response = ResourceCandidate.class),
-            @ApiResponse(code = 204, message = "No Content"),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized"),
-            @ApiResponse(code = 403, message = "Forbidden"),
-            @ApiResponse(code = 404, message = "Not Found", response = Error.class),
+            @ApiResponse(code = 200, message = "Updated", response = ResourceCandidate.class),
+            //@ApiResponse(code = 204, message = "No Content"),
+            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            //@ApiResponse(code = 401, message = "Unauthorized"),
+            //@ApiResponse(code = 403, message = "Forbidden"),
+            @ApiResponse(code = 404, message = "Not Found", response = String.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/resourceCatalogManagement/v2/resourceCandidate/{id}",
             produces = { "application/json" },
             consumes = { "application/json" },
             method = RequestMethod.PATCH)
-    public ResponseEntity<ResourceCandidate>
+    public ResponseEntity<?>
     patchResourceCandidate(@ApiParam(value = "Identifier of the Resource Candidate", required = true)
                            @PathVariable("id") String id,
                            @ApiParam(value = "The Resource Candidate to be updated", required = true )
@@ -212,26 +213,26 @@ public class ResourceCandidateController implements ResourceCandidateInterface {
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
         }
 
         if(resourceCandidate == null) {
             log.error("Web-Server: Invalid request body (resourceCandidate) received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Invalid request body (resourceCandidate) received.");
         }
 
         ResourceCandidate rc;
         try {
             rc = resourceCandidateService.patch(id, resourceCandidate);
         } catch (NotExistingEntityException e) {
-            log.error("Web-Server: ");
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
         log.info("Web-Server: Resource Candidate " + id + " patched.");
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(rc);
+        return ResponseEntity.status(HttpStatus.OK).body(rc);
     }
 
     @ApiOperation(value = "Retrieves a 'ResourceCandidate' by Id", nickname = "retrieveResourceCandidate",
@@ -245,15 +246,15 @@ public class ResourceCandidateController implements ResourceCandidateInterface {
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok", response = ResourceCandidate.class, responseContainer = "List"),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized"),
-            @ApiResponse(code = 403, message = "Forbidden"),
-            @ApiResponse(code = 404, message = "Not Found", response = Error.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            //@ApiResponse(code = 401, message = "Unauthorized"),
+            //@ApiResponse(code = 403, message = "Forbidden"),
+            @ApiResponse(code = 404, message = "Not Found", response = String.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/resourceCatalogManagement/v2/resourceCandidate/{id}",
             produces = { "application/json" },
             method = RequestMethod.GET)
-    public ResponseEntity<List<ResourceCandidate>>
+    public ResponseEntity<?>
     retrieveResourceCandidate(@ApiParam(value = "Identifier of the Resource Candidate", required = true)
                               @PathVariable("id") String id) {
 
@@ -261,16 +262,15 @@ public class ResourceCandidateController implements ResourceCandidateInterface {
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
         }
 
         List<ResourceCandidate> rc = new ArrayList<>();
         try {
             rc.add(resourceCandidateService.get(id));
         } catch (NotExistingEntityException e) {
-            log.error("Web-Server: ");
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
         log.info("Web-Server: Resource Candidate " + id + " retrieved.");
