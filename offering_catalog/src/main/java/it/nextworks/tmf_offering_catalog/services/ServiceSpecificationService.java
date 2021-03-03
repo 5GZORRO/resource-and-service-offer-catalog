@@ -154,6 +154,8 @@ public class ServiceSpecificationService {
         if(isBundle != null)
             serviceSpecification.setIsBundle(isBundle);
 
+        serviceSpecification.setLastUpdate(OffsetDateTime.now().toString());
+
         final String lifecycleStatus = serviceSpecificationUpdate.getLifecycleStatus();
         if(lifecycleStatus != null)
             serviceSpecification.setLifecycleStatus(lifecycleStatus);

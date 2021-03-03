@@ -136,6 +136,8 @@ public class ResourceCategoryService {
         if(isRoot != null)
             resourceCategory.setIsRoot(isRoot);
 
+        resourceCategory.setLastUpdate(OffsetDateTime.now().toString());
+
         final String lifecycleStatus = resourceCategoryUpdate.getLifecycleStatus();
         if(lifecycleStatus != null)
             resourceCategory.setLifecycleStatus(lifecycleStatus);

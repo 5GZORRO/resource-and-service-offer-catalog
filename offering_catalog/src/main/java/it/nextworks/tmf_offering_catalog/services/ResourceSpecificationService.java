@@ -161,6 +161,8 @@ public class ResourceSpecificationService {
         if(isBundle != null)
             resourceSpecification.setIsBundle(isBundle);
 
+        resourceSpecification.setLastUpdate(OffsetDateTime.now().toString());
+
         final String lifecycleStatus = resourceSpecificationUpdate.getLifecycleStatus();
         if(lifecycleStatus != null)
             resourceSpecification.setLifecycleStatus(lifecycleStatus);

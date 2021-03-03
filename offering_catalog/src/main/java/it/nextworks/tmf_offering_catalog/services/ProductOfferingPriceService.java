@@ -177,6 +177,8 @@ public class ProductOfferingPriceService {
         if(isBundle != null)
             productOfferingPrice.setIsBundle(isBundle);
 
+        productOfferingPrice.setLastUpdate(OffsetDateTime.now().toString());
+
         final String lifecycleStatus = productOfferingPriceUpdate.getLifecycleStatus();
         if(lifecycleStatus != null)
             productOfferingPrice.setLifecycleStatus(lifecycleStatus);

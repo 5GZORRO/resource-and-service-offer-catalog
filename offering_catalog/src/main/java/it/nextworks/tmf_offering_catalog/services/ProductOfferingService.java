@@ -224,6 +224,8 @@ public class ProductOfferingService {
         if(isSellable != null)
             productOffering.setIsSellable(isSellable);
 
+        productOffering.setLastUpdate(OffsetDateTime.now().toString());
+
         final String lifecycleStatus = productOfferingUpdate.getLifecycleStatus();
         if(lifecycleStatus != null)
             productOffering.setLifecycleStatus(lifecycleStatus);

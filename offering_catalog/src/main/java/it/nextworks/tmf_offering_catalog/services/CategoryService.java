@@ -126,6 +126,8 @@ public class CategoryService {
         if(isRoot != null)
             category.setIsRoot(isRoot);
 
+        category.setLastUpdate(OffsetDateTime.now().toString());
+
         final String lifecycleStatus = categoryUpdate.getLifecycleStatus();
         if(lifecycleStatus != null) {
             category.setLifecycleStatus(lifecycleStatus);

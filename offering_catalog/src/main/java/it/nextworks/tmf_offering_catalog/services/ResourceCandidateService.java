@@ -135,6 +135,8 @@ public class ResourceCandidateService {
         if(lastUpdate != null)
             resourceCandidate.setLastUpdate(lastUpdate.toString());
 
+        resourceCandidate.setLastUpdate(OffsetDateTime.now().toString());
+
         final String lifecycleStatus = resourceCandidateUpdate.getLifecycleStatus();
         if(lifecycleStatus != null)
             resourceCandidate.setLifecycleStatus(lifecycleStatus);

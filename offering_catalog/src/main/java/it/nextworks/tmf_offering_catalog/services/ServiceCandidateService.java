@@ -135,6 +135,8 @@ public class ServiceCandidateService {
         if(description != null)
             serviceCandidate.setDescription(description);
 
+        serviceCandidate.setLastUpdate(OffsetDateTime.now().toString());
+
         final String lifecycleStatus = serviceCandidateUpdate.getLifecycleStatus();
         if(lifecycleStatus != null)
             serviceCandidate.setLifecycleStatus(lifecycleStatus);
