@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
+import org.threeten.bp.ZoneId;
 
 import java.util.List;
 import java.util.Optional;
@@ -176,7 +178,7 @@ public class ProductSpecificationService {
         if(isBundle != null)
             productSpecification.setIsBundle(isBundle);
 
-        productSpecification.setLastUpdate(OffsetDateTime.now().toString());
+        productSpecification.setLastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
 
         final String lifecycleStatus = productSpecificationUpdate.getLifecycleStatus();
         if(lifecycleStatus != null)

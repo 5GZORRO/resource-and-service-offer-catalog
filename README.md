@@ -13,13 +13,18 @@ Implementation of the TM Forum Product Catalog Management API for a VNF/PNF offe
   sudo apt update
   sudo apt install openjdk-8-jdk
   ```
+- Maven </br>
+  ```bash
+  sudo apt update
+  sudo apt install maven
+  ```
   
 ## Installation
 ```bash
 mvn clean install
 cd offering_catalog
 cd target
-nohup java -jar offering_catalog-1.0-SNAPSHOT.jar
+java -jar offering_catalog-1.0-SNAPSHOT.jar
 ```
 
 ## Usage
