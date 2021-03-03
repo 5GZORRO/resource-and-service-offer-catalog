@@ -51,7 +51,7 @@ public class ServiceCategoryController implements ServiceCategoryInterface {
     @ApiResponses(value = {
             //@ApiResponse(code = 200, message = "OK", response = ServiceCategory.class),
             @ApiResponse(code = 201, message = "Created", response = ServiceCategory.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = ErrMsg.class),
             //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
             //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
             //@ApiResponse(code = 404, message = "Not Found"),
@@ -72,7 +72,7 @@ public class ServiceCategoryController implements ServiceCategoryInterface {
         if(serviceCategory == null) {
             log.error("Web-Server: Invalid request body (serviceCategory) received.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Invalid request body (serviceCategory) received.");
+                    .body(new ErrMsg("Invalid request body (serviceCategory) received."));
         }
 
         ServiceCategory sc = serviceCategoryService.create(serviceCategory);
@@ -94,10 +94,10 @@ public class ServiceCategoryController implements ServiceCategoryInterface {
     @ApiResponses(value = {
             //@ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 204, message = "Deleted"),
-            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = ErrMsg.class),
             //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
             //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found", response = String.class),
+            @ApiResponse(code = 404, message = "Not Found", response = ErrMsg.class),
             //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
             //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
@@ -113,14 +113,15 @@ public class ServiceCategoryController implements ServiceCategoryInterface {
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrMsg("Invalid path variable (id) request received."));
         }
 
         try {
             serviceCategoryService.delete(id);
         } catch (NotExistingEntityException e) {
             log.error("Web-Server: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrMsg(e.getMessage()));
         }
 
         log.info("Web-Server: Service Category " + id + " deleted.");
@@ -175,10 +176,10 @@ public class ServiceCategoryController implements ServiceCategoryInterface {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Updated", response = ServiceCategory.class),
             //@ApiResponse(code = 204, message = "No Content"),
-            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = ErrMsg.class),
             //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
             //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found", response = String.class),
+            @ApiResponse(code = 404, message = "Not Found", response = ErrMsg.class),
             //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
             //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
@@ -196,13 +197,14 @@ public class ServiceCategoryController implements ServiceCategoryInterface {
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrMsg("Invalid path variable (id) request received."));
         }
 
         if(serviceCategory == null) {
             log.error("Web-Server: Invalid request body (serviceCategory) received.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Invalid request body (serviceCategory) received.");
+                    .body(new ErrMsg("Invalid request body (serviceCategory) received."));
         }
 
         ServiceCategory sc;
@@ -210,7 +212,7 @@ public class ServiceCategoryController implements ServiceCategoryInterface {
             sc = serviceCategoryService.patch(id, serviceCategory);
         } catch (NotExistingEntityException e) {
             log.error("Web-Server: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrMsg(e.getMessage()));
         }
 
         log.info("Web-Server: Service Category " + id + " patched.");
@@ -230,10 +232,10 @@ public class ServiceCategoryController implements ServiceCategoryInterface {
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success", response = ServiceCategory.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = ErrMsg.class),
             //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
             //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found", response = String.class),
+            @ApiResponse(code = 404, message = "Not Found", response = ErrMsg.class),
             //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
             //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
@@ -250,7 +252,8 @@ public class ServiceCategoryController implements ServiceCategoryInterface {
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrMsg("Invalid path variable (id) request received."));
         }
 
         ServiceCategory sc;
@@ -258,7 +261,7 @@ public class ServiceCategoryController implements ServiceCategoryInterface {
             sc = serviceCategoryService.get(id);
         } catch (NotExistingEntityException e) {
             log.error("Web-Server: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrMsg(e.getMessage()));
         }
 
         log.info("Web-Server: Service Category " + id + " retrieved.");

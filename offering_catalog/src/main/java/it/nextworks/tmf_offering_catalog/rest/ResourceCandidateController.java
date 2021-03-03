@@ -53,7 +53,7 @@ public class ResourceCandidateController implements ResourceCandidateInterface {
     @ApiResponses(value = {
             //@ApiResponse(code = 200, message = "OK", response = ResourceCandidate.class),
             @ApiResponse(code = 201, message = "Created", response = ResourceCandidate.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = ErrMsg.class),
             //@ApiResponse(code = 401, message = "Unauthorized"),
             //@ApiResponse(code = 403, message = "Forbidden"),
             //@ApiResponse(code = 404, message = "Not Found"),
@@ -72,7 +72,7 @@ public class ResourceCandidateController implements ResourceCandidateInterface {
         if(resourceCandidate == null) {
             log.error("Web-Server: Invalid request body (resourceCandidate) received.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Invalid request body (resourceCandidate) received.");
+                    .body(new ErrMsg("Invalid request body (resourceCandidate) received."));
         }
 
         ResourceCandidate rc = resourceCandidateService.create(resourceCandidate);
@@ -94,10 +94,10 @@ public class ResourceCandidateController implements ResourceCandidateInterface {
     @ApiResponses(value = {
             //@ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 204, message = "Deleted"),
-            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = ErrMsg.class),
             //@ApiResponse(code = 401, message = "Unauthorized"),
             //@ApiResponse(code = 403, message = "Forbidden"),
-            @ApiResponse(code = 404, message = "Not Found", response = String.class),
+            @ApiResponse(code = 404, message = "Not Found", response = ErrMsg.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/resourceCatalogManagement/v2/resourceCandidate/{id}",
             produces = { "application/json" },
@@ -111,14 +111,15 @@ public class ResourceCandidateController implements ResourceCandidateInterface {
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrMsg("Invalid path variable (id) request received."));
         }
 
         try {
             resourceCandidateService.delete(id);
         } catch (NotExistingEntityException e) {
             log.error("Web-Server: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrMsg(e.getMessage()));
         }
 
         log.info("Web-Server: Resource Candidate " + id + " deleted.");
@@ -194,10 +195,10 @@ public class ResourceCandidateController implements ResourceCandidateInterface {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Updated", response = ResourceCandidate.class),
             //@ApiResponse(code = 204, message = "No Content"),
-            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = ErrMsg.class),
             //@ApiResponse(code = 401, message = "Unauthorized"),
             //@ApiResponse(code = 403, message = "Forbidden"),
-            @ApiResponse(code = 404, message = "Not Found", response = String.class),
+            @ApiResponse(code = 404, message = "Not Found", response = ErrMsg.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/resourceCatalogManagement/v2/resourceCandidate/{id}",
             produces = { "application/json" },
@@ -213,13 +214,14 @@ public class ResourceCandidateController implements ResourceCandidateInterface {
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrMsg("Invalid path variable (id) request received."));
         }
 
         if(resourceCandidate == null) {
             log.error("Web-Server: Invalid request body (resourceCandidate) received.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Invalid request body (resourceCandidate) received.");
+                    .body(new ErrMsg("Invalid request body (resourceCandidate) received."));
         }
 
         ResourceCandidate rc;
@@ -227,7 +229,7 @@ public class ResourceCandidateController implements ResourceCandidateInterface {
             rc = resourceCandidateService.patch(id, resourceCandidate);
         } catch (NotExistingEntityException e) {
             log.error("Web-Server: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrMsg(e.getMessage()));
         }
 
         log.info("Web-Server: Resource Candidate " + id + " patched.");
@@ -246,10 +248,10 @@ public class ResourceCandidateController implements ResourceCandidateInterface {
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok", response = ResourceCandidate.class, responseContainer = "List"),
-            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = ErrMsg.class),
             //@ApiResponse(code = 401, message = "Unauthorized"),
             //@ApiResponse(code = 403, message = "Forbidden"),
-            @ApiResponse(code = 404, message = "Not Found", response = String.class),
+            @ApiResponse(code = 404, message = "Not Found", response = ErrMsg.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/resourceCatalogManagement/v2/resourceCandidate/{id}",
             produces = { "application/json" },
@@ -262,7 +264,8 @@ public class ResourceCandidateController implements ResourceCandidateInterface {
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrMsg("Invalid path variable (id) request received."));
         }
 
         List<ResourceCandidate> rc = new ArrayList<>();
@@ -270,7 +273,7 @@ public class ResourceCandidateController implements ResourceCandidateInterface {
             rc.add(resourceCandidateService.get(id));
         } catch (NotExistingEntityException e) {
             log.error("Web-Server: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrMsg(e.getMessage()));
         }
 
         log.info("Web-Server: Resource Candidate " + id + " retrieved.");

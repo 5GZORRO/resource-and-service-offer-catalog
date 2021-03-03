@@ -53,7 +53,7 @@ public class ResourceSpecificationController implements ResourceSpecificationInt
     @ApiResponses(value = {
             //@ApiResponse(code = 200, message = "OK", response = ResourceSpecification.class),
             @ApiResponse(code = 201, message = "Created", response = ResourceSpecification.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = ErrMsg.class),
             //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
             //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
             //@ApiResponse(code = 404, message = "Not Found"),
@@ -74,7 +74,7 @@ public class ResourceSpecificationController implements ResourceSpecificationInt
         if(serviceSpecification == null) {
             log.error("Web-Server: Invalid request body (serviceSpecification) received.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Invalid request body (serviceSpecification) received.");
+                    .body(new ErrMsg("Invalid request body (serviceSpecification) received."));
         }
 
         ResourceSpecification rs = resourceSpecificationService.create(serviceSpecification);
@@ -95,10 +95,10 @@ public class ResourceSpecificationController implements ResourceSpecificationInt
     @ApiResponses(value = {
             //@ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 204, message = "Deleted"),
-            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = ErrMsg.class),
             //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
             //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found", response = String.class),
+            @ApiResponse(code = 404, message = "Not Found", response = ErrMsg.class),
             //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
             //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
@@ -114,14 +114,15 @@ public class ResourceSpecificationController implements ResourceSpecificationInt
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrMsg("Invalid path variable (id) request received."));
         }
 
         try {
             resourceSpecificationService.delete(id);
         } catch (NotExistingEntityException e) {
             log.error("Web-Server: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrMsg(e.getMessage()));
         }
 
         log.info("Web-Server: Resource Specification " + id + " deleted.");
@@ -244,10 +245,10 @@ public class ResourceSpecificationController implements ResourceSpecificationInt
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Updated", response = ResourceSpecification.class),
             //@ApiResponse(code = 204, message = "No Content"),
-            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = ErrMsg.class),
             //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
             //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found", response = String.class),
+            @ApiResponse(code = 404, message = "Not Found", response = ErrMsg.class),
             //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
             //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
@@ -265,13 +266,14 @@ public class ResourceSpecificationController implements ResourceSpecificationInt
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrMsg("Invalid path variable (id) request received."));
         }
 
         if(serviceSpecification == null) {
             log.error("Web-Server: Invalid request body (serviceSpecification) received.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Invalid request body (serviceSpecification) received.");
+                    .body(new ErrMsg("Invalid request body (serviceSpecification) received."));
         }
 
         ResourceSpecification rs;
@@ -279,7 +281,7 @@ public class ResourceSpecificationController implements ResourceSpecificationInt
             rs = resourceSpecificationService.patch(id, serviceSpecification);
         } catch (NotExistingEntityException e) {
             log.error("Web-Server: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrMsg(e.getMessage()));
         }
 
         log.info("Web-Server: Resource Specification " + id + " patched.");
@@ -298,10 +300,10 @@ public class ResourceSpecificationController implements ResourceSpecificationInt
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok", response = ResourceSpecification.class, responseContainer = "List"),
-            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = ErrMsg.class),
             //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
             //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found", response = String.class),
+            @ApiResponse(code = 404, message = "Not Found", response = ErrMsg.class),
             //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
             //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
@@ -316,7 +318,8 @@ public class ResourceSpecificationController implements ResourceSpecificationInt
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrMsg("Invalid path variable (id) request received."));
         }
 
         List<ResourceSpecification> rs = new ArrayList<>();
@@ -324,7 +327,7 @@ public class ResourceSpecificationController implements ResourceSpecificationInt
             rs.add(resourceSpecificationService.get(id));
         } catch (NotExistingEntityException e) {
             log.error("Web-Server: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrMsg(e.getMessage()));
         }
 
         log.info("Web-Server: Resource Specification " + id + " retrieved.");

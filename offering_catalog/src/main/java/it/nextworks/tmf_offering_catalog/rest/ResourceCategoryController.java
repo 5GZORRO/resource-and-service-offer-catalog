@@ -53,7 +53,7 @@ public class ResourceCategoryController implements ResourceCategoryInterface {
     @ApiResponses(value = {
             //@ApiResponse(code = 200, message = "OK", response = ResourceCategory.class),
             @ApiResponse(code = 201, message = "Created", response = ResourceCategory.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = ErrMsg.class),
             //@ApiResponse(code = 401, message = "Unauthorized"),
             //@ApiResponse(code = 403, message = "Forbidden"),
             //@ApiResponse(code = 404, message = "Not Found"),
@@ -71,7 +71,8 @@ public class ResourceCategoryController implements ResourceCategoryInterface {
 
         if(resCategory == null) {
             log.error("Web-Server: Invalid request body (resCategory) received.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid request body (resCategory) received.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrMsg("Invalid request body (resCategory) received."));
         }
 
         ResourceCategory rc = resourceCategoryService.create(resCategory);
@@ -93,10 +94,10 @@ public class ResourceCategoryController implements ResourceCategoryInterface {
     @ApiResponses(value = {
             //@ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 204, message = "Deleted"),
-            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = ErrMsg.class),
             //@ApiResponse(code = 401, message = "Unauthorized"),
             //@ApiResponse(code = 403, message = "Forbidden"),
-            @ApiResponse(code = 404, message = "Not Found", response = String.class),
+            @ApiResponse(code = 404, message = "Not Found", response = ErrMsg.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/resourceCatalogManagement/v2/resourceCategory/{id}",
             produces = { "application/json" },
@@ -110,14 +111,15 @@ public class ResourceCategoryController implements ResourceCategoryInterface {
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrMsg("Invalid path variable (id) request received."));
         }
 
         try {
             resourceCategoryService.delete(id);
         } catch (NotExistingEntityException e) {
             log.error("Web-Server: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrMsg(e.getMessage()));
         }
 
         log.info("Web-Server: Resource Category " + id + " deleted.");
@@ -201,10 +203,10 @@ public class ResourceCategoryController implements ResourceCategoryInterface {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Updated", response = ResourceCategory.class),
             //@ApiResponse(code = 204, message = "No Content"),
-            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = ErrMsg.class),
             //@ApiResponse(code = 401, message = "Unauthorized"),
             //@ApiResponse(code = 403, message = "Forbidden"),
-            @ApiResponse(code = 404, message = "Not Found", response = String.class),
+            @ApiResponse(code = 404, message = "Not Found", response = ErrMsg.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/resourceCatalogManagement/v2/resourceCategory/{id}",
             produces = { "application/json" },
@@ -220,13 +222,14 @@ public class ResourceCategoryController implements ResourceCategoryInterface {
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrMsg("Invalid path variable (id) request received."));
         }
 
         if(resourceCategory == null){
             log.error("Web-Server: Invalid request body (resourceCategory) received.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Invalid request body (resourceCategory) received.");
+                    .body(new ErrMsg("Invalid request body (resourceCategory) received."));
         }
 
         ResourceCategory rc;
@@ -234,7 +237,7 @@ public class ResourceCategoryController implements ResourceCategoryInterface {
             rc = resourceCategoryService.patch(id, resourceCategory);
         } catch (NotExistingEntityException e) {
             log.error("Web-Server: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrMsg(e.getMessage()));
         }
 
         log.info("Web-Server: Resource Category " + id + " patched.");
@@ -253,10 +256,10 @@ public class ResourceCategoryController implements ResourceCategoryInterface {
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok", response = ResourceCategory.class, responseContainer = "List"),
-            @ApiResponse(code = 400, message = "Bad Request", response = String.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = ErrMsg.class),
             //@ApiResponse(code = 401, message = "Unauthorized"),
             //@ApiResponse(code = 403, message = "Forbidden"),
-            @ApiResponse(code = 404, message = "Not Found", response = String.class),
+            @ApiResponse(code = 404, message = "Not Found", response = ErrMsg.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/resourceCatalogManagement/v2/resourceCategory/{id}",
             produces = { "application/json" },
@@ -269,7 +272,8 @@ public class ResourceCategoryController implements ResourceCategoryInterface {
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid path variable (id) request received.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrMsg("Invalid path variable (id) request received."));
         }
 
         List<ResourceCategory> rc = new ArrayList<>();
@@ -277,7 +281,7 @@ public class ResourceCategoryController implements ResourceCategoryInterface {
             rc.add(resourceCategoryService.get(id));
         } catch (NotExistingEntityException e) {
             log.error("Web-Server: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrMsg(e.getMessage()));
         }
 
         log.info("Web-Server: Resource Category " + id + " retrieved.");
