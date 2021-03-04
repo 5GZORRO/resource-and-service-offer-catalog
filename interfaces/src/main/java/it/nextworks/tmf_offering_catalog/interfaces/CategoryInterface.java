@@ -12,7 +12,7 @@ public interface CategoryInterface {
 
     ResponseEntity<?> listCategory(String fields, Integer limit, Integer offset);
 
-    ResponseEntity<?> patchCategory(CategoryUpdate category, String id);
+    ResponseEntity<?> patchCategory(String id, CategoryUpdate category);
 
     ResponseEntity<?> retrieveCategory(String id, String fields);
 }

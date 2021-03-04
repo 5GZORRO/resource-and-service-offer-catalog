@@ -1,10 +1,15 @@
 package it.nextworks.tmf_offering_catalog.rest;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class ErrMsg {
 
-    String msg;
+    @JsonProperty("msg")
+    private String msg;
 
-    public ErrMsg(String msg) { this.msg = msg; }
+    @JsonCreator
+    public ErrMsg(@JsonProperty("msg") String msg) { this.msg = msg; }
 
     public void setMsg(String msg) { this.msg = msg; }
 

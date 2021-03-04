@@ -184,23 +184,23 @@ public class CategoryController implements CategoryInterface {
             consumes = { "application/json;charset=utf-8" },
             method = RequestMethod.PATCH)
     public ResponseEntity<?>
-    patchCategory(@ApiParam(value = "The Category to be updated", required = true )
-                  @Valid @RequestBody CategoryUpdate category,
-                  @ApiParam(value = "Identifier of the Category", required = true)
-                  @PathVariable("id") String id) {
+    patchCategory(@ApiParam(value = "Identifier of the Category", required = true)
+                  @PathVariable("id") String id,
+                  @ApiParam(value = "The Category to be updated", required = true )
+                  @Valid @RequestBody CategoryUpdate category) {
 
         log.info("Web-Server: Received request to patch Category with id " + id + ".");
-
-        if(category == null) {
-            log.error("Web-Server: Invalid request body (category) received.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ErrMsg("Invalid request body (category) received."));
-        }
 
         if(!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ErrMsg("Invalid path variable (id) request received."));
+        }
+
+        if(category == null) {
+            log.error("Web-Server: Invalid request body (category) received.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrMsg("Invalid request body (category) received."));
         }
 
         Category c;
