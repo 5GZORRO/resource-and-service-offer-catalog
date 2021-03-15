@@ -1,5 +1,8 @@
 package it.nextworks.tmf_offering_catalog.rest;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
@@ -8,18 +11,53 @@ import it.nextworks.tmf_offering_catalog.information_models.product.ProductOffer
 import it.nextworks.tmf_offering_catalog.information_models.product.ProductOfferingUpdate;
 import it.nextworks.tmf_offering_catalog.interfaces.ProductOfferingInterface;
 import it.nextworks.tmf_offering_catalog.services.ProductOfferingService;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Collection;
+import java.util.Map;
 
 @RestController
 public class ProductOfferingController implements ProductOfferingInterface {
+
+    public class Invitation {}
+    public class VerifiableCredential {}
+
+    public class PublishProductOfferingRequest {
+
+        @JsonProperty("productOffering")
+        private final ProductOffering productOffering;
+        @JsonProperty("invitations")
+        private Map<String, Invitation> invitations;
+        @JsonProperty("verifiableCredentials")
+        private Collection<VerifiableCredential> verifiableCredentials;
+
+        @JsonCreator
+        public PublishProductOfferingRequest(@JsonProperty("productOffering") ProductOffering productOffering,
+                                             @JsonProperty("invitations") Map<String, Invitation> invitations,
+                                             @JsonProperty("verifiableCredentials")
+                                                     Collection<VerifiableCredential> verifiableCredentials) {
+            this.productOffering       = productOffering;
+            this.invitations           = invitations;
+            this.verifiableCredentials = verifiableCredentials;
+        }
+    }
 
     private final static Logger log = LoggerFactory.getLogger(ProductOfferingController.class);
 
@@ -31,6 +69,13 @@ public class ProductOfferingController implements ProductOfferingInterface {
 
     @Autowired
     private ProductOfferingService productOfferingService;
+
+    private static final String protocol = "http://";
+    @Value("${sc_lcm.hostname}")
+    private String hostname;
+    @Value("${sc_lcm.port}")
+    private String port;
+    private static final String requestPath = "/product-offer";
 
     @Autowired
     public ProductOfferingController(ObjectMapper objectMapper, HttpServletRequest request) {
@@ -54,10 +99,10 @@ public class ProductOfferingController implements ProductOfferingInterface {
             @ApiResponse(code = 400, message = "Bad Request", response = ErrMsg.class),
             //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
             //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            //@ApiResponse(code = 404, message = "Not Found"),
+            @ApiResponse(code = 404, message = "Not Found", response = ErrMsg.class),
             //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
             //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
-            @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
+            @ApiResponse(code = 500, message = "Internal Server Error", response = ErrMsg.class) })
     @RequestMapping(value = "/productCatalogManagement/v4/productOffering",
             produces = { "application/json;charset=utf-8" },
             consumes = { "application/json;charset=utf-8" },
@@ -77,7 +122,69 @@ public class ProductOfferingController implements ProductOfferingInterface {
 
         ProductOffering po = productOfferingService.create(productOffering);
 
-        log.info("Web-Server: Product Offering created with id " + po.getId() + ".");
+        String id = po.getId();
+        log.info("Web-Server: Product Offering created with id " + id + ".");
+
+        log.info("Web-Server: Sending publish Product Offer request to " + hostname + ".");
+
+        String request = protocol + hostname + ":" + port + requestPath;
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(request);
+
+        PublishProductOfferingRequest publishProductOfferingRequest =
+                new PublishProductOfferingRequest(po, null, null);
+        String pporJson;
+        try {
+            pporJson = objectMapper.writeValueAsString(publishProductOfferingRequest);
+        } catch (JsonProcessingException e) {
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrMsg(e.getMessage()));
+        }
+
+        StringEntity stringEntity;
+        try {
+            stringEntity = new StringEntity(pporJson);
+        } catch (UnsupportedEncodingException e) {
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrMsg(e.getMessage()));
+        }
+
+        httpPost.setEntity(stringEntity);
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("Content-type", "application/json");
+
+        CloseableHttpResponse response;
+        try {
+            response = httpClient.execute(httpPost);
+        } catch (IOException e) {
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrMsg(e.getMessage()));
+        }
+
+        if(response.getStatusLine().getStatusCode() != 200) {
+            HttpEntity httpEntity = response.getEntity();
+            String responseString;
+            if(httpEntity != null) {
+                try {
+                    responseString = EntityUtils.toString(httpEntity, "UTF-8");
+                } catch (IOException e) {
+                    log.error("Web-Server: " + "Product Offering " + id
+                            + " not published; Error description unavailable:" + e.getMessage());
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .body(new ErrMsg("Product Offering " + id
+                                    + " not published; Error description unavailable:" + e.getMessage()));
+                }
+            }
+            else
+                responseString = "Error description unavailable.";
+
+            log.error("Web-Server: " + "Product Offering " + id
+                    + " not published; " + responseString);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrMsg("Product Offering " + id + " not published; " + responseString));
+        }
+
+        log.info("Web-Server: Product Offering " + id + " published.");
 
         return ResponseEntity.status(HttpStatus.CREATED).body(po);
     }

@@ -61,8 +61,8 @@ public class ResourceSpecificationController implements ResourceSpecificationInt
             //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/resourceCatalogManagement/v2/resourceSpecification",
-            produces = { "application/json" },
-            consumes = { "application/json" },
+            produces = { "application/json;charset=utf-8" },
+            consumes = { "application/json;charset=utf-8" },
             method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<?>
@@ -103,7 +103,7 @@ public class ResourceSpecificationController implements ResourceSpecificationInt
             //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/resourceCatalogManagement/v2/resourceSpecification/{id}",
-            produces = { "application/json" },
+            produces = { "application/json;charset=utf-8" },
             method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public ResponseEntity<?>
@@ -149,7 +149,7 @@ public class ResourceSpecificationController implements ResourceSpecificationInt
             //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/resourceCatalogManagement/v2/resourceSpecification",
-            produces = { "application/json" },
+            produces = { "application/json;charset=utf-8" },
             method = RequestMethod.GET)
     public ResponseEntity<?>
     listResourceSpecification(@ApiParam(value = "For filtering: The (immediate) base class type of this REST resource")
@@ -253,8 +253,8 @@ public class ResourceSpecificationController implements ResourceSpecificationInt
             //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/resourceCatalogManagement/v2/resourceSpecification/{id}",
-            produces = { "application/json" },
-            consumes = { "application/json" },
+            produces = { "application/json;charset=utf-8" },
+            consumes = { "application/json;charset=utf-8" },
             method = RequestMethod.PATCH)
     public ResponseEntity<?>
     patchResourceSpecification(@ApiParam(value = "Identifier of the ResourceSpecification",required = true)
@@ -308,7 +308,7 @@ public class ResourceSpecificationController implements ResourceSpecificationInt
             //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/resourceCatalogManagement/v2/resourceSpecification/{id}",
-            produces = { "application/json" },
+            produces = { "application/json;charset=utf-8" },
             method = RequestMethod.GET)
     public ResponseEntity<?>
     retrieveResourceSpecification(@ApiParam(value = "Identifier of the Resource Specification", required = true)

@@ -59,8 +59,8 @@ public class ResourceCandidateController implements ResourceCandidateInterface {
             //@ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/resourceCatalogManagement/v2/resourceCandidate",
-            produces = { "application/json" },
-            consumes = { "application/json" },
+            produces = { "application/json;charset=utf-8" },
+            consumes = { "application/json;charset=utf-8" },
             method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<?>
@@ -100,7 +100,7 @@ public class ResourceCandidateController implements ResourceCandidateInterface {
             @ApiResponse(code = 404, message = "Not Found", response = ErrMsg.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/resourceCatalogManagement/v2/resourceCandidate/{id}",
-            produces = { "application/json" },
+            produces = { "application/json;charset=utf-8" },
             method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public ResponseEntity<?>
@@ -144,7 +144,7 @@ public class ResourceCandidateController implements ResourceCandidateInterface {
             //@ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/resourceCatalogManagement/v2/resourceCandidate",
-            produces = { "application/json" },
+            produces = { "application/json;charset=utf-8" },
             method = RequestMethod.GET)
     public ResponseEntity<?>
     listResourceCandidate(@ApiParam(value = "For filtering: The (immediate) base class type of this REST resource")
@@ -201,8 +201,8 @@ public class ResourceCandidateController implements ResourceCandidateInterface {
             @ApiResponse(code = 404, message = "Not Found", response = ErrMsg.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/resourceCatalogManagement/v2/resourceCandidate/{id}",
-            produces = { "application/json" },
-            consumes = { "application/json" },
+            produces = { "application/json;charset=utf-8" },
+            consumes = { "application/json;charset=utf-8" },
             method = RequestMethod.PATCH)
     public ResponseEntity<?>
     patchResourceCandidate(@ApiParam(value = "Identifier of the Resource Candidate", required = true)
@@ -254,7 +254,7 @@ public class ResourceCandidateController implements ResourceCandidateInterface {
             @ApiResponse(code = 404, message = "Not Found", response = ErrMsg.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
     @RequestMapping(value = "/resourceCatalogManagement/v2/resourceCandidate/{id}",
-            produces = { "application/json" },
+            produces = { "application/json;charset=utf-8" },
             method = RequestMethod.GET)
     public ResponseEntity<?>
     retrieveResourceCandidate(@ApiParam(value = "Identifier of the Resource Candidate", required = true)
