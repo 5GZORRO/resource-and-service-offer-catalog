@@ -71,11 +71,18 @@ public class ProductOfferingController implements ProductOfferingInterface {
     private ProductOfferingService productOfferingService;
 
     private static final String protocol = "http://";
+
     @Value("${sc_lcm.hostname}")
-    private String hostname;
+    private String scLcmHostname;
     @Value("${sc_lcm.port}")
-    private String port;
-    private static final String requestPath = "/product-offer";
+    private String scLcmPort;
+    private static final String scLcmRequestPath = "/product-offer";
+
+    @Value("${srsd.hostname}")
+    private String srsdHostname;
+    @Value("${srsd.port}")
+    private String srsdPort;
+    private static final String srsdRequestPath = "/classifyOffer";
 
     @Autowired
     public ProductOfferingController(ObjectMapper objectMapper, HttpServletRequest request) {
@@ -83,51 +90,13 @@ public class ProductOfferingController implements ProductOfferingInterface {
         this.request = request;
     }
 
-    @ApiOperation(value = "Creates a ProductOffering", nickname = "createProductOffering",
-            notes = "This operation creates a ProductOffering entity.", response = ProductOffering.class,
-            authorizations = {
-            @Authorization(value = "spring_oauth", scopes = {
-                    @AuthorizationScope(scope = "read", description = "for read operations"),
-                    @AuthorizationScope(scope = "openapi", description = "Access openapi API"),
-                    @AuthorizationScope(scope = "admin", description = "Access admin API"),
-                    @AuthorizationScope(scope = "write", description = "for write operations")
-            })
-    })
-    @ApiResponses(value = {
-            //@ApiResponse(code = 200, message = "OK", response = ProductOffering.class),
-            @ApiResponse(code = 201, message = "Created", response = ProductOffering.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = ErrMsg.class),
-            //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found", response = ErrMsg.class),
-            //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-            //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
-            @ApiResponse(code = 500, message = "Internal Server Error", response = ErrMsg.class) })
-    @RequestMapping(value = "/productCatalogManagement/v4/productOffering",
-            produces = { "application/json;charset=utf-8" },
-            consumes = { "application/json;charset=utf-8" },
-            method = RequestMethod.POST)
-    @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<?>
-    createProductOffering(@ApiParam(value = "The ProductOffering to be created", required = true )
-                          @Valid @RequestBody ProductOfferingCreate productOffering) {
+    private ResponseEntity<ErrMsg> publishProductOffering(ProductOffering po) {
 
-        log.info("Web-Server: Received request to create a Product Offering.");
-
-        if(productOffering == null) {
-            log.error("Web-Server: Invalid request body (productOffering) received.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ErrMsg("Invalid request body (productOffering) received."));
-        }
-
-        ProductOffering po = productOfferingService.create(productOffering);
+        log.info("Web-Server: Sending publish Product Offer request to " + scLcmHostname + ".");
 
         String id = po.getId();
-        log.info("Web-Server: Product Offering created with id " + id + ".");
 
-        log.info("Web-Server: Sending publish Product Offer request to " + hostname + ".");
-
-        String request = protocol + hostname + ":" + port + requestPath;
+        String request = protocol + scLcmHostname + ":" + scLcmPort + scLcmRequestPath;
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(request);
 
@@ -185,6 +154,125 @@ public class ProductOfferingController implements ProductOfferingInterface {
         }
 
         log.info("Web-Server: Product Offering " + id + " published.");
+
+        return null;
+    }
+
+    private ResponseEntity<ErrMsg> classifyProductOffering(ProductOffering po) {
+
+        log.info("Web-Server: Sending classify Product Offer request to " + srsdHostname + ".");
+
+        String id = po.getId();
+
+        String request = protocol + srsdHostname + ":" + srsdPort + srsdRequestPath;
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(request);
+
+        String poJson;
+        try {
+            poJson = objectMapper.writeValueAsString(po);
+        } catch (JsonProcessingException e) {
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrMsg(e.getMessage()));
+        }
+
+        StringEntity stringEntity;
+        try {
+            stringEntity = new StringEntity(poJson);
+        } catch (UnsupportedEncodingException e) {
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrMsg(e.getMessage()));
+        }
+
+        httpPost.setEntity(stringEntity);
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("Content-type", "application/json");
+
+        CloseableHttpResponse response;
+        try {
+            response = httpClient.execute(httpPost);
+        } catch (IOException e) {
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrMsg(e.getMessage()));
+        }
+
+        if(response.getStatusLine().getStatusCode() != 200) {
+            HttpEntity httpEntity = response.getEntity();
+            String responseString;
+            if(httpEntity != null) {
+                try {
+                    responseString = EntityUtils.toString(httpEntity, "UTF-8");
+                } catch (IOException e) {
+                    log.error("Web-Server: " + "Product Offering " + id
+                            + " not classified; Error description unavailable:" + e.getMessage());
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .body(new ErrMsg("Product Offering " + id
+                                    + " not classified; Error description unavailable:" + e.getMessage()));
+                }
+            }
+            else
+                responseString = "Error description unavailable.";
+
+            log.error("Web-Server: " + "Product Offering " + id
+                    + " not classified; " + responseString);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrMsg("Product Offering " + id + " not classified; " + responseString));
+        }
+
+        log.info("Web-Server: Product Offering " + id + " classified.");
+
+        return null;
+    }
+
+    @ApiOperation(value = "Creates a ProductOffering", nickname = "createProductOffering",
+            notes = "This operation creates a ProductOffering entity.", response = ProductOffering.class,
+            authorizations = {
+            @Authorization(value = "spring_oauth", scopes = {
+                    @AuthorizationScope(scope = "read", description = "for read operations"),
+                    @AuthorizationScope(scope = "openapi", description = "Access openapi API"),
+                    @AuthorizationScope(scope = "admin", description = "Access admin API"),
+                    @AuthorizationScope(scope = "write", description = "for write operations")
+            })
+    })
+    @ApiResponses(value = {
+            //@ApiResponse(code = 200, message = "OK", response = ProductOffering.class),
+            @ApiResponse(code = 201, message = "Created", response = ProductOffering.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = ErrMsg.class),
+            //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+            //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
+            @ApiResponse(code = 404, message = "Not Found", response = ErrMsg.class),
+            //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
+            //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
+            @ApiResponse(code = 500, message = "Internal Server Error", response = ErrMsg.class) })
+    @RequestMapping(value = "/productCatalogManagement/v4/productOffering",
+            produces = { "application/json;charset=utf-8" },
+            consumes = { "application/json;charset=utf-8" },
+            method = RequestMethod.POST)
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<?>
+    createProductOffering(@ApiParam(value = "The ProductOffering to be created", required = true )
+                          @Valid @RequestBody ProductOfferingCreate productOffering) {
+
+        log.info("Web-Server: Received request to create a Product Offering.");
+
+        if(productOffering == null) {
+            log.error("Web-Server: Invalid request body (productOffering) received.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrMsg("Invalid request body (productOffering) received."));
+        }
+
+        ProductOffering po = productOfferingService.create(productOffering);
+
+        String id = po.getId();
+        log.info("Web-Server: Product Offering created with id " + id + ".");
+
+        ResponseEntity<ErrMsg> publishResponse = publishProductOffering(po);
+        if(publishResponse != null)
+            return publishResponse;
+
+        ResponseEntity<ErrMsg> classifyResponse = classifyProductOffering(po);
+        if(classifyResponse != null)
+            return classifyResponse;
 
         return ResponseEntity.status(HttpStatus.CREATED).body(po);
     }
