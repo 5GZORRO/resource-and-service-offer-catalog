@@ -3,15 +3,14 @@ package it.nextworks.tmf_offering_catalog.services;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,30 +24,28 @@ import java.util.List;
 @Service
 public class DIDDiscoveryService {
 
-    public class DIDNotGeneratedException extends Exception {
-        public DIDNotGeneratedException(String msg) { super(msg); }
+    public class DIDGenerationRequestException extends Exception {
+        public DIDGenerationRequestException(String msg) { super(msg); }
     }
 
-    public class EmptyResponseException extends Exception {
-        public EmptyResponseException(String msg) { super(msg); }
-    }
+    public class Claims {}
 
-    public static class ApiResponse {
+    public class Offer {
 
-        @JsonProperty("code")
-        private final int code;
         @JsonProperty("type")
-        private final String type;
-        @JsonProperty("message")
-        private final String message;
+        private String type;
+        @JsonProperty("claims")
+        private Claims claims;
+        @JsonProperty("handler_url")
+        private String handlerUrl;
 
         @JsonCreator
-        public ApiResponse(@JsonProperty("code") int code,
-                           @JsonProperty("type") String type,
-                           @JsonProperty("message") String message) {
-            this.code    = code;
-            this.type    = type;
-            this.message = message;
+        public Offer(@JsonProperty("type") String type,
+                     @JsonProperty("claims") Claims claims,
+                     @JsonProperty("handler_url") String handlerUrl) {
+            this.type = type;
+            this.claims = claims;
+            this.handlerUrl = handlerUrl;
         }
     }
 
@@ -56,43 +53,53 @@ public class DIDDiscoveryService {
 
     private static final String protocol = "http://";
     @Value("${did_service.hostname}")
-    private String hostname;
+    private String didServiceHostname;
     @Value("${did_service.port}")
-    private String port;
+    private String didServicePort;
     private static final String requestPath = "/holder/create_did";
 
     @Value("${did_service.token}")
     private String token;
+
+    @Value("${server.hostname}")
+    private String hostname;
+    @Value("${server.port}")
+    private String port;
 
     private final ObjectMapper objectMapper;
 
     @Autowired
     public DIDDiscoveryService(ObjectMapper objectMapper) { this.objectMapper = objectMapper; }
 
-    public String discoverDID() throws IOException, DIDNotGeneratedException, EmptyResponseException {
+    public void discoverDID() throws IOException, DIDGenerationRequestException {
 
-        log.info("Sending create DID request to " + hostname + ".");
+        log.info("Sending create DID request to " + didServiceHostname + ".");
 
-        String request = protocol + hostname + ":" + port + requestPath;
+        String request = protocol + didServiceHostname + ":" + didServicePort + requestPath;
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(request);
 
         List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("token", token));
+
+        Offer requestOffer =
+                new Offer(null, null,
+                        protocol + hostname + ":" + port +
+                                "/tmf-api/productCatalogManagement/v4/productOffering/did");
+        String roJson = objectMapper.writeValueAsString(requestOffer);
+
+        StringEntity stringEntity = new StringEntity(roJson);
+
         httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+        httpPost.setEntity(stringEntity);
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("Content-type", "application/json");
 
         CloseableHttpResponse response = httpClient.execute(httpPost);
 
         if(response.getStatusLine().getStatusCode() != 200)
-            throw new DIDNotGeneratedException("The DID Service do not generated the DID.");
+            throw new DIDGenerationRequestException("The DID Service do not accepted the DID creation request.");
 
-        HttpEntity httpEntity = response.getEntity();
-        if(httpEntity == null)
-            throw new EmptyResponseException("The DID Service returned an empty response: DID not available.");
-
-        String responseString = EntityUtils.toString(httpEntity, "UTF-8");
-        ApiResponse apiResponse = objectMapper.readValue(responseString, ApiResponse.class);
-
-        return apiResponse.message;
+        log.info("Create DID request accepted by " + didServiceHostname + ".");
     }
 }
