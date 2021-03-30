@@ -1,5 +1,6 @@
 package it.nextworks.tmf_offering_catalog.services;
 
+import it.nextworks.tmf_offering_catalog.common.exception.DIDGenerationRequestException;
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
 import it.nextworks.tmf_offering_catalog.information_models.PlaceRef;
 import it.nextworks.tmf_offering_catalog.information_models.ResourceCandidateRef;
@@ -18,6 +19,7 @@ import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
 import org.threeten.bp.ZoneId;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -36,13 +38,33 @@ public class ProductOfferingService {
     private static final String path = "/tmf-api/productCatalogManagement/v4/productOffering/";
 
     @Autowired
+    private CommunicationService communicationService;
+
+    @Autowired
     private ProductOfferingRepository productOfferingRepository;
 
-    public ProductOffering create(ProductOfferingCreate productOfferingCreate) {
+    public ProductOffering create(ProductOfferingCreate productOfferingCreate)
+            throws IOException, DIDGenerationRequestException {
 
         log.info("Received request to create a Product Offering.");
 
         final String id = UUID.randomUUID().toString();
+
+        /* We will need to move the call to ID&P in case the CommunicationService will have
+         * to update the productOffering to insert the DID (now external in the product_offering_states table)
+         */
+        log.info("Requesting DID via CommunicationService to ID&P.");
+
+        try {
+            communicationService.requestDID(id);
+        } catch (IOException e) {
+            throw e;
+        } catch (DIDGenerationRequestException e) {
+            throw e;
+        }
+
+        log.info("DID successfully requested via CommunicationService to ID&P.");
+
         ProductOffering productOffering = new ProductOffering()
                 .baseType(productOfferingCreate.getBaseType())
                 .schemaLocation(productOfferingCreate.getSchemaLocation())

@@ -1,5 +1,6 @@
 package it.nextworks.tmf_offering_catalog.interfaces;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import it.nextworks.tmf_offering_catalog.information_models.product.ProductOfferingCreate;
 import it.nextworks.tmf_offering_catalog.information_models.product.ProductOfferingUpdate;
 import org.springframework.http.ResponseEntity;
@@ -7,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 public interface ProductOfferingInterface {
 
     ResponseEntity<?> createProductOffering(ProductOfferingCreate productOffering);
+
+    ResponseEntity<?> handleDIDReceiving(String id, JsonNode jsonNode);
 
     ResponseEntity<?> deleteProductOffering(String id);
 
