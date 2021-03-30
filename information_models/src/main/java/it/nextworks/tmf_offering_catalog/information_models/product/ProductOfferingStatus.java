@@ -2,6 +2,7 @@ package it.nextworks.tmf_offering_catalog.information_models.product;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
+import it.nextworks.tmf_offering_catalog.information_models.common.converter.ProductOfferingStatesEnumConverter;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
@@ -23,6 +24,7 @@ public class ProductOfferingStatus {
     private String did;
 
     @JsonProperty("status")
+    @Convert(converter = ProductOfferingStatesEnumConverter.class)
     private ProductOfferingStatesEnum status;
 
     public ProductOfferingStatus catalogId(String catalogId) {

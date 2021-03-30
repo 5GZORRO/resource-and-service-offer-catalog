@@ -1,4 +1,4 @@
-package it.nextworks.tmf_offering_catalog.information_models;
+package it.nextworks.tmf_offering_catalog.information_models.common;
 
 import java.util.Objects;
 
@@ -10,18 +10,17 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
 
 /**
- * Place reference. PlaceRef defines the placeRefs where the products are sold or delivered.
+ * Attachment reference. An attachment complements the description of an element (for instance a product) through video, pictures
  */
-@ApiModel(description = "Place reference. PlaceRef defines the placeRefs where the products are sold or delivered.")
+@ApiModel(description = "Attachment reference. An attachment complements the description of an element (for instance a product) through video, pictures")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-09T15:56:41.618Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-10T10:00:31.056Z")
 
 @Entity
-@Table(name = "place_refs")
-public class PlaceRef {
+@Table(name = "attachment_refs")
+public class AttachmentRef {
 
   @JsonProperty("@baseType")
   @Column(name = "base_type")
@@ -38,6 +37,9 @@ public class PlaceRef {
   @JsonProperty("@type")
   private String type = null;
 
+  @JsonProperty("description")
+  private String description = null;
+
   @JsonProperty("href")
   private String href = null;
 
@@ -47,8 +49,8 @@ public class PlaceRef {
   @JsonProperty("name")
   private String name = null;
 
-  @JsonProperty("role")
-  private String role = null;
+  @JsonProperty("url")
+  private String url = null;
 
   @JsonIgnore
   @Id
@@ -56,7 +58,7 @@ public class PlaceRef {
   @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
-  public PlaceRef baseType(String baseType) {
+  public AttachmentRef baseType(String baseType) {
     this.baseType = baseType;
     return this;
   }
@@ -76,7 +78,7 @@ public class PlaceRef {
     this.baseType = baseType;
   }
 
-  public PlaceRef referredType(String referredType) {
+  public AttachmentRef referredType(String referredType) {
     this.referredType = referredType;
     return this;
   }
@@ -96,7 +98,7 @@ public class PlaceRef {
     this.referredType = referredType;
   }
 
-  public PlaceRef schemaLocation(String schemaLocation) {
+  public AttachmentRef schemaLocation(String schemaLocation) {
     this.schemaLocation = schemaLocation;
     return this;
   }
@@ -116,7 +118,7 @@ public class PlaceRef {
     this.schemaLocation = schemaLocation;
   }
 
-  public PlaceRef type(String type) {
+  public AttachmentRef type(String type) {
     this.type = type;
     return this;
   }
@@ -136,7 +138,27 @@ public class PlaceRef {
     this.type = type;
   }
 
-  public PlaceRef href(String href) {
+  public AttachmentRef description(String description) {
+    this.description = description;
+    return this;
+  }
+
+  /**
+   * A narrative text describing the content of the attachment
+   * @return description
+  **/
+  @ApiModelProperty(value = "A narrative text describing the content of the attachment")
+
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public AttachmentRef href(String href) {
     this.href = href;
     return this;
   }
@@ -156,17 +178,16 @@ public class PlaceRef {
     this.href = href;
   }
 
-  public PlaceRef id(String id) {
+  public AttachmentRef id(String id) {
     this.id = id;
     return this;
   }
 
   /**
-   * Unique identifier of a related entity.
+   * Get id
    * @return id
   **/
-  @ApiModelProperty(required = true, value = "Unique identifier of a related entity.")
-  @NotNull
+  @ApiModelProperty(value = "")
 
 
   public String getId() {
@@ -177,7 +198,7 @@ public class PlaceRef {
     this.id = id;
   }
 
-  public PlaceRef name(String name) {
+  public AttachmentRef name(String name) {
     this.name = name;
     return this;
   }
@@ -197,27 +218,27 @@ public class PlaceRef {
     this.name = name;
   }
 
-  public PlaceRef role(String role) {
-    this.role = role;
+  public AttachmentRef url(String url) {
+    this.url = url;
     return this;
   }
 
   /**
-   * Role of the place (for instance: 'home delivery', 'shop retrieval')
-   * @return role
-   **/
-  @ApiModelProperty(value = "Role of the place (for instance: 'home delivery', 'shop retrieval')")
+   * Link to the attachment media/content
+   * @return url
+  **/
+  @ApiModelProperty(value = "Link to the attachment media/content")
 
 
-  public String getRole() {
-    return role;
+  public String getUrl() {
+    return url;
   }
 
-  public void setRole(String role) {
-    this.role = role;
+  public void setUrl(String url) {
+    this.url = url;
   }
 
-  public PlaceRef uuid(String uuid) {
+  public AttachmentRef uuid(String uuid) {
     this.uuid = uuid;
     return this;
   }
@@ -237,7 +258,6 @@ public class PlaceRef {
     this.uuid = uuid;
   }
 
-
   @Override
   public boolean equals(java.lang.Object o) {
     if (this == o) {
@@ -246,36 +266,38 @@ public class PlaceRef {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    PlaceRef placeRef = (PlaceRef) o;
-    return Objects.equals(this.baseType, placeRef.baseType) &&
-        Objects.equals(this.referredType, placeRef.referredType) &&
-        Objects.equals(this.schemaLocation, placeRef.schemaLocation) &&
-        Objects.equals(this.type, placeRef.type) &&
-        Objects.equals(this.href, placeRef.href) &&
-        Objects.equals(this.id, placeRef.id) &&
-        Objects.equals(this.name, placeRef.name) &&
-        Objects.equals(this.role, placeRef.role) &&
-        Objects.equals(this.uuid, placeRef.uuid);
+    AttachmentRef attachmentRef = (AttachmentRef) o;
+    return Objects.equals(this.baseType, attachmentRef.baseType) &&
+        Objects.equals(this.referredType, attachmentRef.referredType) &&
+        Objects.equals(this.schemaLocation, attachmentRef.schemaLocation) &&
+        Objects.equals(this.type, attachmentRef.type) &&
+        Objects.equals(this.description, attachmentRef.description) &&
+        Objects.equals(this.href, attachmentRef.href) &&
+        Objects.equals(this.id, attachmentRef.id) &&
+        Objects.equals(this.name, attachmentRef.name) &&
+        Objects.equals(this.url, attachmentRef.url) &&
+        Objects.equals(this.uuid, attachmentRef.uuid);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(baseType, referredType, schemaLocation, type, href, id, name, role, uuid);
+    return Objects.hash(baseType, referredType, schemaLocation, type, description, href, id, name, url, uuid);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class PlaceRef {\n");
+    sb.append("class AttachmentRef {\n");
     
     sb.append("    baseType: ").append(toIndentedString(baseType)).append("\n");
     sb.append("    referredType: ").append(toIndentedString(referredType)).append("\n");
     sb.append("    schemaLocation: ").append(toIndentedString(schemaLocation)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
+    sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    href: ").append(toIndentedString(href)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    role: ").append(toIndentedString(role)).append("\n");
+    sb.append("    url: ").append(toIndentedString(url)).append("\n");
     sb.append("    uuid: ").append(toIndentedString(uuid)).append("\n");
     sb.append("}");
     return sb.toString();

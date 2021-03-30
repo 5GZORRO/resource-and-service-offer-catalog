@@ -8,9 +8,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.nextworks.tmf_offering_catalog.information_models.RelatedParty;
-import it.nextworks.tmf_offering_catalog.information_models.ResourceCandidateRef;
-import it.nextworks.tmf_offering_catalog.information_models.TimePeriod;
+import it.nextworks.tmf_offering_catalog.information_models.common.RelatedParty;
+import it.nextworks.tmf_offering_catalog.information_models.common.ResourceCandidateRef;
+import it.nextworks.tmf_offering_catalog.information_models.common.TimePeriod;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 

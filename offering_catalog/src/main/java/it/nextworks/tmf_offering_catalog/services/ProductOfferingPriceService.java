@@ -1,9 +1,9 @@
 package it.nextworks.tmf_offering_catalog.services;
 
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
-import it.nextworks.tmf_offering_catalog.information_models.PlaceRef;
-import it.nextworks.tmf_offering_catalog.information_models.Quantity;
-import it.nextworks.tmf_offering_catalog.information_models.TimePeriod;
+import it.nextworks.tmf_offering_catalog.information_models.common.PlaceRef;
+import it.nextworks.tmf_offering_catalog.information_models.common.Quantity;
+import it.nextworks.tmf_offering_catalog.information_models.common.TimePeriod;
 import it.nextworks.tmf_offering_catalog.information_models.product.*;
 import it.nextworks.tmf_offering_catalog.repo.ProductOfferingPriceRepository;
 import org.hibernate.Hibernate;

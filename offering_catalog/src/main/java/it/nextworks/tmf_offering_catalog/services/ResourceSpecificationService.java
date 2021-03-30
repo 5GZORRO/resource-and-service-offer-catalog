@@ -1,9 +1,9 @@
 package it.nextworks.tmf_offering_catalog.services;
 
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
-import it.nextworks.tmf_offering_catalog.information_models.AttachmentRef;
-import it.nextworks.tmf_offering_catalog.information_models.RelatedParty;
-import it.nextworks.tmf_offering_catalog.information_models.TimePeriod;
+import it.nextworks.tmf_offering_catalog.information_models.common.AttachmentRef;
+import it.nextworks.tmf_offering_catalog.information_models.common.RelatedParty;
+import it.nextworks.tmf_offering_catalog.information_models.common.TimePeriod;
 import it.nextworks.tmf_offering_catalog.information_models.resource.*;
 import it.nextworks.tmf_offering_catalog.repo.ResourceSpecificationRepository;
 import org.hibernate.Hibernate;

@@ -1,4 +1,4 @@
-package it.nextworks.tmf_offering_catalog.information_models;
+package it.nextworks.tmf_offering_catalog.information_models.common;
 
 import java.util.Objects;
 
@@ -12,15 +12,15 @@ import org.springframework.validation.annotation.Validated;
 import javax.persistence.*;
 
 /**
- * Attachment reference. An attachment complements the description of an element (for instance a product) through video, pictures
+ * RelatedParty reference. A related party defines party or party role linked to a specific entity.
  */
-@ApiModel(description = "Attachment reference. An attachment complements the description of an element (for instance a product) through video, pictures")
+@ApiModel(description = "RelatedParty reference. A related party defines party or party role linked to a specific entity.")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-10T10:00:31.056Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-09T15:56:41.618Z")
 
 @Entity
-@Table(name = "attachment_refs")
-public class AttachmentRef {
+@Table(name = "related_parties")
+public class RelatedParty {
 
   @JsonProperty("@baseType")
   @Column(name = "base_type")
@@ -37,8 +37,9 @@ public class AttachmentRef {
   @JsonProperty("@type")
   private String type = null;
 
-  @JsonProperty("description")
-  private String description = null;
+  @JsonProperty("extendedInfo")
+  @Column(name = "extended_info")
+  private String extendedInfo = null;
 
   @JsonProperty("href")
   private String href = null;
@@ -49,8 +50,8 @@ public class AttachmentRef {
   @JsonProperty("name")
   private String name = null;
 
-  @JsonProperty("url")
-  private String url = null;
+  @JsonProperty("role")
+  private String role = null;
 
   @JsonIgnore
   @Id
@@ -58,7 +59,7 @@ public class AttachmentRef {
   @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
-  public AttachmentRef baseType(String baseType) {
+  public RelatedParty baseType(String baseType) {
     this.baseType = baseType;
     return this;
   }
@@ -78,7 +79,7 @@ public class AttachmentRef {
     this.baseType = baseType;
   }
 
-  public AttachmentRef referredType(String referredType) {
+  public RelatedParty referredType(String referredType) {
     this.referredType = referredType;
     return this;
   }
@@ -98,7 +99,7 @@ public class AttachmentRef {
     this.referredType = referredType;
   }
 
-  public AttachmentRef schemaLocation(String schemaLocation) {
+  public RelatedParty schemaLocation(String schemaLocation) {
     this.schemaLocation = schemaLocation;
     return this;
   }
@@ -118,7 +119,7 @@ public class AttachmentRef {
     this.schemaLocation = schemaLocation;
   }
 
-  public AttachmentRef type(String type) {
+  public RelatedParty type(String type) {
     this.type = type;
     return this;
   }
@@ -138,27 +139,27 @@ public class AttachmentRef {
     this.type = type;
   }
 
-  public AttachmentRef description(String description) {
-    this.description = description;
+  public RelatedParty extendedInfo(String extendedInfo) {
+    this.extendedInfo = extendedInfo;
     return this;
   }
 
   /**
-   * A narrative text describing the content of the attachment
-   * @return description
+   * Get extendedInfo
+   * @return extendedInfo
   **/
-  @ApiModelProperty(value = "A narrative text describing the content of the attachment")
+  @ApiModelProperty(value = "")
 
 
-  public String getDescription() {
-    return description;
+  public String getExtendedInfo() {
+    return extendedInfo;
   }
 
-  public void setDescription(String description) {
-    this.description = description;
+  public void setExtendedInfo(String extendedInfo) {
+    this.extendedInfo = extendedInfo;
   }
 
-  public AttachmentRef href(String href) {
+  public RelatedParty href(String href) {
     this.href = href;
     return this;
   }
@@ -178,7 +179,7 @@ public class AttachmentRef {
     this.href = href;
   }
 
-  public AttachmentRef id(String id) {
+  public RelatedParty id(String id) {
     this.id = id;
     return this;
   }
@@ -198,7 +199,7 @@ public class AttachmentRef {
     this.id = id;
   }
 
-  public AttachmentRef name(String name) {
+  public RelatedParty name(String name) {
     this.name = name;
     return this;
   }
@@ -218,27 +219,27 @@ public class AttachmentRef {
     this.name = name;
   }
 
-  public AttachmentRef url(String url) {
-    this.url = url;
+  public RelatedParty role(String role) {
+    this.role = role;
     return this;
   }
 
   /**
-   * Link to the attachment media/content
-   * @return url
+   * Role of the related party.
+   * @return role
   **/
-  @ApiModelProperty(value = "Link to the attachment media/content")
+  @ApiModelProperty(value = "Role of the related party.")
 
 
-  public String getUrl() {
-    return url;
+  public String getRole() {
+    return role;
   }
 
-  public void setUrl(String url) {
-    this.url = url;
+  public void setRole(String role) {
+    this.role = role;
   }
 
-  public AttachmentRef uuid(String uuid) {
+  public RelatedParty uuid(String uuid) {
     this.uuid = uuid;
     return this;
   }
@@ -266,38 +267,38 @@ public class AttachmentRef {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    AttachmentRef attachmentRef = (AttachmentRef) o;
-    return Objects.equals(this.baseType, attachmentRef.baseType) &&
-        Objects.equals(this.referredType, attachmentRef.referredType) &&
-        Objects.equals(this.schemaLocation, attachmentRef.schemaLocation) &&
-        Objects.equals(this.type, attachmentRef.type) &&
-        Objects.equals(this.description, attachmentRef.description) &&
-        Objects.equals(this.href, attachmentRef.href) &&
-        Objects.equals(this.id, attachmentRef.id) &&
-        Objects.equals(this.name, attachmentRef.name) &&
-        Objects.equals(this.url, attachmentRef.url) &&
-        Objects.equals(this.uuid, attachmentRef.uuid);
+    RelatedParty relatedParty = (RelatedParty) o;
+    return Objects.equals(this.baseType, relatedParty.baseType) &&
+        Objects.equals(this.referredType, relatedParty.referredType) &&
+        Objects.equals(this.schemaLocation, relatedParty.schemaLocation) &&
+        Objects.equals(this.type, relatedParty.type) &&
+        Objects.equals(this.extendedInfo, relatedParty.extendedInfo) &&
+        Objects.equals(this.href, relatedParty.href) &&
+        Objects.equals(this.id, relatedParty.id) &&
+        Objects.equals(this.name, relatedParty.name) &&
+        Objects.equals(this.role, relatedParty.role) &&
+        Objects.equals(this.uuid, relatedParty.uuid);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(baseType, referredType, schemaLocation, type, description, href, id, name, url, uuid);
+    return Objects.hash(baseType, referredType, schemaLocation, type, extendedInfo, href, id, name, role, uuid);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class AttachmentRef {\n");
+    sb.append("class RelatedParty {\n");
     
     sb.append("    baseType: ").append(toIndentedString(baseType)).append("\n");
     sb.append("    referredType: ").append(toIndentedString(referredType)).append("\n");
     sb.append("    schemaLocation: ").append(toIndentedString(schemaLocation)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
-    sb.append("    description: ").append(toIndentedString(description)).append("\n");
+    sb.append("    extendedInfo: ").append(toIndentedString(extendedInfo)).append("\n");
     sb.append("    href: ").append(toIndentedString(href)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    url: ").append(toIndentedString(url)).append("\n");
+    sb.append("    role: ").append(toIndentedString(role)).append("\n");
     sb.append("    uuid: ").append(toIndentedString(uuid)).append("\n");
     sb.append("}");
     return sb.toString();

@@ -10,10 +10,13 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.nextworks.tmf_offering_catalog.information_models.LifecycleStatusEnumEnum;
-import it.nextworks.tmf_offering_catalog.information_models.RelatedParty;
-import it.nextworks.tmf_offering_catalog.information_models.TimePeriod;
+import it.nextworks.tmf_offering_catalog.information_models.common.LifecycleStatusEnumEnum;
+import it.nextworks.tmf_offering_catalog.information_models.common.RelatedParty;
+import it.nextworks.tmf_offering_catalog.information_models.common.TimePeriod;
+import it.nextworks.tmf_offering_catalog.information_models.common.converter.LifecycleStatusEnumEnumConverter;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.Convert;
 import javax.validation.Valid;
 
 /**

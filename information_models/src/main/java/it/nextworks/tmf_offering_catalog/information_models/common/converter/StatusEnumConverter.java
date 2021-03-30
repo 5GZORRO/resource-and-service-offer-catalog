@@ -1,6 +1,6 @@
-package it.nextworks.tmf_offering_catalog.common.converter;
+package it.nextworks.tmf_offering_catalog.information_models.common.converter;
 
-import it.nextworks.tmf_offering_catalog.information_models.StatusEnum;
+import it.nextworks.tmf_offering_catalog.information_models.common.StatusEnum;
 
 import javax.persistence.AttributeConverter;
 

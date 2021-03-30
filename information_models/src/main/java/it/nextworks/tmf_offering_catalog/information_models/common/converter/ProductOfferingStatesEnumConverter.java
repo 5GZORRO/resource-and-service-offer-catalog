@@ -1,4 +1,4 @@
-package it.nextworks.tmf_offering_catalog.common.converter;
+package it.nextworks.tmf_offering_catalog.information_models.common.converter;
 
 import it.nextworks.tmf_offering_catalog.information_models.product.ProductOfferingStatesEnum;
 

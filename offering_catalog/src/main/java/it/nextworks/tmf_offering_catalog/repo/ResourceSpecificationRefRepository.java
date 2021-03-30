@@ -1,6 +1,6 @@
 package it.nextworks.tmf_offering_catalog.repo;
 
-import it.nextworks.tmf_offering_catalog.information_models.ResourceSpecificationRef;
+import it.nextworks.tmf_offering_catalog.information_models.common.ResourceSpecificationRef;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

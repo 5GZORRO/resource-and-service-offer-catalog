@@ -1,4 +1,4 @@
-package it.nextworks.tmf_offering_catalog.information_models;
+package it.nextworks.tmf_offering_catalog.information_models.common;
 
 import java.util.Objects;
 
@@ -10,17 +10,18 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 /**
- * Resource Specification reference: The ResourceSpecification is required to realize a ProductSpecification.
+ * Place reference. PlaceRef defines the placeRefs where the products are sold or delivered.
  */
-@ApiModel(description = "Resource Specification reference: The ResourceSpecification is required to realize a ProductSpecification.")
+@ApiModel(description = "Place reference. PlaceRef defines the placeRefs where the products are sold or delivered.")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-09T15:56:41.618Z")
 
 @Entity
-@Table(name = "resource_specification_refs")
-public class ResourceSpecificationRef   {
+@Table(name = "place_refs")
+public class PlaceRef {
 
   @JsonProperty("@baseType")
   @Column(name = "base_type")
@@ -46,16 +47,16 @@ public class ResourceSpecificationRef   {
   @JsonProperty("name")
   private String name = null;
 
+  @JsonProperty("role")
+  private String role = null;
+
   @JsonIgnore
   @Id
   @GeneratedValue(generator = "uuid")
   @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
-  @JsonProperty("version")
-  private String version = null;
-
-  public ResourceSpecificationRef baseType(String baseType) {
+  public PlaceRef baseType(String baseType) {
     this.baseType = baseType;
     return this;
   }
@@ -75,7 +76,7 @@ public class ResourceSpecificationRef   {
     this.baseType = baseType;
   }
 
-  public ResourceSpecificationRef referredType(String referredType) {
+  public PlaceRef referredType(String referredType) {
     this.referredType = referredType;
     return this;
   }
@@ -95,7 +96,7 @@ public class ResourceSpecificationRef   {
     this.referredType = referredType;
   }
 
-  public ResourceSpecificationRef schemaLocation(String schemaLocation) {
+  public PlaceRef schemaLocation(String schemaLocation) {
     this.schemaLocation = schemaLocation;
     return this;
   }
@@ -115,7 +116,7 @@ public class ResourceSpecificationRef   {
     this.schemaLocation = schemaLocation;
   }
 
-  public ResourceSpecificationRef type(String type) {
+  public PlaceRef type(String type) {
     this.type = type;
     return this;
   }
@@ -135,7 +136,7 @@ public class ResourceSpecificationRef   {
     this.type = type;
   }
 
-  public ResourceSpecificationRef href(String href) {
+  public PlaceRef href(String href) {
     this.href = href;
     return this;
   }
@@ -155,16 +156,17 @@ public class ResourceSpecificationRef   {
     this.href = href;
   }
 
-  public ResourceSpecificationRef id(String id) {
+  public PlaceRef id(String id) {
     this.id = id;
     return this;
   }
 
   /**
-   * Get id
+   * Unique identifier of a related entity.
    * @return id
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "Unique identifier of a related entity.")
+  @NotNull
 
 
   public String getId() {
@@ -175,7 +177,7 @@ public class ResourceSpecificationRef   {
     this.id = id;
   }
 
-  public ResourceSpecificationRef name(String name) {
+  public PlaceRef name(String name) {
     this.name = name;
     return this;
   }
@@ -195,7 +197,27 @@ public class ResourceSpecificationRef   {
     this.name = name;
   }
 
-  public ResourceSpecificationRef uuid(String uuid) {
+  public PlaceRef role(String role) {
+    this.role = role;
+    return this;
+  }
+
+  /**
+   * Role of the place (for instance: 'home delivery', 'shop retrieval')
+   * @return role
+   **/
+  @ApiModelProperty(value = "Role of the place (for instance: 'home delivery', 'shop retrieval')")
+
+
+  public String getRole() {
+    return role;
+  }
+
+  public void setRole(String role) {
+    this.role = role;
+  }
+
+  public PlaceRef uuid(String uuid) {
     this.uuid = uuid;
     return this;
   }
@@ -215,25 +237,6 @@ public class ResourceSpecificationRef   {
     this.uuid = uuid;
   }
 
-  public ResourceSpecificationRef version(String version) {
-    this.version = version;
-    return this;
-  }
-
-  /**
-   * Resource specification version
-   * @return version
-  **/
-  @ApiModelProperty(value = "Resource specification version")
-
-
-  public String getVersion() {
-    return version;
-  }
-
-  public void setVersion(String version) {
-    this.version = version;
-  }
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -243,27 +246,27 @@ public class ResourceSpecificationRef   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ResourceSpecificationRef resourceSpecificationRef = (ResourceSpecificationRef) o;
-    return Objects.equals(this.baseType, resourceSpecificationRef.baseType) &&
-        Objects.equals(this.referredType, resourceSpecificationRef.referredType) &&
-        Objects.equals(this.schemaLocation, resourceSpecificationRef.schemaLocation) &&
-        Objects.equals(this.type, resourceSpecificationRef.type) &&
-        Objects.equals(this.href, resourceSpecificationRef.href) &&
-        Objects.equals(this.id, resourceSpecificationRef.id) &&
-        Objects.equals(this.name, resourceSpecificationRef.name) &&
-        Objects.equals(this.uuid, resourceSpecificationRef.uuid) &&
-        Objects.equals(this.version, resourceSpecificationRef.version);
+    PlaceRef placeRef = (PlaceRef) o;
+    return Objects.equals(this.baseType, placeRef.baseType) &&
+        Objects.equals(this.referredType, placeRef.referredType) &&
+        Objects.equals(this.schemaLocation, placeRef.schemaLocation) &&
+        Objects.equals(this.type, placeRef.type) &&
+        Objects.equals(this.href, placeRef.href) &&
+        Objects.equals(this.id, placeRef.id) &&
+        Objects.equals(this.name, placeRef.name) &&
+        Objects.equals(this.role, placeRef.role) &&
+        Objects.equals(this.uuid, placeRef.uuid);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(baseType, referredType, schemaLocation, type, href, id, name, uuid, version);
+    return Objects.hash(baseType, referredType, schemaLocation, type, href, id, name, role, uuid);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ResourceSpecificationRef {\n");
+    sb.append("class PlaceRef {\n");
     
     sb.append("    baseType: ").append(toIndentedString(baseType)).append("\n");
     sb.append("    referredType: ").append(toIndentedString(referredType)).append("\n");
@@ -272,8 +275,8 @@ public class ResourceSpecificationRef   {
     sb.append("    href: ").append(toIndentedString(href)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    role: ").append(toIndentedString(role)).append("\n");
     sb.append("    uuid: ").append(toIndentedString(uuid)).append("\n");
-    sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -1,9 +1,9 @@
 package it.nextworks.tmf_offering_catalog.services;
 
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
-import it.nextworks.tmf_offering_catalog.information_models.ServiceSpecificationRef;
-import it.nextworks.tmf_offering_catalog.information_models.TargetServiceSchema;
-import it.nextworks.tmf_offering_catalog.information_models.TimePeriod;
+import it.nextworks.tmf_offering_catalog.information_models.common.ServiceSpecificationRef;
+import it.nextworks.tmf_offering_catalog.information_models.common.TargetServiceSchema;
+import it.nextworks.tmf_offering_catalog.information_models.common.TimePeriod;
 import it.nextworks.tmf_offering_catalog.information_models.service.ServiceCandidate;
 import it.nextworks.tmf_offering_catalog.information_models.service.ServiceCandidateCreate;
 import it.nextworks.tmf_offering_catalog.information_models.service.ServiceCandidateUpdate;

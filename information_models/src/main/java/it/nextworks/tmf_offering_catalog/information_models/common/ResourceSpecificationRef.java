@@ -1,4 +1,4 @@
-package it.nextworks.tmf_offering_catalog.information_models;
+package it.nextworks.tmf_offering_catalog.information_models.common;
 
 import java.util.Objects;
 
@@ -10,18 +10,17 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
-import javax.validation.Valid;
 
 /**
- * Service specification reference: ServiceSpecification(s) required to realize a ProductSpecification.
+ * Resource Specification reference: The ResourceSpecification is required to realize a ProductSpecification.
  */
-@ApiModel(description = "Service specification reference: ServiceSpecification(s) required to realize a ProductSpecification.")
+@ApiModel(description = "Resource Specification reference: The ResourceSpecification is required to realize a ProductSpecification.")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-09T15:56:41.618Z")
 
 @Entity
-@Table(name = "service_specification_refs")
-public class ServiceSpecificationRef {
+@Table(name = "resource_specification_refs")
+public class ResourceSpecificationRef   {
 
   @JsonProperty("@baseType")
   @Column(name = "base_type")
@@ -47,11 +46,6 @@ public class ServiceSpecificationRef {
   @JsonProperty("name")
   private String name = null;
 
-  @JsonProperty("targetServiceSchema")
-  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-  @JoinColumn(name = "target_service_schema_id", referencedColumnName = "uuid")
-  private TargetServiceSchema targetServiceSchema = null;
-
   @JsonIgnore
   @Id
   @GeneratedValue(generator = "uuid")
@@ -61,7 +55,7 @@ public class ServiceSpecificationRef {
   @JsonProperty("version")
   private String version = null;
 
-  public ServiceSpecificationRef baseType(String baseType) {
+  public ResourceSpecificationRef baseType(String baseType) {
     this.baseType = baseType;
     return this;
   }
@@ -81,7 +75,7 @@ public class ServiceSpecificationRef {
     this.baseType = baseType;
   }
 
-  public ServiceSpecificationRef referredType(String referredType) {
+  public ResourceSpecificationRef referredType(String referredType) {
     this.referredType = referredType;
     return this;
   }
@@ -101,7 +95,7 @@ public class ServiceSpecificationRef {
     this.referredType = referredType;
   }
 
-  public ServiceSpecificationRef schemaLocation(String schemaLocation) {
+  public ResourceSpecificationRef schemaLocation(String schemaLocation) {
     this.schemaLocation = schemaLocation;
     return this;
   }
@@ -121,7 +115,7 @@ public class ServiceSpecificationRef {
     this.schemaLocation = schemaLocation;
   }
 
-  public ServiceSpecificationRef type(String type) {
+  public ResourceSpecificationRef type(String type) {
     this.type = type;
     return this;
   }
@@ -141,7 +135,7 @@ public class ServiceSpecificationRef {
     this.type = type;
   }
 
-  public ServiceSpecificationRef href(String href) {
+  public ResourceSpecificationRef href(String href) {
     this.href = href;
     return this;
   }
@@ -161,7 +155,7 @@ public class ServiceSpecificationRef {
     this.href = href;
   }
 
-  public ServiceSpecificationRef id(String id) {
+  public ResourceSpecificationRef id(String id) {
     this.id = id;
     return this;
   }
@@ -181,7 +175,7 @@ public class ServiceSpecificationRef {
     this.id = id;
   }
 
-  public ServiceSpecificationRef name(String name) {
+  public ResourceSpecificationRef name(String name) {
     this.name = name;
     return this;
   }
@@ -201,28 +195,7 @@ public class ServiceSpecificationRef {
     this.name = name;
   }
 
-  public ServiceSpecificationRef targetServiceSchema(TargetServiceSchema targetServiceSchema) {
-    this.targetServiceSchema = targetServiceSchema;
-    return this;
-  }
-
-  /**
-   * A target service schema reference (TargetServiceSchemaRef). The reference object to the schema and type of target service which is described by service specification.
-   * @return targetServiceSchema
-  **/
-  @ApiModelProperty(value = "A target service schema reference (TargetServiceSchemaRef). The reference object to the schema and type of target service which is described by service specification.")
-
-  @Valid
-
-  public TargetServiceSchema getTargetServiceSchema() {
-    return targetServiceSchema;
-  }
-
-  public void setTargetServiceSchema(TargetServiceSchema targetServiceSchema) {
-    this.targetServiceSchema = targetServiceSchema;
-  }
-
-  public ServiceSpecificationRef uuid(String uuid) {
+  public ResourceSpecificationRef uuid(String uuid) {
     this.uuid = uuid;
     return this;
   }
@@ -242,16 +215,16 @@ public class ServiceSpecificationRef {
     this.uuid = uuid;
   }
 
-  public ServiceSpecificationRef version(String version) {
+  public ResourceSpecificationRef version(String version) {
     this.version = version;
     return this;
   }
 
   /**
-   * Service specification version
+   * Resource specification version
    * @return version
   **/
-  @ApiModelProperty(value = "Service specification version")
+  @ApiModelProperty(value = "Resource specification version")
 
 
   public String getVersion() {
@@ -262,7 +235,6 @@ public class ServiceSpecificationRef {
     this.version = version;
   }
 
-
   @Override
   public boolean equals(java.lang.Object o) {
     if (this == o) {
@@ -271,28 +243,27 @@ public class ServiceSpecificationRef {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ServiceSpecificationRef serviceSpecificationRef = (ServiceSpecificationRef) o;
-    return Objects.equals(this.baseType, serviceSpecificationRef.baseType) &&
-        Objects.equals(this.referredType, serviceSpecificationRef.referredType) &&
-        Objects.equals(this.schemaLocation, serviceSpecificationRef.schemaLocation) &&
-        Objects.equals(this.type, serviceSpecificationRef.type) &&
-        Objects.equals(this.href, serviceSpecificationRef.href) &&
-        Objects.equals(this.id, serviceSpecificationRef.id) &&
-        Objects.equals(this.name, serviceSpecificationRef.name) &&
-        Objects.equals(this.targetServiceSchema, serviceSpecificationRef.targetServiceSchema) &&
-        Objects.equals(this.uuid, serviceSpecificationRef.uuid) &&
-        Objects.equals(this.version, serviceSpecificationRef.version);
+    ResourceSpecificationRef resourceSpecificationRef = (ResourceSpecificationRef) o;
+    return Objects.equals(this.baseType, resourceSpecificationRef.baseType) &&
+        Objects.equals(this.referredType, resourceSpecificationRef.referredType) &&
+        Objects.equals(this.schemaLocation, resourceSpecificationRef.schemaLocation) &&
+        Objects.equals(this.type, resourceSpecificationRef.type) &&
+        Objects.equals(this.href, resourceSpecificationRef.href) &&
+        Objects.equals(this.id, resourceSpecificationRef.id) &&
+        Objects.equals(this.name, resourceSpecificationRef.name) &&
+        Objects.equals(this.uuid, resourceSpecificationRef.uuid) &&
+        Objects.equals(this.version, resourceSpecificationRef.version);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(baseType, referredType, schemaLocation, type, href, id, name, targetServiceSchema, uuid, version);
+    return Objects.hash(baseType, referredType, schemaLocation, type, href, id, name, uuid, version);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ServiceSpecificationRef {\n");
+    sb.append("class ResourceSpecificationRef {\n");
     
     sb.append("    baseType: ").append(toIndentedString(baseType)).append("\n");
     sb.append("    referredType: ").append(toIndentedString(referredType)).append("\n");
@@ -301,7 +272,6 @@ public class ServiceSpecificationRef {
     sb.append("    href: ").append(toIndentedString(href)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    targetServiceSchema: ").append(toIndentedString(targetServiceSchema)).append("\n");
     sb.append("    uuid: ").append(toIndentedString(uuid)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("}");

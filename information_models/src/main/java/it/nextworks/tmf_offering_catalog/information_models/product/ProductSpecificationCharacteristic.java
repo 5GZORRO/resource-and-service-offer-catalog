@@ -10,8 +10,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.nextworks.tmf_offering_catalog.information_models.LifecycleStatusEnumEnum;
-import it.nextworks.tmf_offering_catalog.information_models.TimePeriod;
+import it.nextworks.tmf_offering_catalog.information_models.common.LifecycleStatusEnumEnum;
+import it.nextworks.tmf_offering_catalog.information_models.common.TimePeriod;
+import it.nextworks.tmf_offering_catalog.information_models.common.converter.LifecycleStatusEnumEnumConverter;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 
@@ -66,6 +67,7 @@ public class ProductSpecificationCharacteristic {
 
   @JsonProperty("lifecycleStatusEnum")
   @Column(name = "lifecycle_status_enum")
+  @Convert(converter = LifecycleStatusEnumEnumConverter.class)
   private LifecycleStatusEnumEnum lifecycleStatusEnum = null;
 
   @JsonProperty("maxCardinality")

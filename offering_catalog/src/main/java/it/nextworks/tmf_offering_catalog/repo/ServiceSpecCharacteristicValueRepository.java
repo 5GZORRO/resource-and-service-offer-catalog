@@ -1,6 +1,6 @@
 package it.nextworks.tmf_offering_catalog.repo;
 
-import it.nextworks.tmf_offering_catalog.information_models.Any;
+import it.nextworks.tmf_offering_catalog.information_models.common.Any;
 import it.nextworks.tmf_offering_catalog.information_models.service.ServiceSpecCharacteristicValue;
 import org.springframework.data.jpa.repository.JpaRepository;
 

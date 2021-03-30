@@ -8,8 +8,8 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.nextworks.tmf_offering_catalog.information_models.ServiceSpecificationRef;
-import it.nextworks.tmf_offering_catalog.information_models.TimePeriod;
+import it.nextworks.tmf_offering_catalog.information_models.common.ServiceSpecificationRef;
+import it.nextworks.tmf_offering_catalog.information_models.common.TimePeriod;
 import org.threeten.bp.OffsetDateTime;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
