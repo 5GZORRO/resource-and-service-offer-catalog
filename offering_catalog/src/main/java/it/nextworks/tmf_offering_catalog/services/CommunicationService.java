@@ -2,14 +2,15 @@ package it.nextworks.tmf_offering_catalog.services;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.nextworks.tmf_offering_catalog.common.exception.DIDAlreadyRequestedForProductException;
 import it.nextworks.tmf_offering_catalog.common.exception.DIDGenerationRequestException;
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
+import it.nextworks.tmf_offering_catalog.components.ClassifyAndPublishProductOfferingTask;
 import it.nextworks.tmf_offering_catalog.information_models.product.ProductOffering;
 import it.nextworks.tmf_offering_catalog.information_models.product.ProductOfferingStatesEnum;
 import it.nextworks.tmf_offering_catalog.information_models.product.ProductOfferingStatus;
-import it.nextworks.tmf_offering_catalog.repo.ProductOfferingRepository;
 import it.nextworks.tmf_offering_catalog.repo.ProductOfferingStatusRepository;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -23,12 +24,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class CommunicationService {
@@ -51,6 +52,49 @@ public class CommunicationService {
             this.type = type;
             this.claims = claims;
             this.handlerUrl = handlerUrl;
+        }
+    }
+
+    public class ClassificationWrapper {
+
+        @JsonProperty("productOffering")
+        private final ProductOffering productOffering;
+        @JsonProperty("did")
+        private final String did;
+
+        @JsonCreator
+        public ClassificationWrapper(@JsonProperty("productOffering") ProductOffering productOffering,
+                                     @JsonProperty("did") String did) {
+            this.productOffering = productOffering;
+            this.did = did;
+        }
+    }
+
+    public class Invitation {}
+
+    public class VerifiableCredential {}
+
+    public class PublicationWrapper {
+
+        @JsonProperty("productOffering")
+        private final ProductOffering productOffering;
+        @JsonProperty("invitations")
+        private final Map<String, Invitation> invitations;
+        @JsonProperty("verifiableCredentials")
+        private final Collection<VerifiableCredential> verifiableCredentials;
+        @JsonProperty("did")
+        private final String did;
+
+        @JsonCreator
+        public PublicationWrapper(@JsonProperty("productOffering") ProductOffering productOffering,
+                                  @JsonProperty("invitations") Map<String, Invitation> invitations,
+                                  @JsonProperty("verifiableCredentials")
+                                          Collection<VerifiableCredential> verifiableCredentials,
+                                  @JsonProperty("did") String did) {
+            this.productOffering       = productOffering;
+            this.invitations           = invitations;
+            this.verifiableCredentials = verifiableCredentials;
+            this.did = did;
         }
     }
 
@@ -77,7 +121,13 @@ public class CommunicationService {
     private ProductOfferingStatusRepository productOfferingStatusRepository;
 
     @Autowired
-    ProductOfferingRepository productOfferingRepository;
+    private ProductOfferingService productOfferingService;
+
+    @Autowired
+    private TaskExecutor taskExecutor;
+
+    @Autowired
+    private ApplicationContext ctx;
 
     @Autowired
     public CommunicationService(ObjectMapper objectMapper) { this.objectMapper = objectMapper; }
@@ -127,17 +177,21 @@ public class CommunicationService {
         log.info("Create DID request accepted by ID&P.");
     }
 
-    public void handleDIDReceiving(String catalogId, String did) throws NotExistingEntityException, DIDAlreadyRequestedForProductException {
+    public void handleDIDReceiving(String catalogId, String did)
+            throws NotExistingEntityException, DIDAlreadyRequestedForProductException, JsonProcessingException {
 
         log.info("Updating status of Product Offering" + catalogId + " with the received DID " + did + ".");
 
-        Optional<ProductOffering> productOfferingForDID = productOfferingRepository.findByProductOfferingId(catalogId);
-        if(!productOfferingForDID.isPresent())
-            throw new NotExistingEntityException("Product Offering with id " + catalogId + " not found in DB.");
+        ProductOffering po;
+        try {
+            po = productOfferingService.get(catalogId);
+        } catch (NotExistingEntityException e) {
+            throw e;
+        }
 
         Optional<ProductOfferingStatus> toUpdate = productOfferingStatusRepository.findById(catalogId);
         if(!toUpdate.isPresent())
-            throw new NotExistingEntityException("Product Offering Status with id " + catalogId + " not found in DB.");
+            throw new NotExistingEntityException("Product Offering Status for id " + catalogId + " not found in DB.");
 
         ProductOfferingStatus productOfferingStatus = toUpdate.get();
 
@@ -149,6 +203,17 @@ public class CommunicationService {
         productOfferingStatus.setStatus(ProductOfferingStatesEnum.STORED_WITH_DID);
 
         productOfferingStatusRepository.save(productOfferingStatus);
+
+        ClassificationWrapper classificationWrapper = new ClassificationWrapper(po, did);
+        String cwJson = objectMapper.writeValueAsString(classificationWrapper);
+        log.info(cwJson);
+
+        PublicationWrapper publicationWrapper = new PublicationWrapper(po, null, null, did);
+        String pwJson = objectMapper.writeValueAsString(publicationWrapper);
+        log.info(pwJson);
+
+        taskExecutor.execute(ctx.getBean(ClassifyAndPublishProductOfferingTask.class)
+                .catalogId(po.getId()).cwJson(cwJson).pwJson(pwJson));
 
         log.info("Status of Product Offering " + catalogId + " updated.");
     }
