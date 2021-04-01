@@ -98,11 +98,13 @@ public class ResourceSpecificationService {
 
             rs.setResourceSpecCharacteristic((List<ResourceSpecCharacteristic>)
                     Hibernate.unproxy(rs.getResourceSpecCharacteristic()));
-            for(ResourceSpecCharacteristic rsc : rs.getResourceSpecCharacteristic()) {
-                rsc.setResourceSpecCharRelationship((List<ResourceSpecCharRelationship>)
-                        Hibernate.unproxy(rsc.getResourceSpecCharRelationship()));
-                rsc.setResourceSpecCharacteristicValue((List<ResourceSpecCharacteristicValue>)
-                        Hibernate.unproxy(rsc.getResourceSpecCharacteristicValue()));
+            if(rs.getResourceSpecCharacteristic() != null) {
+                for (ResourceSpecCharacteristic rsc : rs.getResourceSpecCharacteristic()) {
+                    rsc.setResourceSpecCharRelationship((List<ResourceSpecCharRelationship>)
+                            Hibernate.unproxy(rsc.getResourceSpecCharRelationship()));
+                    rsc.setResourceSpecCharacteristicValue((List<ResourceSpecCharacteristicValue>)
+                            Hibernate.unproxy(rsc.getResourceSpecCharacteristicValue()));
+                }
             }
 
             rs.setResourceSpecRelationship((List<ResourceSpecRelationship>)
@@ -136,8 +138,12 @@ public class ResourceSpecificationService {
 
         final List<AttachmentRef> attachment = resourceSpecificationUpdate.getAttachment();
         if(attachment != null) {
-            resourceSpecification.getAttachment().clear();
-            resourceSpecification.getAttachment().addAll(attachment);
+            if(resourceSpecification.getAttachment() != null) {
+                resourceSpecification.getAttachment().clear();
+                resourceSpecification.getAttachment().addAll(attachment);
+            }
+            else
+                resourceSpecification.setAttachment(attachment);
         }
         else
             resourceSpecification.setAttachment((List<AttachmentRef>)
@@ -153,8 +159,12 @@ public class ResourceSpecificationService {
 
         final List<Feature> feature = resourceSpecificationUpdate.getFeature();
         if(feature != null) {
-            resourceSpecification.getFeature().clear();
-            resourceSpecification.getFeature().addAll(feature);
+            if(resourceSpecification.getFeature() != null) {
+                resourceSpecification.getFeature().clear();
+                resourceSpecification.getFeature().addAll(feature);
+            }
+            else
+                resourceSpecification.setFeature(feature);
         }
         else
             resourceSpecification.setFeature((List<Feature>) Hibernate.unproxy(resourceSpecification.getFeature()));
@@ -175,8 +185,12 @@ public class ResourceSpecificationService {
 
         final List<RelatedParty> relatedParty = resourceSpecificationUpdate.getRelatedParty();
         if(relatedParty != null) {
-            resourceSpecification.getRelatedParty().clear();
-            resourceSpecification.getRelatedParty().addAll(relatedParty);
+            if(resourceSpecification.getRelatedParty() != null) {
+                resourceSpecification.getRelatedParty().clear();
+                resourceSpecification.getRelatedParty().addAll(relatedParty);
+            }
+            else
+                resourceSpecification.setRelatedParty(relatedParty);
         }
         else
             resourceSpecification.setRelatedParty((List<RelatedParty>)
@@ -185,25 +199,35 @@ public class ResourceSpecificationService {
         final List<ResourceSpecCharacteristic> resourceSpecCharacteristic =
                 resourceSpecificationUpdate.getResourceSpecCharacteristic();
         if(resourceSpecCharacteristic != null) {
-            resourceSpecification.getResourceSpecCharacteristic().clear();
-            resourceSpecification.getResourceSpecCharacteristic().addAll(resourceSpecCharacteristic);
+            if(resourceSpecification.getResourceSpecCharacteristic() != null) {
+                resourceSpecification.getResourceSpecCharacteristic().clear();
+                resourceSpecification.getResourceSpecCharacteristic().addAll(resourceSpecCharacteristic);
+            }
+            else
+                resourceSpecification.setResourceSpecCharacteristic(resourceSpecCharacteristic);
         }
         else {
             resourceSpecification.setResourceSpecCharacteristic((List<ResourceSpecCharacteristic>)
                     Hibernate.unproxy(resourceSpecification.getResourceSpecCharacteristic()));
-            for(ResourceSpecCharacteristic rsc : resourceSpecification.getResourceSpecCharacteristic()) {
-                rsc.setResourceSpecCharRelationship((List<ResourceSpecCharRelationship>)
-                        Hibernate.unproxy(rsc.getResourceSpecCharRelationship()));
-                rsc.setResourceSpecCharacteristicValue((List<ResourceSpecCharacteristicValue>)
-                        Hibernate.unproxy(rsc.getResourceSpecCharacteristicValue()));
+            if(resourceSpecification.getResourceSpecCharacteristic() != null) {
+                for (ResourceSpecCharacteristic rsc : resourceSpecification.getResourceSpecCharacteristic()) {
+                    rsc.setResourceSpecCharRelationship((List<ResourceSpecCharRelationship>)
+                            Hibernate.unproxy(rsc.getResourceSpecCharRelationship()));
+                    rsc.setResourceSpecCharacteristicValue((List<ResourceSpecCharacteristicValue>)
+                            Hibernate.unproxy(rsc.getResourceSpecCharacteristicValue()));
+                }
             }
         }
 
         final List<ResourceSpecRelationship> resourceSpecRelationship =
                 resourceSpecificationUpdate.getResourceSpecRelationship();
         if(resourceSpecRelationship != null) {
-            resourceSpecification.getResourceSpecRelationship().clear();
-            resourceSpecification.getResourceSpecRelationship().addAll(resourceSpecRelationship);
+            if(resourceSpecification.getResourceSpecRelationship() != null) {
+                resourceSpecification.getResourceSpecRelationship().clear();
+                resourceSpecification.getResourceSpecRelationship().addAll(resourceSpecRelationship);
+            }
+            else
+                resourceSpecification.setResourceSpecRelationship(resourceSpecRelationship);
         }
         else
             resourceSpecification.setResourceSpecRelationship((List<ResourceSpecRelationship>)
@@ -247,11 +271,13 @@ public class ResourceSpecificationService {
 
         rs.setResourceSpecCharacteristic((List<ResourceSpecCharacteristic>)
                 Hibernate.unproxy(rs.getResourceSpecCharacteristic()));
-        for(ResourceSpecCharacteristic rsc : rs.getResourceSpecCharacteristic()) {
-            rsc.setResourceSpecCharRelationship((List<ResourceSpecCharRelationship>)
-                    Hibernate.unproxy(rsc.getResourceSpecCharRelationship()));
-            rsc.setResourceSpecCharacteristicValue((List<ResourceSpecCharacteristicValue>)
-                    Hibernate.unproxy(rsc.getResourceSpecCharacteristicValue()));
+        if(rs.getResourceSpecCharacteristic() != null) {
+            for (ResourceSpecCharacteristic rsc : rs.getResourceSpecCharacteristic()) {
+                rsc.setResourceSpecCharRelationship((List<ResourceSpecCharRelationship>)
+                        Hibernate.unproxy(rsc.getResourceSpecCharRelationship()));
+                rsc.setResourceSpecCharacteristicValue((List<ResourceSpecCharacteristicValue>)
+                        Hibernate.unproxy(rsc.getResourceSpecCharacteristicValue()));
+            }
         }
 
         rs.setResourceSpecRelationship((List<ResourceSpecRelationship>)

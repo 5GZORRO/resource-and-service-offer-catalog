@@ -124,8 +124,12 @@ public class ServiceCategoryService {
 
         final List<ServiceCategoryRef> category = serviceCategoryUpdate.getCategory();
         if(category != null) {
-            serviceCategory.getCategory().clear();
-            serviceCategory.getCategory().addAll(category);
+            if(serviceCategory.getCategory() != null) {
+                serviceCategory.getCategory().clear();
+                serviceCategory.getCategory().addAll(category);
+            }
+            else
+                serviceCategory.setCategory(category);
         }
         else
             serviceCategory.setCategory((List<ServiceCategoryRef>) Hibernate.unproxy(serviceCategory.getCategory()));
@@ -154,8 +158,12 @@ public class ServiceCategoryService {
 
         final List<ServiceCandidateRef> serviceCandidate = serviceCategoryUpdate.getServiceCandidate();
         if(serviceCandidate != null) {
-            serviceCategory.getServiceCandidate().clear();
-            serviceCategory.getServiceCandidate().addAll(serviceCandidate);
+            if(serviceCategory.getServiceCandidate() != null) {
+                serviceCategory.getServiceCandidate().clear();
+                serviceCategory.getServiceCandidate().addAll(serviceCandidate);
+            }
+            else
+                serviceCategory.setServiceCandidate(serviceCandidate);
         }
         else
             serviceCategory.setServiceCandidate((List<ServiceCandidateRef>)

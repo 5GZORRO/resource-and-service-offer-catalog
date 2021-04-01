@@ -122,8 +122,12 @@ public class ResourceCandidateService {
 
         final List<ResourceCategoryRef> category = resourceCandidateUpdate.getCategory();
         if(category != null) {
-            resourceCandidate.getCategory().clear();
-            resourceCandidate.getCategory().addAll(category);
+            if(resourceCandidate.getCategory() != null) {
+                resourceCandidate.getCategory().clear();
+                resourceCandidate.getCategory().addAll(category);
+            }
+            else
+                resourceCandidate.setCategory(category);
         }
         else
             resourceCandidate.setCategory((List<ResourceCategoryRef>)

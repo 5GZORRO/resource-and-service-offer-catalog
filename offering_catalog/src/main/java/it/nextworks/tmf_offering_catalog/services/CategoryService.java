@@ -146,16 +146,24 @@ public class CategoryService {
 
         final List<ProductOfferingRef> productOffering = categoryUpdate.getProductOffering();
         if(productOffering != null) {
-            category.getProductOffering().clear();
-            category.getProductOffering().addAll(productOffering);
+            if(category.getProductOffering() != null) {
+                category.getProductOffering().clear();
+                category.getProductOffering().addAll(productOffering);
+            }
+            else
+                category.setProductOffering(productOffering);
         }
         else
             category.setProductOffering((List<ProductOfferingRef>) Hibernate.unproxy(category.getProductOffering()));
 
         final List<CategoryRef> subCategory = categoryUpdate.getSubCategory();
         if(subCategory != null) {
-            category.getSubCategory().clear();
-            category.getSubCategory().addAll(subCategory);
+            if(category.getSubCategory() != null) {
+                category.getSubCategory().clear();
+                category.getSubCategory().addAll(subCategory);
+            }
+            else
+                category.setSubCategory(subCategory);
         }
         else
             category.setSubCategory((List<CategoryRef>) Hibernate.unproxy(category.getSubCategory()));

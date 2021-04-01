@@ -99,11 +99,13 @@ public class ServiceSpecificationService {
 
             ss.setServiceSpecCharacteristic((List<ServiceSpecCharacteristic>)
                     Hibernate.unproxy(ss.getServiceSpecCharacteristic()));
-            for(ServiceSpecCharacteristic ssc : ss.getServiceSpecCharacteristic()){
-                ssc.setServiceSpecCharRelationship((List<ServiceSpecCharRelationship>)
-                        Hibernate.unproxy(ssc.getServiceSpecCharRelationship()));
-                ssc.setServiceSpecCharacteristicValue((List<ServiceSpecCharacteristicValue>)
-                        Hibernate.unproxy(ssc.getServiceSpecCharacteristicValue()));
+            if(ss.getServiceSpecCharacteristic() != null) {
+                for (ServiceSpecCharacteristic ssc : ss.getServiceSpecCharacteristic()) {
+                    ssc.setServiceSpecCharRelationship((List<ServiceSpecCharRelationship>)
+                            Hibernate.unproxy(ssc.getServiceSpecCharRelationship()));
+                    ssc.setServiceSpecCharacteristicValue((List<ServiceSpecCharacteristicValue>)
+                            Hibernate.unproxy(ssc.getServiceSpecCharacteristicValue()));
+                }
             }
 
             ss.setServiceSpecRelationship((List<ServiceSpecRelationship>)
@@ -141,8 +143,12 @@ public class ServiceSpecificationService {
 
         final List<AttachmentRef> attachment = serviceSpecificationUpdate.getAttachment();
         if(attachment != null) {
-            serviceSpecification.getAttachment().clear();
-            serviceSpecification.getAttachment().addAll(attachment);
+            if(serviceSpecification.getAttachment() != null) {
+                serviceSpecification.getAttachment().clear();
+                serviceSpecification.getAttachment().addAll(attachment);
+            }
+            else
+                serviceSpecification.setAttachment(attachment);
         }
         else
             serviceSpecification.setAttachment((List<AttachmentRef>)
@@ -168,8 +174,12 @@ public class ServiceSpecificationService {
 
         final List<RelatedParty> relatedParty = serviceSpecificationUpdate.getRelatedParty();
         if(relatedParty != null) {
-            serviceSpecification.getRelatedParty().clear();
-            serviceSpecification.getRelatedParty().addAll(relatedParty);
+            if(serviceSpecification.getRelatedParty() != null) {
+                serviceSpecification.getRelatedParty().clear();
+                serviceSpecification.getRelatedParty().addAll(relatedParty);
+            }
+            else
+                serviceSpecification.setRelatedParty(relatedParty);
         }
         else
             serviceSpecification.setRelatedParty((List<RelatedParty>)
@@ -178,8 +188,12 @@ public class ServiceSpecificationService {
         final List<ResourceSpecificationRef> resourceSpecification =
                 serviceSpecificationUpdate.getResourceSpecification();
         if(resourceSpecification != null) {
-            serviceSpecification.getResourceSpecification().clear();
-            serviceSpecification.getResourceSpecification().addAll(resourceSpecification);
+            if(serviceSpecification.getResourceSpecification() != null) {
+                serviceSpecification.getResourceSpecification().clear();
+                serviceSpecification.getResourceSpecification().addAll(resourceSpecification);
+            }
+            else
+                serviceSpecification.setResourceSpecification(resourceSpecification);
         }
         else
             serviceSpecification.setResourceSpecification((List<ResourceSpecificationRef>)
@@ -188,8 +202,12 @@ public class ServiceSpecificationService {
         final List<ServiceLevelSpecificationRef> serviceLevelSpecification =
                 serviceSpecificationUpdate.getServiceLevelSpecification();
         if(serviceLevelSpecification != null) {
-            serviceSpecification.getServiceLevelSpecification().clear();
-            serviceSpecification.getServiceLevelSpecification().addAll(serviceLevelSpecification);
+            if(serviceSpecification.getServiceLevelSpecification() != null) {
+                serviceSpecification.getServiceLevelSpecification().clear();
+                serviceSpecification.getServiceLevelSpecification().addAll(serviceLevelSpecification);
+            }
+            else
+                serviceSpecification.setServiceLevelSpecification(serviceLevelSpecification);
         }
         else
             serviceSpecification.setServiceLevelSpecification((List<ServiceLevelSpecificationRef>)
@@ -198,25 +216,35 @@ public class ServiceSpecificationService {
         final List<ServiceSpecCharacteristic> serviceSpecCharacteristic =
                 serviceSpecificationUpdate.getServiceSpecCharacteristic();
         if(serviceSpecCharacteristic != null) {
-            serviceSpecification.getServiceSpecCharacteristic().clear();
-            serviceSpecification.getServiceSpecCharacteristic().addAll(serviceSpecCharacteristic);
+            if(serviceSpecification.getServiceSpecCharacteristic() != null) {
+                serviceSpecification.getServiceSpecCharacteristic().clear();
+                serviceSpecification.getServiceSpecCharacteristic().addAll(serviceSpecCharacteristic);
+            }
+            else
+                serviceSpecification.setServiceSpecCharacteristic(serviceSpecCharacteristic);
         }
         else {
             serviceSpecification.setServiceSpecCharacteristic((List<ServiceSpecCharacteristic>)
                     Hibernate.unproxy(serviceSpecification.getServiceSpecCharacteristic()));
-            for(ServiceSpecCharacteristic ssc : serviceSpecification.getServiceSpecCharacteristic()){
-                ssc.setServiceSpecCharRelationship((List<ServiceSpecCharRelationship>)
-                        Hibernate.unproxy(ssc.getServiceSpecCharRelationship()));
-                ssc.setServiceSpecCharacteristicValue((List<ServiceSpecCharacteristicValue>)
-                        Hibernate.unproxy(ssc.getServiceSpecCharacteristicValue()));
+            if(serviceSpecification.getServiceSpecCharacteristic() != null) {
+                for (ServiceSpecCharacteristic ssc : serviceSpecification.getServiceSpecCharacteristic()) {
+                    ssc.setServiceSpecCharRelationship((List<ServiceSpecCharRelationship>)
+                            Hibernate.unproxy(ssc.getServiceSpecCharRelationship()));
+                    ssc.setServiceSpecCharacteristicValue((List<ServiceSpecCharacteristicValue>)
+                            Hibernate.unproxy(ssc.getServiceSpecCharacteristicValue()));
+                }
             }
         }
 
         final List<ServiceSpecRelationship> serviceSpecRelationship =
                 serviceSpecificationUpdate.getServiceSpecRelationship();
         if(serviceSpecRelationship != null) {
-            serviceSpecification.getServiceSpecRelationship().clear();
-            serviceSpecification.getServiceSpecRelationship().addAll(serviceSpecRelationship);
+            if(serviceSpecification.getServiceSpecRelationship() != null) {
+                serviceSpecification.getServiceSpecRelationship().clear();
+                serviceSpecification.getServiceSpecRelationship().addAll(serviceSpecRelationship);
+            }
+            else
+                serviceSpecification.setServiceSpecRelationship(serviceSpecRelationship);
         }
         else
             serviceSpecification.setServiceSpecRelationship((List<ServiceSpecRelationship>)
@@ -263,11 +291,13 @@ public class ServiceSpecificationService {
 
         ss.setServiceSpecCharacteristic((List<ServiceSpecCharacteristic>)
                 Hibernate.unproxy(ss.getServiceSpecCharacteristic()));
-        for(ServiceSpecCharacteristic ssc : ss.getServiceSpecCharacteristic()){
-            ssc.setServiceSpecCharRelationship((List<ServiceSpecCharRelationship>)
-                    Hibernate.unproxy(ssc.getServiceSpecCharRelationship()));
-            ssc.setServiceSpecCharacteristicValue((List<ServiceSpecCharacteristicValue>)
-                    Hibernate.unproxy(ssc.getServiceSpecCharacteristicValue()));
+        if(ss.getServiceSpecCharacteristic() != null) {
+            for (ServiceSpecCharacteristic ssc : ss.getServiceSpecCharacteristic()) {
+                ssc.setServiceSpecCharRelationship((List<ServiceSpecCharRelationship>)
+                        Hibernate.unproxy(ssc.getServiceSpecCharRelationship()));
+                ssc.setServiceSpecCharacteristicValue((List<ServiceSpecCharacteristicValue>)
+                        Hibernate.unproxy(ssc.getServiceSpecCharacteristicValue()));
+            }
         }
 
         ss.setServiceSpecRelationship((List<ServiceSpecRelationship>)

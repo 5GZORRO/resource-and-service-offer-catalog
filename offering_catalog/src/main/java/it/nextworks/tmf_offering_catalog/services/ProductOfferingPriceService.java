@@ -110,14 +110,17 @@ public class ProductOfferingPriceService {
 
             pop.setProdSpecCharValueUse((List<ProductSpecificationCharacteristicValueUse>)
                     Hibernate.unproxy(pop.getProdSpecCharValueUse()));
-            for(ProductSpecificationCharacteristicValueUse pscvu : pop.getProdSpecCharValueUse()) {
-                pscvu.setProductSpecCharacteristicValue((List<ProductSpecificationCharacteristicValue>)
-                        Hibernate.unproxy(pscvu.getProductSpecCharacteristicValue()));
+            if(pop.getProdSpecCharValueUse() != null) {
+                for (ProductSpecificationCharacteristicValueUse pscvu : pop.getProdSpecCharValueUse()) {
+                    pscvu.setProductSpecCharacteristicValue((List<ProductSpecificationCharacteristicValue>)
+                            Hibernate.unproxy(pscvu.getProductSpecCharacteristicValue()));
 
-                pscvu.setProductSpecification((ProductSpecificationRef)
-                        Hibernate.unproxy(pscvu.getProductSpecification()));
-                pscvu.getProductSpecification().setTargetProductSchema((TargetProductSchema)
-                        Hibernate.unproxy(pscvu.getProductSpecification().getTargetProductSchema()));
+                    pscvu.setProductSpecification((ProductSpecificationRef)
+                            Hibernate.unproxy(pscvu.getProductSpecification()));
+                    if(pscvu.getProductSpecification() != null)
+                        pscvu.getProductSpecification().setTargetProductSchema((TargetProductSchema)
+                                Hibernate.unproxy(pscvu.getProductSpecification().getTargetProductSchema()));
+                }
             }
 
             pop.setProductOfferingTerm((List<ProductOfferingTerm>) Hibernate.unproxy(pop.getProductOfferingTerm()));
@@ -155,8 +158,12 @@ public class ProductOfferingPriceService {
         final List<BundledProductOfferingPriceRelationship> bundledPopRelationship =
                 productOfferingPriceUpdate.getBundledPopRelationship();
         if(bundledPopRelationship != null) {
-            productOfferingPrice.getBundledPopRelationship().clear();
-            productOfferingPrice.getBundledPopRelationship().addAll(bundledPopRelationship);
+            if(productOfferingPrice.getBundledPopRelationship() != null) {
+                productOfferingPrice.getBundledPopRelationship().clear();
+                productOfferingPrice.getBundledPopRelationship().addAll(bundledPopRelationship);
+            }
+            else
+                productOfferingPrice.setBundledPopRelationship(bundledPopRelationship);
         }
         else
             productOfferingPrice.setBundledPopRelationship((List<BundledProductOfferingPriceRelationship>)
@@ -164,8 +171,12 @@ public class ProductOfferingPriceService {
 
         final List<ConstraintRef> constraint = productOfferingPriceUpdate.getConstraint();
         if(constraint != null) {
-            productOfferingPrice.getConstraint().clear();
-            productOfferingPrice.getConstraint().addAll(constraint);
+            if(productOfferingPrice.getConstraint() != null) {
+                productOfferingPrice.getConstraint().clear();
+                productOfferingPrice.getConstraint().addAll(constraint);
+            }
+            else
+                productOfferingPrice.setConstraint(constraint);
         }
         else
             productOfferingPrice.setConstraint((List<ConstraintRef>)
@@ -195,16 +206,24 @@ public class ProductOfferingPriceService {
 
         final List<PlaceRef> place = productOfferingPriceUpdate.getPlace();
         if(place != null) {
-            productOfferingPrice.getPlace().clear();
-            productOfferingPrice.getPlace().addAll(place);
+            if(productOfferingPrice.getPlace() != null) {
+                productOfferingPrice.getPlace().clear();
+                productOfferingPrice.getPlace().addAll(place);
+            }
+            else
+                productOfferingPrice.setPlace(place);
         }
         else
             productOfferingPrice.setPlace((List<PlaceRef>) Hibernate.unproxy(productOfferingPrice.getPlace()));
 
         final List<ProductOfferingPriceRelationship> popRelationship = productOfferingPriceUpdate.getPopRelationship();
         if(popRelationship != null) {
-            productOfferingPrice.getPopRelationship().clear();
-            productOfferingPrice.getPopRelationship().addAll(popRelationship);
+            if(productOfferingPrice.getPopRelationship() != null) {
+                productOfferingPrice.getPopRelationship().clear();
+                productOfferingPrice.getPopRelationship().addAll(popRelationship);
+            }
+            else
+                productOfferingPrice.setPopRelationship(popRelationship);
         }
         else
             productOfferingPrice.setPopRelationship((List<ProductOfferingPriceRelationship>)
@@ -220,8 +239,12 @@ public class ProductOfferingPriceService {
 
         final List<PricingLogicAlgorithm> pricingLogicAlgorithm = productOfferingPriceUpdate.getPricingLogicAlgorithm();
         if(pricingLogicAlgorithm != null) {
-            productOfferingPrice.getPricingLogicAlgorithm().clear();
-            productOfferingPrice.getPricingLogicAlgorithm().addAll(pricingLogicAlgorithm);
+            if(productOfferingPrice.getPricingLogicAlgorithm() != null) {
+                productOfferingPrice.getPricingLogicAlgorithm().clear();
+                productOfferingPrice.getPricingLogicAlgorithm().addAll(pricingLogicAlgorithm);
+            }
+            else
+                productOfferingPrice.setPricingLogicAlgorithm(pricingLogicAlgorithm);
         }
         else
             productOfferingPrice.setPricingLogicAlgorithm((List<PricingLogicAlgorithm>)
@@ -230,27 +253,38 @@ public class ProductOfferingPriceService {
         final List<ProductSpecificationCharacteristicValueUse> prodSpecCharValueUse =
                 productOfferingPriceUpdate.getProdSpecCharValueUse();
         if(prodSpecCharValueUse != null) {
-            productOfferingPrice.getProdSpecCharValueUse().clear();
-            productOfferingPrice.getProdSpecCharValueUse().addAll(prodSpecCharValueUse);
+            if(productOfferingPrice.getProdSpecCharValueUse() != null) {
+                productOfferingPrice.getProdSpecCharValueUse().clear();
+                productOfferingPrice.getProdSpecCharValueUse().addAll(prodSpecCharValueUse);
+            }
+            else
+                productOfferingPrice.setProdSpecCharValueUse(prodSpecCharValueUse);
         }
         else {
             productOfferingPrice.setProdSpecCharValueUse((List<ProductSpecificationCharacteristicValueUse>)
                     Hibernate.unproxy(productOfferingPrice.getProdSpecCharValueUse()));
-            for(ProductSpecificationCharacteristicValueUse pscvu : productOfferingPrice.getProdSpecCharValueUse()) {
-                pscvu.setProductSpecCharacteristicValue((List<ProductSpecificationCharacteristicValue>)
-                        Hibernate.unproxy(pscvu.getProductSpecCharacteristicValue()));
+            if(productOfferingPrice.getProdSpecCharValueUse() != null) {
+                for (ProductSpecificationCharacteristicValueUse pscvu : productOfferingPrice.getProdSpecCharValueUse()) {
+                    pscvu.setProductSpecCharacteristicValue((List<ProductSpecificationCharacteristicValue>)
+                            Hibernate.unproxy(pscvu.getProductSpecCharacteristicValue()));
 
-                pscvu.setProductSpecification((ProductSpecificationRef)
-                        Hibernate.unproxy(pscvu.getProductSpecification()));
-                pscvu.getProductSpecification().setTargetProductSchema((TargetProductSchema)
-                        Hibernate.unproxy(pscvu.getProductSpecification().getTargetProductSchema()));
+                    pscvu.setProductSpecification((ProductSpecificationRef)
+                            Hibernate.unproxy(pscvu.getProductSpecification()));
+                    if(pscvu.getProductSpecification() != null)
+                        pscvu.getProductSpecification().setTargetProductSchema((TargetProductSchema)
+                                Hibernate.unproxy(pscvu.getProductSpecification().getTargetProductSchema()));
+                }
             }
         }
 
         final List<ProductOfferingTerm> productOfferingTerm = productOfferingPriceUpdate.getProductOfferingTerm();
         if(productOfferingTerm != null) {
-            productOfferingPrice.getProductOfferingTerm().clear();
-            productOfferingPrice.getProductOfferingTerm().addAll(productOfferingTerm);
+            if(productOfferingPrice.getProductOfferingTerm() != null) {
+                productOfferingPrice.getProductOfferingTerm().clear();
+                productOfferingPrice.getProductOfferingTerm().addAll(productOfferingTerm);
+            }
+            else
+                productOfferingPrice.setProductOfferingTerm(productOfferingTerm);
         }
         else
             productOfferingPrice.setProductOfferingTerm((List<ProductOfferingTerm>)
@@ -266,8 +300,12 @@ public class ProductOfferingPriceService {
 
         final List<TaxItem> tax = productOfferingPriceUpdate.getTax();
         if(tax != null) {
-            productOfferingPrice.getTax().clear();
-            productOfferingPrice.getTax().addAll(tax);
+            if(productOfferingPrice.getTax() != null) {
+                productOfferingPrice.getTax().clear();
+                productOfferingPrice.getTax().addAll(tax);
+            }
+            else
+                productOfferingPrice.setTax(tax);
         }
         else
             productOfferingPrice.setTax((List<TaxItem>) Hibernate.unproxy(productOfferingPrice.getTax()));
@@ -312,14 +350,17 @@ public class ProductOfferingPriceService {
 
         pop.setProdSpecCharValueUse((List<ProductSpecificationCharacteristicValueUse>)
                 Hibernate.unproxy(pop.getProdSpecCharValueUse()));
-        for(ProductSpecificationCharacteristicValueUse pscvu : pop.getProdSpecCharValueUse()) {
-            pscvu.setProductSpecCharacteristicValue((List<ProductSpecificationCharacteristicValue>)
-                    Hibernate.unproxy(pscvu.getProductSpecCharacteristicValue()));
+        if(pop.getProdSpecCharValueUse() != null) {
+            for (ProductSpecificationCharacteristicValueUse pscvu : pop.getProdSpecCharValueUse()) {
+                pscvu.setProductSpecCharacteristicValue((List<ProductSpecificationCharacteristicValue>)
+                        Hibernate.unproxy(pscvu.getProductSpecCharacteristicValue()));
 
-            pscvu.setProductSpecification((ProductSpecificationRef)
-                    Hibernate.unproxy(pscvu.getProductSpecification()));
-            pscvu.getProductSpecification().setTargetProductSchema((TargetProductSchema)
-                    Hibernate.unproxy(pscvu.getProductSpecification().getTargetProductSchema()));
+                pscvu.setProductSpecification((ProductSpecificationRef)
+                        Hibernate.unproxy(pscvu.getProductSpecification()));
+                if(pscvu.getProductSpecification() != null)
+                    pscvu.getProductSpecification().setTargetProductSchema((TargetProductSchema)
+                            Hibernate.unproxy(pscvu.getProductSpecification().getTargetProductSchema()));
+            }
         }
 
         pop.setProductOfferingTerm((List<ProductOfferingTerm>) Hibernate.unproxy(pop.getProductOfferingTerm()));

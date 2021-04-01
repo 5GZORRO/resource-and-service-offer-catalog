@@ -99,11 +99,13 @@ public class ProductSpecificationService {
 
             ps.setProductSpecCharacteristic((List<ProductSpecificationCharacteristic>)
                     Hibernate.unproxy(ps.getProductSpecCharacteristic()));
-            for(ProductSpecificationCharacteristic psc : ps.getProductSpecCharacteristic()) {
-                psc.setProductSpecCharRelationship((List<ProductSpecificationCharacteristicRelationship>)
-                        Hibernate.unproxy(psc.getProductSpecCharRelationship()));
-                psc.setProductSpecCharacteristicValue((List<ProductSpecificationCharacteristicValue>)
-                        Hibernate.unproxy(psc.getProductSpecCharacteristicValue()));
+            if(ps.getProductSpecCharacteristic() != null) {
+                for (ProductSpecificationCharacteristic psc : ps.getProductSpecCharacteristic()) {
+                    psc.setProductSpecCharRelationship((List<ProductSpecificationCharacteristicRelationship>)
+                            Hibernate.unproxy(psc.getProductSpecCharRelationship()));
+                    psc.setProductSpecCharacteristicValue((List<ProductSpecificationCharacteristicValue>)
+                            Hibernate.unproxy(psc.getProductSpecCharacteristicValue()));
+                }
             }
 
             ps.setProductSpecificationRelationship((List<ProductSpecificationRelationship>)
@@ -113,8 +115,10 @@ public class ProductSpecificationService {
                     Hibernate.unproxy(ps.getResourceSpecification()));
 
             ps.setServiceSpecification((List<ServiceSpecificationRef>) Hibernate.unproxy(ps.getServiceSpecification()));
-            for(ServiceSpecificationRef ssr : ps.getServiceSpecification())
-                ssr.setTargetServiceSchema((TargetServiceSchema) Hibernate.unproxy(ssr.getTargetServiceSchema()));
+            if(ps.getServiceSpecification() != null) {
+                for (ServiceSpecificationRef ssr : ps.getServiceSpecification())
+                    ssr.setTargetServiceSchema((TargetServiceSchema) Hibernate.unproxy(ssr.getTargetServiceSchema()));
+            }
 
             ps.setTargetProductSchema((TargetProductSchema) Hibernate.unproxy(ps.getTargetProductSchema()));
         }
@@ -149,8 +153,12 @@ public class ProductSpecificationService {
 
         final List<AttachmentRefOrValue> attachment = productSpecificationUpdate.getAttachment();
         if(attachment != null) {
-            productSpecification.getAttachment().clear();
-            productSpecification.getAttachment().addAll(attachment);
+            if(productSpecification.getAttachment() != null) {
+                productSpecification.getAttachment().clear();
+                productSpecification.getAttachment().addAll(attachment);
+            }
+            else
+                productSpecification.setAttachment(attachment);
         }
         else
             productSpecification.setAttachment((List<AttachmentRefOrValue>)
@@ -163,8 +171,12 @@ public class ProductSpecificationService {
         final List<BundledProductSpecification> bundledProductSpecification =
                 productSpecificationUpdate.getBundledProductSpecification();
         if(bundledProductSpecification != null) {
-            productSpecification.getBundledProductSpecification().clear();
-            productSpecification.getBundledProductSpecification().addAll(bundledProductSpecification);
+            if(productSpecification.getBundledProductSpecification() != null) {
+                productSpecification.getBundledProductSpecification().clear();
+                productSpecification.getBundledProductSpecification().addAll(bundledProductSpecification);
+            }
+            else
+                productSpecification.setBundledProductSpecification(bundledProductSpecification);
         }
         else
             productSpecification.setBundledProductSpecification((List<BundledProductSpecification>)
@@ -195,25 +207,35 @@ public class ProductSpecificationService {
         final List<ProductSpecificationCharacteristic> productSpecCharacteristic =
                 productSpecificationUpdate.getProductSpecCharacteristic();
         if(productSpecCharacteristic != null) {
-            productSpecification.getProductSpecCharacteristic().clear();
-            productSpecification.getProductSpecCharacteristic().addAll(productSpecCharacteristic);
+            if(productSpecification.getProductSpecCharacteristic() != null) {
+                productSpecification.getProductSpecCharacteristic().clear();
+                productSpecification.getProductSpecCharacteristic().addAll(productSpecCharacteristic);
+            }
+            else
+                productSpecification.setProductSpecCharacteristic(productSpecCharacteristic);
         }
         else {
             productSpecification.setProductSpecCharacteristic((List<ProductSpecificationCharacteristic>)
                     Hibernate.unproxy(productSpecification.getProductSpecCharacteristic()));
-            for(ProductSpecificationCharacteristic psc : productSpecification.getProductSpecCharacteristic()) {
-                psc.setProductSpecCharRelationship((List<ProductSpecificationCharacteristicRelationship>)
-                        Hibernate.unproxy(psc.getProductSpecCharRelationship()));
-                psc.setProductSpecCharacteristicValue((List<ProductSpecificationCharacteristicValue>)
-                        Hibernate.unproxy(psc.getProductSpecCharacteristicValue()));
+            if(productSpecification.getProductSpecCharacteristic() != null) {
+                for (ProductSpecificationCharacteristic psc : productSpecification.getProductSpecCharacteristic()) {
+                    psc.setProductSpecCharRelationship((List<ProductSpecificationCharacteristicRelationship>)
+                            Hibernate.unproxy(psc.getProductSpecCharRelationship()));
+                    psc.setProductSpecCharacteristicValue((List<ProductSpecificationCharacteristicValue>)
+                            Hibernate.unproxy(psc.getProductSpecCharacteristicValue()));
+                }
             }
         }
 
         final List<ProductSpecificationRelationship> productSpecificationRelationship =
                 productSpecificationUpdate.getProductSpecificationRelationship();
         if(productSpecificationRelationship != null) {
-            productSpecification.getProductSpecificationRelationship().clear();
-            productSpecification.getProductSpecificationRelationship().addAll(productSpecificationRelationship);
+            if(productSpecification.getProductSpecificationRelationship() != null) {
+                productSpecification.getProductSpecificationRelationship().clear();
+                productSpecification.getProductSpecificationRelationship().addAll(productSpecificationRelationship);
+            }
+            else
+                productSpecification.setProductSpecificationRelationship(productSpecificationRelationship);
         }
         else
             productSpecification.setProductSpecificationRelationship((List<ProductSpecificationRelationship>)
@@ -221,8 +243,12 @@ public class ProductSpecificationService {
 
         final List<RelatedParty> relatedParty = productSpecificationUpdate.getRelatedParty();
         if(relatedParty != null) {
-            productSpecification.getRelatedParty().clear();
-            productSpecification.getRelatedParty().addAll(relatedParty);
+            if(productSpecification.getRelatedParty() != null) {
+                productSpecification.getRelatedParty().clear();
+                productSpecification.getRelatedParty().addAll(relatedParty);
+            }
+            else
+                productSpecification.setRelatedParty(relatedParty);
         }
         else
             productSpecification.setRelatedParty((List<RelatedParty>)
@@ -231,8 +257,12 @@ public class ProductSpecificationService {
         final List<ResourceSpecificationRef> resourceSpecification =
                 productSpecificationUpdate.getResourceSpecification();
         if(resourceSpecification != null) {
-            productSpecification.getResourceSpecification().clear();
-            productSpecification.getResourceSpecification().addAll(resourceSpecification);
+            if(productSpecification.getResourceSpecification() != null) {
+                productSpecification.getResourceSpecification().clear();
+                productSpecification.getResourceSpecification().addAll(resourceSpecification);
+            }
+            else
+                productSpecification.setResourceSpecification(resourceSpecification);
         }
         else
             productSpecification.setResourceSpecification((List<ResourceSpecificationRef>)
@@ -240,14 +270,20 @@ public class ProductSpecificationService {
 
         final List<ServiceSpecificationRef> serviceSpecification = productSpecificationUpdate.getServiceSpecification();
         if(serviceSpecification != null) {
-            productSpecification.getServiceSpecification().clear();
-            productSpecification.getServiceSpecification().addAll(serviceSpecification);
+            if(productSpecification.getServiceSpecification() != null) {
+                productSpecification.getServiceSpecification().clear();
+                productSpecification.getServiceSpecification().addAll(serviceSpecification);
+            }
+            else
+                productSpecification.setServiceSpecification(serviceSpecification);
         }
         else {
             productSpecification.setServiceSpecification((List<ServiceSpecificationRef>)
                     Hibernate.unproxy(productSpecification.getServiceSpecification()));
-            for(ServiceSpecificationRef ssr : productSpecification.getServiceSpecification())
-                ssr.setTargetServiceSchema((TargetServiceSchema) Hibernate.unproxy(ssr.getTargetServiceSchema()));
+            if(productSpecification.getServiceSpecification() != null) {
+                for (ServiceSpecificationRef ssr : productSpecification.getServiceSpecification())
+                    ssr.setTargetServiceSchema((TargetServiceSchema) Hibernate.unproxy(ssr.getTargetServiceSchema()));
+            }
         }
 
         final TargetProductSchema targetProductSchema = productSpecificationUpdate.getTargetProductSchema();
@@ -288,11 +324,13 @@ public class ProductSpecificationService {
 
         ps.setProductSpecCharacteristic((List<ProductSpecificationCharacteristic>)
                 Hibernate.unproxy(ps.getProductSpecCharacteristic()));
-        for(ProductSpecificationCharacteristic psc : ps.getProductSpecCharacteristic()) {
-            psc.setProductSpecCharRelationship((List<ProductSpecificationCharacteristicRelationship>)
-                    Hibernate.unproxy(psc.getProductSpecCharRelationship()));
-            psc.setProductSpecCharacteristicValue((List<ProductSpecificationCharacteristicValue>)
-                    Hibernate.unproxy(psc.getProductSpecCharacteristicValue()));
+        if(ps.getProductSpecCharacteristic() != null) {
+            for (ProductSpecificationCharacteristic psc : ps.getProductSpecCharacteristic()) {
+                psc.setProductSpecCharRelationship((List<ProductSpecificationCharacteristicRelationship>)
+                        Hibernate.unproxy(psc.getProductSpecCharRelationship()));
+                psc.setProductSpecCharacteristicValue((List<ProductSpecificationCharacteristicValue>)
+                        Hibernate.unproxy(psc.getProductSpecCharacteristicValue()));
+            }
         }
 
         ps.setProductSpecificationRelationship((List<ProductSpecificationRelationship>)
@@ -302,8 +340,10 @@ public class ProductSpecificationService {
                 Hibernate.unproxy(ps.getResourceSpecification()));
 
         ps.setServiceSpecification((List<ServiceSpecificationRef>) Hibernate.unproxy(ps.getServiceSpecification()));
-        for(ServiceSpecificationRef ssr : ps.getServiceSpecification())
-            ssr.setTargetServiceSchema((TargetServiceSchema) Hibernate.unproxy(ssr.getTargetServiceSchema()));
+        if(ps.getServiceSpecification() != null) {
+            for (ServiceSpecificationRef ssr : ps.getServiceSpecification())
+                ssr.setTargetServiceSchema((TargetServiceSchema) Hibernate.unproxy(ssr.getTargetServiceSchema()));
+        }
 
         ps.setTargetProductSchema((TargetProductSchema) Hibernate.unproxy(ps.getTargetProductSchema()));
 

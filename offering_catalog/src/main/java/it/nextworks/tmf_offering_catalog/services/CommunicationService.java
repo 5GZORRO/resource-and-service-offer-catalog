@@ -8,9 +8,11 @@ import it.nextworks.tmf_offering_catalog.common.exception.DIDAlreadyRequestedFor
 import it.nextworks.tmf_offering_catalog.common.exception.DIDGenerationRequestException;
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
 import it.nextworks.tmf_offering_catalog.components.ClassifyAndPublishProductOfferingTask;
-import it.nextworks.tmf_offering_catalog.information_models.product.ProductOffering;
-import it.nextworks.tmf_offering_catalog.information_models.product.ProductOfferingStatesEnum;
-import it.nextworks.tmf_offering_catalog.information_models.product.ProductOfferingStatus;
+import it.nextworks.tmf_offering_catalog.information_models.common.ResourceSpecificationRef;
+import it.nextworks.tmf_offering_catalog.information_models.common.ServiceSpecificationRef;
+import it.nextworks.tmf_offering_catalog.information_models.product.*;
+import it.nextworks.tmf_offering_catalog.information_models.resource.ResourceSpecification;
+import it.nextworks.tmf_offering_catalog.information_models.service.ServiceSpecification;
 import it.nextworks.tmf_offering_catalog.repo.ProductOfferingStatusRepository;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -40,8 +42,10 @@ public class CommunicationService {
 
         @JsonProperty("type")
         private String type;
+
         @JsonProperty("claims")
         private Claims claims;
+
         @JsonProperty("handler_url")
         private String handlerUrl;
 
@@ -59,14 +63,35 @@ public class CommunicationService {
 
         @JsonProperty("productOffering")
         private final ProductOffering productOffering;
+
         @JsonProperty("did")
         private final String did;
 
+        @JsonProperty("productOfferingPrice")
+        private final List<ProductOfferingPrice> productOfferingPrice;
+
+        @JsonProperty("productSpecification")
+        private final ProductSpecification productSpecification;
+
+        @JsonProperty("resourceSpecifications")
+        private final List<ResourceSpecification> resourceSpecifications;
+
+        @JsonProperty("serviceSpecifications")
+        private final List<ServiceSpecification> serviceSpecifications;
+
         @JsonCreator
         public ClassificationWrapper(@JsonProperty("productOffering") ProductOffering productOffering,
-                                     @JsonProperty("did") String did) {
+                                     @JsonProperty("did") String did,
+                                     @JsonProperty("productOfferingPrice") List<ProductOfferingPrice> productOfferingPrice,
+                                     @JsonProperty("productSpecification") ProductSpecification productSpecification,
+                                     @JsonProperty("resourceSpecifications") List<ResourceSpecification> resourceSpecifications,
+                                     @JsonProperty("serviceSpecifications") List<ServiceSpecification> serviceSpecifications) {
             this.productOffering = productOffering;
             this.did = did;
+            this.productOfferingPrice = productOfferingPrice;
+            this.productSpecification = productSpecification;
+            this.resourceSpecifications = resourceSpecifications;
+            this.serviceSpecifications = serviceSpecifications;
         }
     }
 
@@ -78,23 +103,46 @@ public class CommunicationService {
 
         @JsonProperty("productOffering")
         private final ProductOffering productOffering;
+
         @JsonProperty("invitations")
         private final Map<String, Invitation> invitations;
+
         @JsonProperty("verifiableCredentials")
         private final Collection<VerifiableCredential> verifiableCredentials;
+
         @JsonProperty("did")
         private final String did;
+
+        @JsonProperty("productOfferingPrice")
+        private final List<ProductOfferingPrice> productOfferingPrice;
+
+        @JsonProperty("productSpecification")
+        private final ProductSpecification productSpecification;
+
+        @JsonProperty("resourceSpecifications")
+        private final List<ResourceSpecification> resourceSpecifications;
+
+        @JsonProperty("serviceSpecifications")
+        private final List<ServiceSpecification> serviceSpecifications;
 
         @JsonCreator
         public PublicationWrapper(@JsonProperty("productOffering") ProductOffering productOffering,
                                   @JsonProperty("invitations") Map<String, Invitation> invitations,
                                   @JsonProperty("verifiableCredentials")
                                           Collection<VerifiableCredential> verifiableCredentials,
-                                  @JsonProperty("did") String did) {
+                                  @JsonProperty("did") String did,
+                                  @JsonProperty("productOfferingPrice") List<ProductOfferingPrice> productOfferingPrice,
+                                  @JsonProperty("productSpecification") ProductSpecification productSpecification,
+                                  @JsonProperty("resourceSpecifications") List<ResourceSpecification> resourceSpecifications,
+                                  @JsonProperty("serviceSpecifications") List<ServiceSpecification> serviceSpecifications) {
             this.productOffering       = productOffering;
             this.invitations           = invitations;
             this.verifiableCredentials = verifiableCredentials;
             this.did = did;
+            this.productOfferingPrice = productOfferingPrice;
+            this.productSpecification = productSpecification;
+            this.resourceSpecifications = resourceSpecifications;
+            this.serviceSpecifications = serviceSpecifications;
         }
     }
 
@@ -122,6 +170,18 @@ public class CommunicationService {
 
     @Autowired
     private ProductOfferingService productOfferingService;
+
+    @Autowired
+    private ProductOfferingPriceService productOfferingPriceService;
+
+    @Autowired
+    private ProductSpecificationService productSpecificationService;
+
+    @Autowired
+    private ResourceSpecificationService resourceSpecificationService;
+
+    @Autowired
+    private ServiceSpecificationService serviceSpecificationService;
 
     @Autowired
     private TaskExecutor taskExecutor;
@@ -180,14 +240,9 @@ public class CommunicationService {
     public void handleDIDReceiving(String catalogId, String did)
             throws NotExistingEntityException, DIDAlreadyRequestedForProductException, JsonProcessingException {
 
-        log.info("Updating status of Product Offering" + catalogId + " with the received DID " + did + ".");
+        log.info("Updating status of Product Offering " + catalogId + " with the received DID " + did + ".");
 
-        ProductOffering po;
-        try {
-            po = productOfferingService.get(catalogId);
-        } catch (NotExistingEntityException e) {
-            throw e;
-        }
+        ProductOffering po = productOfferingService.get(catalogId);
 
         Optional<ProductOfferingStatus> toUpdate = productOfferingStatusRepository.findById(catalogId);
         if(!toUpdate.isPresent())
@@ -204,11 +259,33 @@ public class CommunicationService {
 
         productOfferingStatusRepository.save(productOfferingStatus);
 
-        ClassificationWrapper classificationWrapper = new ClassificationWrapper(po, did);
+        // Construct the payloads for the classify and publish POST requests
+
+        List<ProductOfferingPrice> productOfferingPrices = null;
+        if(po.getProductOfferingPrice() != null)
+            productOfferingPrices = getProductOfferingPrices(po);
+
+        ProductSpecification productSpecification = null;
+        if(po.getProductSpecification() != null)
+            productSpecification = productSpecificationService.get(po.getProductSpecification().getId());
+
+        List<ResourceSpecification> resourceSpecifications = null;
+        if(productSpecification != null && productSpecification.getResourceSpecification() != null)
+            resourceSpecifications = getResourceSpecifications(productSpecification);
+
+        List<ServiceSpecification> serviceSpecifications = null;
+        if(productSpecification != null && productSpecification.getServiceSpecification() != null)
+            serviceSpecifications = getServiceSpecifications(productSpecification);
+
+        ClassificationWrapper classificationWrapper =
+                new ClassificationWrapper(po, did, productOfferingPrices, productSpecification,
+                        resourceSpecifications, serviceSpecifications);
         String cwJson = objectMapper.writeValueAsString(classificationWrapper);
         log.info(cwJson);
 
-        PublicationWrapper publicationWrapper = new PublicationWrapper(po, null, null, did);
+        PublicationWrapper publicationWrapper =
+                new PublicationWrapper(po, null, null, did,
+                        productOfferingPrices, productSpecification, resourceSpecifications, serviceSpecifications);
         String pwJson = objectMapper.writeValueAsString(publicationWrapper);
         log.info(pwJson);
 
@@ -216,5 +293,56 @@ public class CommunicationService {
                 .catalogId(po.getId()).cwJson(cwJson).pwJson(pwJson));
 
         log.info("Status of Product Offering " + catalogId + " updated.");
+    }
+
+    private List<ProductOfferingPrice> getProductOfferingPrices(ProductOffering po) {
+
+        List<ProductOfferingPrice> productOfferingPrices = new ArrayList<>();
+
+        List<ProductOfferingPriceRef> productOfferingPriceRefs = po.getProductOfferingPrice();
+        for(ProductOfferingPriceRef priceRef : productOfferingPriceRefs) {
+            String id = priceRef.getId();
+            try {
+                productOfferingPrices.add(productOfferingPriceService.get(id));
+            } catch (NotExistingEntityException e) {
+                log.warn("ProductOfferingPrice with id " + id + " not found in DB.");
+            }
+        }
+
+        return productOfferingPrices;
+    }
+
+    private List<ResourceSpecification> getResourceSpecifications(ProductSpecification ps) {
+
+        List<ResourceSpecification> resourceSpecifications = new ArrayList<>();
+
+        List<ResourceSpecificationRef> resourceSpecificationRefs = ps.getResourceSpecification();
+        for(ResourceSpecificationRef specificationRef : resourceSpecificationRefs) {
+            String id = specificationRef.getId();
+            try {
+                resourceSpecifications.add(resourceSpecificationService.get(id));
+            } catch (NotExistingEntityException e) {
+                log.warn("ResourceSpecification with id " + id + " not found in DB.");
+            }
+        }
+
+        return resourceSpecifications;
+    }
+
+    private List<ServiceSpecification> getServiceSpecifications(ProductSpecification ps) {
+
+        List<ServiceSpecification> serviceSpecifications = new ArrayList<>();
+
+        List<ServiceSpecificationRef> serviceSpecificationRefs = ps.getServiceSpecification();
+        for(ServiceSpecificationRef specificationRef : serviceSpecificationRefs) {
+            String id = specificationRef.getId();
+            try {
+                serviceSpecifications.add(serviceSpecificationService.get(id));
+            } catch (NotExistingEntityException e) {
+                log.warn("ServiceSpecification with id " + id + " not found in DB.");
+            }
+        }
+
+        return serviceSpecifications;
     }
 }
