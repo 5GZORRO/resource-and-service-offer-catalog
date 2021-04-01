@@ -261,21 +261,10 @@ public class CommunicationService {
 
         // Construct the payloads for the classify and publish POST requests
 
-        List<ProductOfferingPrice> productOfferingPrices = null;
-        if(po.getProductOfferingPrice() != null)
-            productOfferingPrices = getProductOfferingPrices(po);
-
-        ProductSpecification productSpecification = null;
-        if(po.getProductSpecification() != null)
-            productSpecification = productSpecificationService.get(po.getProductSpecification().getId());
-
-        List<ResourceSpecification> resourceSpecifications = null;
-        if(productSpecification != null && productSpecification.getResourceSpecification() != null)
-            resourceSpecifications = getResourceSpecifications(productSpecification);
-
-        List<ServiceSpecification> serviceSpecifications = null;
-        if(productSpecification != null && productSpecification.getServiceSpecification() != null)
-            serviceSpecifications = getServiceSpecifications(productSpecification);
+        List<ProductOfferingPrice> productOfferingPrices = getProductOfferingPrices(po);
+        ProductSpecification productSpecification = getProductSpecification(po);
+        List<ResourceSpecification> resourceSpecifications = getResourceSpecifications(productSpecification);
+        List<ServiceSpecification> serviceSpecifications = getServiceSpecifications(productSpecification);
 
         ClassificationWrapper classificationWrapper =
                 new ClassificationWrapper(po, did, productOfferingPrices, productSpecification,
@@ -296,6 +285,8 @@ public class CommunicationService {
     }
 
     private List<ProductOfferingPrice> getProductOfferingPrices(ProductOffering po) {
+        if(po.getProductOfferingPrice() == null)
+            return null;
 
         List<ProductOfferingPrice> productOfferingPrices = new ArrayList<>();
 
@@ -312,7 +303,24 @@ public class CommunicationService {
         return productOfferingPrices;
     }
 
+    private ProductSpecification getProductSpecification(ProductOffering po) {
+        if(po.getProductSpecification() == null)
+            return null;
+
+        ProductSpecification productSpecification = null;
+        String id = po.getProductSpecification().getId();
+        try {
+            productSpecification =  productSpecificationService.get(id);
+        } catch (NotExistingEntityException e) {
+            log.warn("ProductSpecification with id " + id + " not found in DB.");
+        }
+
+        return productSpecification;
+    }
+
     private List<ResourceSpecification> getResourceSpecifications(ProductSpecification ps) {
+        if(ps == null || ps.getResourceSpecification() == null)
+            return null;
 
         List<ResourceSpecification> resourceSpecifications = new ArrayList<>();
 
@@ -330,6 +338,8 @@ public class CommunicationService {
     }
 
     private List<ServiceSpecification> getServiceSpecifications(ProductSpecification ps) {
+        if(ps == null || ps.getServiceSpecification() == null)
+            return null;
 
         List<ServiceSpecification> serviceSpecifications = new ArrayList<>();
 

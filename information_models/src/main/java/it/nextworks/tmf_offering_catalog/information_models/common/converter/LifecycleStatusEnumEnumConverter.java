@@ -8,6 +8,9 @@ public class LifecycleStatusEnumEnumConverter implements AttributeConverter<Life
 
     @Override
     public String convertToDatabaseColumn(LifecycleStatusEnumEnum lifecycleStatusEnumEnum) {
+        if(lifecycleStatusEnumEnum == null)
+            return null;
+
         return lifecycleStatusEnumEnum.toString();
     }
 
