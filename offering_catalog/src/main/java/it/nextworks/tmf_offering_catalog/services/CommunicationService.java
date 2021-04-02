@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.nextworks.tmf_offering_catalog.common.exception.DIDAlreadyRequestedForProductException;
 import it.nextworks.tmf_offering_catalog.common.exception.DIDGenerationRequestException;
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
-import it.nextworks.tmf_offering_catalog.components.ClassifyAndPublishProductOfferingTask;
 import it.nextworks.tmf_offering_catalog.information_models.common.ResourceSpecificationRef;
 import it.nextworks.tmf_offering_catalog.information_models.common.ServiceSpecificationRef;
 import it.nextworks.tmf_offering_catalog.information_models.product.*;
@@ -26,8 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
-import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -184,10 +181,7 @@ public class CommunicationService {
     private ServiceSpecificationService serviceSpecificationService;
 
     @Autowired
-    private TaskExecutor taskExecutor;
-
-    @Autowired
-    private ApplicationContext ctx;
+    private ClassifyAndPublishProductOfferingService classifyAndPublishProductOfferingService;
 
     @Autowired
     public CommunicationService(ObjectMapper objectMapper) { this.objectMapper = objectMapper; }
@@ -278,8 +272,7 @@ public class CommunicationService {
         String pwJson = objectMapper.writeValueAsString(publicationWrapper);
         log.info(pwJson);
 
-        taskExecutor.execute(ctx.getBean(ClassifyAndPublishProductOfferingTask.class)
-                .catalogId(po.getId()).cwJson(cwJson).pwJson(pwJson));
+        classifyAndPublishProductOfferingService.classifyAndPublish(catalogId, cwJson, pwJson);
 
         log.info("Status of Product Offering " + catalogId + " updated.");
     }

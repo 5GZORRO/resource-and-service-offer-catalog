@@ -1,4 +1,4 @@
-package it.nextworks.tmf_offering_catalog.components;
+package it.nextworks.tmf_offering_catalog.services;
 
 import it.nextworks.tmf_offering_catalog.information_models.product.ProductOfferingStatesEnum;
 import it.nextworks.tmf_offering_catalog.information_models.product.ProductOfferingStatus;
@@ -14,26 +14,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 
-@Component
-@Scope("prototype")
-public class ClassifyAndPublishProductOfferingTask implements Runnable {
+@Service
+public class ClassifyAndPublishProductOfferingService {
 
-    private static final Logger log = LoggerFactory.getLogger(ClassifyAndPublishProductOfferingTask.class);
+    private static final Logger log = LoggerFactory.getLogger(ClassifyAndPublishProductOfferingService.class);
 
     private static final String protocol = "http://";
-
-    private String catalogId = null;
-
-    private String cwJson = null;
-
-    private String pwJson = null;
 
     @Value("${sc_lcm.hostname}")
     private String scLcmHostname;
@@ -50,9 +43,8 @@ public class ClassifyAndPublishProductOfferingTask implements Runnable {
     @Autowired
     private ProductOfferingStatusRepository productOfferingStatusRepository;
 
-    @Override
-    public void run() {
-
+    @Async
+    public void classifyAndPublish(String catalogId, String cwJson, String pwJson) {
         Optional<ProductOfferingStatus> toClassify = productOfferingStatusRepository.findById(catalogId);
         if(!toClassify.isPresent()) {
             log.error("Product Offering Status for id " + catalogId + " not found in DB.");
@@ -61,7 +53,7 @@ public class ClassifyAndPublishProductOfferingTask implements Runnable {
 
         ProductOfferingStatus productOfferingStatus = toClassify.get();
 
-        if(!classifyProductOffering(catalogId)) {
+        if(!classifyProductOffering(catalogId, cwJson)) {
             productOfferingStatus.setStatus(ProductOfferingStatesEnum.CLASSIFICATION_FAILED);
             productOfferingStatusRepository.save(productOfferingStatus);
             return;
@@ -70,32 +62,16 @@ public class ClassifyAndPublishProductOfferingTask implements Runnable {
         productOfferingStatus.setStatus(ProductOfferingStatesEnum.CLASSIFIED);
         productOfferingStatusRepository.save(productOfferingStatus);
 
-        if(!publicProductOffering(catalogId)) {
+        if(!publicProductOffering(catalogId, pwJson)) {
             productOfferingStatus.setStatus(ProductOfferingStatesEnum.PUBLISHING_FAILED);
             productOfferingStatusRepository.save(productOfferingStatus);
         }
 
         productOfferingStatus.setStatus(ProductOfferingStatesEnum.PUBLISHED);
         productOfferingStatusRepository.save(productOfferingStatus);
-
     }
 
-    public ClassifyAndPublishProductOfferingTask catalogId(String catalogId) {
-        this.catalogId = catalogId;
-        return this;
-    }
-
-    public ClassifyAndPublishProductOfferingTask cwJson(String cwJson) {
-        this.cwJson = cwJson;
-        return this;
-    }
-
-    public ClassifyAndPublishProductOfferingTask pwJson(String pwJson) {
-        this.pwJson = pwJson;
-        return this;
-    }
-
-    private boolean classifyProductOffering(String catalogId) {
+    private boolean classifyProductOffering(String catalogId, String cwJson) {
 
         log.info("Classifying Product Offering with id " + catalogId + ".");
 
@@ -148,7 +124,7 @@ public class ClassifyAndPublishProductOfferingTask implements Runnable {
         return true;
     }
 
-    private boolean publicProductOffering(String catalogId) {
+    private boolean publicProductOffering(String catalogId, String pwJson) {
 
         log.info("Publishing Product Offering with id " + catalogId + ".");
 
