@@ -60,9 +60,8 @@ public class ClassifyAndPublishProductOfferingTask implements Runnable {
         }
 
         ProductOfferingStatus productOfferingStatus = toClassify.get();
-        String did = productOfferingStatus.getDid();
 
-        if(!classifyProductOffering(catalogId, did)) {
+        if(!classifyProductOffering(catalogId)) {
             productOfferingStatus.setStatus(ProductOfferingStatesEnum.CLASSIFICATION_FAILED);
             productOfferingStatusRepository.save(productOfferingStatus);
             return;
@@ -71,7 +70,7 @@ public class ClassifyAndPublishProductOfferingTask implements Runnable {
         productOfferingStatus.setStatus(ProductOfferingStatesEnum.CLASSIFIED);
         productOfferingStatusRepository.save(productOfferingStatus);
 
-        if(!publicProductOffering(catalogId, did)) {
+        if(!publicProductOffering(catalogId)) {
             productOfferingStatus.setStatus(ProductOfferingStatesEnum.PUBLISHING_FAILED);
             productOfferingStatusRepository.save(productOfferingStatus);
         }
@@ -96,7 +95,7 @@ public class ClassifyAndPublishProductOfferingTask implements Runnable {
         return this;
     }
 
-    private boolean classifyProductOffering(String catalogId, String did) {
+    private boolean classifyProductOffering(String catalogId) {
 
         log.info("Classifying Product Offering with id " + catalogId + ".");
 
@@ -149,7 +148,7 @@ public class ClassifyAndPublishProductOfferingTask implements Runnable {
         return true;
     }
 
-    private boolean publicProductOffering(String catalogId, String did) {
+    private boolean publicProductOffering(String catalogId) {
 
         log.info("Publishing Product Offering with id " + catalogId + ".");
 
