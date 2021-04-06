@@ -55,13 +55,7 @@ public class ProductOfferingService {
          */
         log.info("Requesting DID via CommunicationService to ID&P.");
 
-        try {
-            communicationService.requestDID(id);
-        } catch (IOException e) {
-            throw e;
-        } catch (DIDGenerationRequestException e) {
-            throw e;
-        }
+        communicationService.requestDID(id);
 
         log.info("DID successfully requested via CommunicationService to ID&P.");
 

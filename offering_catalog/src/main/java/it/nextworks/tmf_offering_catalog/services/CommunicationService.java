@@ -50,8 +50,8 @@ public class CommunicationService {
         public Offer(@JsonProperty("type") String type,
                      @JsonProperty("claims") Claims claims,
                      @JsonProperty("handler_url") String handlerUrl) {
-            this.type = type;
-            this.claims = claims;
+            this.type       = type;
+            this.claims     = claims;
             this.handlerUrl = handlerUrl;
         }
     }
@@ -64,8 +64,8 @@ public class CommunicationService {
         @JsonProperty("did")
         private final String did;
 
-        @JsonProperty("productOfferingPrice")
-        private final List<ProductOfferingPrice> productOfferingPrice;
+        @JsonProperty("productOfferingPrices")
+        private final List<ProductOfferingPrice> productOfferingPrices;
 
         @JsonProperty("productSpecification")
         private final ProductSpecification productSpecification;
@@ -79,16 +79,16 @@ public class CommunicationService {
         @JsonCreator
         public ClassificationWrapper(@JsonProperty("productOffering") ProductOffering productOffering,
                                      @JsonProperty("did") String did,
-                                     @JsonProperty("productOfferingPrice") List<ProductOfferingPrice> productOfferingPrice,
+                                     @JsonProperty("productOfferingPrices") List<ProductOfferingPrice> productOfferingPrices,
                                      @JsonProperty("productSpecification") ProductSpecification productSpecification,
                                      @JsonProperty("resourceSpecifications") List<ResourceSpecification> resourceSpecifications,
                                      @JsonProperty("serviceSpecifications") List<ServiceSpecification> serviceSpecifications) {
-            this.productOffering = productOffering;
-            this.did = did;
-            this.productOfferingPrice = productOfferingPrice;
-            this.productSpecification = productSpecification;
+            this.productOffering        = productOffering;
+            this.did                    = did;
+            this.productOfferingPrices  = productOfferingPrices;
+            this.productSpecification   = productSpecification;
             this.resourceSpecifications = resourceSpecifications;
-            this.serviceSpecifications = serviceSpecifications;
+            this.serviceSpecifications  = serviceSpecifications;
         }
     }
 
@@ -110,8 +110,8 @@ public class CommunicationService {
         @JsonProperty("did")
         private final String did;
 
-        @JsonProperty("productOfferingPrice")
-        private final List<ProductOfferingPrice> productOfferingPrice;
+        @JsonProperty("productOfferingPrices")
+        private final List<ProductOfferingPrice> productOfferingPrices;
 
         @JsonProperty("productSpecification")
         private final ProductSpecification productSpecification;
@@ -128,18 +128,18 @@ public class CommunicationService {
                                   @JsonProperty("verifiableCredentials")
                                           Collection<VerifiableCredential> verifiableCredentials,
                                   @JsonProperty("did") String did,
-                                  @JsonProperty("productOfferingPrice") List<ProductOfferingPrice> productOfferingPrice,
+                                  @JsonProperty("productOfferingPrices") List<ProductOfferingPrice> productOfferingPrices,
                                   @JsonProperty("productSpecification") ProductSpecification productSpecification,
                                   @JsonProperty("resourceSpecifications") List<ResourceSpecification> resourceSpecifications,
                                   @JsonProperty("serviceSpecifications") List<ServiceSpecification> serviceSpecifications) {
-            this.productOffering       = productOffering;
-            this.invitations           = invitations;
-            this.verifiableCredentials = verifiableCredentials;
-            this.did = did;
-            this.productOfferingPrice = productOfferingPrice;
-            this.productSpecification = productSpecification;
+            this.productOffering        = productOffering;
+            this.invitations            = invitations;
+            this.verifiableCredentials  = verifiableCredentials;
+            this.did                    = did;
+            this.productOfferingPrices  = productOfferingPrices;
+            this.productSpecification   = productSpecification;
             this.resourceSpecifications = resourceSpecifications;
-            this.serviceSpecifications = serviceSpecifications;
+            this.serviceSpecifications  = serviceSpecifications;
         }
     }
 
