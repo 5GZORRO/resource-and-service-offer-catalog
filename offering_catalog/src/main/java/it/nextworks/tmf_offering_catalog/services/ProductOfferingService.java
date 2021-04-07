@@ -4,10 +4,7 @@ import it.nextworks.tmf_offering_catalog.common.exception.DIDGenerationRequestEx
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
 import it.nextworks.tmf_offering_catalog.common.exception.ProductOfferingDeleteScLCMException;
 import it.nextworks.tmf_offering_catalog.common.exception.ProductOfferingInPublicationException;
-import it.nextworks.tmf_offering_catalog.information_models.common.PlaceRef;
-import it.nextworks.tmf_offering_catalog.information_models.common.ResourceCandidateRef;
-import it.nextworks.tmf_offering_catalog.information_models.common.ServiceCandidateRef;
-import it.nextworks.tmf_offering_catalog.information_models.common.TimePeriod;
+import it.nextworks.tmf_offering_catalog.information_models.common.*;
 import it.nextworks.tmf_offering_catalog.information_models.product.*;
 import it.nextworks.tmf_offering_catalog.repo.ProductOfferingRepository;
 import org.hibernate.Hibernate;

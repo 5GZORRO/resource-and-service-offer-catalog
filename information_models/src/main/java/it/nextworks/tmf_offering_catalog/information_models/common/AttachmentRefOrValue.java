@@ -1,4 +1,4 @@
-package it.nextworks.tmf_offering_catalog.information_models.product;
+package it.nextworks.tmf_offering_catalog.information_models.common;
 
 import java.util.Objects;
 
@@ -6,9 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import it.nextworks.tmf_offering_catalog.information_models.common.LifecycleStatusEnumEnum;
-import it.nextworks.tmf_offering_catalog.information_models.common.Quantity;
-import it.nextworks.tmf_offering_catalog.information_models.common.TimePeriod;
 import it.nextworks.tmf_offering_catalog.information_models.common.converter.LifecycleStatusEnumEnumConverter;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
@@ -41,6 +38,10 @@ public class AttachmentRefOrValue {
 
   @JsonProperty("@type")
   private String type = null;
+
+  @JsonProperty("atReferredType")
+  @Column(name = "at_referred_type")
+  private String atReferredType = null;
 
   @JsonProperty("attachmentType")
   @Column(name = "attachment_type")
