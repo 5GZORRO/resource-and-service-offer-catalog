@@ -1,10 +1,15 @@
 package it.nextworks.tmf_offering_catalog.information_models.party;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 
 /**
  * Describes the contact medium characteristics that could be used to contact a party (an individual or an organization)
@@ -13,12 +18,16 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-04-07T10:10:44.963Z")
 
+@Entity
+@Table(name = "medium_characteristics")
+public class MediumCharacteristic {
 
-public class MediumCharacteristic   {
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")
@@ -28,39 +37,51 @@ public class MediumCharacteristic   {
   private String city = null;
 
   @JsonProperty("contactType")
+  @Column(name = "contact_type")
   private String contactType = null;
 
   @JsonProperty("country")
   private String country = null;
 
   @JsonProperty("emailAddress")
+  @Column(name = "email_address")
   private String emailAddress = null;
 
   @JsonProperty("faxNumber")
+  @Column(name = "fax_number")
   private String faxNumber = null;
 
   @JsonProperty("href")
   private String href = null;
 
   @JsonProperty("phoneNumber")
+  @Column(name = "phone_number")
   private String phoneNumber = null;
 
   @JsonProperty("postCode")
+  @Column(name = "post_code")
   private String postCode = null;
 
   @JsonProperty("socialNetworkId")
+  @Column(name = "social_network_id")
   private String socialNetworkId = null;
 
   @JsonProperty("stateOrProvince")
+  @Column(name = "state_or_province")
   private String stateOrProvince = null;
 
   @JsonProperty("street1")
+  @Column(name = "street_1")
   private String street1 = null;
 
   @JsonProperty("street2")
+  @Column(name = "street_2")
   private String street2 = null;
 
-  @JsonProperty("uuid")
+  @JsonIgnore
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
   public MediumCharacteristic baseType(String baseType) {

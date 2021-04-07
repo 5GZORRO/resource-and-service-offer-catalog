@@ -1,10 +1,15 @@
 package it.nextworks.tmf_offering_catalog.information_models.party;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 
 /**
@@ -14,12 +19,16 @@ import javax.validation.Valid;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-04-07T10:10:44.963Z")
 
+@Entity
+@Table(name = "organization_child_relationships")
+public class OrganizationChildRelationship {
 
-public class OrganizationChildRelationship   {
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")
@@ -29,12 +38,18 @@ public class OrganizationChildRelationship   {
   private String href = null;
 
   @JsonProperty("organization")
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "organization_id", referencedColumnName = "uuid")
   private OrganizationRef organization = null;
 
   @JsonProperty("relationshipType")
+  @Column(name = "relationship_type")
   private String relationshipType = null;
 
-  @JsonProperty("uuid")
+  @JsonIgnore
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
   public OrganizationChildRelationship baseType(String baseType) {

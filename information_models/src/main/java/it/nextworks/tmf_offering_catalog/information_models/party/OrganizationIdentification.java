@@ -1,13 +1,18 @@
 package it.nextworks.tmf_offering_catalog.information_models.party;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import it.nextworks.tmf_offering_catalog.information_models.common.AttachmentRefOrValue;
 import it.nextworks.tmf_offering_catalog.information_models.common.TimePeriod;
+import org.hibernate.annotations.GenericGenerator;
 import org.threeten.bp.OffsetDateTime;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 
 /**
@@ -17,39 +22,54 @@ import javax.validation.Valid;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-04-07T10:10:44.963Z")
 
+@Entity
+@Table(name = "organization_identifications")
+public class OrganizationIdentification {
 
-public class OrganizationIdentification   {
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")
   private String type = null;
 
   @JsonProperty("attachment")
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "attachment_id", referencedColumnName = "uuid")
   private AttachmentRefOrValue attachment = null;
 
   @JsonProperty("href")
   private String href = null;
 
   @JsonProperty("identificationId")
+  @Column(name = "identification_id")
   private String identificationId = null;
 
   @JsonProperty("identificationType")
+  @Column(name = "identification_type")
   private String identificationType = null;
 
   @JsonProperty("issuingAuthority")
+  @Column(name = "issuing_authority")
   private String issuingAuthority = null;
 
   @JsonProperty("issuingDate")
+  @Column(name = "issuing_date")
   private OffsetDateTime issuingDate = null;
 
-  @JsonProperty("uuid")
+  @JsonIgnore
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
   @JsonProperty("validFor")
+  @Column(name = "valid_for")
+  @Embedded
   private TimePeriod validFor = null;
 
   public OrganizationIdentification baseType(String baseType) {

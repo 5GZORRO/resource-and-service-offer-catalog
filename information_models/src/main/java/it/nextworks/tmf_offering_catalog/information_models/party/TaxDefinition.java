@@ -1,10 +1,15 @@
 package it.nextworks.tmf_offering_catalog.information_models.party;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 
 /**
  * Reference of a tax definition. A tax is levied by an authorized tax jurisdiction. There are many different types of tax (Federal Tax levied by the US Government, State Tax levied by the State of California,…).
@@ -13,15 +18,20 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-04-07T10:10:44.963Z")
 
+@Entity
+@Table(name = "tax_definitions")
+public class TaxDefinition {
 
-public class TaxDefinition   {
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@referredType")
+  @Column(name = "referred_type")
   private String referredType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")
@@ -37,9 +47,13 @@ public class TaxDefinition   {
   private String name = null;
 
   @JsonProperty("taxType")
+  @Column(name = "tax_type")
   private String taxType = null;
 
-  @JsonProperty("uuid")
+  @JsonIgnore
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
   public TaxDefinition baseType(String baseType) {

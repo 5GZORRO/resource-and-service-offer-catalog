@@ -1,11 +1,16 @@
 package it.nextworks.tmf_offering_catalog.information_models.party;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import it.nextworks.tmf_offering_catalog.information_models.common.TimePeriod;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 
 /**
@@ -15,12 +20,16 @@ import javax.validation.Valid;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-04-07T10:10:44.963Z")
 
+@Entity
+@Table(name = "other_name_organizations")
+public class OtherNameOrganization {
 
-public class OtherNameOrganization   {
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")
@@ -33,15 +42,22 @@ public class OtherNameOrganization   {
   private String name = null;
 
   @JsonProperty("nameType")
+  @Column(name = "name_type")
   private String nameType = null;
 
   @JsonProperty("tradingName")
+  @Column(name = "trading_name")
   private String tradingName = null;
 
-  @JsonProperty("uuid")
+  @JsonIgnore
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
   @JsonProperty("validFor")
+  @Column(name = "valid_for")
+  @Embedded
   private TimePeriod validFor = null;
 
   public OtherNameOrganization baseType(String baseType) {

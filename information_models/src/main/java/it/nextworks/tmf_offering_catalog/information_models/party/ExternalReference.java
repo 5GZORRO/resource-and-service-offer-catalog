@@ -1,10 +1,15 @@
 package it.nextworks.tmf_offering_catalog.information_models.party;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 
 /**
  * External reference of the individual or reference in other system
@@ -13,18 +18,23 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-04-07T10:10:44.963Z")
 
+@Entity
+@Table(name = "external_references")
+public class ExternalReference {
 
-public class ExternalReference   {
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")
   private String type = null;
 
   @JsonProperty("externalReferenceType")
+  @Column(name = "external_reference_type")
   private String externalReferenceType = null;
 
   @JsonProperty("href")
@@ -33,7 +43,10 @@ public class ExternalReference   {
   @JsonProperty("name")
   private String name = null;
 
-  @JsonProperty("uuid")
+  @JsonIgnore
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
   public ExternalReference baseType(String baseType) {

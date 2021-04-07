@@ -1,11 +1,16 @@
 package it.nextworks.tmf_offering_catalog.information_models.party;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import it.nextworks.tmf_offering_catalog.information_models.common.TimePeriod;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -16,33 +21,45 @@ import javax.validation.constraints.*;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-04-07T10:10:44.963Z")
 
+@Entity
+@Table(name = "contact_mediums")
+public class ContactMedium {
 
-public class ContactMedium   {
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")
   private String type = null;
 
   @JsonProperty("characteristic")
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "characteristic_id", referencedColumnName = "uuid")
   private MediumCharacteristic characteristic = null;
 
   @JsonProperty("href")
   private String href = null;
 
   @JsonProperty("mediumType")
+  @Column(name = "medium_type")
   private String mediumType = null;
 
   @JsonProperty("preferred")
   private Boolean preferred = null;
 
-  @JsonProperty("uuid")
+  @JsonIgnore
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
   @JsonProperty("validFor")
+  @Column(name = "valid_for")
+  @Embedded
   private TimePeriod validFor = null;
 
   public ContactMedium baseType(String baseType) {

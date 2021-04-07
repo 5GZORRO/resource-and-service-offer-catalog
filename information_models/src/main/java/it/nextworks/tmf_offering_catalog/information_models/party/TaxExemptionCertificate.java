@@ -1,6 +1,8 @@
 package it.nextworks.tmf_offering_catalog.information_models.party;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -10,7 +12,10 @@ import java.util.List;
 
 import it.nextworks.tmf_offering_catalog.information_models.common.AttachmentRefOrValue;
 import it.nextworks.tmf_offering_catalog.information_models.common.TimePeriod;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 
 /**
@@ -20,18 +25,24 @@ import javax.validation.Valid;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-04-07T10:10:44.963Z")
 
+@Entity
+@Table(name = "tax_exemption_certificates")
+public class TaxExemptionCertificate {
 
-public class TaxExemptionCertificate   {
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")
   private String type = null;
 
   @JsonProperty("attachment")
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "attachment_id", referencedColumnName = "uuid")
   private AttachmentRefOrValue attachment = null;
 
   @JsonProperty("href")
@@ -42,12 +53,19 @@ public class TaxExemptionCertificate   {
 
   @JsonProperty("taxDefinition")
   @Valid
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "tax_exemption_certificate_fk", referencedColumnName = "uuid")
   private List<TaxDefinition> taxDefinition = null;
 
-  @JsonProperty("uuid")
+  @JsonIgnore
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
   @JsonProperty("validFor")
+  @Column(name = "valid_for")
+  @Embedded
   private TimePeriod validFor = null;
 
   public TaxExemptionCertificate baseType(String baseType) {

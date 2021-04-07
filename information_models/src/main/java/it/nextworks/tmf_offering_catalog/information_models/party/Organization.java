@@ -1,9 +1,9 @@
 package it.nextworks.tmf_offering_catalog.information_models.party;
 
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -12,7 +12,11 @@ import java.util.List;
 
 import it.nextworks.tmf_offering_catalog.information_models.common.RelatedParty;
 import it.nextworks.tmf_offering_catalog.information_models.common.TimePeriod;
+import it.nextworks.tmf_offering_catalog.information_models.common.converter.PartyStatusEnumConverter;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -23,12 +27,16 @@ import javax.validation.constraints.*;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-04-07T10:10:44.963Z")
 
+@Entity
+@Table(name = "organizations")
+public class Organization {
 
-public class Organization   {
   @JsonProperty("@baseType")
+  @Column(name = "base_type")
   private String baseType = null;
 
   @JsonProperty("@schemaLocation")
+  @Column(name = "schema_location")
   private String schemaLocation = null;
 
   @JsonProperty("@type")
@@ -36,17 +44,25 @@ public class Organization   {
 
   @JsonProperty("contactMedium")
   @Valid
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "organization_fk", referencedColumnName = "uuid")
   private List<ContactMedium> contactMedium = null;
 
   @JsonProperty("creditRating")
   @Valid
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "organization_fk", referencedColumnName = "uuid")
   private List<PartyCreditProfile> creditRating = null;
 
   @JsonProperty("existsDuring")
+  @Column(name = "exists_during")
+  @Embedded
   private TimePeriod existsDuring = null;
 
   @JsonProperty("externalReference")
   @Valid
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "organization_fk", referencedColumnName = "uuid")
   private List<ExternalReference> externalReference = null;
 
   @JsonProperty("href")
@@ -56,87 +72,77 @@ public class Organization   {
   private String id = null;
 
   @JsonProperty("isHeadOffice")
+  @Column(name = "is_head_office")
   private Boolean isHeadOffice = null;
 
   @JsonProperty("isLegalEntity")
+  @Column(name = "is_legal_entity")
   private Boolean isLegalEntity = null;
 
   @JsonProperty("name")
   private String name = null;
 
   @JsonProperty("nameType")
+  @Column(name = "name_type")
   private String nameType = null;
 
   @JsonProperty("organizationChildRelationship")
   @Valid
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "organization_fk", referencedColumnName = "uuid")
   private List<OrganizationChildRelationship> organizationChildRelationship = null;
 
   @JsonProperty("organizationIdentification")
   @Valid
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "organization_fk", referencedColumnName = "uuid")
   private List<OrganizationIdentification> organizationIdentification = null;
 
   @JsonProperty("organizationParentRelationship")
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "organization_parent_relationship_id", referencedColumnName = "uuid")
   private OrganizationParentRelationship organizationParentRelationship = null;
 
   @JsonProperty("organizationType")
+  @Column(name = "organization_type")
   private String organizationType = null;
 
   @JsonProperty("otherName")
   @Valid
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "organization_fk", referencedColumnName = "uuid")
   private List<OtherNameOrganization> otherName = null;
 
   @JsonProperty("partyCharacteristic")
   @Valid
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "organization_fk", referencedColumnName = "uuid")
   private List<Characteristic> partyCharacteristic = null;
 
   @JsonProperty("relatedParty")
   @Valid
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "organization_fk", referencedColumnName = "uuid")
   private List<RelatedParty> relatedParty = null;
 
-  /**
-   * Status of the organization
-   */
-  public enum StatusEnum {
-    INITIALIZED("initialized"),
-    
-    VALIDATED("validated"),
-    
-    CLOSED("closed");
-
-    private String value;
-
-    StatusEnum(String value) {
-      this.value = value;
-    }
-
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static StatusEnum fromValue(String text) {
-      for (StatusEnum b : StatusEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
-
   @JsonProperty("status")
-  private StatusEnum status = null;
+  @Convert(converter = PartyStatusEnumConverter.class)
+  private PartyStatusEnum status = null;
 
   @JsonProperty("taxExemptionCertificate")
   @Valid
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "organization_fk", referencedColumnName = "uuid")
   private List<TaxExemptionCertificate> taxExemptionCertificate = null;
 
   @JsonProperty("tradingName")
+  @Column(name = "trading_name")
   private String tradingName = null;
 
-  @JsonProperty("uuid")
+  @JsonIgnore
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
   private String uuid = null;
 
   public Organization baseType(String baseType) {
@@ -614,7 +620,7 @@ public class Organization   {
     this.relatedParty = relatedParty;
   }
 
-  public Organization status(StatusEnum status) {
+  public Organization status(PartyStatusEnum status) {
     this.status = status;
     return this;
   }
@@ -626,11 +632,11 @@ public class Organization   {
   @ApiModelProperty(value = "Status of the organization")
 
 
-  public StatusEnum getStatus() {
+  public PartyStatusEnum getStatus() {
     return status;
   }
 
-  public void setStatus(StatusEnum status) {
+  public void setStatus(PartyStatusEnum status) {
     this.status = status;
   }
 
