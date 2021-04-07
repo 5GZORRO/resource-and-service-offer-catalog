@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.nextworks.tmf_offering_catalog.common.exception.DIDAlreadyRequestedForProductException;
-import it.nextworks.tmf_offering_catalog.common.exception.DIDGenerationRequestException;
-import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
+import it.nextworks.tmf_offering_catalog.common.exception.*;
 import it.nextworks.tmf_offering_catalog.information_models.common.ResourceSpecificationRef;
 import it.nextworks.tmf_offering_catalog.information_models.common.ServiceSpecificationRef;
 import it.nextworks.tmf_offering_catalog.information_models.product.*;
@@ -16,6 +14,7 @@ import it.nextworks.tmf_offering_catalog.repo.ProductOfferingStatusRepository;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -159,6 +158,12 @@ public class CommunicationService {
     private String hostname;
     @Value("${server.port}")
     private String port;
+
+    @Value("${sc_lcm.hostname}")
+    private String scLcmHostname;
+    @Value("${sc_lcm.port}")
+    private String scLcmPort;
+    private static final String scLcmRequestPath = "/product-offer/";
 
     private final ObjectMapper objectMapper;
 
@@ -347,5 +352,38 @@ public class CommunicationService {
         }
 
         return serviceSpecifications;
+    }
+
+    public void deleteProductOffering(String catalogId)
+            throws NotExistingEntityException, IOException, ProductOfferingDeleteScLCMException,
+            ProductOfferingInPublicationException {
+
+        log.info("Sending delete Product Offering request.");
+
+        Optional<ProductOfferingStatus> toDelete = productOfferingStatusRepository.findById(catalogId);
+        if(!toDelete.isPresent())
+            throw new NotExistingEntityException("Product Offering Status for id " + catalogId + " not found in DB.");
+
+        ProductOfferingStatus productOfferingStatus = toDelete.get();
+        ProductOfferingStatesEnum productOfferingStatesEnum = productOfferingStatus.getStatus();
+        if(productOfferingStatesEnum == ProductOfferingStatesEnum.DID_REQUESTED ||
+                productOfferingStatesEnum == ProductOfferingStatesEnum.STORED_WITH_DID ||
+                productOfferingStatesEnum == ProductOfferingStatesEnum.CLASSIFIED)
+            throw new ProductOfferingInPublicationException("Cannot delete Product Offering " + catalogId + " while in publication.");
+
+        String request = protocol + scLcmHostname + ":" + scLcmPort + scLcmRequestPath + catalogId;
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpDelete httpDelete = new HttpDelete(request);
+
+        httpDelete.setHeader("Accept", "application/json");
+
+        CloseableHttpResponse response = httpClient.execute(httpDelete);
+
+        if(response.getStatusLine().getStatusCode() != 200)
+            throw new ProductOfferingDeleteScLCMException("The Smart Contract LCM entity did not accept the delete request.");
+
+        productOfferingStatusRepository.delete(productOfferingStatus);
+
+        log.info("Delete Product Offering request accepted.");
     }
 }

@@ -2,6 +2,8 @@ package it.nextworks.tmf_offering_catalog.services;
 
 import it.nextworks.tmf_offering_catalog.common.exception.DIDGenerationRequestException;
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
+import it.nextworks.tmf_offering_catalog.common.exception.ProductOfferingDeleteScLCMException;
+import it.nextworks.tmf_offering_catalog.common.exception.ProductOfferingInPublicationException;
 import it.nextworks.tmf_offering_catalog.information_models.common.PlaceRef;
 import it.nextworks.tmf_offering_catalog.information_models.common.ResourceCandidateRef;
 import it.nextworks.tmf_offering_catalog.information_models.common.ServiceCandidateRef;
@@ -99,13 +101,16 @@ public class ProductOfferingService {
         return productOffering;
     }
 
-    public void delete(String id) throws NotExistingEntityException {
+    public void delete(String id) throws NotExistingEntityException, ProductOfferingDeleteScLCMException,
+            ProductOfferingInPublicationException, IOException {
 
         log.info("Received request to delete Product Offering with id " + id + ".");
 
         Optional<ProductOffering> toDelete = productOfferingRepository.findByProductOfferingId(id);
         if(!toDelete.isPresent())
             throw new NotExistingEntityException("Product Offering with id " + id + " not found in DB.");
+
+        communicationService.deleteProductOffering(id);
 
         productOfferingRepository.delete(toDelete.get());
 

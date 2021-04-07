@@ -4,9 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
-import it.nextworks.tmf_offering_catalog.common.exception.DIDAlreadyRequestedForProductException;
-import it.nextworks.tmf_offering_catalog.common.exception.DIDGenerationRequestException;
-import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
+import it.nextworks.tmf_offering_catalog.common.exception.*;
 import it.nextworks.tmf_offering_catalog.information_models.product.ProductOffering;
 import it.nextworks.tmf_offering_catalog.information_models.product.ProductOfferingCreate;
 import it.nextworks.tmf_offering_catalog.information_models.product.ProductOfferingUpdate;
@@ -182,11 +180,11 @@ public class ProductOfferingController implements ProductOfferingInterface {
             @ApiResponse(code = 204, message = "Deleted"),
             @ApiResponse(code = 400, message = "Bad Request", response = ErrMsg.class),
             //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
+            @ApiResponse(code = 403, message = "Forbidden", response = ErrMsg.class),
             @ApiResponse(code = 404, message = "Not Found", response = ErrMsg.class),
             //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
             //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
-            @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
+            @ApiResponse(code = 500, message = "Internal Server Error", response = ErrMsg.class) })
     @RequestMapping(value = "/productCatalogManagement/v4/productOffering/{id}",
             produces = { "application/json;charset=utf-8" },
             method = RequestMethod.DELETE)
@@ -208,6 +206,15 @@ public class ProductOfferingController implements ProductOfferingInterface {
         } catch (NotExistingEntityException e) {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrMsg(e.getMessage()));
+        } catch (ProductOfferingInPublicationException e) {
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrMsg(e.getMessage()));
+        } catch (IOException e) {
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrMsg(e.getMessage()));
+        } catch (ProductOfferingDeleteScLCMException e) {
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrMsg(e.getMessage()));
         }
 
         log.info("Web-Server: Product Offering " + id + " deleted.");
