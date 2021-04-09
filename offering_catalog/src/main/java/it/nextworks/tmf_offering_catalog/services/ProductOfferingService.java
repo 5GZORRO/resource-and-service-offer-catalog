@@ -48,16 +48,6 @@ public class ProductOfferingService {
         log.info("Received request to create a Product Offering.");
 
         final String id = UUID.randomUUID().toString();
-
-        /* We will need to move the call to ID&P in case the CommunicationService will have
-         * to update the productOffering to insert the DID (now external in the product_offering_states table)
-         */
-        log.info("Requesting DID via CommunicationService to ID&P.");
-
-        communicationService.requestDID(id);
-
-        log.info("DID successfully requested via CommunicationService to ID&P.");
-
         ProductOffering productOffering = new ProductOffering()
                 .baseType(productOfferingCreate.getBaseType())
                 .schemaLocation(productOfferingCreate.getSchemaLocation())
@@ -93,7 +83,17 @@ public class ProductOfferingService {
 
         productOfferingRepository.save(productOffering);
 
-        log.info("Product Offering created with id " + productOffering.getId() + ".");
+        log.info("Requesting DID via CommunicationService to ID&P.");
+
+        try {
+            communicationService.requestDID(id);
+        } catch (DIDGenerationRequestException e) {
+            productOfferingRepository.delete(productOffering);
+            throw e;
+        }
+
+        log.info("DID successfully requested via CommunicationService to ID&P.");
+        log.info("Product Offering created with id " + id + ".");
 
         return productOffering;
     }

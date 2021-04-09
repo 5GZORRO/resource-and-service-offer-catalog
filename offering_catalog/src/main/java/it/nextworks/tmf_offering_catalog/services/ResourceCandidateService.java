@@ -64,7 +64,7 @@ public class ResourceCandidateService {
 
         resourceCandidateRepository.save(resourceCandidate);
 
-        log.info("Resource Candidate created with id " + resourceCandidate.getId() + ".");
+        log.info("Resource Candidate created with id " + id + ".");
 
         return resourceCandidate;
     }

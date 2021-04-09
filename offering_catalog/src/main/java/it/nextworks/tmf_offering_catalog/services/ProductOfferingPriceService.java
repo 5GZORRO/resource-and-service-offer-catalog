@@ -75,7 +75,7 @@ public class ProductOfferingPriceService {
 
         productOfferingPriceRepository.save(productOfferingPrice);
 
-        log.info("Product Offering Price created with id " + productOfferingPrice.getId() + ".");
+        log.info("Product Offering Price created with id " + id + ".");
 
         return productOfferingPrice;
     }

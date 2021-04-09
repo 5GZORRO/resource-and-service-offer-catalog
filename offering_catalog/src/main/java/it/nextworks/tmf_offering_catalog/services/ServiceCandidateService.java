@@ -65,7 +65,7 @@ public class ServiceCandidateService {
 
         serviceCandidateRepository.save(serviceCandidate);
 
-        log.info("Service Candidate created with id " + serviceCandidate.getId() + ".");
+        log.info("Service Candidate created with id " + id + ".");
 
         return serviceCandidate;
     }

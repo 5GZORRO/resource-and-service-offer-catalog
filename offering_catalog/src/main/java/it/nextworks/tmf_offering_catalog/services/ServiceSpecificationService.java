@@ -66,7 +66,7 @@ public class ServiceSpecificationService {
 
         serviceSpecificationRepository.save(serviceSpecification);
 
-        log.info("Service Specification created with id " + serviceSpecification.getId() + ".");
+        log.info("Service Specification created with id " + id + ".");
 
         return serviceSpecification;
     }

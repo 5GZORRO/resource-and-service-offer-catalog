@@ -65,7 +65,7 @@ public class CategoryService {
 
         categoryRepository.save(category);
 
-        log.info("Category created with id " + category.getId() + ".");
+        log.info("Category created with id " + id + ".");
 
         return category;
     }

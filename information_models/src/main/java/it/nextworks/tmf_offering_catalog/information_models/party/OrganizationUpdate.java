@@ -19,8 +19,8 @@ import javax.validation.Valid;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-04-07T10:10:44.963Z")
 
+public class OrganizationUpdate {
 
-public class OrganizationCreate   {
   @JsonProperty("@baseType")
   private String baseType = null;
 
@@ -93,7 +93,7 @@ public class OrganizationCreate   {
   @JsonProperty("tradingName")
   private String tradingName = null;
 
-  public OrganizationCreate baseType(String baseType) {
+  public OrganizationUpdate baseType(String baseType) {
     this.baseType = baseType;
     return this;
   }
@@ -113,7 +113,7 @@ public class OrganizationCreate   {
     this.baseType = baseType;
   }
 
-  public OrganizationCreate schemaLocation(String schemaLocation) {
+  public OrganizationUpdate schemaLocation(String schemaLocation) {
     this.schemaLocation = schemaLocation;
     return this;
   }
@@ -133,7 +133,7 @@ public class OrganizationCreate   {
     this.schemaLocation = schemaLocation;
   }
 
-  public OrganizationCreate type(String type) {
+  public OrganizationUpdate type(String type) {
     this.type = type;
     return this;
   }
@@ -153,12 +153,12 @@ public class OrganizationCreate   {
     this.type = type;
   }
 
-  public OrganizationCreate contactMedium(List<ContactMedium> contactMedium) {
+  public OrganizationUpdate contactMedium(List<ContactMedium> contactMedium) {
     this.contactMedium = contactMedium;
     return this;
   }
 
-  public OrganizationCreate addContactMediumItem(ContactMedium contactMediumItem) {
+  public OrganizationUpdate addContactMediumItem(ContactMedium contactMediumItem) {
     if (this.contactMedium == null) {
       this.contactMedium = new ArrayList<ContactMedium>();
     }
@@ -182,12 +182,12 @@ public class OrganizationCreate   {
     this.contactMedium = contactMedium;
   }
 
-  public OrganizationCreate creditRating(List<PartyCreditProfile> creditRating) {
+  public OrganizationUpdate creditRating(List<PartyCreditProfile> creditRating) {
     this.creditRating = creditRating;
     return this;
   }
 
-  public OrganizationCreate addCreditRatingItem(PartyCreditProfile creditRatingItem) {
+  public OrganizationUpdate addCreditRatingItem(PartyCreditProfile creditRatingItem) {
     if (this.creditRating == null) {
       this.creditRating = new ArrayList<PartyCreditProfile>();
     }
@@ -211,7 +211,7 @@ public class OrganizationCreate   {
     this.creditRating = creditRating;
   }
 
-  public OrganizationCreate existsDuring(TimePeriod existsDuring) {
+  public OrganizationUpdate existsDuring(TimePeriod existsDuring) {
     this.existsDuring = existsDuring;
     return this;
   }
@@ -232,12 +232,12 @@ public class OrganizationCreate   {
     this.existsDuring = existsDuring;
   }
 
-  public OrganizationCreate externalReference(List<ExternalReference> externalReference) {
+  public OrganizationUpdate externalReference(List<ExternalReference> externalReference) {
     this.externalReference = externalReference;
     return this;
   }
 
-  public OrganizationCreate addExternalReferenceItem(ExternalReference externalReferenceItem) {
+  public OrganizationUpdate addExternalReferenceItem(ExternalReference externalReferenceItem) {
     if (this.externalReference == null) {
       this.externalReference = new ArrayList<ExternalReference>();
     }
@@ -261,7 +261,7 @@ public class OrganizationCreate   {
     this.externalReference = externalReference;
   }
 
-  public OrganizationCreate isHeadOffice(Boolean isHeadOffice) {
+  public OrganizationUpdate isHeadOffice(Boolean isHeadOffice) {
     this.isHeadOffice = isHeadOffice;
     return this;
   }
@@ -281,7 +281,7 @@ public class OrganizationCreate   {
     this.isHeadOffice = isHeadOffice;
   }
 
-  public OrganizationCreate isLegalEntity(Boolean isLegalEntity) {
+  public OrganizationUpdate isLegalEntity(Boolean isLegalEntity) {
     this.isLegalEntity = isLegalEntity;
     return this;
   }
@@ -301,7 +301,7 @@ public class OrganizationCreate   {
     this.isLegalEntity = isLegalEntity;
   }
 
-  public OrganizationCreate name(String name) {
+  public OrganizationUpdate name(String name) {
     this.name = name;
     return this;
   }
@@ -321,7 +321,7 @@ public class OrganizationCreate   {
     this.name = name;
   }
 
-  public OrganizationCreate nameType(String nameType) {
+  public OrganizationUpdate nameType(String nameType) {
     this.nameType = nameType;
     return this;
   }
@@ -341,12 +341,12 @@ public class OrganizationCreate   {
     this.nameType = nameType;
   }
 
-  public OrganizationCreate organizationChildRelationship(List<OrganizationChildRelationship> organizationChildRelationship) {
+  public OrganizationUpdate organizationChildRelationship(List<OrganizationChildRelationship> organizationChildRelationship) {
     this.organizationChildRelationship = organizationChildRelationship;
     return this;
   }
 
-  public OrganizationCreate addOrganizationChildRelationshipItem(OrganizationChildRelationship organizationChildRelationshipItem) {
+  public OrganizationUpdate addOrganizationChildRelationshipItem(OrganizationChildRelationship organizationChildRelationshipItem) {
     if (this.organizationChildRelationship == null) {
       this.organizationChildRelationship = new ArrayList<OrganizationChildRelationship>();
     }
@@ -370,12 +370,12 @@ public class OrganizationCreate   {
     this.organizationChildRelationship = organizationChildRelationship;
   }
 
-  public OrganizationCreate organizationIdentification(List<OrganizationIdentification> organizationIdentification) {
+  public OrganizationUpdate organizationIdentification(List<OrganizationIdentification> organizationIdentification) {
     this.organizationIdentification = organizationIdentification;
     return this;
   }
 
-  public OrganizationCreate addOrganizationIdentificationItem(OrganizationIdentification organizationIdentificationItem) {
+  public OrganizationUpdate addOrganizationIdentificationItem(OrganizationIdentification organizationIdentificationItem) {
     if (this.organizationIdentification == null) {
       this.organizationIdentification = new ArrayList<OrganizationIdentification>();
     }
@@ -399,7 +399,7 @@ public class OrganizationCreate   {
     this.organizationIdentification = organizationIdentification;
   }
 
-  public OrganizationCreate organizationParentRelationship(OrganizationParentRelationship organizationParentRelationship) {
+  public OrganizationUpdate organizationParentRelationship(OrganizationParentRelationship organizationParentRelationship) {
     this.organizationParentRelationship = organizationParentRelationship;
     return this;
   }
@@ -420,7 +420,7 @@ public class OrganizationCreate   {
     this.organizationParentRelationship = organizationParentRelationship;
   }
 
-  public OrganizationCreate organizationType(String organizationType) {
+  public OrganizationUpdate organizationType(String organizationType) {
     this.organizationType = organizationType;
     return this;
   }
@@ -440,12 +440,12 @@ public class OrganizationCreate   {
     this.organizationType = organizationType;
   }
 
-  public OrganizationCreate otherName(List<OtherNameOrganization> otherName) {
+  public OrganizationUpdate otherName(List<OtherNameOrganization> otherName) {
     this.otherName = otherName;
     return this;
   }
 
-  public OrganizationCreate addOtherNameItem(OtherNameOrganization otherNameItem) {
+  public OrganizationUpdate addOtherNameItem(OtherNameOrganization otherNameItem) {
     if (this.otherName == null) {
       this.otherName = new ArrayList<OtherNameOrganization>();
     }
@@ -469,12 +469,12 @@ public class OrganizationCreate   {
     this.otherName = otherName;
   }
 
-  public OrganizationCreate partyCharacteristic(List<Characteristic> partyCharacteristic) {
+  public OrganizationUpdate partyCharacteristic(List<Characteristic> partyCharacteristic) {
     this.partyCharacteristic = partyCharacteristic;
     return this;
   }
 
-  public OrganizationCreate addPartyCharacteristicItem(Characteristic partyCharacteristicItem) {
+  public OrganizationUpdate addPartyCharacteristicItem(Characteristic partyCharacteristicItem) {
     if (this.partyCharacteristic == null) {
       this.partyCharacteristic = new ArrayList<Characteristic>();
     }
@@ -498,12 +498,12 @@ public class OrganizationCreate   {
     this.partyCharacteristic = partyCharacteristic;
   }
 
-  public OrganizationCreate relatedParty(List<RelatedParty> relatedParty) {
+  public OrganizationUpdate relatedParty(List<RelatedParty> relatedParty) {
     this.relatedParty = relatedParty;
     return this;
   }
 
-  public OrganizationCreate addRelatedPartyItem(RelatedParty relatedPartyItem) {
+  public OrganizationUpdate addRelatedPartyItem(RelatedParty relatedPartyItem) {
     if (this.relatedParty == null) {
       this.relatedParty = new ArrayList<RelatedParty>();
     }
@@ -527,7 +527,7 @@ public class OrganizationCreate   {
     this.relatedParty = relatedParty;
   }
 
-  public OrganizationCreate status(PartyStatusEnum status) {
+  public OrganizationUpdate status(PartyStatusEnum status) {
     this.status = status;
     return this;
   }
@@ -547,12 +547,12 @@ public class OrganizationCreate   {
     this.status = status;
   }
 
-  public OrganizationCreate taxExemptionCertificate(List<TaxExemptionCertificate> taxExemptionCertificate) {
+  public OrganizationUpdate taxExemptionCertificate(List<TaxExemptionCertificate> taxExemptionCertificate) {
     this.taxExemptionCertificate = taxExemptionCertificate;
     return this;
   }
 
-  public OrganizationCreate addTaxExemptionCertificateItem(TaxExemptionCertificate taxExemptionCertificateItem) {
+  public OrganizationUpdate addTaxExemptionCertificateItem(TaxExemptionCertificate taxExemptionCertificateItem) {
     if (this.taxExemptionCertificate == null) {
       this.taxExemptionCertificate = new ArrayList<TaxExemptionCertificate>();
     }
@@ -576,7 +576,7 @@ public class OrganizationCreate   {
     this.taxExemptionCertificate = taxExemptionCertificate;
   }
 
-  public OrganizationCreate tradingName(String tradingName) {
+  public OrganizationUpdate tradingName(String tradingName) {
     this.tradingName = tradingName;
     return this;
   }
@@ -605,28 +605,28 @@ public class OrganizationCreate   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    OrganizationCreate organizationCreate = (OrganizationCreate) o;
-    return Objects.equals(this.baseType, organizationCreate.baseType) &&
-        Objects.equals(this.schemaLocation, organizationCreate.schemaLocation) &&
-        Objects.equals(this.type, organizationCreate.type) &&
-        Objects.equals(this.contactMedium, organizationCreate.contactMedium) &&
-        Objects.equals(this.creditRating, organizationCreate.creditRating) &&
-        Objects.equals(this.existsDuring, organizationCreate.existsDuring) &&
-        Objects.equals(this.externalReference, organizationCreate.externalReference) &&
-        Objects.equals(this.isHeadOffice, organizationCreate.isHeadOffice) &&
-        Objects.equals(this.isLegalEntity, organizationCreate.isLegalEntity) &&
-        Objects.equals(this.name, organizationCreate.name) &&
-        Objects.equals(this.nameType, organizationCreate.nameType) &&
-        Objects.equals(this.organizationChildRelationship, organizationCreate.organizationChildRelationship) &&
-        Objects.equals(this.organizationIdentification, organizationCreate.organizationIdentification) &&
-        Objects.equals(this.organizationParentRelationship, organizationCreate.organizationParentRelationship) &&
-        Objects.equals(this.organizationType, organizationCreate.organizationType) &&
-        Objects.equals(this.otherName, organizationCreate.otherName) &&
-        Objects.equals(this.partyCharacteristic, organizationCreate.partyCharacteristic) &&
-        Objects.equals(this.relatedParty, organizationCreate.relatedParty) &&
-        Objects.equals(this.status, organizationCreate.status) &&
-        Objects.equals(this.taxExemptionCertificate, organizationCreate.taxExemptionCertificate) &&
-        Objects.equals(this.tradingName, organizationCreate.tradingName);
+    OrganizationUpdate organizationUpdate = (OrganizationUpdate) o;
+    return Objects.equals(this.baseType, organizationUpdate.baseType) &&
+        Objects.equals(this.schemaLocation, organizationUpdate.schemaLocation) &&
+        Objects.equals(this.type, organizationUpdate.type) &&
+        Objects.equals(this.contactMedium, organizationUpdate.contactMedium) &&
+        Objects.equals(this.creditRating, organizationUpdate.creditRating) &&
+        Objects.equals(this.existsDuring, organizationUpdate.existsDuring) &&
+        Objects.equals(this.externalReference, organizationUpdate.externalReference) &&
+        Objects.equals(this.isHeadOffice, organizationUpdate.isHeadOffice) &&
+        Objects.equals(this.isLegalEntity, organizationUpdate.isLegalEntity) &&
+        Objects.equals(this.name, organizationUpdate.name) &&
+        Objects.equals(this.nameType, organizationUpdate.nameType) &&
+        Objects.equals(this.organizationChildRelationship, organizationUpdate.organizationChildRelationship) &&
+        Objects.equals(this.organizationIdentification, organizationUpdate.organizationIdentification) &&
+        Objects.equals(this.organizationParentRelationship, organizationUpdate.organizationParentRelationship) &&
+        Objects.equals(this.organizationType, organizationUpdate.organizationType) &&
+        Objects.equals(this.otherName, organizationUpdate.otherName) &&
+        Objects.equals(this.partyCharacteristic, organizationUpdate.partyCharacteristic) &&
+        Objects.equals(this.relatedParty, organizationUpdate.relatedParty) &&
+        Objects.equals(this.status, organizationUpdate.status) &&
+        Objects.equals(this.taxExemptionCertificate, organizationUpdate.taxExemptionCertificate) &&
+        Objects.equals(this.tradingName, organizationUpdate.tradingName);
   }
 
   @Override
@@ -637,7 +637,7 @@ public class OrganizationCreate   {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class OrganizationCreate {\n");
+    sb.append("class OrganizationUpdate {\n");
     
     sb.append("    baseType: ").append(toIndentedString(baseType)).append("\n");
     sb.append("    schemaLocation: ").append(toIndentedString(schemaLocation)).append("\n");

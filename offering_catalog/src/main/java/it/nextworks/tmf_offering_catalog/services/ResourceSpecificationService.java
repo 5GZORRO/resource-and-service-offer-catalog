@@ -68,7 +68,7 @@ public class ResourceSpecificationService {
 
         resourceSpecificationRepository.save(resourceSpecification);
 
-        log.info("Resource Specification created with id " + resourceSpecification.getId() + ".");
+        log.info("Resource Specification created with id " + id + ".");
 
         return resourceSpecification;
     }

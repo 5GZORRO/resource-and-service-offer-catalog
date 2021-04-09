@@ -66,7 +66,7 @@ public class ResourceCategoryService {
 
         resourceCategoryRepository.save(resourceCategory);
 
-        log.info("Resource Category created with id " + resourceCategory.getId() + ".");
+        log.info("Resource Category created with id " + id + ".");
 
         return resourceCategory;
     }

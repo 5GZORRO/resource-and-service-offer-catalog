@@ -69,7 +69,7 @@ public class ProductSpecificationService {
 
         productSpecificationRepository.save(productSpecification);
 
-        log.info("Product Specification created with id " + productSpecification.getId() + ".");
+        log.info("Product Specification created with id " + id + ".");
 
         return productSpecification;
     }
