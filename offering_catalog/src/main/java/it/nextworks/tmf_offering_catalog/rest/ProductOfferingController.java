@@ -141,15 +141,22 @@ public class ProductOfferingController implements ProductOfferingInterface {
                     .body(new ErrMsg("Invalid request body (jsonNode) received."));
         }
 
-        String did = jsonNode.get("credentialSubject").get("id").asText();
-        if(did == null) {
+        JsonNode credentialSubject = jsonNode.get("credentialSubject");
+        if(credentialSubject == null) {
+            log.error("Web-Server: Invalid request body (jsonNode) content received.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrMsg("Invalid request body (jsonNode) content received."));
+        }
+
+        JsonNode did = credentialSubject.get("id");
+        if(did == null || !did.isTextual()) {
             log.error("Web-Server: Invalid request body (jsonNode) content received.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ErrMsg("Invalid request body (jsonNode) content received."));
         }
 
         try {
-            communicationService.handleDIDReceiving(id, did);
+            communicationService.handleDIDReceiving(id, did.asText());
         } catch (NotExistingEntityException e) {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrMsg(e.getMessage()));
