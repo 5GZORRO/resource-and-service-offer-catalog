@@ -2,8 +2,6 @@ package it.nextworks.tmf_offering_catalog.services;
 
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
 import it.nextworks.tmf_offering_catalog.information_models.common.PlaceRef;
-import it.nextworks.tmf_offering_catalog.information_models.common.Quantity;
-import it.nextworks.tmf_offering_catalog.information_models.common.TimePeriod;
 import it.nextworks.tmf_offering_catalog.information_models.product.*;
 import it.nextworks.tmf_offering_catalog.repo.ProductOfferingPriceRepository;
 import org.hibernate.Hibernate;
@@ -143,184 +141,108 @@ public class ProductOfferingPriceService {
 
         ProductOfferingPrice productOfferingPrice = toUpdate.get();
 
-        final String baseType = productOfferingPriceUpdate.getBaseType();
-        if(baseType != null)
-            productOfferingPrice.setBaseType(baseType);
-
-        final String schemaLocation = productOfferingPriceUpdate.getSchemaLocation();
-        if(schemaLocation != null)
-            productOfferingPrice.setSchemaLocation(schemaLocation);
-
-        final String type = productOfferingPriceUpdate.getType();
-        if(type != null)
-            productOfferingPrice.setType(type);
+        productOfferingPrice.setBaseType(productOfferingPriceUpdate.getBaseType());
+        productOfferingPrice.setSchemaLocation(productOfferingPriceUpdate.getSchemaLocation());
+        productOfferingPrice.setType(productOfferingPriceUpdate.getType());
 
         final List<BundledProductOfferingPriceRelationship> bundledPopRelationship =
                 productOfferingPriceUpdate.getBundledPopRelationship();
-        if(bundledPopRelationship != null) {
-            if(productOfferingPrice.getBundledPopRelationship() != null) {
-                productOfferingPrice.getBundledPopRelationship().clear();
-                productOfferingPrice.getBundledPopRelationship().addAll(bundledPopRelationship);
-            }
-            else
-                productOfferingPrice.setBundledPopRelationship(bundledPopRelationship);
+        if(productOfferingPrice.getBundledPopRelationship() == null)
+            productOfferingPrice.setBundledPopRelationship(bundledPopRelationship);
+        else if(bundledPopRelationship != null) {
+            productOfferingPrice.getBundledPopRelationship().clear();
+            productOfferingPrice.getBundledPopRelationship().addAll(bundledPopRelationship);
         }
         else
-            productOfferingPrice.setBundledPopRelationship((List<BundledProductOfferingPriceRelationship>)
-                    Hibernate.unproxy(productOfferingPrice.getBundledPopRelationship()));
+            productOfferingPrice.getBundledPopRelationship().clear();
 
         final List<ConstraintRef> constraint = productOfferingPriceUpdate.getConstraint();
-        if(constraint != null) {
-            if(productOfferingPrice.getConstraint() != null) {
-                productOfferingPrice.getConstraint().clear();
-                productOfferingPrice.getConstraint().addAll(constraint);
-            }
-            else
-                productOfferingPrice.setConstraint(constraint);
+        if(productOfferingPrice.getConstraint() == null)
+            productOfferingPrice.setConstraint(constraint);
+        else if(constraint != null) {
+            productOfferingPrice.getConstraint().clear();
+            productOfferingPrice.getConstraint().addAll(constraint);
         }
         else
-            productOfferingPrice.setConstraint((List<ConstraintRef>)
-                    Hibernate.unproxy(productOfferingPrice.getConstraint()));
+            productOfferingPrice.getConstraint().clear();
 
-        final String description = productOfferingPriceUpdate.getDescription();
-        if(description != null)
-            productOfferingPrice.setDescription(description);
-
-        final Boolean isBundle = productOfferingPriceUpdate.isIsBundle();
-        if(isBundle != null)
-            productOfferingPrice.setIsBundle(isBundle);
-
+        productOfferingPrice.setDescription(productOfferingPriceUpdate.getDescription());
+        productOfferingPrice.setIsBundle(productOfferingPriceUpdate.isIsBundle());
         productOfferingPrice.setLastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
-
-        final String lifecycleStatus = productOfferingPriceUpdate.getLifecycleStatus();
-        if(lifecycleStatus != null)
-            productOfferingPrice.setLifecycleStatus(lifecycleStatus);
-
-        final String name = productOfferingPriceUpdate.getName();
-        if(name != null)
-            productOfferingPrice.setName(name);
-
-        final Float percentage = productOfferingPriceUpdate.getPercentage();
-        if(percentage != null)
-            productOfferingPrice.setPercentage(percentage);
+        productOfferingPrice.setLifecycleStatus(productOfferingPriceUpdate.getLifecycleStatus());
+        productOfferingPrice.setName(productOfferingPriceUpdate.getName());
+        productOfferingPrice.setPercentage(productOfferingPriceUpdate.getPercentage());
 
         final List<PlaceRef> place = productOfferingPriceUpdate.getPlace();
-        if(place != null) {
-            if(productOfferingPrice.getPlace() != null) {
-                productOfferingPrice.getPlace().clear();
-                productOfferingPrice.getPlace().addAll(place);
-            }
-            else
-                productOfferingPrice.setPlace(place);
+        if(productOfferingPrice.getPlace() == null)
+            productOfferingPrice.setPlace(place);
+        else if(place != null) {
+            productOfferingPrice.getPlace().clear();
+            productOfferingPrice.getPlace().addAll(place);
         }
         else
-            productOfferingPrice.setPlace((List<PlaceRef>) Hibernate.unproxy(productOfferingPrice.getPlace()));
+            productOfferingPrice.getPlace().clear();
 
         final List<ProductOfferingPriceRelationship> popRelationship = productOfferingPriceUpdate.getPopRelationship();
-        if(popRelationship != null) {
-            if(productOfferingPrice.getPopRelationship() != null) {
-                productOfferingPrice.getPopRelationship().clear();
-                productOfferingPrice.getPopRelationship().addAll(popRelationship);
-            }
-            else
-                productOfferingPrice.setPopRelationship(popRelationship);
+        if(productOfferingPrice.getPopRelationship() == null)
+            productOfferingPrice.setPopRelationship(popRelationship);
+        else if(popRelationship != null) {
+            productOfferingPrice.getPopRelationship().clear();
+            productOfferingPrice.getPopRelationship().addAll(popRelationship);
         }
         else
-            productOfferingPrice.setPopRelationship((List<ProductOfferingPriceRelationship>)
-                    Hibernate.unproxy(productOfferingPrice.getPopRelationship()));
+            productOfferingPrice.getPopRelationship().clear();
 
-        final Money price = productOfferingPriceUpdate.getPrice();
-        if(price != null)
-            productOfferingPrice.setPrice(price);
-
-        final String priceType = productOfferingPriceUpdate.getPriceType();
-        if(priceType != null)
-            productOfferingPrice.setPriceType(priceType);
+        productOfferingPrice.setPrice(productOfferingPriceUpdate.getPrice());
+        productOfferingPrice.setPriceType(productOfferingPriceUpdate.getPriceType());
 
         final List<PricingLogicAlgorithm> pricingLogicAlgorithm = productOfferingPriceUpdate.getPricingLogicAlgorithm();
-        if(pricingLogicAlgorithm != null) {
-            if(productOfferingPrice.getPricingLogicAlgorithm() != null) {
-                productOfferingPrice.getPricingLogicAlgorithm().clear();
-                productOfferingPrice.getPricingLogicAlgorithm().addAll(pricingLogicAlgorithm);
-            }
-            else
-                productOfferingPrice.setPricingLogicAlgorithm(pricingLogicAlgorithm);
+        if(productOfferingPrice.getPricingLogicAlgorithm() == null)
+            productOfferingPrice.setPricingLogicAlgorithm(pricingLogicAlgorithm);
+        else if(pricingLogicAlgorithm != null) {
+            productOfferingPrice.getPricingLogicAlgorithm().clear();
+            productOfferingPrice.getPricingLogicAlgorithm().addAll(pricingLogicAlgorithm);
         }
         else
-            productOfferingPrice.setPricingLogicAlgorithm((List<PricingLogicAlgorithm>)
-                    Hibernate.unproxy(productOfferingPrice.getPricingLogicAlgorithm()));
+            productOfferingPrice.getPricingLogicAlgorithm().clear();
 
         final List<ProductSpecificationCharacteristicValueUse> prodSpecCharValueUse =
                 productOfferingPriceUpdate.getProdSpecCharValueUse();
-        if(prodSpecCharValueUse != null) {
-            if(productOfferingPrice.getProdSpecCharValueUse() != null) {
-                productOfferingPrice.getProdSpecCharValueUse().clear();
-                productOfferingPrice.getProdSpecCharValueUse().addAll(prodSpecCharValueUse);
-            }
-            else
-                productOfferingPrice.setProdSpecCharValueUse(prodSpecCharValueUse);
+        if(productOfferingPrice.getProdSpecCharValueUse() == null)
+            productOfferingPrice.setProdSpecCharValueUse(prodSpecCharValueUse);
+        else if(prodSpecCharValueUse != null) {
+            productOfferingPrice.getProdSpecCharValueUse().clear();
+            productOfferingPrice.getProdSpecCharValueUse().addAll(prodSpecCharValueUse);
         }
-        else {
-            productOfferingPrice.setProdSpecCharValueUse((List<ProductSpecificationCharacteristicValueUse>)
-                    Hibernate.unproxy(productOfferingPrice.getProdSpecCharValueUse()));
-            if(productOfferingPrice.getProdSpecCharValueUse() != null) {
-                for (ProductSpecificationCharacteristicValueUse pscvu : productOfferingPrice.getProdSpecCharValueUse()) {
-                    pscvu.setProductSpecCharacteristicValue((List<ProductSpecificationCharacteristicValue>)
-                            Hibernate.unproxy(pscvu.getProductSpecCharacteristicValue()));
-
-                    pscvu.setProductSpecification((ProductSpecificationRef)
-                            Hibernate.unproxy(pscvu.getProductSpecification()));
-                    if(pscvu.getProductSpecification() != null)
-                        pscvu.getProductSpecification().setTargetProductSchema((TargetProductSchema)
-                                Hibernate.unproxy(pscvu.getProductSpecification().getTargetProductSchema()));
-                }
-            }
-        }
+        else
+            productOfferingPrice.getProdSpecCharValueUse().clear();
 
         final List<ProductOfferingTerm> productOfferingTerm = productOfferingPriceUpdate.getProductOfferingTerm();
-        if(productOfferingTerm != null) {
-            if(productOfferingPrice.getProductOfferingTerm() != null) {
-                productOfferingPrice.getProductOfferingTerm().clear();
-                productOfferingPrice.getProductOfferingTerm().addAll(productOfferingTerm);
-            }
-            else
-                productOfferingPrice.setProductOfferingTerm(productOfferingTerm);
+        if(productOfferingPrice.getProductOfferingTerm() == null)
+            productOfferingPrice.setProductOfferingTerm(productOfferingTerm);
+        else if(productOfferingTerm != null) {
+            productOfferingPrice.getProductOfferingTerm().clear();
+            productOfferingPrice.getProductOfferingTerm().addAll(productOfferingTerm);
         }
         else
-            productOfferingPrice.setProductOfferingTerm((List<ProductOfferingTerm>)
-                    Hibernate.unproxy(productOfferingPrice.getProductOfferingTerm()));
+            productOfferingPrice.getProductOfferingTerm().clear();
 
-        final Integer recurringChargePeriodLength = productOfferingPriceUpdate.getRecurringChargePeriodLength();
-        if(recurringChargePeriodLength != null)
-            productOfferingPrice.setRecurringChargePeriodLength(recurringChargePeriodLength);
-
-        final String recurringChargePeriodType = productOfferingPriceUpdate.getRecurringChargePeriodType();
-        if(recurringChargePeriodType != null)
-            productOfferingPrice.setRecurringChargePeriodType(recurringChargePeriodType);
+        productOfferingPrice.setRecurringChargePeriodLength(productOfferingPriceUpdate.getRecurringChargePeriodLength());
+        productOfferingPrice.setRecurringChargePeriodType(productOfferingPriceUpdate.getRecurringChargePeriodType());
 
         final List<TaxItem> tax = productOfferingPriceUpdate.getTax();
-        if(tax != null) {
-            if(productOfferingPrice.getTax() != null) {
-                productOfferingPrice.getTax().clear();
-                productOfferingPrice.getTax().addAll(tax);
-            }
-            else
-                productOfferingPrice.setTax(tax);
+        if(productOfferingPrice.getTax() == null)
+            productOfferingPrice.setTax(tax);
+        else if(tax != null) {
+            productOfferingPrice.getTax().clear();
+            productOfferingPrice.getTax().addAll(tax);
         }
         else
-            productOfferingPrice.setTax((List<TaxItem>) Hibernate.unproxy(productOfferingPrice.getTax()));
+            productOfferingPrice.getTax().clear();
 
-        final Quantity unitOfMeasure = productOfferingPriceUpdate.getUnitOfMeasure();
-        if(unitOfMeasure != null)
-            productOfferingPrice.setUnitOfMeasure(unitOfMeasure);
-
-        final TimePeriod validFor = productOfferingPriceUpdate.getValidFor();
-        if(validFor != null)
-            productOfferingPrice.setValidFor(validFor);
-
-        final String version = productOfferingPriceUpdate.getVersion();
-        if(version != null)
-            productOfferingPrice.setVersion(version);
+        productOfferingPrice.setUnitOfMeasure(productOfferingPriceUpdate.getUnitOfMeasure());
+        productOfferingPrice.setValidFor(productOfferingPriceUpdate.getValidFor());
+        productOfferingPrice.setVersion(productOfferingPriceUpdate.getVersion());
 
         productOfferingPriceRepository.save(productOfferingPrice);
 

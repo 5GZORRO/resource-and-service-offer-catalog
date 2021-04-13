@@ -108,73 +108,45 @@ public class CategoryService {
 
         Category category = toUpdate.get();
 
-        final String baseType = categoryUpdate.getBaseType();
-        if(baseType != null)
-            category.setBaseType(baseType);
-
-        final String schemaLocation = categoryUpdate.getSchemaLocation();
-        if(schemaLocation != null)
-            category.setSchemaLocation(schemaLocation);
-
-        final String type = categoryUpdate.getType();
-        if(type != null)
-            category.setType(type);
-
-        final String description = categoryUpdate.getDescription();
-        if(description != null)
-            category.setDescription(description);
-
-        final Boolean isRoot = categoryUpdate.isIsRoot();
-        if(isRoot != null)
-            category.setIsRoot(isRoot);
-
+        category.setBaseType(categoryUpdate.getBaseType());
+        category.setSchemaLocation(categoryUpdate.getSchemaLocation());
+        category.setType(categoryUpdate.getType());
+        category.setDescription(categoryUpdate.getDescription());
+        category.setIsRoot(categoryUpdate.isIsRoot());
         category.setLastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
 
         final String lifecycleStatus = categoryUpdate.getLifecycleStatus();
-        if(lifecycleStatus != null) {
-            category.setLifecycleStatus(lifecycleStatus);
+        category.setLifecycleStatus(lifecycleStatus);
+        if(lifecycleStatus == null)
+            category.setLifecycleStatusEnum(null);
+        else
             category.setLifecycleStatusEnum(LifecycleStatusEnumEnum.fromValue(lifecycleStatus));
-        }
 
-        final String name = categoryUpdate.getName();
-        if(name != null)
-            category.setName(name);
-
-        final String parentId = categoryUpdate.getParentId();
-        if(parentId != null)
-            category.setParentId(parentId);
+        category.setName(categoryUpdate.getName());
+        category.setParentId(categoryUpdate.getParentId());
 
         final List<ProductOfferingRef> productOffering = categoryUpdate.getProductOffering();
-        if(productOffering != null) {
-            if(category.getProductOffering() != null) {
-                category.getProductOffering().clear();
-                category.getProductOffering().addAll(productOffering);
-            }
-            else
-                category.setProductOffering(productOffering);
+        if(category.getProductOffering() == null)
+            category.setProductOffering(productOffering);
+        else if(productOffering != null) {
+            category.getProductOffering().clear();
+            category.getProductOffering().addAll(productOffering);
         }
         else
-            category.setProductOffering((List<ProductOfferingRef>) Hibernate.unproxy(category.getProductOffering()));
+            category.getProductOffering().clear();
 
         final List<CategoryRef> subCategory = categoryUpdate.getSubCategory();
-        if(subCategory != null) {
-            if(category.getSubCategory() != null) {
-                category.getSubCategory().clear();
-                category.getSubCategory().addAll(subCategory);
-            }
-            else
-                category.setSubCategory(subCategory);
+        if(category.getSubCategory() == null)
+            category.setSubCategory(subCategory);
+        else if(subCategory != null) {
+            category.getSubCategory().clear();
+            category.getSubCategory().addAll(subCategory);
         }
         else
-            category.setSubCategory((List<CategoryRef>) Hibernate.unproxy(category.getSubCategory()));
+            category.getSubCategory().clear();
 
-        final TimePeriod validFor = categoryUpdate.getValidFor();
-        if(validFor != null)
-            category.setValidFor(validFor);
-
-        final String version = categoryUpdate.getVersion();
-        if(version != null)
-            category.setVersion(version);
+        category.setValidFor(categoryUpdate.getValidFor());
+        category.setVersion(categoryUpdate.getVersion());
 
         categoryRepository.save(category);
 

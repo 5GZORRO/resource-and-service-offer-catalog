@@ -108,63 +108,28 @@ public class ResourceCandidateService {
 
         ResourceCandidate resourceCandidate = toUpdate.get();
 
-        final String baseType = resourceCandidateUpdate.getBaseType();
-        if(baseType != null)
-            resourceCandidate.setBaseType(baseType);
-
-        final String schemaLocation = resourceCandidateUpdate.getSchemaLocation();
-        if(schemaLocation != null)
-            resourceCandidate.setSchemaLocation(schemaLocation);
-
-        final String type = resourceCandidateUpdate.getType();
-        if(type != null)
-            resourceCandidate.setType(type);
+        resourceCandidate.setBaseType(resourceCandidateUpdate.getBaseType());
+        resourceCandidate.setSchemaLocation(resourceCandidateUpdate.getSchemaLocation());
+        resourceCandidate.setType(resourceCandidateUpdate.getType());
 
         final List<ResourceCategoryRef> category = resourceCandidateUpdate.getCategory();
-        if(category != null) {
-            if(resourceCandidate.getCategory() != null) {
-                resourceCandidate.getCategory().clear();
-                resourceCandidate.getCategory().addAll(category);
-            }
-            else
-                resourceCandidate.setCategory(category);
+        if(resourceCandidate.getCategory() == null)
+            resourceCandidate.setCategory(category);
+        else if(category != null) {
+            resourceCandidate.getCategory().clear();
+            resourceCandidate.getCategory().addAll(category);
         }
         else
-            resourceCandidate.setCategory((List<ResourceCategoryRef>)
-                    Hibernate.unproxy(resourceCandidate.getCategory()));
+            resourceCandidate.getCategory().clear();
 
-        final String description = resourceCandidateUpdate.getDescription();
-        if(description != null)
-            resourceCandidate.setDescription(description);
-
-        final OffsetDateTime lastUpdate = resourceCandidateUpdate.getLastUpdate();
-        if(lastUpdate != null)
-            resourceCandidate.setLastUpdate(lastUpdate.toString());
-
+        resourceCandidate.setDescription(resourceCandidateUpdate.getDescription());
+        resourceCandidate.setLastUpdate(resourceCandidateUpdate.getLastUpdate().toString());
         resourceCandidate.setLastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
-
-        final String lifecycleStatus = resourceCandidateUpdate.getLifecycleStatus();
-        if(lifecycleStatus != null)
-            resourceCandidate.setLifecycleStatus(lifecycleStatus);
-
-        final String name = resourceCandidateUpdate.getName();
-        if(name != null)
-            resourceCandidate.setName(name);
-
-        final ResourceSpecificationRef resourceSpecification = resourceCandidateUpdate.getResourceSpecification();
-        if(resourceSpecification != null)
-            resourceCandidate.setResourceSpecification(resourceSpecification);
-        else
-            resourceCandidate.setResourceSpecification((ResourceSpecificationRef)
-                    Hibernate.unproxy(resourceCandidate.getResourceSpecification()));
-
-        final TimePeriod validFor = resourceCandidateUpdate.getValidFor();
-        if(validFor != null)
-            resourceCandidate.setValidFor(validFor);
-
-        final String version = resourceCandidateUpdate.getVersion();
-        if(version != null)
-            resourceCandidate.setVersion(version);
+        resourceCandidate.setLifecycleStatus(resourceCandidateUpdate.getLifecycleStatus());
+        resourceCandidate.setName(resourceCandidateUpdate.getName());
+        resourceCandidate.setResourceSpecification(resourceCandidateUpdate.getResourceSpecification());
+        resourceCandidate.setValidFor(resourceCandidateUpdate.getValidFor());
+        resourceCandidate.setVersion(resourceCandidateUpdate.getVersion());
 
         resourceCandidateRepository.save(resourceCandidate);
 

@@ -110,72 +110,39 @@ public class ServiceCategoryService {
 
         ServiceCategory serviceCategory = toUpdate.get();
 
-        final String baseType = serviceCategoryUpdate.getBaseType();
-        if(baseType != null)
-            serviceCategory.setBaseType(baseType);
-
-        final String schemaLocation = serviceCategoryUpdate.getSchemaLocation();
-        if(schemaLocation != null)
-            serviceCategory.setSchemaLocation(schemaLocation);
-
-        final String type = serviceCategoryUpdate.getType();
-        if(type != null)
-            serviceCategory.setType(type);
+        serviceCategory.setBaseType(serviceCategoryUpdate.getBaseType());
+        serviceCategory.setSchemaLocation(serviceCategoryUpdate.getSchemaLocation());
+        serviceCategory.setType(serviceCategoryUpdate.getType());
 
         final List<ServiceCategoryRef> category = serviceCategoryUpdate.getCategory();
-        if(category != null) {
-            if(serviceCategory.getCategory() != null) {
-                serviceCategory.getCategory().clear();
-                serviceCategory.getCategory().addAll(category);
-            }
-            else
-                serviceCategory.setCategory(category);
+        if(serviceCategory.getCategory() == null)
+            serviceCategory.setCategory(category);
+        else if(category != null) {
+            serviceCategory.getCategory().clear();
+            serviceCategory.getCategory().addAll(category);
         }
         else
-            serviceCategory.setCategory((List<ServiceCategoryRef>) Hibernate.unproxy(serviceCategory.getCategory()));
+            serviceCategory.getCategory().clear();
 
-        final String description = serviceCategoryUpdate.getDescription();
-        if(description != null)
-            serviceCategory.setDescription(description);
-
-        final Boolean isRoot = serviceCategoryUpdate.isIsRoot();
-        if(isRoot != null)
-            serviceCategory.setIsRoot(isRoot);
-
+        serviceCategory.setDescription(serviceCategoryUpdate.getDescription());
+        serviceCategory.setIsRoot(serviceCategoryUpdate.isIsRoot());
         serviceCategory.setLastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
-
-        final String lifecycleStatus = serviceCategoryUpdate.getLifecycleStatus();
-        if(lifecycleStatus != null)
-            serviceCategory.setLifecycleStatus(lifecycleStatus);
-
-        final String name = serviceCategoryUpdate.getName();
-        if(name != null)
-            serviceCategory.setName(name);
-
-        final String parentId = serviceCategoryUpdate.getParentId();
-        if(parentId != null)
-            serviceCategory.setParentId(parentId);
+        serviceCategory.setLifecycleStatus(serviceCategoryUpdate.getLifecycleStatus());
+        serviceCategory.setName(serviceCategoryUpdate.getName());
+        serviceCategory.setParentId(serviceCategoryUpdate.getParentId());
 
         final List<ServiceCandidateRef> serviceCandidate = serviceCategoryUpdate.getServiceCandidate();
-        if(serviceCandidate != null) {
-            if(serviceCategory.getServiceCandidate() != null) {
-                serviceCategory.getServiceCandidate().clear();
-                serviceCategory.getServiceCandidate().addAll(serviceCandidate);
-            }
-            else
-                serviceCategory.setServiceCandidate(serviceCandidate);
+        if(serviceCategory.getServiceCandidate() == null)
+            serviceCategory.setServiceCandidate(serviceCandidate);
+        else if(serviceCandidate != null) {
+            serviceCategory.getServiceCandidate().clear();
+            serviceCategory.getServiceCandidate().addAll(serviceCandidate);
         }
         else
-            serviceCategory.setServiceCandidate((List<ServiceCandidateRef>)
-                    Hibernate.unproxy(serviceCategory.getServiceCandidate()));
+            serviceCategory.getServiceCandidate().clear();
 
-        final TimePeriod validFor = serviceCategoryUpdate.getValidFor();
-        if(validFor != null)
-            serviceCategory.setValidFor(validFor);
-
-        final String version = serviceCategoryUpdate.getVersion();
-        if(version != null)
-            serviceCategory.setVersion(version);
+        serviceCategory.setValidFor(serviceCategoryUpdate.getValidFor());
+        serviceCategory.setVersion(serviceCategoryUpdate.getVersion());
 
         serviceCategoryRepository.save(serviceCategory);
 

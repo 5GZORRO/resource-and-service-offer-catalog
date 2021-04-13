@@ -113,63 +113,27 @@ public class ServiceCandidateService {
 
         ServiceCandidate serviceCandidate = toUpdate.get();
 
-        final String baseType = serviceCandidateUpdate.getBaseType();
-        if(baseType != null)
-            serviceCandidate.setBaseType(baseType);
-
-        final String schemaLocation = serviceCandidateUpdate.getSchemaLocation();
-        if(schemaLocation != null)
-            serviceCandidate.setSchemaLocation(schemaLocation);
-
-        final String type = serviceCandidateUpdate.getType();
-        if(type != null)
-            serviceCandidate.setType(type);
+        serviceCandidate.setBaseType(serviceCandidateUpdate.getBaseType());
+        serviceCandidate.setSchemaLocation(serviceCandidateUpdate.getSchemaLocation());
+        serviceCandidate.setType(serviceCandidateUpdate.getType());
 
         final List<ServiceCategoryRef> category = serviceCandidateUpdate.getCategory();
-        if(category != null) {
-            if(serviceCandidate.getCategory() != null) {
-                serviceCandidate.getCategory().clear();
-                serviceCandidate.getCategory().addAll(category);
-            }
-            else
-                serviceCandidate.setCategory(category);
+        if(serviceCandidate.getCategory() == null)
+            serviceCandidate.setCategory(category);
+        else if(category != null) {
+            serviceCandidate.getCategory().clear();
+            serviceCandidate.getCategory().addAll(category);
         }
         else
-            serviceCandidate.setCategory((List<ServiceCategoryRef>) Hibernate.unproxy(serviceCandidate.getCategory()));
+            serviceCandidate.getCategory().clear();
 
-        final String description = serviceCandidateUpdate.getDescription();
-        if(description != null)
-            serviceCandidate.setDescription(description);
-
+        serviceCandidate.setDescription(serviceCandidateUpdate.getDescription());
         serviceCandidate.setLastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
-
-        final String lifecycleStatus = serviceCandidateUpdate.getLifecycleStatus();
-        if(lifecycleStatus != null)
-            serviceCandidate.setLifecycleStatus(lifecycleStatus);
-
-        final String name = serviceCandidateUpdate.getName();
-        if(name != null)
-            serviceCandidate.setName(name);
-
-        final ServiceSpecificationRef serviceSpecification = serviceCandidateUpdate.getServiceSpecification();
-        if(serviceSpecification != null)
-            serviceCandidate.setServiceSpecification(serviceSpecification);
-        else {
-            serviceCandidate.setServiceSpecification((ServiceSpecificationRef)
-                    Hibernate.unproxy(serviceCandidate.getServiceSpecification()));
-
-            ServiceSpecificationRef ssr = serviceCandidate.getServiceSpecification();
-            if(ssr != null)
-                ssr.setTargetServiceSchema((TargetServiceSchema) Hibernate.unproxy(ssr.getTargetServiceSchema()));
-        }
-
-        final TimePeriod validFor = serviceCandidateUpdate.getValidFor();
-        if(validFor != null)
-            serviceCandidate.setValidFor(validFor);
-
-        final String version = serviceCandidateUpdate.getVersion();
-        if(version != null)
-            serviceCandidate.setVersion(version);
+        serviceCandidate.setLifecycleStatus(serviceCandidateUpdate.getLifecycleStatus());
+        serviceCandidate.setName(serviceCandidateUpdate.getName());
+        serviceCandidate.setServiceSpecification(serviceCandidateUpdate.getServiceSpecification());
+        serviceCandidate.setValidFor(serviceCandidateUpdate.getValidFor());
+        serviceCandidate.setVersion(serviceCandidateUpdate.getVersion());
 
         serviceCandidateRepository.save(serviceCandidate);
 

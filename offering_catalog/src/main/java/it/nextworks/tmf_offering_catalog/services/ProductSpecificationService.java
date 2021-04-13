@@ -139,167 +139,96 @@ public class ProductSpecificationService {
 
         ProductSpecification productSpecification = toUpdate.get();
 
-        final String baseType = productSpecificationUpdate.getBaseType();
-        if(baseType != null)
-            productSpecification.setBaseType(baseType);
-
-        final String schemaLocation = productSpecificationUpdate.getSchemaLocation();
-        if(schemaLocation != null)
-            productSpecification.setSchemaLocation(schemaLocation);
-
-        final String type = productSpecificationUpdate.getType();
-        if(type != null)
-            productSpecification.setType(type);
+        productSpecification.setBaseType(productSpecificationUpdate.getBaseType());
+        productSpecification.setSchemaLocation(productSpecificationUpdate.getSchemaLocation());
+        productSpecification.setType(productSpecificationUpdate.getType());
 
         final List<AttachmentRefOrValue> attachment = productSpecificationUpdate.getAttachment();
-        if(attachment != null) {
-            if(productSpecification.getAttachment() != null) {
-                productSpecification.getAttachment().clear();
-                productSpecification.getAttachment().addAll(attachment);
-            }
-            else
-                productSpecification.setAttachment(attachment);
+        if(productSpecification.getAttachment() == null)
+            productSpecification.setAttachment(attachment);
+        else if(attachment != null) {
+            productSpecification.getAttachment().clear();
+            productSpecification.getAttachment().addAll(attachment);
         }
         else
-            productSpecification.setAttachment((List<AttachmentRefOrValue>)
-                    Hibernate.unproxy(productSpecification.getAttachment()));
+            productSpecification.getAttachment().clear();
 
-        final String brand = productSpecificationUpdate.getBrand();
-        if(brand != null)
-            productSpecification.setBrand(brand);
+        productSpecification.setBrand(productSpecificationUpdate.getBrand());
 
         final List<BundledProductSpecification> bundledProductSpecification =
                 productSpecificationUpdate.getBundledProductSpecification();
-        if(bundledProductSpecification != null) {
-            if(productSpecification.getBundledProductSpecification() != null) {
-                productSpecification.getBundledProductSpecification().clear();
-                productSpecification.getBundledProductSpecification().addAll(bundledProductSpecification);
-            }
-            else
-                productSpecification.setBundledProductSpecification(bundledProductSpecification);
+        if(productSpecification.getBundledProductSpecification() == null)
+            productSpecification.setBundledProductSpecification(bundledProductSpecification);
+        else if(bundledProductSpecification != null) {
+            productSpecification.getBundledProductSpecification().clear();
+            productSpecification.getBundledProductSpecification().addAll(bundledProductSpecification);
         }
         else
-            productSpecification.setBundledProductSpecification((List<BundledProductSpecification>)
-                    Hibernate.unproxy(productSpecification.getBundledProductSpecification()));
+            productSpecification.getBundledProductSpecification().clear();
 
-        final String description = productSpecificationUpdate.getDescription();
-        if(description != null)
-            productSpecification.setDescription(description);
-
-        final Boolean isBundle = productSpecificationUpdate.isIsBundle();
-        if(isBundle != null)
-            productSpecification.setIsBundle(isBundle);
-
+        productSpecification.setDescription(productSpecificationUpdate.getDescription());
+        productSpecification.setIsBundle(productSpecificationUpdate.isIsBundle());
         productSpecification.setLastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
-
-        final String lifecycleStatus = productSpecificationUpdate.getLifecycleStatus();
-        if(lifecycleStatus != null)
-            productSpecification.setLifecycleStatus(lifecycleStatus);
-
-        final String name = productSpecificationUpdate.getName();
-        if(name != null)
-            productSpecification.setName(name);
-
-        final String productNumber = productSpecificationUpdate.getProductNumber();
-        if(productNumber != null)
-            productSpecification.setProductNumber(productNumber);
+        productSpecification.setLifecycleStatus(productSpecificationUpdate.getLifecycleStatus());
+        productSpecification.setName(productSpecificationUpdate.getName());
+        productSpecification.setProductNumber(productSpecificationUpdate.getProductNumber());
 
         final List<ProductSpecificationCharacteristic> productSpecCharacteristic =
                 productSpecificationUpdate.getProductSpecCharacteristic();
-        if(productSpecCharacteristic != null) {
-            if(productSpecification.getProductSpecCharacteristic() != null) {
-                productSpecification.getProductSpecCharacteristic().clear();
-                productSpecification.getProductSpecCharacteristic().addAll(productSpecCharacteristic);
-            }
-            else
-                productSpecification.setProductSpecCharacteristic(productSpecCharacteristic);
+        if(productSpecification.getProductSpecCharacteristic() == null)
+            productSpecification.setProductSpecCharacteristic(productSpecCharacteristic);
+        else if(productSpecCharacteristic != null) {
+            productSpecification.getProductSpecCharacteristic().clear();
+            productSpecification.getProductSpecCharacteristic().addAll(productSpecCharacteristic);
         }
-        else {
-            productSpecification.setProductSpecCharacteristic((List<ProductSpecificationCharacteristic>)
-                    Hibernate.unproxy(productSpecification.getProductSpecCharacteristic()));
-            if(productSpecification.getProductSpecCharacteristic() != null) {
-                for (ProductSpecificationCharacteristic psc : productSpecification.getProductSpecCharacteristic()) {
-                    psc.setProductSpecCharRelationship((List<ProductSpecificationCharacteristicRelationship>)
-                            Hibernate.unproxy(psc.getProductSpecCharRelationship()));
-                    psc.setProductSpecCharacteristicValue((List<ProductSpecificationCharacteristicValue>)
-                            Hibernate.unproxy(psc.getProductSpecCharacteristicValue()));
-                }
-            }
-        }
+        else
+            productSpecification.getProductSpecCharacteristic().clear();
 
         final List<ProductSpecificationRelationship> productSpecificationRelationship =
                 productSpecificationUpdate.getProductSpecificationRelationship();
-        if(productSpecificationRelationship != null) {
-            if(productSpecification.getProductSpecificationRelationship() != null) {
-                productSpecification.getProductSpecificationRelationship().clear();
-                productSpecification.getProductSpecificationRelationship().addAll(productSpecificationRelationship);
-            }
-            else
-                productSpecification.setProductSpecificationRelationship(productSpecificationRelationship);
+        if(productSpecification.getProductSpecificationRelationship() == null)
+            productSpecification.setProductSpecificationRelationship(productSpecificationRelationship);
+        else if(productSpecificationRelationship != null) {
+            productSpecification.getProductSpecificationRelationship().clear();
+            productSpecification.getProductSpecificationRelationship().addAll(productSpecificationRelationship);
         }
         else
-            productSpecification.setProductSpecificationRelationship((List<ProductSpecificationRelationship>)
-                    Hibernate.unproxy(productSpecification.getProductSpecificationRelationship()));
+            productSpecification.getProductSpecificationRelationship().clear();
 
         final List<RelatedParty> relatedParty = productSpecificationUpdate.getRelatedParty();
-        if(relatedParty != null) {
-            if(productSpecification.getRelatedParty() != null) {
-                productSpecification.getRelatedParty().clear();
-                productSpecification.getRelatedParty().addAll(relatedParty);
-            }
-            else
-                productSpecification.setRelatedParty(relatedParty);
+        if(productSpecification.getRelatedParty() == null)
+            productSpecification.setRelatedParty(relatedParty);
+        else if(relatedParty != null) {
+            productSpecification.getRelatedParty().clear();
+            productSpecification.getRelatedParty().addAll(relatedParty);
         }
         else
-            productSpecification.setRelatedParty((List<RelatedParty>)
-                    Hibernate.unproxy(productSpecification.getRelatedParty()));
+            productSpecification.getRelatedParty().clear();
 
         final List<ResourceSpecificationRef> resourceSpecification =
                 productSpecificationUpdate.getResourceSpecification();
-        if(resourceSpecification != null) {
-            if(productSpecification.getResourceSpecification() != null) {
-                productSpecification.getResourceSpecification().clear();
-                productSpecification.getResourceSpecification().addAll(resourceSpecification);
-            }
-            else
-                productSpecification.setResourceSpecification(resourceSpecification);
+        if(productSpecification.getResourceSpecification() == null)
+            productSpecification.setResourceSpecification(resourceSpecification);
+        else if(resourceSpecification != null) {
+            productSpecification.getResourceSpecification().clear();
+            productSpecification.getResourceSpecification().addAll(resourceSpecification);
         }
         else
-            productSpecification.setResourceSpecification((List<ResourceSpecificationRef>)
-                    Hibernate.unproxy(productSpecification.getResourceSpecification()));
+            productSpecification.getResourceSpecification().clear();
 
         final List<ServiceSpecificationRef> serviceSpecification = productSpecificationUpdate.getServiceSpecification();
-        if(serviceSpecification != null) {
-            if(productSpecification.getServiceSpecification() != null) {
-                productSpecification.getServiceSpecification().clear();
-                productSpecification.getServiceSpecification().addAll(serviceSpecification);
-            }
-            else
-                productSpecification.setServiceSpecification(serviceSpecification);
+        if(productSpecification.getServiceSpecification() == null)
+            productSpecification.setServiceSpecification(serviceSpecification);
+        else if(serviceSpecification != null) {
+            productSpecification.getServiceSpecification().clear();
+            productSpecification.getServiceSpecification().addAll(serviceSpecification);
         }
-        else {
-            productSpecification.setServiceSpecification((List<ServiceSpecificationRef>)
-                    Hibernate.unproxy(productSpecification.getServiceSpecification()));
-            if(productSpecification.getServiceSpecification() != null) {
-                for (ServiceSpecificationRef ssr : productSpecification.getServiceSpecification())
-                    ssr.setTargetServiceSchema((TargetServiceSchema) Hibernate.unproxy(ssr.getTargetServiceSchema()));
-            }
-        }
-
-        final TargetProductSchema targetProductSchema = productSpecificationUpdate.getTargetProductSchema();
-        if(targetProductSchema != null)
-            productSpecification.setTargetProductSchema(targetProductSchema);
         else
-            productSpecification.setTargetProductSchema((TargetProductSchema)
-                    Hibernate.unproxy(productSpecification.getTargetProductSchema()));
+            productSpecification.getServiceSpecification().clear();
 
-        final TimePeriod validFor = productSpecificationUpdate.getValidFor();
-        if(validFor != null)
-            productSpecification.setValidFor(validFor);
-
-        final String version = productSpecificationUpdate.getVersion();
-        if(version != null)
-            productSpecification.setVersion(version);
+        productSpecification.setTargetProductSchema(productSpecificationUpdate.getTargetProductSchema());
+        productSpecification.setValidFor(productSpecificationUpdate.getValidFor());
+        productSpecification.setVersion(productSpecificationUpdate.getVersion());
 
         productSpecificationRepository.save(productSpecification);
 

@@ -128,125 +128,72 @@ public class ResourceSpecificationService {
 
         ResourceSpecification resourceSpecification = toUpdate.get();
 
-        final String baseType = resourceSpecificationUpdate.getBaseType();
-        if(baseType != null)
-            resourceSpecification.setBaseType(baseType);
-
-        final String schemaLocation = resourceSpecificationUpdate.getSchemaLocation();
-        if(schemaLocation != null)
-            resourceSpecification.setSchemaLocation(schemaLocation);
+        resourceSpecification.setBaseType(resourceSpecificationUpdate.getBaseType());
+        resourceSpecification.setSchemaLocation(resourceSpecificationUpdate.getSchemaLocation());
 
         final List<AttachmentRef> attachment = resourceSpecificationUpdate.getAttachment();
-        if(attachment != null) {
-            if(resourceSpecification.getAttachment() != null) {
-                resourceSpecification.getAttachment().clear();
-                resourceSpecification.getAttachment().addAll(attachment);
-            }
-            else
-                resourceSpecification.setAttachment(attachment);
+        if(resourceSpecification.getAttachment() == null)
+            resourceSpecification.setAttachment(attachment);
+        else if(attachment != null) {
+            resourceSpecification.getAttachment().clear();
+            resourceSpecification.getAttachment().addAll(attachment);
         }
         else
-            resourceSpecification.setAttachment((List<AttachmentRef>)
-                    Hibernate.unproxy(resourceSpecification.getAttachment()));
+            resourceSpecification.getAttachment().clear();
 
-        final String category = resourceSpecificationUpdate.getCategory();
-        if(category != null)
-            resourceSpecification.setCategory(category);
-
-        final String description = resourceSpecificationUpdate.getDescription();
-        if(description != null)
-            resourceSpecification.setDescription(description);
+        resourceSpecification.setCategory(resourceSpecificationUpdate.getCategory());
+        resourceSpecification.setDescription(resourceSpecificationUpdate.getDescription());
 
         final List<Feature> feature = resourceSpecificationUpdate.getFeature();
-        if(feature != null) {
-            if(resourceSpecification.getFeature() != null) {
-                resourceSpecification.getFeature().clear();
-                resourceSpecification.getFeature().addAll(feature);
-            }
-            else
-                resourceSpecification.setFeature(feature);
+        if(resourceSpecification.getFeature() == null)
+            resourceSpecification.setFeature(feature);
+        else if(feature != null) {
+            resourceSpecification.getFeature().clear();
+            resourceSpecification.getFeature().addAll(feature);
         }
         else
-            resourceSpecification.setFeature((List<Feature>) Hibernate.unproxy(resourceSpecification.getFeature()));
+            resourceSpecification.getFeature().clear();
 
-        final Boolean isBundle = resourceSpecificationUpdate.isIsBundle();
-        if(isBundle != null)
-            resourceSpecification.setIsBundle(isBundle);
-
+        resourceSpecification.setIsBundle(resourceSpecificationUpdate.isIsBundle());
         resourceSpecification.setLastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
-
-        final String lifecycleStatus = resourceSpecificationUpdate.getLifecycleStatus();
-        if(lifecycleStatus != null)
-            resourceSpecification.setLifecycleStatus(lifecycleStatus);
-
-        final String name = resourceSpecificationUpdate.getName();
-        if(name != null)
-            resourceSpecification.setName(name);
+        resourceSpecification.setLifecycleStatus(resourceSpecificationUpdate.getLifecycleStatus());
+        resourceSpecification.setName(resourceSpecificationUpdate.getName());
 
         final List<RelatedParty> relatedParty = resourceSpecificationUpdate.getRelatedParty();
-        if(relatedParty != null) {
-            if(resourceSpecification.getRelatedParty() != null) {
-                resourceSpecification.getRelatedParty().clear();
-                resourceSpecification.getRelatedParty().addAll(relatedParty);
-            }
-            else
-                resourceSpecification.setRelatedParty(relatedParty);
+        if(resourceSpecification.getRelatedParty() == null)
+            resourceSpecification.setRelatedParty(relatedParty);
+        else if(relatedParty != null) {
+            resourceSpecification.getRelatedParty().clear();
+            resourceSpecification.getRelatedParty().addAll(relatedParty);
         }
         else
-            resourceSpecification.setRelatedParty((List<RelatedParty>)
-                    Hibernate.unproxy(resourceSpecification.getRelatedParty()));
+            resourceSpecification.getRelatedParty().clear();
 
         final List<ResourceSpecCharacteristic> resourceSpecCharacteristic =
                 resourceSpecificationUpdate.getResourceSpecCharacteristic();
-        if(resourceSpecCharacteristic != null) {
-            if(resourceSpecification.getResourceSpecCharacteristic() != null) {
-                resourceSpecification.getResourceSpecCharacteristic().clear();
-                resourceSpecification.getResourceSpecCharacteristic().addAll(resourceSpecCharacteristic);
-            }
-            else
-                resourceSpecification.setResourceSpecCharacteristic(resourceSpecCharacteristic);
+        if(resourceSpecification.getResourceSpecCharacteristic() == null)
+            resourceSpecification.setResourceSpecCharacteristic(resourceSpecCharacteristic);
+        else if(resourceSpecCharacteristic != null) {
+            resourceSpecification.getResourceSpecCharacteristic().clear();
+            resourceSpecification.getResourceSpecCharacteristic().addAll(resourceSpecCharacteristic);
         }
-        else {
-            resourceSpecification.setResourceSpecCharacteristic((List<ResourceSpecCharacteristic>)
-                    Hibernate.unproxy(resourceSpecification.getResourceSpecCharacteristic()));
-            if(resourceSpecification.getResourceSpecCharacteristic() != null) {
-                for (ResourceSpecCharacteristic rsc : resourceSpecification.getResourceSpecCharacteristic()) {
-                    rsc.setResourceSpecCharRelationship((List<ResourceSpecCharRelationship>)
-                            Hibernate.unproxy(rsc.getResourceSpecCharRelationship()));
-                    rsc.setResourceSpecCharacteristicValue((List<ResourceSpecCharacteristicValue>)
-                            Hibernate.unproxy(rsc.getResourceSpecCharacteristicValue()));
-                }
-            }
-        }
+        else
+            resourceSpecification.getResourceSpecCharacteristic().clear();
 
         final List<ResourceSpecRelationship> resourceSpecRelationship =
                 resourceSpecificationUpdate.getResourceSpecRelationship();
-        if(resourceSpecRelationship != null) {
-            if(resourceSpecification.getResourceSpecRelationship() != null) {
-                resourceSpecification.getResourceSpecRelationship().clear();
-                resourceSpecification.getResourceSpecRelationship().addAll(resourceSpecRelationship);
-            }
-            else
-                resourceSpecification.setResourceSpecRelationship(resourceSpecRelationship);
+        if(resourceSpecification.getResourceSpecRelationship() == null)
+            resourceSpecification.setResourceSpecRelationship(resourceSpecRelationship);
+        else if(resourceSpecRelationship != null) {
+            resourceSpecification.getResourceSpecRelationship().clear();
+            resourceSpecification.getResourceSpecRelationship().addAll(resourceSpecRelationship);
         }
         else
-            resourceSpecification.setResourceSpecRelationship((List<ResourceSpecRelationship>)
-                    Hibernate.unproxy(resourceSpecification.getResourceSpecRelationship()));
+            resourceSpecification.getResourceSpecRelationship().clear();
 
-        final TargetResourceSchemaRef targetResourceSchema = resourceSpecificationUpdate.getTargetResourceSchema();
-        if(targetResourceSchema != null)
-            resourceSpecification.setTargetResourceSchema(targetResourceSchema);
-        else
-            resourceSpecification.setTargetResourceSchema((TargetResourceSchemaRef)
-                    Hibernate.unproxy(resourceSpecification.getTargetResourceSchema()));
-
-        final TimePeriod validFor = resourceSpecificationUpdate.getValidFor();
-        if(validFor != null)
-            resourceSpecification.setValidFor(validFor);
-
-        final String version = resourceSpecificationUpdate.getVersion();
-        if(version != null)
-            resourceSpecification.setVersion(version);
+        resourceSpecification.setTargetResourceSchema(resourceSpecificationUpdate.getTargetResourceSchema());
+        resourceSpecification.setValidFor(resourceSpecificationUpdate.getValidFor());
+        resourceSpecification.setVersion(resourceSpecificationUpdate.getVersion());
 
         resourceSpecificationRepository.save(resourceSpecification);
 

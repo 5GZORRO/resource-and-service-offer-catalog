@@ -180,229 +180,126 @@ public class ProductOfferingService {
 
         ProductOffering productOffering = toUpdate.get();
 
-        final String baseType = productOfferingUpdate.getBaseType();
-        if(baseType != null)
-            productOffering.setBaseType(baseType);
-
-        final String schemaLocation = productOfferingUpdate.getSchemaLocation();
-        if(schemaLocation != null)
-            productOffering.setSchemaLocation(schemaLocation);
-
-        final String type = productOfferingUpdate.getType();
-        if(type != null)
-            productOffering.setType(type);
+        productOffering.setBaseType(productOfferingUpdate.getBaseType());
+        productOffering.setSchemaLocation(productOfferingUpdate.getSchemaLocation());
+        productOffering.setType(productOfferingUpdate.getType());
 
         final List<AgreementRef> agreement = productOfferingUpdate.getAgreement();
-        if(agreement != null) {
-            if(productOffering.getAgreement() != null) {
-                productOffering.getAgreement().clear();
-                productOffering.getAgreement().addAll(agreement);
-            }
-            else
-                productOffering.setAgreement(agreement);
+        if(productOffering.getAgreement() == null)
+            productOffering.setAgreement(agreement);
+        else if(agreement != null) {
+            productOffering.getAgreement().clear();
+            productOffering.getAgreement().addAll(agreement);
         }
         else
-            productOffering.setAgreement((List<AgreementRef>) Hibernate.unproxy(productOffering.getAgreement()));
+            productOffering.getAgreement().clear();
 
         final List<AttachmentRefOrValue> attachment = productOfferingUpdate.getAttachment();
-        if(attachment != null) {
-            if(productOffering.getAttachment() != null) {
-                productOffering.getAttachment().clear();
-                productOffering.getAttachment().addAll(attachment);
-            }
-            else
-                productOffering.setAttachment(attachment);
+        if(productOffering.getAttachment() == null)
+            productOffering.setAttachment(attachment);
+        else if(attachment != null) {
+            productOffering.getAttachment().clear();
+            productOffering.getAttachment().addAll(attachment);
         }
         else
-            productOffering.setAttachment((List<AttachmentRefOrValue>)
-                    Hibernate.unproxy(productOffering.getAttachment()));
+            productOffering.getAttachment().clear();
 
         final List<BundledProductOffering> bundledProductOffering = productOfferingUpdate.getBundledProductOffering();
-        if(bundledProductOffering != null) {
-            if(productOffering.getBundledProductOffering() != null) {
-                productOffering.getBundledProductOffering().clear();
-                productOffering.getBundledProductOffering().addAll(bundledProductOffering);
-            }
-            else
-                productOffering.setBundledProductOffering(bundledProductOffering);
+        if(productOffering.getBundledProductOffering() == null)
+            productOffering.setBundledProductOffering(bundledProductOffering);
+        else if(bundledProductOffering != null) {
+            productOffering.getBundledProductOffering().clear();
+            productOffering.getBundledProductOffering().addAll(bundledProductOffering);
         }
-        else {
-            productOffering.setBundledProductOffering((List<BundledProductOffering>)
-                    Hibernate.unproxy(productOffering.getBundledProductOffering()));
-            if(productOffering.getBundledProductOffering() != null) {
-                for (BundledProductOffering bpo : productOffering.getBundledProductOffering())
-                    bpo.setBundledProductOfferingOption((BundledProductOfferingOption)
-                            Hibernate.unproxy(bpo.getBundledProductOfferingOption()));
-            }
-        }
+        else
+            productOffering.getBundledProductOffering().clear();
 
         final List<CategoryRef> category = productOfferingUpdate.getCategory();
-        if(category != null) {
-            if(productOffering.getCategory() != null) {
-                productOffering.getCategory().clear();
-                productOffering.getCategory().addAll(category);
-            }
-            else
-                productOffering.setCategory(category);
+        if(productOffering.getCategory() == null)
+            productOffering.setCategory(category);
+        else if(category != null) {
+            productOffering.getCategory().clear();
+            productOffering.getCategory().addAll(category);
         }
         else
-            productOffering.setCategory((List<CategoryRef>) Hibernate.unproxy(productOffering.getCategory()));
+            productOffering.getCategory().clear();
 
         final List<ChannelRef> channel = productOfferingUpdate.getChannel();
-        if(channel != null) {
-            if(productOffering.getChannel() != null) {
-                productOffering.getChannel().clear();
-                productOffering.getChannel().addAll(channel);
-            }
-            else
-                productOffering.setChannel(channel);
+        if(productOffering.getChannel() == null)
+            productOffering.setChannel(channel);
+        else if(channel != null) {
+            productOffering.getChannel().clear();
+            productOffering.getChannel().addAll(channel);
         }
         else
-            productOffering.setChannel((List<ChannelRef>) Hibernate.unproxy(productOffering.getChannel()));
+            productOffering.getChannel().clear();
 
-        final String description = productOfferingUpdate.getDescription();
-        if(description != null)
-            productOffering.setDescription(description);
-
-        final Boolean isBundle = productOfferingUpdate.isIsBundle();
-        if(isBundle != null)
-            productOffering.setIsBundle(isBundle);
-
-        final Boolean isSellable = productOfferingUpdate.isIsSellable();
-        if(isSellable != null)
-            productOffering.setIsSellable(isSellable);
-
+        productOffering.setDescription(productOfferingUpdate.getDescription());
+        productOffering.setIsBundle(productOfferingUpdate.isIsBundle());
+        productOffering.setIsSellable(productOfferingUpdate.isIsSellable());
         productOffering.setLastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
-
-        final String lifecycleStatus = productOfferingUpdate.getLifecycleStatus();
-        if(lifecycleStatus != null)
-            productOffering.setLifecycleStatus(lifecycleStatus);
+        productOffering.setLifecycleStatus(productOfferingUpdate.getLifecycleStatus());
 
         final List<MarketSegmentRef> marketSegment = productOfferingUpdate.getMarketSegment();
-        if(marketSegment != null) {
-            if(productOffering.getMarketSegment() != null) {
-                productOffering.getMarketSegment().clear();
-                productOffering.getMarketSegment().addAll(marketSegment);
-            }
-            else
-                productOffering.setMarketSegment(marketSegment);
+        if(productOffering.getMarketSegment() == null)
+            productOffering.setMarketSegment(marketSegment);
+        else if(marketSegment != null) {
+            productOffering.getMarketSegment().clear();
+            productOffering.getMarketSegment().addAll(marketSegment);
         }
         else
-            productOffering.setMarketSegment((List<MarketSegmentRef>)
-                    Hibernate.unproxy(productOffering.getMarketSegment()));
+            productOffering.getMarketSegment().clear();
 
-        final String name = productOfferingUpdate.getName();
-        if(name != null)
-            productOffering.setName(name);
+        productOffering.setName(productOfferingUpdate.getName());
 
         final List<PlaceRef> place = productOfferingUpdate.getPlace();
-        if(place != null) {
-            if(productOffering.getPlace() != null) {
-                productOffering.getPlace().clear();
-                productOffering.getPlace().addAll(place);
-            }
-            else
-                productOffering.setPlace(place);
+        if(productOffering.getPlace() == null)
+            productOffering.setPlace(place);
+        else if(place != null) {
+            productOffering.getPlace().clear();
+            productOffering.getPlace().addAll(place);
         }
         else
-            productOffering.setPlace((List<PlaceRef>) Hibernate.unproxy(productOffering.getPlace()));
+            productOffering.getPlace().clear();
 
         final List<ProductSpecificationCharacteristicValueUse> prodSpecCharValueUse =
                 productOfferingUpdate.getProdSpecCharValueUse();
-        if(prodSpecCharValueUse != null) {
-            if(productOffering.getProdSpecCharValueUse() != null) {
-                productOffering.getProdSpecCharValueUse().clear();
-                productOffering.getProdSpecCharValueUse().addAll(prodSpecCharValueUse);
-            }
-            else
-                productOffering.setProdSpecCharValueUse(prodSpecCharValueUse);
+        if(productOffering.getProdSpecCharValueUse() == null)
+            productOffering.setProdSpecCharValueUse(prodSpecCharValueUse);
+        else if(prodSpecCharValueUse != null) {
+            productOffering.getProdSpecCharValueUse().clear();
+            productOffering.getProdSpecCharValueUse().addAll(prodSpecCharValueUse);
         }
-        else {
-            productOffering.setProdSpecCharValueUse((List<ProductSpecificationCharacteristicValueUse>)
-                    Hibernate.unproxy(productOffering.getProdSpecCharValueUse()));
-            if(productOffering.getProdSpecCharValueUse() != null) {
-                for (ProductSpecificationCharacteristicValueUse pscvu : productOffering.getProdSpecCharValueUse()) {
-                    pscvu.setProductSpecCharacteristicValue((List<ProductSpecificationCharacteristicValue>)
-                            Hibernate.unproxy(pscvu.getProductSpecCharacteristicValue()));
-
-                    pscvu.setProductSpecification((ProductSpecificationRef)
-                            Hibernate.unproxy(pscvu.getProductSpecification()));
-                    if(pscvu.getProductSpecification() != null)
-                        pscvu.getProductSpecification().setTargetProductSchema((TargetProductSchema)
-                                Hibernate.unproxy(pscvu.getProductSpecification().getTargetProductSchema()));
-                }
-            }
-        }
+        else
+            productOffering.getProdSpecCharValueUse().clear();
 
         final List<ProductOfferingPriceRef> productOfferingPrice = productOfferingUpdate.getProductOfferingPrice();
-        if(productOfferingPrice != null) {
-            if(productOffering.getProductOfferingPrice() != null) {
-                productOffering.getProductOfferingPrice().clear();
-                productOffering.getProductOfferingPrice().addAll(productOfferingPrice);
-            }
-            else
-                productOffering.setProductOfferingPrice(productOfferingPrice);
+        if(productOffering.getProductOfferingPrice() == null)
+            productOffering.setProductOfferingPrice(productOfferingPrice);
+        else if(productOfferingPrice != null) {
+            productOffering.getProductOfferingPrice().clear();
+            productOffering.getProductOfferingPrice().addAll(productOfferingPrice);
         }
         else
-            productOffering.setProductOfferingPrice((List<ProductOfferingPriceRef>)
-                    Hibernate.unproxy(productOffering.getProductOfferingPrice()));
+            productOffering.getProductOfferingPrice().clear();
 
         final List<ProductOfferingTerm> productOfferingTerm = productOfferingUpdate.getProductOfferingTerm();
-        if(productOfferingTerm != null) {
-            if(productOffering.getProductOfferingTerm() != null) {
-                productOffering.getProductOfferingTerm().clear();
-                productOffering.getProductOfferingTerm().addAll(productOfferingTerm);
-            }
-            else
-                productOffering.setProductOfferingTerm(productOfferingTerm);
+        if(productOffering.getProductOfferingTerm() == null)
+            productOffering.setProductOfferingTerm(productOfferingTerm);
+        else if(productOfferingTerm != null) {
+            productOffering.getProductOfferingTerm().clear();
+            productOffering.getProductOfferingTerm().addAll(productOfferingTerm);
         }
         else
-            productOffering.setProductOfferingTerm((List<ProductOfferingTerm>)
-                    Hibernate.unproxy(productOffering.getProductOfferingTerm()));
+            productOffering.getProductOfferingTerm().clear();
 
-        final ProductSpecificationRef productSpecification = productOfferingUpdate.getProductSpecification();
-        if(productSpecification != null)
-            productOffering.setProductSpecification(productSpecification);
-        else {
-            productOffering.setProductSpecification((ProductSpecificationRef)
-                    Hibernate.unproxy(productOffering.getProductSpecification()));
-            if(productOffering.getProductSpecification() != null)
-                productOffering.getProductSpecification().setTargetProductSchema((TargetProductSchema)
-                        Hibernate.unproxy(productOffering.getProductSpecification().getTargetProductSchema()));
-        }
-
-        final ResourceCandidateRef resourceCandidate = productOfferingUpdate.getResourceCandidate();
-        if(resourceCandidate != null)
-            productOffering.setResourceCandidate(resourceCandidate);
-        else
-            productOffering.setResourceCandidate((ResourceCandidateRef)
-                    Hibernate.unproxy(productOffering.getResourceCandidate()));
-
-        final ServiceCandidateRef serviceCandidate = productOfferingUpdate.getServiceCandidate();
-        if(serviceCandidate != null)
-            productOffering.setServiceCandidate(serviceCandidate);
-        else
-            productOffering.setServiceCandidate((ServiceCandidateRef)
-                    Hibernate.unproxy(productOffering.getServiceCandidate()));
-
-        final SLARef serviceLevelAgreement = productOfferingUpdate.getServiceLevelAgreement();
-        if(serviceLevelAgreement != null)
-            productOffering.setServiceLevelAgreement(serviceLevelAgreement);
-        else
-            productOffering.setServiceLevelAgreement((SLARef)
-                    Hibernate.unproxy(productOffering.getServiceLevelAgreement()));
-
-        final String statusReason = productOfferingUpdate.getStatusReason();
-        if(statusReason != null)
-            productOffering.setStatusReason(statusReason);
-
-        final TimePeriod validFor = productOfferingUpdate.getValidFor();
-        if(validFor != null)
-            productOffering.setValidFor(validFor);
-
-        final String version = productOfferingUpdate.getVersion();
-        if(version != null)
-            productOffering.setVersion(version);
+        productOffering.setProductSpecification(productOfferingUpdate.getProductSpecification());
+        productOffering.setResourceCandidate(productOfferingUpdate.getResourceCandidate());
+        productOffering.setServiceCandidate(productOfferingUpdate.getServiceCandidate());
+        productOffering.setServiceLevelAgreement(productOfferingUpdate.getServiceLevelAgreement());
+        productOffering.setStatusReason(productOfferingUpdate.getStatusReason());
+        productOffering.setValidFor(productOfferingUpdate.getValidFor());
+        productOffering.setVersion(productOfferingUpdate.getVersion());
 
         productOfferingRepository.save(productOffering);
 

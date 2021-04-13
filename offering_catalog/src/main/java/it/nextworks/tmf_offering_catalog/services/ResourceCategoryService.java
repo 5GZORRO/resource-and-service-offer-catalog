@@ -110,72 +110,39 @@ public class ResourceCategoryService {
 
         ResourceCategory resourceCategory = toUpdate.get();
 
-        final String baseType = resourceCategoryUpdate.getBaseType();
-        if(baseType != null)
-            resourceCategory.setBaseType(baseType);
-
-        final String schemaLocation = resourceCategoryUpdate.getSchemalLocation();
-        if(schemaLocation != null)
-            resourceCategory.setSchemaLocation(schemaLocation);
-
-        final String type = resourceCategoryUpdate.getType();
-        if(type != null)
-            resourceCategory.setType(type);
+        resourceCategory.setBaseType(resourceCategoryUpdate.getBaseType());
+        resourceCategory.setSchemaLocation(resourceCategoryUpdate.getSchemalLocation());
+        resourceCategory.setType(resourceCategoryUpdate.getType());
 
         final List<ResourceCategoryRef> category = resourceCategoryUpdate.getCategory();
-        if(category != null) {
-            if(resourceCategory.getCategory() != null) {
-                resourceCategory.getCategory().clear();
-                resourceCategory.getCategory().addAll(category);
-            }
-            else
-                resourceCategory.setCategory(category);
+        if(resourceCategory.getCategory() == null)
+            resourceCategory.setCategory(category);
+        else if(category != null) {
+            resourceCategory.getCategory().clear();
+            resourceCategory.getCategory().addAll(category);
         }
         else
-            resourceCategory.setCategory((List<ResourceCategoryRef>) Hibernate.unproxy(resourceCategory.getCategory()));
+            resourceCategory.getCategory().clear();
 
-        final String description = resourceCategoryUpdate.getDescription();
-        if(description != null)
-            resourceCategory.setDescription(description);
-
-        final Boolean isRoot = resourceCategoryUpdate.isIsRoot();
-        if(isRoot != null)
-            resourceCategory.setIsRoot(isRoot);
-
+        resourceCategory.setDescription(resourceCategoryUpdate.getDescription());
+        resourceCategory.setIsRoot(resourceCategoryUpdate.isIsRoot());
         resourceCategory.setLastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
-
-        final String lifecycleStatus = resourceCategoryUpdate.getLifecycleStatus();
-        if(lifecycleStatus != null)
-            resourceCategory.setLifecycleStatus(lifecycleStatus);
-
-        final String name = resourceCategoryUpdate.getName();
-        if(name != null)
-            resourceCategory.setName(name);
-
-        final String parentId = resourceCategoryUpdate.getParentId();
-        if(parentId != null)
-            resourceCategory.setParentId(parentId);
+        resourceCategory.setLifecycleStatus(resourceCategoryUpdate.getLifecycleStatus());
+        resourceCategory.setName(resourceCategoryUpdate.getName());
+        resourceCategory.setParentId(resourceCategoryUpdate.getParentId());
 
         final List<ResourceCandidateRef> resourceCandidate = resourceCategoryUpdate.getResourceCandidate();
-        if(resourceCandidate != null) {
-            if(resourceCategory.getResourceCandidate() != null) {
-                resourceCategory.getResourceCandidate().clear();
-                resourceCategory.getResourceCandidate().addAll(resourceCandidate);
-            }
-            else
-                resourceCategory.setResourceCandidate(resourceCandidate);
+        if(resourceCategory.getResourceCandidate() == null)
+            resourceCategory.setResourceCandidate(resourceCandidate);
+        else if(resourceCandidate != null) {
+            resourceCategory.getResourceCandidate().clear();
+            resourceCategory.getResourceCandidate().addAll(resourceCandidate);
         }
         else
-            resourceCategory.setResourceCandidate((List<ResourceCandidateRef>)
-                    Hibernate.unproxy(resourceCategory.getResourceCandidate()));
+            resourceCategory.getResourceCandidate().clear();
 
-        final TimePeriod validFor = resourceCategoryUpdate.getValidFor();
-        if(validFor != null)
-            resourceCategory.setValidFor(validFor);
-
-        final String version = resourceCategoryUpdate.getVersion();
-        if(version != null)
-            resourceCategory.setVersion(version);
+        resourceCategory.setValidFor(resourceCategoryUpdate.getValidFor());
+        resourceCategory.setVersion(resourceCategoryUpdate.getVersion());
 
         resourceCategoryRepository.save(resourceCategory);
 
