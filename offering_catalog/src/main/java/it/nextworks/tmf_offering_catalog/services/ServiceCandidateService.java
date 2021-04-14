@@ -3,7 +3,6 @@ package it.nextworks.tmf_offering_catalog.services;
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
 import it.nextworks.tmf_offering_catalog.information_models.common.ServiceSpecificationRef;
 import it.nextworks.tmf_offering_catalog.information_models.common.TargetServiceSchema;
-import it.nextworks.tmf_offering_catalog.information_models.common.TimePeriod;
 import it.nextworks.tmf_offering_catalog.information_models.service.ServiceCandidate;
 import it.nextworks.tmf_offering_catalog.information_models.service.ServiceCandidateCreate;
 import it.nextworks.tmf_offering_catalog.information_models.service.ServiceCandidateUpdate;
@@ -16,9 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
-import org.threeten.bp.ZoneId;
 
 import java.util.List;
 import java.util.Optional;
@@ -102,7 +99,7 @@ public class ServiceCandidateService {
         return serviceCandidates;
     }
 
-    public ServiceCandidate patch(String id, ServiceCandidateUpdate serviceCandidateUpdate)
+    public ServiceCandidate patch(String id, ServiceCandidateUpdate serviceCandidateUpdate, String lastUpdate)
         throws NotExistingEntityException {
 
         log.info("Received request to patch Service Candidate with id " + id + ".");
@@ -128,7 +125,7 @@ public class ServiceCandidateService {
             serviceCandidate.getCategory().clear();
 
         serviceCandidate.setDescription(serviceCandidateUpdate.getDescription());
-        serviceCandidate.setLastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
+        serviceCandidate.setLastUpdate(lastUpdate);
         serviceCandidate.setLifecycleStatus(serviceCandidateUpdate.getLifecycleStatus());
         serviceCandidate.setName(serviceCandidateUpdate.getName());
         serviceCandidate.setServiceSpecification(serviceCandidateUpdate.getServiceSpecification());

@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
+import org.threeten.bp.ZoneId;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -234,7 +236,8 @@ public class ResourceCategoryController implements ResourceCategoryInterface {
 
         ResourceCategory rc;
         try {
-            rc = resourceCategoryService.patch(id, resourceCategory);
+            rc = resourceCategoryService.patch(id, resourceCategory,
+                    OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
         } catch (NotExistingEntityException e) {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrMsg(e.getMessage()));

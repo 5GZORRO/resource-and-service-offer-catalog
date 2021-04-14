@@ -11,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
-import org.threeten.bp.ZoneId;
 
 import java.util.List;
 import java.util.Optional;
@@ -118,7 +116,7 @@ public class ServiceSpecificationService {
         return serviceSpecifications;
     }
 
-    public ServiceSpecification patch(String id, ServiceSpecificationUpdate serviceSpecificationUpdate)
+    public ServiceSpecification patch(String id, ServiceSpecificationUpdate serviceSpecificationUpdate, String lastUpdate)
         throws NotExistingEntityException {
 
         log.info("Received request to patch Service Specification with id " + id + ".");
@@ -145,7 +143,7 @@ public class ServiceSpecificationService {
 
         serviceSpecification.setDescription(serviceSpecificationUpdate.getDescription());
         serviceSpecification.setIsBundle(serviceSpecificationUpdate.isIsBundle());
-        serviceSpecification.setLastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
+        serviceSpecification.setLastUpdate(lastUpdate);
         serviceSpecification.setLifecycleStatus(serviceSpecificationUpdate.getLifecycleStatus());
         serviceSpecification.setName(serviceSpecificationUpdate.getName());
 

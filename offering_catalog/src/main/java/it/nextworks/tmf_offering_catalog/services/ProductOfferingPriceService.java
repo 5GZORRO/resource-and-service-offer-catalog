@@ -11,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
-import org.threeten.bp.ZoneId;
 
 import java.util.List;
 import java.util.Optional;
@@ -130,7 +128,7 @@ public class ProductOfferingPriceService {
         return productOfferingPrices;
     }
 
-    public ProductOfferingPrice patch(String id, ProductOfferingPriceUpdate productOfferingPriceUpdate)
+    public ProductOfferingPrice patch(String id, ProductOfferingPriceUpdate productOfferingPriceUpdate, String lastUpdate)
         throws NotExistingEntityException {
 
         log.info("Received request to patch Product Offering Price with id " + id + ".");
@@ -168,7 +166,7 @@ public class ProductOfferingPriceService {
 
         productOfferingPrice.setDescription(productOfferingPriceUpdate.getDescription());
         productOfferingPrice.setIsBundle(productOfferingPriceUpdate.isIsBundle());
-        productOfferingPrice.setLastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
+        productOfferingPrice.setLastUpdate(lastUpdate);
         productOfferingPrice.setLifecycleStatus(productOfferingPriceUpdate.getLifecycleStatus());
         productOfferingPrice.setName(productOfferingPriceUpdate.getName());
         productOfferingPrice.setPercentage(productOfferingPriceUpdate.getPercentage());

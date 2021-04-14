@@ -3,7 +3,6 @@ package it.nextworks.tmf_offering_catalog.services;
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
 import it.nextworks.tmf_offering_catalog.information_models.common.AttachmentRef;
 import it.nextworks.tmf_offering_catalog.information_models.common.RelatedParty;
-import it.nextworks.tmf_offering_catalog.information_models.common.TimePeriod;
 import it.nextworks.tmf_offering_catalog.information_models.resource.*;
 import it.nextworks.tmf_offering_catalog.repo.ResourceSpecificationRepository;
 import org.hibernate.Hibernate;
@@ -13,9 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
-import org.threeten.bp.ZoneId;
 
 import java.util.List;
 import java.util.Optional;
@@ -117,7 +114,7 @@ public class ResourceSpecificationService {
         return resourceSpecifications;
     }
 
-    public ResourceSpecification patch(String id, ResourceSpecificationUpdate resourceSpecificationUpdate)
+    public ResourceSpecification patch(String id, ResourceSpecificationUpdate resourceSpecificationUpdate, String lastUpdate)
             throws NotExistingEntityException {
 
         log.info("Received request to patch Resource Specification with id " + id + ".");
@@ -155,7 +152,7 @@ public class ResourceSpecificationService {
             resourceSpecification.getFeature().clear();
 
         resourceSpecification.setIsBundle(resourceSpecificationUpdate.isIsBundle());
-        resourceSpecification.setLastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
+        resourceSpecification.setLastUpdate(lastUpdate);
         resourceSpecification.setLifecycleStatus(resourceSpecificationUpdate.getLifecycleStatus());
         resourceSpecification.setName(resourceSpecificationUpdate.getName());
 

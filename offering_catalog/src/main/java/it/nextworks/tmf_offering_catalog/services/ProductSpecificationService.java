@@ -11,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
-import org.threeten.bp.ZoneId;
 
 import java.util.List;
 import java.util.Optional;
@@ -128,7 +126,7 @@ public class ProductSpecificationService {
         return productSpecifications;
     }
 
-    public ProductSpecification patch(String id, ProductSpecificationUpdate productSpecificationUpdate)
+    public ProductSpecification patch(String id, ProductSpecificationUpdate productSpecificationUpdate, String lastUpdate)
         throws NotExistingEntityException {
 
         log.info("Received request to patch Product Specification with id " + id + ".");
@@ -168,7 +166,7 @@ public class ProductSpecificationService {
 
         productSpecification.setDescription(productSpecificationUpdate.getDescription());
         productSpecification.setIsBundle(productSpecificationUpdate.isIsBundle());
-        productSpecification.setLastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
+        productSpecification.setLastUpdate(lastUpdate);
         productSpecification.setLifecycleStatus(productSpecificationUpdate.getLifecycleStatus());
         productSpecification.setName(productSpecificationUpdate.getName());
         productSpecification.setProductNumber(productSpecificationUpdate.getProductNumber());

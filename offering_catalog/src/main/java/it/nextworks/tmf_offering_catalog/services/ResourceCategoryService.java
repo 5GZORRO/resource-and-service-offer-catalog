@@ -2,7 +2,6 @@ package it.nextworks.tmf_offering_catalog.services;
 
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
 import it.nextworks.tmf_offering_catalog.information_models.common.ResourceCandidateRef;
-import it.nextworks.tmf_offering_catalog.information_models.common.TimePeriod;
 import it.nextworks.tmf_offering_catalog.information_models.resource.ResourceCategory;
 import it.nextworks.tmf_offering_catalog.information_models.resource.ResourceCategoryCreate;
 import it.nextworks.tmf_offering_catalog.information_models.resource.ResourceCategoryRef;
@@ -15,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
-import org.threeten.bp.ZoneId;
 
 import java.util.List;
 import java.util.Optional;
@@ -99,7 +96,7 @@ public class ResourceCategoryService {
         return resourceCategories;
     }
 
-    public ResourceCategory patch(String id, ResourceCategoryUpdate resourceCategoryUpdate)
+    public ResourceCategory patch(String id, ResourceCategoryUpdate resourceCategoryUpdate, String lastUpdate)
         throws NotExistingEntityException {
 
         log.info("Received request to patch Resource Category with id " + id + ".");
@@ -126,7 +123,7 @@ public class ResourceCategoryService {
 
         resourceCategory.setDescription(resourceCategoryUpdate.getDescription());
         resourceCategory.setIsRoot(resourceCategoryUpdate.isIsRoot());
-        resourceCategory.setLastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
+        resourceCategory.setLastUpdate(lastUpdate);
         resourceCategory.setLifecycleStatus(resourceCategoryUpdate.getLifecycleStatus());
         resourceCategory.setName(resourceCategoryUpdate.getName());
         resourceCategory.setParentId(resourceCategoryUpdate.getParentId());

@@ -2,7 +2,6 @@ package it.nextworks.tmf_offering_catalog.services;
 
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
 import it.nextworks.tmf_offering_catalog.information_models.common.ResourceSpecificationRef;
-import it.nextworks.tmf_offering_catalog.information_models.common.TimePeriod;
 import it.nextworks.tmf_offering_catalog.information_models.resource.ResourceCandidate;
 import it.nextworks.tmf_offering_catalog.information_models.resource.ResourceCandidateCreate;
 import it.nextworks.tmf_offering_catalog.information_models.resource.ResourceCandidateUpdate;
@@ -15,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
-import org.threeten.bp.ZoneId;
 
 import java.util.List;
 import java.util.Optional;
@@ -97,7 +94,7 @@ public class ResourceCandidateService {
         return resourceCandidates;
     }
 
-    public ResourceCandidate patch(String id, ResourceCandidateUpdate resourceCandidateUpdate)
+    public ResourceCandidate patch(String id, ResourceCandidateUpdate resourceCandidateUpdate, String lastUpdate)
             throws NotExistingEntityException {
 
         log.info("Received request to patch Resource Candidate with id " + id + ".");
@@ -124,7 +121,7 @@ public class ResourceCandidateService {
 
         resourceCandidate.setDescription(resourceCandidateUpdate.getDescription());
         resourceCandidate.setLastUpdate(resourceCandidateUpdate.getLastUpdate().toString());
-        resourceCandidate.setLastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
+        resourceCandidate.setLastUpdate(lastUpdate);
         resourceCandidate.setLifecycleStatus(resourceCandidateUpdate.getLifecycleStatus());
         resourceCandidate.setName(resourceCandidateUpdate.getName());
         resourceCandidate.setResourceSpecification(resourceCandidateUpdate.getResourceSpecification());

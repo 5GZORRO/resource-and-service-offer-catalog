@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
+import org.threeten.bp.ZoneId;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -226,7 +228,8 @@ public class ResourceCandidateController implements ResourceCandidateInterface {
 
         ResourceCandidate rc;
         try {
-            rc = resourceCandidateService.patch(id, resourceCandidate);
+            rc = resourceCandidateService.patch(id, resourceCandidate,
+                    OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
         } catch (NotExistingEntityException e) {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrMsg(e.getMessage()));

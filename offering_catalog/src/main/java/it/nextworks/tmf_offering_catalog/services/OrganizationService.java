@@ -4,7 +4,6 @@ import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityExcep
 import it.nextworks.tmf_offering_catalog.common.exception.StakeholderAlreadyRegisteredException;
 import it.nextworks.tmf_offering_catalog.information_models.common.AttachmentRefOrValue;
 import it.nextworks.tmf_offering_catalog.information_models.common.RelatedParty;
-import it.nextworks.tmf_offering_catalog.information_models.common.TimePeriod;
 import it.nextworks.tmf_offering_catalog.information_models.party.*;
 import it.nextworks.tmf_offering_catalog.repo.OrganizationRepository;
 import org.hibernate.Hibernate;

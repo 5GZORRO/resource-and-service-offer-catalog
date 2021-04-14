@@ -2,7 +2,6 @@ package it.nextworks.tmf_offering_catalog.services;
 
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
 import it.nextworks.tmf_offering_catalog.information_models.common.LifecycleStatusEnumEnum;
-import it.nextworks.tmf_offering_catalog.information_models.common.TimePeriod;
 import it.nextworks.tmf_offering_catalog.information_models.product.*;
 import it.nextworks.tmf_offering_catalog.repo.CategoryRepository;
 import org.hibernate.Hibernate;
@@ -12,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
-import org.threeten.bp.ZoneId;
 
 import java.util.List;
 import java.util.Optional;
@@ -98,7 +95,7 @@ public class CategoryService {
         return categories;
     }
 
-    public Category patch(String id, CategoryUpdate categoryUpdate) throws NotExistingEntityException {
+    public Category patch(String id, CategoryUpdate categoryUpdate, String lastUpdate) throws NotExistingEntityException {
 
         log.info("Received request to patch Category with id " + id + ".");
 
@@ -113,7 +110,7 @@ public class CategoryService {
         category.setType(categoryUpdate.getType());
         category.setDescription(categoryUpdate.getDescription());
         category.setIsRoot(categoryUpdate.isIsRoot());
-        category.setLastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
+        category.setLastUpdate(lastUpdate);
 
         final String lifecycleStatus = categoryUpdate.getLifecycleStatus();
         category.setLifecycleStatus(lifecycleStatus);

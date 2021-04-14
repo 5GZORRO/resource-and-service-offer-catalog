@@ -2,7 +2,6 @@ package it.nextworks.tmf_offering_catalog.services;
 
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
 import it.nextworks.tmf_offering_catalog.information_models.common.ServiceCandidateRef;
-import it.nextworks.tmf_offering_catalog.information_models.common.TimePeriod;
 import it.nextworks.tmf_offering_catalog.information_models.service.ServiceCategory;
 import it.nextworks.tmf_offering_catalog.information_models.service.ServiceCategoryCreate;
 import it.nextworks.tmf_offering_catalog.information_models.service.ServiceCategoryRef;
@@ -15,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
-import org.threeten.bp.ZoneId;
 
 import java.util.List;
 import java.util.Optional;
@@ -99,7 +96,7 @@ public class ServiceCategoryService {
         return serviceCategories;
     }
 
-    public ServiceCategory patch(String id, ServiceCategoryUpdate serviceCategoryUpdate)
+    public ServiceCategory patch(String id, ServiceCategoryUpdate serviceCategoryUpdate, String lastUpdate)
         throws NotExistingEntityException {
 
         log.info("Received request to patch Service Category with id " + id + ".");
@@ -126,7 +123,7 @@ public class ServiceCategoryService {
 
         serviceCategory.setDescription(serviceCategoryUpdate.getDescription());
         serviceCategory.setIsRoot(serviceCategoryUpdate.isIsRoot());
-        serviceCategory.setLastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
+        serviceCategory.setLastUpdate(lastUpdate);
         serviceCategory.setLifecycleStatus(serviceCategoryUpdate.getLifecycleStatus());
         serviceCategory.setName(serviceCategoryUpdate.getName());
         serviceCategory.setParentId(serviceCategoryUpdate.getParentId());

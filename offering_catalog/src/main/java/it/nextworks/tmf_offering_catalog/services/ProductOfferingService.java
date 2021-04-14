@@ -14,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
-import org.threeten.bp.ZoneId;
 
 import java.io.IOException;
 import java.util.List;
@@ -169,7 +167,7 @@ public class ProductOfferingService {
         return productOfferings;
     }
 
-    public ProductOffering patch(String id, ProductOfferingUpdate productOfferingUpdate)
+    public ProductOffering patch(String id, ProductOfferingUpdate productOfferingUpdate, String lastUpdate)
             throws NotExistingEntityException {
 
         log.info("Received request to patch Product Offering with id " + id + ".");
@@ -237,7 +235,7 @@ public class ProductOfferingService {
         productOffering.setDescription(productOfferingUpdate.getDescription());
         productOffering.setIsBundle(productOfferingUpdate.isIsBundle());
         productOffering.setIsSellable(productOfferingUpdate.isIsSellable());
-        productOffering.setLastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
+        productOffering.setLastUpdate(lastUpdate);
         productOffering.setLifecycleStatus(productOfferingUpdate.getLifecycleStatus());
 
         final List<MarketSegmentRef> marketSegment = productOfferingUpdate.getMarketSegment();
