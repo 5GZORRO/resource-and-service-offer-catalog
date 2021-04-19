@@ -1,10 +1,8 @@
 package it.nextworks.tmf_offering_catalog.services;
 
-import it.nextworks.tmf_offering_catalog.common.exception.DIDGenerationRequestException;
-import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
-import it.nextworks.tmf_offering_catalog.common.exception.ProductOfferingDeleteScLCMException;
-import it.nextworks.tmf_offering_catalog.common.exception.ProductOfferingInPublicationException;
+import it.nextworks.tmf_offering_catalog.common.exception.*;
 import it.nextworks.tmf_offering_catalog.information_models.common.*;
+import it.nextworks.tmf_offering_catalog.information_models.party.OrganizationWrapper;
 import it.nextworks.tmf_offering_catalog.information_models.product.*;
 import it.nextworks.tmf_offering_catalog.repo.ProductOfferingRepository;
 import org.hibernate.Hibernate;
@@ -40,10 +38,20 @@ public class ProductOfferingService {
     @Autowired
     private ProductOfferingRepository productOfferingRepository;
 
+    @Autowired
+    private OrganizationService organizationService;
+
     public ProductOffering create(ProductOfferingCreate productOfferingCreate)
-            throws IOException, DIDGenerationRequestException {
+            throws IOException, DIDGenerationRequestException, StakeholderNotRegisteredException {
 
         log.info("Received request to create a Product Offering.");
+
+        OrganizationWrapper ow;
+        try {
+            ow = organizationService.get();
+        } catch (NotExistingEntityException e) {
+            throw new StakeholderNotRegisteredException(e.getMessage());
+        }
 
         final String id = UUID.randomUUID().toString();
         ProductOffering productOffering = new ProductOffering()
@@ -84,7 +92,7 @@ public class ProductOfferingService {
         log.info("Requesting DID via CommunicationService to ID&P.");
 
         try {
-            communicationService.requestDID(id);
+            communicationService.requestDID(id, ow.getToken());
         } catch (DIDGenerationRequestException e) {
             productOfferingRepository.delete(productOffering);
             throw e;

@@ -97,6 +97,9 @@ public class ProductOfferingController implements ProductOfferingInterface {
         } catch (DIDGenerationRequestException e) {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new ErrMsg(e.getMessage()));
+        } catch (StakeholderNotRegisteredException e) {
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg(e.getMessage()));
         }
 
         log.info("Web-Server: Product Offering created with id " + po.getId() + ".");

@@ -6,6 +6,7 @@ import it.nextworks.tmf_offering_catalog.information_models.common.AttachmentRef
 import it.nextworks.tmf_offering_catalog.information_models.common.RelatedParty;
 import it.nextworks.tmf_offering_catalog.information_models.party.*;
 import it.nextworks.tmf_offering_catalog.repo.OrganizationRepository;
+import it.nextworks.tmf_offering_catalog.repo.StakeholderPlatformInfoRepository;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -34,12 +34,19 @@ public class OrganizationService {
     @Autowired
     private OrganizationRepository organizationRepository;
 
-    public Organization create(OrganizationCreate organizationCreate) throws StakeholderAlreadyRegisteredException {
+    @Autowired
+    private StakeholderPlatformInfoRepository stakeholderPlatformInfoRepository;
+
+    public OrganizationWrapper create(OrganizationCreateWrapper organizationCreateWrapper) throws StakeholderAlreadyRegisteredException {
 
         log.info("Received request to create an Organization.");
 
-        if(organizationRepository.findAll().size() == 1)
+        if(organizationRepository.findAll().size() >= 1)
             throw new StakeholderAlreadyRegisteredException("Stakeholder already registered.");
+
+        OrganizationCreate organizationCreate = organizationCreateWrapper.getOrganizationCreate();
+        String stakeholderDID = organizationCreateWrapper.getStakeholderDID();
+        String token = organizationCreateWrapper.getToken();
 
         final String id = UUID.randomUUID().toString();
         Organization organization = new Organization()
@@ -68,41 +75,46 @@ public class OrganizationService {
                 .tradingName(organizationCreate.getTradingName());
 
         organizationRepository.save(organization);
-
-        //log.info("Requesting stakeholder registration via CommunicationService to ID&P.");
-        // TODO: register stakeholder via ID&P in order to receive credential (stakeholder did and token)
-        //log.info("Stakeholder registration successfully completed via ID&P.");
+        stakeholderPlatformInfoRepository.save(new StakeholderPlatformInfo(id, stakeholderDID, token));
 
         log.info("Organization created with id " + id + ".");
 
-        return organization;
+        return new OrganizationWrapper(organization, stakeholderDID, token);
     }
 
-    public void delete(String id) throws NotExistingEntityException {
+    public void delete() throws NotExistingEntityException {
 
-        log.info("Received request to delete Organization with id " + id + ".");
+        log.info("Received request to delete Organization.");
 
-        Optional<Organization> toDelete = organizationRepository.findByOrganizationId(id);
-        if(!toDelete.isPresent())
-            throw new NotExistingEntityException("Organization with id " + id + " not found in DB.");
+        List<Organization> toDelete = organizationRepository.findAll();
+        if(toDelete.isEmpty())
+            throw new NotExistingEntityException("Organization not found in DB.");
 
-         // TODO: revoke stakeholder registration/credential?
-        organizationRepository.delete(toDelete.get());
+        organizationRepository.delete(toDelete.get(0));
 
-        log.info("Organization " + id + " deleted.");
+        List<StakeholderPlatformInfo> toDeleteInfo = stakeholderPlatformInfoRepository.findAll();
+        if(toDeleteInfo.isEmpty())
+            throw new NotExistingEntityException("Stakeholder Platform Info not found in DB.");
+
+        stakeholderPlatformInfoRepository.delete(toDeleteInfo.get(0));
+
+        log.info("Organization deleted.");
     }
 
-    public Organization patch(String id, OrganizationUpdate organizationUpdate) throws NotExistingEntityException {
+    public OrganizationWrapper patch(OrganizationUpdate organizationUpdate) throws NotExistingEntityException {
 
-        log.info("Received request to patch Organization with id " + id + ".");
+        log.info("Received request to patch Organization.");
 
-        Optional<Organization> toUpdate = organizationRepository.findByOrganizationId(id);
-        if(!toUpdate.isPresent())
-            throw new NotExistingEntityException("Organization with id " + id + " not found in DB.");
+        List<Organization> toUpdate = organizationRepository.findAll();
+        if(toUpdate.isEmpty())
+            throw new NotExistingEntityException("Organization not found in DB.");
 
-        Organization organization = toUpdate.get();
+        List<StakeholderPlatformInfo> info = stakeholderPlatformInfoRepository.findAll();
+        if(info.isEmpty())
+            throw new NotExistingEntityException("Stakeholder Platform Info not found in DB.");
 
-        // TODO: revoke stakeholder registration/credential?
+        Organization organization = toUpdate.get(0);
+        StakeholderPlatformInfo stakeholderPlatformInfo = info.get(0);
 
         organization.setBaseType(organizationUpdate.getBaseType());
         organization.setSchemaLocation(organizationUpdate.getSchemaLocation());
@@ -216,20 +228,26 @@ public class OrganizationService {
 
         organizationRepository.save(organization);
 
-        log.info("Organization " + id + " patched.");
+        log.info("Organization patched.");
 
-        return organization;
+        return new OrganizationWrapper(organization, stakeholderPlatformInfo.getStakeholderDID(),
+                stakeholderPlatformInfo.getToken());
     }
 
-    public Organization get(String id) throws NotExistingEntityException {
+    public OrganizationWrapper get() throws NotExistingEntityException {
 
-        log.info("Received request to retrieve Organization with id " + id + ".");
+        log.info("Received request to retrieve Organization.");
 
-        Optional<Organization> retrieved = organizationRepository.findByOrganizationId(id);
-        if(!retrieved.isPresent())
-            throw new NotExistingEntityException("Organization with id " + id + " not found in DB.");
+        List<Organization> retrieved = organizationRepository.findAll();
+        if(retrieved.isEmpty())
+            throw new NotExistingEntityException("Organization not found in DB.");
 
-        Organization o = retrieved.get();
+        List<StakeholderPlatformInfo> info = stakeholderPlatformInfoRepository.findAll();
+        if(info.isEmpty())
+            throw new NotExistingEntityException("Stakeholder Platform Info not found in DB.");
+
+        Organization o = retrieved.get(0);
+        StakeholderPlatformInfo stakeholderPlatformInfo = info.get(0);
 
         o.setContactMedium((List<ContactMedium>) Hibernate.unproxy(o.getContactMedium()));
         if(o.getContactMedium() != null) {
@@ -273,8 +291,9 @@ public class OrganizationService {
             }
         }
 
-        log.info("Organization " + id + " retrieved.");
+        log.info("Organization retrieved.");
 
-        return o;
+        return new OrganizationWrapper(o, stakeholderPlatformInfo.getStakeholderDID(),
+                stakeholderPlatformInfo.getToken());
     }
 }

@@ -151,9 +151,6 @@ public class CommunicationService {
     private String didServicePort;
     private static final String requestPath = "/holder/create_did";
 
-    @Value("${did_service.token}")
-    private String token;
-
     @Value("${server.hostname}")
     private String hostname;
     @Value("${server.port}")
@@ -191,7 +188,7 @@ public class CommunicationService {
     @Autowired
     public CommunicationService(ObjectMapper objectMapper) { this.objectMapper = objectMapper; }
 
-    public void requestDID(String catalogId) throws IOException, DIDGenerationRequestException {
+    public void requestDID(String catalogId, String token) throws IOException, DIDGenerationRequestException {
 
         log.info("Sending create DID request to ID&P.");
 
@@ -224,12 +221,17 @@ public class CommunicationService {
                 .status(ProductOfferingStatesEnum.DID_REQUESTED);
         productOfferingStatusRepository.save(productOfferingStatus);
 
-        CloseableHttpResponse response = httpClient.execute(httpPost);
+        CloseableHttpResponse response;
+        try {
+            response = httpClient.execute(httpPost);
+        } catch(IOException e) {
+            productOfferingStatusRepository.delete(productOfferingStatus);
+            throw new DIDGenerationRequestException("ID&P Unreachable");
+        }
 
         if(response.getStatusLine().getStatusCode() != 200) {
             // Delete persisted productOfferingStatus if ID&P didn't accept the DID creation request.
             productOfferingStatusRepository.delete(productOfferingStatus);
-
             throw new DIDGenerationRequestException("Create DID request via CommunicationService not accepted by ID&P");
         }
 
