@@ -18,7 +18,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@Transactional
 public class CategoryService {
 
     private static final Logger log = LoggerFactory.getLogger(CategoryService.class);
@@ -80,6 +79,7 @@ public class CategoryService {
         log.info("Category " + id + " deleted.");
     }
 
+    @Transactional
     public List<Category> list() {
 
         log.info("Received request to retrieve all Categories.");
@@ -152,6 +152,7 @@ public class CategoryService {
         return category;
     }
 
+    @Transactional
     public Category get(String id) throws NotExistingEntityException {
 
         log.info("Received request to retrieve Category with id " + id + ".");

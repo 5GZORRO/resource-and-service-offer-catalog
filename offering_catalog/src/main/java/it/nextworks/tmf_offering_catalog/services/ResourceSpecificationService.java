@@ -19,7 +19,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@Transactional
 public class ResourceSpecificationService {
 
     private static final Logger log = LoggerFactory.getLogger(ResourceSpecificationService.class);
@@ -83,6 +82,7 @@ public class ResourceSpecificationService {
         log.info("Resource Specification " + id + " deleted.");
     }
 
+    @Transactional
     public List<ResourceSpecification> list() {
 
         log.info("Received request to retrieve all Resource Specifications.");
@@ -199,6 +199,7 @@ public class ResourceSpecificationService {
         return resourceSpecification;
     }
 
+    @Transactional
     public ResourceSpecification get(String id) throws NotExistingEntityException {
 
         log.info("Received request to retrieve Resource Specification with id " + id + ".");

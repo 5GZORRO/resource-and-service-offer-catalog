@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@Transactional
 public class OrganizationService {
 
     private static final Logger log = LoggerFactory.getLogger(OrganizationService.class);
@@ -37,7 +36,8 @@ public class OrganizationService {
     @Autowired
     private StakeholderPlatformInfoRepository stakeholderPlatformInfoRepository;
 
-    public OrganizationWrapper create(OrganizationCreateWrapper organizationCreateWrapper) throws StakeholderAlreadyRegisteredException {
+    public OrganizationWrapper create(OrganizationCreateWrapper organizationCreateWrapper)
+            throws StakeholderAlreadyRegisteredException {
 
         log.info("Received request to create an Organization.");
 
@@ -234,6 +234,7 @@ public class OrganizationService {
                 stakeholderPlatformInfo.getToken());
     }
 
+    @Transactional
     public OrganizationWrapper get() throws NotExistingEntityException {
 
         log.info("Received request to retrieve Organization.");

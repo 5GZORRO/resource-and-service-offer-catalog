@@ -192,12 +192,9 @@ public class CommunicationService {
 
         log.info("Sending create DID request to ID&P.");
 
-        String request = protocol + didServiceHostname + ":" + didServicePort + requestPath;
+        String request = protocol + didServiceHostname + ":" + didServicePort + requestPath + "?token=" + token;
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(request);
-
-        List<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("token", token));
 
         Offer requestOffer =
                 new Offer("", new ArrayList<>(),
@@ -207,7 +204,6 @@ public class CommunicationService {
 
         StringEntity stringEntity = new StringEntity(roJson);
 
-        httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
         httpPost.setEntity(stringEntity);
         httpPost.setHeader("Accept", "application/json");
         httpPost.setHeader("Content-type", "application/json");

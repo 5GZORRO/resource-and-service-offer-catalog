@@ -21,7 +21,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@Transactional
 public class ResourceCategoryService {
 
     private static final Logger log = LoggerFactory.getLogger(ResourceCategoryService.class);
@@ -81,6 +80,7 @@ public class ResourceCategoryService {
         log.info("Resource Category " + id + " deleted.");
     }
 
+    @Transactional
     public List<ResourceCategory> list() {
 
         log.info("Received request to retrieve all Resource Categories.");
@@ -148,6 +148,7 @@ public class ResourceCategoryService {
         return resourceCategory;
     }
 
+    @Transactional
     public ResourceCategory get(String id) throws NotExistingEntityException {
 
         log.info("Received request to retrieve Resource Category with id " + id + ".");

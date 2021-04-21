@@ -22,7 +22,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@Transactional
 public class ServiceCandidateService {
 
     private static final Logger log = LoggerFactory.getLogger(ServiceCandidateService.class);
@@ -80,6 +79,7 @@ public class ServiceCandidateService {
         log.info("Service Candidate " + id + " deleted");
     }
 
+    @Transactional
     public List<ServiceCandidate> list() {
 
         log.info("Received request to retrieve all Service Candidates.");
@@ -139,6 +139,7 @@ public class ServiceCandidateService {
         return serviceCandidate;
     }
 
+    @Transactional
     public ServiceCandidate get(String id) throws NotExistingEntityException {
 
         log.info("Received request to retrieve Service Candidate with id " + id + ".");

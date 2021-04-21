@@ -20,7 +20,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@Transactional
 public class ProductOfferingService {
 
     private static final Logger log = LoggerFactory.getLogger(ProductOfferingService.class);
@@ -120,6 +119,7 @@ public class ProductOfferingService {
         log.info("Product Offering " + id + " deleted.");
     }
 
+    @Transactional
     public List<ProductOffering> list() {
 
         log.info("Received request to retrieve all Product Offerings.");
@@ -314,6 +314,7 @@ public class ProductOfferingService {
         return productOffering;
     }
 
+    @Transactional
     public ProductOffering get(String id) throws NotExistingEntityException {
 
         log.info("Received request to retrieve Product Offering with id " + id + ".");
