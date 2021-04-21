@@ -40,14 +40,14 @@ public class CommunicationService {
         private String type;
 
         @JsonProperty("claims")
-        private Claims claims;
+        private List<Claims> claims;
 
         @JsonProperty("handler_url")
         private String handlerUrl;
 
         @JsonCreator
         public Offer(@JsonProperty("type") String type,
-                     @JsonProperty("claims") Claims claims,
+                     @JsonProperty("claims") List<Claims> claims,
                      @JsonProperty("handler_url") String handlerUrl) {
             this.type       = type;
             this.claims     = claims;
@@ -200,7 +200,7 @@ public class CommunicationService {
         params.add(new BasicNameValuePair("token", token));
 
         Offer requestOffer =
-                new Offer(null, null,
+                new Offer("", new ArrayList<>(),
                         protocol + hostname + ":" + port +
                                 "/tmf-api/productCatalogManagement/v4/productOffering/did/" + catalogId);
         String roJson = objectMapper.writeValueAsString(requestOffer);
@@ -229,7 +229,7 @@ public class CommunicationService {
             throw new DIDGenerationRequestException("ID&P Unreachable");
         }
 
-        if(response.getStatusLine().getStatusCode() != 200) {
+        if(response.getStatusLine().getStatusCode() != 201) {
             // Delete persisted productOfferingStatus if ID&P didn't accept the DID creation request.
             productOfferingStatusRepository.delete(productOfferingStatus);
             throw new DIDGenerationRequestException("Create DID request via CommunicationService not accepted by ID&P");
