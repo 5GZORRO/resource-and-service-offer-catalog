@@ -11,15 +11,12 @@ import it.nextworks.tmf_offering_catalog.information_models.product.*;
 import it.nextworks.tmf_offering_catalog.information_models.resource.ResourceSpecification;
 import it.nextworks.tmf_offering_catalog.information_models.service.ServiceSpecification;
 import it.nextworks.tmf_offering_catalog.repo.ProductOfferingStatusRepository;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -149,7 +146,8 @@ public class CommunicationService {
     private String didServiceHostname;
     @Value("${did_service.port}")
     private String didServicePort;
-    private static final String requestPath = "/holder/create_did";
+    @Value("${did_service.request_path}")
+    private String requestPath;
 
     @Value("${server.hostname}")
     private String hostname;
@@ -160,7 +158,8 @@ public class CommunicationService {
     private String scLcmHostname;
     @Value("${sc_lcm.port}")
     private String scLcmPort;
-    private static final String scLcmRequestPath = "/product-offer/";
+    @Value("${sc_lcm.sc_lcm_request_path}")
+    private String scLcmRequestPath;
 
     private final ObjectMapper objectMapper;
 

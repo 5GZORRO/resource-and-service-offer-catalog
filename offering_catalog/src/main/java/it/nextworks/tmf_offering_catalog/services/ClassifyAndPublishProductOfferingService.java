@@ -32,13 +32,15 @@ public class ClassifyAndPublishProductOfferingService {
     private String scLcmHostname;
     @Value("${sc_lcm.port}")
     private String scLcmPort;
-    private static final String scLcmRequestPath = "/product-offer";
+    @Value("${sc_lcm.sc_lcm_request_path}")
+    private String scLcmRequestPath;
 
     @Value("${srsd.hostname}")
     private String srsdHostname;
     @Value("${srsd.port}")
     private String srsdPort;
-    private static final String srsdRequestPath = "/classifyOffer";
+    @Value("${srsd.srsd_request_path}")
+    private String srsdRequestPath;
 
     @Autowired
     private ProductOfferingStatusRepository productOfferingStatusRepository;

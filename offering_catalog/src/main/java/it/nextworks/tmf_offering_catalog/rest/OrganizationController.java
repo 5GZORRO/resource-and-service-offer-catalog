@@ -74,8 +74,6 @@ public class OrganizationController implements OrganizationInterface {
                     .body(new ErrMsg("Invalid request body (organizationCreateWrapper) received."));
         }
 
-        // TODO add regex matching for stakeholderDID and token
-
         OrganizationWrapper ow;
         try {
             ow = organizationService.create(organizationCreateWrapper);

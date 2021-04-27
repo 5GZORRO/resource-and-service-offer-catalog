@@ -70,7 +70,7 @@ public class ExternalProductOfferingConsumer {
     private ProductOfferingService productOfferingService;
 
     @KafkaListener(
-            topics = "externalProductOffering",
+            topics = "operatora-dlt-product-offerings",
             containerFactory = "kafkaListenerContainerFactory")
     public void listener(ExternalProductOffering externalProductOffering) {
 
@@ -87,12 +87,13 @@ public class ExternalProductOfferingConsumer {
             return;
         }
 
-        // TODO add regex matching check
         String did = externalProductOffering.getDid();
         if(did == null) {
             log.warn("Received empty DID in External Product Offering.");
             return;
         }
+
+        // TODO check RETIRE enum type
 
         syncProductOfferingPrices(externalProductOffering.getProductOfferingPrices());
         syncProductSpecification(externalProductOffering.getProductSpecification());
