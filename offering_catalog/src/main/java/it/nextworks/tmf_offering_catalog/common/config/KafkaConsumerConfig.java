@@ -26,14 +26,22 @@ public class KafkaConsumerConfig {
     @Bean
     public ConsumerFactory<String, ExternalProductOffering> consumerFactory() {
 
+        JsonDeserializer<ExternalProductOffering> epoDeserializer =
+                new JsonDeserializer<>(ExternalProductOffering.class);
+        epoDeserializer.setRemoveTypeHeaders(false);
+        epoDeserializer.addTrustedPackages("eu._5gzorro.manager.domain.events.ProductOfferingUpdateEvent");
+        epoDeserializer.setUseTypeMapperForKey(true);
+
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, UUID.randomUUID().toString());
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, epoDeserializer);
 
         return new DefaultKafkaConsumerFactory<>(
                 props,
                 new StringDeserializer(),
-                new JsonDeserializer<>(ExternalProductOffering.class));
+                epoDeserializer);
     }
 
     @Bean

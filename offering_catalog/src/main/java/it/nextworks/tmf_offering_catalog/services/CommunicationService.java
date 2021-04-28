@@ -367,6 +367,14 @@ public class CommunicationService {
                 productOfferingStatesEnum == ProductOfferingStatesEnum.STORED_WITH_DID ||
                 productOfferingStatesEnum == ProductOfferingStatesEnum.CLASSIFIED)
             throw new ProductOfferingInPublicationException("Cannot delete Product Offering " + catalogId + " while in publication.");
+        else if(productOfferingStatesEnum == ProductOfferingStatesEnum.CLASSIFICATION_FAILED ||
+                productOfferingStatesEnum == ProductOfferingStatesEnum.PUBLISHING_FAILED) {
+            productOfferingStatusRepository.delete(productOfferingStatus);
+
+            log.info("Delete Product Offering request accepted.");
+            return;
+        }
+
 
         String request = protocol + scLcmHostname + ":" + scLcmPort + scLcmRequestPath + catalogId;
         CloseableHttpClient httpClient = HttpClients.createDefault();
