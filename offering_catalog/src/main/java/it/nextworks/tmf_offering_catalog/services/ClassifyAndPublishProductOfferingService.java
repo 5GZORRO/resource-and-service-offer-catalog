@@ -67,6 +67,7 @@ public class ClassifyAndPublishProductOfferingService {
         if(!publicProductOffering(catalogId, pwJson)) {
             productOfferingStatus.setStatus(ProductOfferingStatesEnum.PUBLISHING_FAILED);
             productOfferingStatusRepository.save(productOfferingStatus);
+            return;
         }
 
         productOfferingStatus.setStatus(ProductOfferingStatesEnum.PUBLISHED);

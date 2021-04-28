@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 /**
@@ -20,6 +21,7 @@ public class Any {
   private String alias = null;
 
   @JsonProperty("value")
+  @Column(name = "value", columnDefinition = "text")
   private String value = null;
 
   public Any alias(String alias) {
