@@ -1,5 +1,7 @@
 # tmf-offering-catalog
-Implementation of the TM Forum Product Catalog Management APIs for a VNF/PNF offering catalog
+Implementation of the TM Forum Product Catalog Management APIs for a VNF/PNF offering catalog.
+If you want to install the Offering Catalog using docker-compose skip the Requirements, and the first Installation
+sections. </br>
 
 ## Requirements
 - Java 8 </br>
@@ -16,26 +18,20 @@ Implementation of the TM Forum Product Catalog Management APIs for a VNF/PNF off
   ```bash
   docker run --name some-postgres -p 5432:5432 -e POSTGRES_PASSWORD=mysecretpassword -d postgres
   ```
-- Apache Kafka
-  ```bash
-  git clone https://github.com/wurstmeister/kafka-docker
-  ```
-  Change `docker-compose.yaml` environment as shown below.
-  ```bash
-  KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9093,OUTSIDE://localhost:9092
-  KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
-  KAFKA_LISTENERS: INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092
-  KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
-  KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-  ```
-  Run:
-  ```bash
-  docker-compose up -d
-  ```
 ## Installation
+Customize your Offering Catalog properties in ```offering_catalog/src/main/resources/application-local.properties``` then from
+```offering_catalog/``` run the following commands.
 ```bash
+export spring_profiles_active=local
 mvn clean install
 java -jar offering_catalog/target/offering_catalog-1.0-SNAPSHOT.jar
+```
+
+## Installation [docker-compose]
+Customize your Offering Catalog properties in ```offering_catalog/deployment/.env``` then from ```offering_catalog/``` 
+run the following command.
+```bash
+docker-compose -f deployment/docker-compose.yaml up -d
 ```
 
 ## Usage
