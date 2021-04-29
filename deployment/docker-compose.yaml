@@ -21,7 +21,7 @@ services:
       dockerfile: deployment/Dockerfile
     environment:
       OFFER_CATALOG_HOSTNAME: ${OFFER_CATALOG_HOSTNAME}
-      OFFER_CATALOG_PORT: ${OFFER_CATALOG_PORT}
+      SERVER_PORT: ${SERVER_PORT}
       POSTGRES_PORT: ${POSTGRES_PORT}
       POSTGRES_MODE: ${POSTGRES_MODE}
       KAFKA_BOOTSTRAP_ADDRESS: ${KAFKA_BOOTSTRAP_ADDRESS}
@@ -35,7 +35,7 @@ services:
       SRSD_PORT: ${SRSD_PORT}
       SRSD_REQUEST_PATH: ${SRSD_REQUEST_PATH}
     ports:
-      - ${OFFER_CATALOG_PORT}:${OFFER_CATALOG_PORT}
+      - ${SERVER_PORT}:${SERVER_PORT}
     depends_on:
       - postgres
 

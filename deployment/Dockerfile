@@ -10,6 +10,6 @@ RUN mkdir /offer_catalog
 COPY --from=build /usr/src/offer_catalog/offering_catalog/target/offering_catalog-1.0-SNAPSHOT.jar /offer_catalog/
 WORKDIR /offer_catalog
 
-EXPOSE ${OFFER_CATALOG_PORT}
+EXPOSE ${SERVER_PORT}
 
 CMD java -jar offering_catalog-1.0-SNAPSHOT.jar
