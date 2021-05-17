@@ -1,10 +1,13 @@
 package it.nextworks.tmf_offering_catalog.information_models.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 
+import javax.persistence.*;
 import java.util.Objects;
 
 /**
@@ -13,6 +16,8 @@ import java.util.Objects;
 @ApiModel(description = "Representation of a GeographicSubAddress  It is used for addressing within a property in an urban area (country properties are often defined differently). It may refer to a building, a building cluster, or a floor of a multistory building.")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-05-14T06:22:11.015Z")
+@Entity
+@Table(name = "geographic_sub_addresses")
 public class GeographicSubAddress {
 
     @JsonProperty("id")
@@ -22,44 +27,73 @@ public class GeographicSubAddress {
     private String href = null;
 
     @JsonProperty("buildingName")
+    @Column(name = "building_name")
     private String buildingName = null;
 
     @JsonProperty("levelNumber")
+    @Column(name = "level_number")
     private String levelNumber = null;
 
     @JsonProperty("levelType")
+    @Column(name = "level_type")
     private String levelType = null;
 
     @JsonProperty("name")
     private String name = null;
 
     @JsonProperty("privateStreetName")
+    @Column(name = "private_street_name")
     private String privateStreetName = null;
 
     @JsonProperty("privateStreetNumber")
+    @Column(name = "private_street_number")
     private String privateStreetNumber = null;
 
     @JsonProperty("subAddressType")
+    @Column(name = "sub_address_type")
     private String subAddressType = null;
 
     @JsonProperty("subUnitNumber")
+    @Column(name = "sub_unit_number")
     private String subUnitNumber = null;
 
     @JsonProperty("subUnitType")
+    @Column(name = "sub_unit_type")
     private String subUnitType = null;
 
     @JsonProperty("@baseType")
+    @Column(name = "base_type")
     private String baseType = null;
 
     @JsonProperty("@schemaLocation")
+    @Column(name = "schema_location")
     private String schemaLocation = null;
 
     @JsonProperty("@type")
     private String type = null;
 
-    public GeographicSubAddress id(String id) {
-        this.id = id;
+    @JsonIgnore
+    @Id
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String uuid = null;
+
+    public GeographicSubAddress uuid(String uuid) {
+        this.uuid = uuid;
         return this;
+    }
+
+    /**
+     * Get uuid
+     * @return uuid
+     **/
+    @ApiModelProperty(value = "")
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     /**

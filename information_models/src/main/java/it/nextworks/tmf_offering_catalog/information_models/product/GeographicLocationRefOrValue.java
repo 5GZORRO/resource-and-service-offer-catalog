@@ -1,12 +1,15 @@
 package it.nextworks.tmf_offering_catalog.information_models.product;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -20,6 +23,8 @@ import java.util.Objects;
 @ApiModel(description = "A GeographicLocation is a pure-virtual super-class to the GeoJSON-aligned geometries of Point (addresses and locations), MultiPoint, LineString (streets, highways and boundaries), MultiLineString and Polygon (countries, provinces, tracts of land). Use the @type attribute to specify which of these is being specified by the geometry attribute.")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-05-14T06:22:11.015Z")
+@Entity
+@Table(name = "geographic_location_refs_or_values")
 public class GeographicLocationRefOrValue {
 
     @JsonProperty("id")
@@ -32,14 +37,23 @@ public class GeographicLocationRefOrValue {
     private String name = null;
 
     @JsonProperty("@baseType")
+    @Column(name = "base_type")
     private String baseType = null;
 
     @JsonProperty("bbox")
     @Valid
+    @Transient //TODO: transform to string?
     private List<BigDecimal> bbox = null;
 
     @JsonProperty("@schemaLocation")
+    @Column(name = "schema_location")
     private String schemaLocation = null;
+
+    @JsonIgnore
+    @Id
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String uuid = null;
 
     /**
      * The name of the GeoJSON structure used in the geometry attribute
@@ -82,11 +96,26 @@ public class GeographicLocationRefOrValue {
     private TypeEnum type = null;
 
     @JsonProperty("@referredType")
+    @Column(name = "referred_type")
     private String referredType = null;
 
-    public GeographicLocationRefOrValue id(String id) {
-        this.id = id;
+    public GeographicLocationRefOrValue uuid(String uuid) {
+        this.uuid = uuid;
         return this;
+    }
+
+    /**
+     * Get uuid
+     *
+     * @return uuid
+     **/
+    @ApiModelProperty(value = "")
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     /**

@@ -1,10 +1,13 @@
 package it.nextworks.tmf_offering_catalog.information_models.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 
+import javax.persistence.*;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +19,8 @@ import java.util.Objects;
 @ApiModel(description = "Structured textual way of describing how to find a Property in an urban area (country properties are often defined differently). Note : Address corresponds to SID UrbanPropertyAddress")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-05-14T06:22:11.015Z")
+@Entity
+@Table(name = "geographic_addresses")
 public class GeographicAddress {
 
     @JsonProperty("id")
@@ -40,48 +45,82 @@ public class GeographicAddress {
     private String postcode = null;
 
     @JsonProperty("stateOrProvince")
+    @Column(name = "state_or_province")
     private String stateOrProvince = null;
 
     @JsonProperty("streetName")
+    @Column(name = "street_name")
     private String streetName = null;
 
     @JsonProperty("streetNr")
+    @Column(name = "street_nr")
     private String streetNr = null;
 
     @JsonProperty("streetNrLast")
+    @Column(name = "street_nr_last")
     private String streetNrLast = null;
 
     @JsonProperty("streetNrLastSuffix")
+    @Column(name = "street_nr_last_suffix")
     private String streetNrLastSuffix = null;
 
     @JsonProperty("streetNrSuffix")
+    @Column(name = "street_nr_suffix")
     private String streetNrSuffix = null;
 
     @JsonProperty("streetSuffix")
+    @Column(name = "street_suffix")
     private String streetSuffix = null;
 
     @JsonProperty("streetType")
+    @Column(name = "street_type")
     private String streetType = null;
 
     @JsonProperty("geographicLocation")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "geographic_location_id", referencedColumnName = "uuid")
     private GeographicLocationRefOrValue geographicLocation = null;
 
     @JsonProperty("geographicSubAddress")
     @Valid
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "geographic_sub_address_fk", referencedColumnName = "uuid")
     private List<GeographicSubAddress> geographicSubAddress = null;
 
     @JsonProperty("@baseType")
+    @Column(name = "base_type")
     private String baseType = null;
 
     @JsonProperty("@schemaLocation")
+    @Column(name = "schema_location")
     private String schemaLocation = null;
 
     @JsonProperty("@type")
     private String type = null;
 
-    public GeographicAddress id(String id) {
-        this.id = id;
+    @JsonIgnore
+    @Id
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String uuid = null;
+
+    public GeographicAddress uuid(String uuid) {
+        this.uuid = uuid;
         return this;
+    }
+
+    /**
+     * Get uuid
+     *
+     * @return uuid
+     **/
+    @ApiModelProperty(value = "")
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     /**
@@ -90,8 +129,6 @@ public class GeographicAddress {
      * @return id
      **/
     @ApiModelProperty(value = "Unique identifier of the place")
-
-
     public String getId() {
         return id;
     }
