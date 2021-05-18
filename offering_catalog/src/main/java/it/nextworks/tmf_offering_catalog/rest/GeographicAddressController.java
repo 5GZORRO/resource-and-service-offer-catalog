@@ -21,6 +21,8 @@ public class GeographicAddressController implements GeographicAddressInterface {
 
     private final static Logger log = LoggerFactory.getLogger(GeographicAddressController.class);
 
+    private static final String uuidRegex = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
+
     @Autowired
     private GeographicAddressService geographicAddressService;
 
@@ -48,10 +50,8 @@ public class GeographicAddressController implements GeographicAddressInterface {
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class)})
     @RequestMapping(value = "/geographicAddressManagement/v4/geographicAddress",
             produces = {"application/json;charset=utf-8"},
-            consumes = {"application/json;charset=utf-8"},
             method = RequestMethod.GET)
-    public ResponseEntity<?>
-    listGeographicAddress(@ApiParam(value = "Comma-separated properties to be provided in response")
+    public ResponseEntity<?> listGeographicAddress(@ApiParam(value = "Comma-separated properties to be provided in response")
                           @Valid @RequestParam(value = "fields", required = false) String fields,
                           @ApiParam(value = "Requested index for start of resources to be provided in response")
                           @Valid @RequestParam(value = "offset", required = false) Integer offset,
@@ -81,10 +81,8 @@ public class GeographicAddressController implements GeographicAddressInterface {
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class)})
     @RequestMapping(value = "/geographicAddressManagement/v4/geographicAddress/{geographicAddressId}/geographicSubAddress",
             produces = {"application/json;charset=utf-8"},
-            consumes = {"application/json;charset=utf-8"},
             method = RequestMethod.GET)
-    public ResponseEntity<?>
-    listGeographicSubAddress(@ApiParam(value = "Identifier of the parent GeographicAddress entity", required = true)
+    public ResponseEntity<?> listGeographicSubAddress(@ApiParam(value = "Identifier of the parent GeographicAddress entity", required = true)
                              @PathVariable("geographicAddressId") String geographicAddressId,
                              @ApiParam(value = "Comma-separated properties to be provided in response")
                              @Valid @RequestParam(value = "fields", required = false) String fields,
@@ -116,13 +114,18 @@ public class GeographicAddressController implements GeographicAddressInterface {
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class)})
     @RequestMapping(value = "/geographicAddressManagement/v4/geographicAddress/{id}",
             produces = {"application/json;charset=utf-8"},
-            consumes = {"application/json;charset=utf-8"},
             method = RequestMethod.GET)
-    public ResponseEntity<?>
-    retrieveGeographicAddress(@ApiParam(value = "Identifier of the GeographicAddress", required = true)
+    public ResponseEntity<?> retrieveGeographicAddress(@ApiParam(value = "Identifier of the GeographicAddress", required = true)
                               @PathVariable("id") String id,
                               @ApiParam(value = "Comma-separated properties to provide in response")
                               @Valid @RequestParam(value = "fields", required = false) String fields) {
+        log.info("Web-Server: Received request to retrieve Geographic Address with id " + id + ".");
+
+        if (!id.matches(uuidRegex)) {
+            log.error("Web-Server: Invalid path variable (id) request received.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg("Invalid path variable (id) request received."));
+        }
+
         GeographicAddress geographicAddress;
         try {
             geographicAddress = geographicAddressService.get(id);
@@ -130,7 +133,7 @@ public class GeographicAddressController implements GeographicAddressInterface {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrMsg(e.getMessage()));
         }
-        log.info("Web-Server: geographic Address " + id + " retrieved.");
+        log.info("Web-Server: Geographic Address " + id + " retrieved.");
         return ResponseEntity.status(HttpStatus.OK).body(geographicAddress);
     }
 
@@ -155,15 +158,20 @@ public class GeographicAddressController implements GeographicAddressInterface {
             @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class)})
     @RequestMapping(value = "/geographicAddressManagement/v4/geographicAddress/{geographicAddressId}/geographicSubAddress/{id}",
             produces = {"application/json;charset=utf-8"},
-            consumes = {"application/json;charset=utf-8"},
             method = RequestMethod.GET)
-    public ResponseEntity<?>
-    retrieveGeographicSubAddress(@ApiParam(value = "Identifier of the parent GeographicAddress entity", required = true)
+    public ResponseEntity<?> retrieveGeographicSubAddress(@ApiParam(value = "Identifier of the parent GeographicAddress entity", required = true)
                                  @PathVariable("geographicAddressId") String geographicAddressId,
                                  @ApiParam(value = "Identifier of the GeographicSubAddress", required = true)
                                  @PathVariable("id") String id,
                                  @ApiParam(value = "Comma-separated properties to provide in response")
                                  @Valid @RequestParam(value = "fields", required = false) String fields) {
+        log.info("Web-Server: Received request to retrieve Geographic Sub Address with id " + id + ".");
+
+        if (!id.matches(uuidRegex)) {
+            log.error("Web-Server: Invalid path variable (id) request received.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg("Invalid path variable (id) request received."));
+        }
+
         GeographicSubAddress geographicSubAddress;
         try {
             geographicSubAddress = geographicSubAddressService.get(id);
@@ -171,7 +179,7 @@ public class GeographicAddressController implements GeographicAddressInterface {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrMsg(e.getMessage()));
         }
-        log.info("Web-Server: geographic Sub Address " + id + " retrieved.");
+        log.info("Web-Server: Geographic Sub Address " + id + " retrieved.");
         return ResponseEntity.status(HttpStatus.OK).body(geographicSubAddress);
     }
 

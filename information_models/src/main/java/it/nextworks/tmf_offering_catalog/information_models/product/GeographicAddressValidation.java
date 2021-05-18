@@ -1,11 +1,14 @@
 package it.nextworks.tmf_offering_catalog.information_models.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 import org.threeten.bp.OffsetDateTime;
 
+import javax.persistence.*;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +20,8 @@ import java.util.Objects;
 @ApiModel(description = "This resource is used to manage address validation request and response")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-05-14T06:22:11.015Z")
+@Entity
+@Table(name = "geographic_address_validations")
 public class GeographicAddressValidation {
 
     @JsonProperty("id")
@@ -26,35 +31,71 @@ public class GeographicAddressValidation {
     private String href = null;
 
     @JsonProperty("provideAlternative")
+    @Column(name = "provide_alternative")
     private Boolean provideAlternative = null;
 
     @JsonProperty("validationDate")
+    @Column(name = "validation_date")
     private OffsetDateTime validationDate = null;
 
     @JsonProperty("validationResult")
+    @Column(name = "validation_result")
     private String validationResult = null;
 
     @JsonProperty("alternateGeographicAddress")
     @Valid
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "geographic_address_fk", referencedColumnName = "uuid")
     private List<GeographicAddress> alternateGeographicAddress = null;
 
     @JsonProperty("state")
     private TaskStateType state = null;
 
     @JsonProperty("submittedGeographicAddress")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "submitted_geographic_address_id", referencedColumnName = "uuid")
     private GeographicAddress submittedGeographicAddress = null;
 
     @JsonProperty("validGeographicAddress")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "valid_geographic_address_id", referencedColumnName = "uuid")
     private GeographicAddress validGeographicAddress = null;
 
     @JsonProperty("@baseType")
+    @Column(name = "base_type")
     private String baseType = null;
 
     @JsonProperty("@schemaLocation")
+    @Column(name = "schema_location")
     private String schemaLocation = null;
 
     @JsonProperty("@type")
     private String type = null;
+
+    @JsonIgnore
+    @Id
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String uuid = null;
+
+    public GeographicAddressValidation uuid(String uuid) {
+        this.uuid = uuid;
+        return this;
+    }
+
+    /**
+     * Get uuid
+     *
+     * @return uuid
+     **/
+    @ApiModelProperty(value = "")
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 
     public GeographicAddressValidation id(String id) {
         this.id = id;
@@ -67,8 +108,6 @@ public class GeographicAddressValidation {
      * @return id
      **/
     @ApiModelProperty(value = "Unique identifier of the Address Validation")
-
-
     public String getId() {
         return id;
     }
