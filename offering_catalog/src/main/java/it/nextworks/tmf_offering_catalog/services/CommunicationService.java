@@ -11,12 +11,14 @@ import it.nextworks.tmf_offering_catalog.information_models.product.*;
 import it.nextworks.tmf_offering_catalog.information_models.resource.ResourceSpecification;
 import it.nextworks.tmf_offering_catalog.information_models.service.ServiceSpecification;
 import it.nextworks.tmf_offering_catalog.repo.ProductOfferingStatusRepository;
+import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,9 @@ public class CommunicationService {
 
     public class Offer {
 
+        @JsonProperty("token")
+        private String token;
+
         @JsonProperty("type")
         private String type;
 
@@ -43,9 +48,11 @@ public class CommunicationService {
         private String handlerUrl;
 
         @JsonCreator
-        public Offer(@JsonProperty("type") String type,
+        public Offer(@JsonProperty("token") String token,
+                     @JsonProperty("type") String type,
                      @JsonProperty("claims") List<Claims> claims,
                      @JsonProperty("handler_url") String handlerUrl) {
+            this.token      = token;
             this.type       = type;
             this.claims     = claims;
             this.handlerUrl = handlerUrl;
@@ -191,12 +198,12 @@ public class CommunicationService {
 
         log.info("Sending create DID request to ID&P.");
 
-        String request = protocol + didServiceHostname + ":" + didServicePort + requestPath + "?token=" + token;
+        String request = protocol + didServiceHostname + ":" + didServicePort + requestPath;
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(request);
 
         Offer requestOffer =
-                new Offer("", new ArrayList<>(),
+                new Offer(token, "", new ArrayList<>(),
                         protocol + hostname + ":" + port +
                                 "/tmf-api/productCatalogManagement/v4/productOffering/did/" + catalogId);
         String roJson = objectMapper.writeValueAsString(requestOffer);
@@ -225,6 +232,14 @@ public class CommunicationService {
         }
 
         if(response.getStatusLine().getStatusCode() != 201) {
+            HttpEntity httpEntity = response.getEntity();
+            String responseString;
+
+            if(httpEntity != null) {
+                responseString = EntityUtils.toString(httpEntity, "UTF-8");
+                log.error("Create DID request not accepted by ID&P; " + responseString);
+            }
+
             // Delete persisted productOfferingStatus if ID&P didn't accept the DID creation request.
             productOfferingStatusRepository.delete(productOfferingStatus);
             throw new DIDGenerationRequestException("Create DID request via CommunicationService not accepted by ID&P");
