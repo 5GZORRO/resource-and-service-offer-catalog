@@ -25,4 +25,7 @@ hs_err_pid*
 # IDE files and folders
 *.iml
 .idea/
-/offering_catalog/target/classes/application.properties
+./information_models/target/
+./interfaces/target/
+./offering_catalog/target/
+
