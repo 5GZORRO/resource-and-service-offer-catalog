@@ -5,6 +5,7 @@ import it.nextworks.tmf_offering_catalog.information_models.common.*;
 import it.nextworks.tmf_offering_catalog.information_models.party.OrganizationWrapper;
 import it.nextworks.tmf_offering_catalog.information_models.product.*;
 import it.nextworks.tmf_offering_catalog.repo.ProductOfferingRepository;
+import it.nextworks.tmf_offering_catalog.rest.Filter;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -162,6 +163,62 @@ public class ProductOfferingService {
 
             po.setProductSpecification((ProductSpecificationRef) Hibernate.unproxy(po.getProductSpecification()));
             if(po.getProductSpecification() != null)
+                po.getProductSpecification().setTargetProductSchema((TargetProductSchema)
+                        Hibernate.unproxy(po.getProductSpecification().getTargetProductSchema()));
+
+            po.setResourceCandidate((ResourceCandidateRef) Hibernate.unproxy(po.getResourceCandidate()));
+            po.setServiceCandidate((ServiceCandidateRef) Hibernate.unproxy(po.getServiceCandidate()));
+            po.setServiceLevelAgreement((SLARef) Hibernate.unproxy(po.getServiceLevelAgreement()));
+        }
+
+        log.info("Product Offerings retrieved.");
+
+        return productOfferings;
+    }
+
+    @Transactional
+    public List<ProductOffering> filteredList(Filter filter) {
+
+        log.info("Received request to retrieve Product Offerings using filters.");
+
+        List<ProductOffering> productOfferings = productOfferingRepository.filteredFindAll(filter);
+        for(ProductOffering po : productOfferings) {
+            po.setAgreement((List<AgreementRef>) Hibernate.unproxy(po.getAgreement()));
+            po.setAttachment((List<AttachmentRefOrValue>) Hibernate.unproxy(po.getAttachment()));
+
+            po.setBundledProductOffering((List<BundledProductOffering>)
+                    Hibernate.unproxy(po.getBundledProductOffering()));
+            if (po.getBundledProductOffering() != null) {
+                for (BundledProductOffering bpo : po.getBundledProductOffering())
+                    bpo.setBundledProductOfferingOption((BundledProductOfferingOption)
+                            Hibernate.unproxy(bpo.getBundledProductOfferingOption()));
+            }
+
+            po.setCategory((List<CategoryRef>) Hibernate.unproxy(po.getCategory()));
+            po.setChannel((List<ChannelRef>) Hibernate.unproxy(po.getChannel()));
+            po.setMarketSegment((List<MarketSegmentRef>) Hibernate.unproxy(po.getMarketSegment()));
+            po.setPlace((List<PlaceRef>) Hibernate.unproxy(po.getPlace()));
+
+            po.setProdSpecCharValueUse((List<ProductSpecificationCharacteristicValueUse>)
+                    Hibernate.unproxy(po.getProdSpecCharValueUse()));
+            if (po.getProdSpecCharValueUse() != null) {
+                for (ProductSpecificationCharacteristicValueUse pscvu : po.getProdSpecCharValueUse()) {
+                    pscvu.setProductSpecCharacteristicValue((List<ProductSpecificationCharacteristicValue>)
+                            Hibernate.unproxy(pscvu.getProductSpecCharacteristicValue()));
+
+                    pscvu.setProductSpecification((ProductSpecificationRef)
+                            Hibernate.unproxy(pscvu.getProductSpecification()));
+                    if (pscvu.getProductSpecification() != null)
+                        pscvu.getProductSpecification().setTargetProductSchema((TargetProductSchema)
+                                Hibernate.unproxy(pscvu.getProductSpecification().getTargetProductSchema()));
+                }
+            }
+
+            po.setProductOfferingPrice((List<ProductOfferingPriceRef>) Hibernate.unproxy(po.getProductOfferingPrice()));
+            po.setProductOfferingTerm((List<ProductOfferingTerm>) Hibernate.unproxy(po.getProductOfferingTerm()));
+
+            po.setProductSpecification((ProductSpecificationRef) Hibernate.unproxy(po.getProductSpecification()));
+            if (po.getProductSpecification() != null)
                 po.getProductSpecification().setTargetProductSchema((TargetProductSchema)
                         Hibernate.unproxy(po.getProductSpecification().getTargetProductSchema()));
 

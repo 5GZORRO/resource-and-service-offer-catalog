@@ -268,6 +268,49 @@ public class ProductOfferingController implements ProductOfferingInterface {
         return ResponseEntity.status(HttpStatus.OK).body(productOfferingService.list());
     }
 
+    @ApiOperation(value = "List ProductOffering objects using filters", nickname = "FilteredListProductOffering",
+            notes = "This operation list or find ProductOffering entities using filters", response = ProductOffering.class,
+            responseContainer = "List", authorizations = {
+            @Authorization(value = "spring_oauth", scopes = {
+                    @AuthorizationScope(scope = "read", description = "for read operations"),
+                    @AuthorizationScope(scope = "openapi", description = "Access openapi API"),
+                    @AuthorizationScope(scope = "admin", description = "Access admin API"),
+                    @AuthorizationScope(scope = "write", description = "for write operations")
+            })
+    })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = ProductOffering.class, responseContainer = "List"),
+            @ApiResponse(code = 400, message = "Bad Request", response = ErrMsg.class),
+            //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+            //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
+            //@ApiResponse(code = 404, message = "Not Found", response = Error.class),
+            //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
+            //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
+            @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
+    @RequestMapping(value = "/productCatalogManagement/v4/productOffering/filtered",
+            produces = { "application/json;charset=utf-8" },
+            method = RequestMethod.GET)
+    public ResponseEntity<?>
+    FilteredListProductOffering(Filter filter) {
+
+        if(filter == null)
+            return ResponseEntity.status(HttpStatus.OK).body(productOfferingService.list());
+
+        Float minPrice = filter.getMinPrice();
+        Float maxPrice = filter.getMaxPrice();
+        String currency = filter.getCurrency();
+        if(minPrice != null && maxPrice != null) {
+            if(minPrice.compareTo(maxPrice) > 0)
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(new ErrMsg("The minimum price specified is greater then the maximum one."));
+
+            if(currency == null || !currency.isEmpty())
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg("Currency not specified."));
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(productOfferingService.filteredList(filter));
+    }
+
     @ApiOperation(value = "Updates partially a ProductOffering", nickname = "patchProductOffering",
             notes = "This operation updates partially a ProductOffering entity.", response = ProductOffering.class,
             authorizations = {
