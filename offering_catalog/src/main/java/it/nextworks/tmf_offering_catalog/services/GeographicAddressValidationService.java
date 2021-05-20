@@ -70,6 +70,11 @@ public class GeographicAddressValidationService {
         return geographicAddressValidation;
     }
 
+    @Transactional
+    public void delete(String id) {
+        geographicAddressValidationRepository.deleteById(id);
+    }
+
     private GeographicAddressValidation createAndPopulateGeographicAddressValidation(GeographicAddressValidationCreate geographicAddressValidationCreate) {
         final String id = UUID.randomUUID().toString();
         return new GeographicAddressValidation()

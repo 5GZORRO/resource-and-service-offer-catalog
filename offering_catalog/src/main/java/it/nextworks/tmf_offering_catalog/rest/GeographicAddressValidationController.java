@@ -127,12 +127,12 @@ public class GeographicAddressValidationController implements GeographicAddressV
                                                               @Valid @RequestBody GeographicAddressValidationUpdate geographicAddressValidationUpdate) {
         log.info("Web-Server: Received request to patch Geographic Address Validation with id " + id + ".");
 
-        if(!id.matches(uuidRegex)) {
+        if (!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg("Invalid path variable (id) request received."));
         }
 
-        if(geographicAddressValidationUpdate == null) {
+        if (geographicAddressValidationUpdate == null) {
             log.error("Web-Server: Invalid request body (geographicAddressValidation) received.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg("Invalid request body (geographicAddressValidation) received."));
         }
@@ -192,6 +192,33 @@ public class GeographicAddressValidationController implements GeographicAddressV
         }
         log.info("Web-Server: Geographic Address Validation " + id + " retrieved.");
         return ResponseEntity.status(HttpStatus.OK).body(geographicAddressValidation);
+    }
+
+    @ApiOperation(value = "Deletes a GeographicAddressValidation", nickname = "deleteGeographicAddressValidation",
+            notes = "This operation deletes a GeographicAddressValidation entity.",
+            authorizations = {
+                    @Authorization(value = "spring_oauth", scopes = {
+                            @AuthorizationScope(scope = "read", description = "for read operations"),
+                            @AuthorizationScope(scope = "openapi", description = "Access openapi API"),
+                            @AuthorizationScope(scope = "admin", description = "Access admin API"),
+                            @AuthorizationScope(scope = "write", description = "for write operations")
+                    })
+            })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Updated", response = GeographicAddressValidation.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
+            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+            @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
+            @ApiResponse(code = 404, message = "Not Found", response = Error.class),
+            @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
+            @ApiResponse(code = 409, message = "Conflict", response = Error.class),
+            @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class)})
+    @RequestMapping(value = "/geographicAddressManagement/v4/geographicAddressValidation/{id}",
+            method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteGeographicAddressValidation(@ApiParam(value = "Identifier of the GeographicAddressValidation", required = true)
+                                                               @PathVariable("id") String id) {
+    geographicAddressValidationService.delete(id);
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }
