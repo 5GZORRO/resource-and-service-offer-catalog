@@ -42,12 +42,7 @@ public class GeographicAddressValidationController implements GeographicAddressV
             })
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created", response = GeographicAddressValidation.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-            @ApiResponse(code = 409, message = "Conflict", response = Error.class),
-            @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class)})
+            @ApiResponse(code = 400, message = "Bad Request", response = Error.class)})
     @RequestMapping(value = "/geographicAddressManagement/v4/geographicAddressValidation",
             produces = {"application/json;charset=utf-8"},
             consumes = {"application/json;charset=utf-8"},
@@ -78,14 +73,7 @@ public class GeographicAddressValidationController implements GeographicAddressV
                     })
             })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Success", response = GeographicAddressValidation.class, responseContainer = "List"),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found", response = Error.class),
-            @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-            @ApiResponse(code = 409, message = "Conflict", response = Error.class),
-            @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class)})
+            @ApiResponse(code = 200, message = "Success", response = GeographicAddressValidation.class, responseContainer = "List")})
     @RequestMapping(value = "/geographicAddressManagement/v4/geographicAddressValidation",
             produces = {"application/json;charset=utf-8"},
             method = RequestMethod.GET)
@@ -109,14 +97,9 @@ public class GeographicAddressValidationController implements GeographicAddressV
                     })
             })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Updated", response = GeographicAddressValidation.class),
+            @ApiResponse(code = 201, message = "Updated", response = GeographicAddressValidation.class),
             @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found", response = Error.class),
-            @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-            @ApiResponse(code = 409, message = "Conflict", response = Error.class),
-            @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class)})
+            @ApiResponse(code = 404, message = "Not Found", response = Error.class)})
     @RequestMapping(value = "/geographicAddressManagement/v4/geographicAddressValidation/{id}",
             produces = {"application/json;charset=utf-8"},
             consumes = {"application/json;charset=utf-8"},
@@ -147,7 +130,7 @@ public class GeographicAddressValidationController implements GeographicAddressV
 
         log.info("Web-Server: Geographic Address Validation " + id + " patched.");
 
-        return ResponseEntity.status(HttpStatus.OK).body(geographicAddressValidation);
+        return ResponseEntity.status(HttpStatus.CREATED).body(geographicAddressValidation);
     }
 
     @ApiOperation(value = "Retrieves a GeographicAddressValidation by ID", nickname = "retrieveGeographicAddressValidation",
@@ -163,12 +146,7 @@ public class GeographicAddressValidationController implements GeographicAddressV
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success", response = GeographicAddressValidation.class),
             @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found", response = Error.class),
-            @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-            @ApiResponse(code = 409, message = "Conflict", response = Error.class),
-            @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class)})
+            @ApiResponse(code = 404, message = "Not Found", response = Error.class)})
     @RequestMapping(value = "/geographicAddressManagement/v4/geographicAddressValidation/{id}",
             produces = {"application/json;charset=utf-8"},
             method = RequestMethod.GET)
@@ -205,14 +183,7 @@ public class GeographicAddressValidationController implements GeographicAddressV
                     })
             })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Updated", response = GeographicAddressValidation.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found", response = Error.class),
-            @ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
-            @ApiResponse(code = 409, message = "Conflict", response = Error.class),
-            @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class)})
+            @ApiResponse(code = 204, message = "Deleted", response = GeographicAddressValidation.class)})
     @RequestMapping(value = "/geographicAddressManagement/v4/geographicAddressValidation/{id}",
             method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteGeographicAddressValidation(@ApiParam(value = "Identifier of the GeographicAddressValidation", required = true)
