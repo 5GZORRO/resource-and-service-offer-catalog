@@ -1,6 +1,6 @@
 package it.nextworks.tmf_offering_catalog.information_models.product;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -9,8 +9,6 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -23,7 +21,10 @@ import java.util.Objects;
 @Table(name = "geographic_addresses")
 public class GeographicAddress {
 
-    @JsonProperty("id")
+    @JsonIgnoreProperties(allowGetters = true)
+    @Id
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id = null;
 
     @JsonProperty("href")
@@ -37,9 +38,6 @@ public class GeographicAddress {
 
     @JsonProperty("locality")
     private String locality = null;
-
-    @JsonProperty("name")
-    private String name = null;
 
     @JsonProperty("postcode")
     private String postcode = null;
@@ -78,18 +76,8 @@ public class GeographicAddress {
 
     @JsonProperty("geographicLocation")
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "geographic_location_id", referencedColumnName = "uuid")
-    private GeographicLocationRefOrValue geographicLocation = null;
-
-    @JsonProperty("geographicSubAddress")
-    @Valid
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "geographic_sub_address_fk", referencedColumnName = "uuid")
-    private List<GeographicSubAddress> geographicSubAddress = null;
-
-    @JsonProperty("@baseType")
-    @Column(name = "base_type")
-    private String baseType = null;
+    @JoinColumn(name = "geographic_location_id", referencedColumnName = "id")
+    private GeographicLocation geographicLocation = null;
 
     @JsonProperty("@schemaLocation")
     @Column(name = "schema_location")
@@ -98,29 +86,9 @@ public class GeographicAddress {
     @JsonProperty("@type")
     private String type = null;
 
-    @JsonIgnore
-    @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    private String uuid = null;
-
-    public GeographicAddress uuid(String uuid) {
-        this.uuid = uuid;
+    public GeographicAddress id(String id) {
+        this.id = id;
         return this;
-    }
-
-    /**
-     * Get uuid
-     *
-     * @return uuid
-     **/
-    @ApiModelProperty(value = "")
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
     }
 
     /**
@@ -148,8 +116,6 @@ public class GeographicAddress {
      * @return href
      **/
     @ApiModelProperty(value = "Unique reference of the place")
-
-
     public String getHref() {
         return href;
     }
@@ -169,8 +135,6 @@ public class GeographicAddress {
      * @return city
      **/
     @ApiModelProperty(value = "City that the address is in")
-
-
     public String getCity() {
         return city;
     }
@@ -190,8 +154,6 @@ public class GeographicAddress {
      * @return country
      **/
     @ApiModelProperty(value = "Country that the address is in")
-
-
     public String getCountry() {
         return country;
     }
@@ -211,8 +173,6 @@ public class GeographicAddress {
      * @return locality
      **/
     @ApiModelProperty(value = "An area of defined or undefined boundaries within a local authority or other legislatively defined area, usually rural or semi rural in nature. [ANZLIC-STREET], or a suburb, a bounded locality within a city, town or shire principally of urban character [ANZLICSTREET]")
-
-
     public String getLocality() {
         return locality;
     }
@@ -221,40 +181,12 @@ public class GeographicAddress {
         this.locality = locality;
     }
 
-    public GeographicAddress name(String name) {
-        this.name = name;
-        return this;
-    }
-
-    /**
-     * A user-friendly name for the place, such as [Paris Store], [London Store], [Main Home]
-     *
-     * @return name
-     **/
-    @ApiModelProperty(value = "A user-friendly name for the place, such as [Paris Store], [London Store], [Main Home]")
-
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public GeographicAddress postcode(String postcode) {
-        this.postcode = postcode;
-        return this;
-    }
-
     /**
      * descriptor for a postal delivery area, used to speed and simplify the delivery of mail (also know as zipcode)
      *
      * @return postcode
      **/
     @ApiModelProperty(value = "descriptor for a postal delivery area, used to speed and simplify the delivery of mail (also know as zipcode)")
-
-
     public String getPostcode() {
         return postcode;
     }
@@ -274,8 +206,6 @@ public class GeographicAddress {
      * @return stateOrProvince
      **/
     @ApiModelProperty(value = "the State or Province that the address is in")
-
-
     public String getStateOrProvince() {
         return stateOrProvince;
     }
@@ -295,8 +225,6 @@ public class GeographicAddress {
      * @return streetName
      **/
     @ApiModelProperty(value = "Name of the street or other street type")
-
-
     public String getStreetName() {
         return streetName;
     }
@@ -316,8 +244,6 @@ public class GeographicAddress {
      * @return streetNr
      **/
     @ApiModelProperty(value = "Number identifying a specific property on a public street. It may be combined with streetNrLast for ranged addresses")
-
-
     public String getStreetNr() {
         return streetNr;
     }
@@ -337,8 +263,6 @@ public class GeographicAddress {
      * @return streetNrLast
      **/
     @ApiModelProperty(value = "Last number in a range of street numbers allocated to a property")
-
-
     public String getStreetNrLast() {
         return streetNrLast;
     }
@@ -358,8 +282,6 @@ public class GeographicAddress {
      * @return streetNrLastSuffix
      **/
     @ApiModelProperty(value = "Last street number suffix for a ranged address")
-
-
     public String getStreetNrLastSuffix() {
         return streetNrLastSuffix;
     }
@@ -379,8 +301,6 @@ public class GeographicAddress {
      * @return streetNrSuffix
      **/
     @ApiModelProperty(value = "the first street number suffix")
-
-
     public String getStreetNrSuffix() {
         return streetNrSuffix;
     }
@@ -400,8 +320,6 @@ public class GeographicAddress {
      * @return streetSuffix
      **/
     @ApiModelProperty(value = "A modifier denoting a relative direction")
-
-
     public String getStreetSuffix() {
         return streetSuffix;
     }
@@ -421,8 +339,6 @@ public class GeographicAddress {
      * @return streetType
      **/
     @ApiModelProperty(value = "alley, avenue, boulevard, brae, crescent, drive, highway, lane, terrace, parade, place, tarn, way, wharf ")
-
-
     public String getStreetType() {
         return streetType;
     }
@@ -431,7 +347,7 @@ public class GeographicAddress {
         this.streetType = streetType;
     }
 
-    public GeographicAddress geographicLocation(GeographicLocationRefOrValue geographicLocation) {
+    public GeographicAddress geographicLocation(GeographicLocation geographicLocation) {
         this.geographicLocation = geographicLocation;
         return this;
     }
@@ -442,71 +358,13 @@ public class GeographicAddress {
      * @return geographicLocation
      **/
     @ApiModelProperty(value = "")
-
     @Valid
-
-    public GeographicLocationRefOrValue getGeographicLocation() {
+    public GeographicLocation getGeographicLocation() {
         return geographicLocation;
     }
 
-    public void setGeographicLocation(GeographicLocationRefOrValue geographicLocation) {
+    public void setGeographicLocation(GeographicLocation geographicLocation) {
         this.geographicLocation = geographicLocation;
-    }
-
-    public GeographicAddress geographicSubAddress(List<GeographicSubAddress> geographicSubAddress) {
-        this.geographicSubAddress = geographicSubAddress;
-        return this;
-    }
-
-    public GeographicAddress addGeographicSubAddressItem(GeographicSubAddress geographicSubAddressItem) {
-        if (this.geographicSubAddress == null) {
-            this.geographicSubAddress = new ArrayList<GeographicSubAddress>();
-        }
-        this.geographicSubAddress.add(geographicSubAddressItem);
-        return this;
-    }
-
-    /**
-     * Get geographicSubAddress
-     *
-     * @return geographicSubAddress
-     **/
-    @ApiModelProperty(value = "")
-
-    @Valid
-
-    public List<GeographicSubAddress> getGeographicSubAddress() {
-        return geographicSubAddress;
-    }
-
-    public void setGeographicSubAddress(List<GeographicSubAddress> geographicSubAddress) {
-        this.geographicSubAddress = geographicSubAddress;
-    }
-
-    public GeographicAddress baseType(String baseType) {
-        this.baseType = baseType;
-        return this;
-    }
-
-    /**
-     * When sub-classing, this defines the super-class
-     *
-     * @return baseType
-     **/
-    @ApiModelProperty(value = "When sub-classing, this defines the super-class")
-
-
-    public String getBaseType() {
-        return baseType;
-    }
-
-    public void setBaseType(String baseType) {
-        this.baseType = baseType;
-    }
-
-    public GeographicAddress schemaLocation(String schemaLocation) {
-        this.schemaLocation = schemaLocation;
-        return this;
     }
 
     /**
@@ -515,8 +373,6 @@ public class GeographicAddress {
      * @return schemaLocation
      **/
     @ApiModelProperty(value = "A URI to a JSON-Schema file that defines additional attributes and relationships")
-
-
     public String getSchemaLocation() {
         return schemaLocation;
     }
@@ -536,8 +392,6 @@ public class GeographicAddress {
      * @return type
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the sub-class entity name")
-
-
     public String getType() {
         return type;
     }
@@ -561,7 +415,6 @@ public class GeographicAddress {
                 Objects.equals(this.city, geographicAddress.city) &&
                 Objects.equals(this.country, geographicAddress.country) &&
                 Objects.equals(this.locality, geographicAddress.locality) &&
-                Objects.equals(this.name, geographicAddress.name) &&
                 Objects.equals(this.postcode, geographicAddress.postcode) &&
                 Objects.equals(this.stateOrProvince, geographicAddress.stateOrProvince) &&
                 Objects.equals(this.streetName, geographicAddress.streetName) &&
@@ -572,15 +425,13 @@ public class GeographicAddress {
                 Objects.equals(this.streetSuffix, geographicAddress.streetSuffix) &&
                 Objects.equals(this.streetType, geographicAddress.streetType) &&
                 Objects.equals(this.geographicLocation, geographicAddress.geographicLocation) &&
-                Objects.equals(this.geographicSubAddress, geographicAddress.geographicSubAddress) &&
-                Objects.equals(this.baseType, geographicAddress.baseType) &&
                 Objects.equals(this.schemaLocation, geographicAddress.schemaLocation) &&
                 Objects.equals(this.type, geographicAddress.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, href, city, country, locality, name, postcode, stateOrProvince, streetName, streetNr, streetNrLast, streetNrLastSuffix, streetNrSuffix, streetSuffix, streetType, geographicLocation, geographicSubAddress, baseType, schemaLocation, type);
+        return Objects.hash(id, href, city, country, locality, postcode, stateOrProvince, streetName, streetNr, streetNrLast, streetNrLastSuffix, streetNrSuffix, streetSuffix, streetType, geographicLocation, schemaLocation, type);
     }
 
     @Override
@@ -593,7 +444,6 @@ public class GeographicAddress {
         sb.append("    city: ").append(toIndentedString(city)).append("\n");
         sb.append("    country: ").append(toIndentedString(country)).append("\n");
         sb.append("    locality: ").append(toIndentedString(locality)).append("\n");
-        sb.append("    name: ").append(toIndentedString(name)).append("\n");
         sb.append("    postcode: ").append(toIndentedString(postcode)).append("\n");
         sb.append("    stateOrProvince: ").append(toIndentedString(stateOrProvince)).append("\n");
         sb.append("    streetName: ").append(toIndentedString(streetName)).append("\n");
@@ -604,8 +454,6 @@ public class GeographicAddress {
         sb.append("    streetSuffix: ").append(toIndentedString(streetSuffix)).append("\n");
         sb.append("    streetType: ").append(toIndentedString(streetType)).append("\n");
         sb.append("    geographicLocation: ").append(toIndentedString(geographicLocation)).append("\n");
-        sb.append("    geographicSubAddress: ").append(toIndentedString(geographicSubAddress)).append("\n");
-        sb.append("    baseType: ").append(toIndentedString(baseType)).append("\n");
         sb.append("    schemaLocation: ").append(toIndentedString(schemaLocation)).append("\n");
         sb.append("    type: ").append(toIndentedString(type)).append("\n");
         sb.append("}");

@@ -73,24 +73,19 @@ public class GeographicAddressValidationService {
     private GeographicAddressValidation createAndPopulateGeographicAddressValidation(GeographicAddressValidationCreate geographicAddressValidationCreate) {
         final String id = UUID.randomUUID().toString();
         return new GeographicAddressValidation()
-                .baseType(geographicAddressValidationCreate.getBaseType())
                 .schemaLocation(geographicAddressValidationCreate.getSchemaLocation())
                 .type(geographicAddressValidationCreate.getType())
                 .href(protocol + hostname + ":" + port + path + id)
                 .id(id)
-                .submittedGeographicAddress(geographicAddressValidationCreate.getSubmittedGeographicAddress());
+                .validGeographicAddress(geographicAddressValidationCreate.getSubmittedGeographicAddress());
     }
 
     private GeographicAddressValidation updateGeographicAddressValidation(GeographicAddressValidation geographicAddressValidation, GeographicAddressValidationUpdate geographicAddressValidationUpdate) {
         return geographicAddressValidation
-                .provideAlternative(geographicAddressValidationUpdate.getAlternateGeographicAddress() != null)
                 .validationDate(geographicAddressValidationUpdate.getValidationDate())
                 .validationResult(geographicAddressValidationUpdate.getValidationResult())
-                .alternateGeographicAddress(geographicAddressValidationUpdate.getAlternateGeographicAddress())
-                .state(geographicAddressValidationUpdate.getState())
-                .submittedGeographicAddress(geographicAddressValidationUpdate.getSubmittedGeographicAddress())
+                .status(geographicAddressValidationUpdate.getStatus())
                 .validGeographicAddress(geographicAddressValidationUpdate.getValidGeographicAddress())
-                .baseType(geographicAddressValidationUpdate.getBaseType())
                 .schemaLocation(geographicAddressValidationUpdate.getSchemaLocation())
                 .type(geographicAddressValidationUpdate.getType());
     }

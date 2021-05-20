@@ -4,11 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * Possible values for the state of a task
+ * Possible values for the state of a validation
  */
-public enum TaskStateType {
-
-    ACCEPTED("accepted"),
+public enum Status {
 
     TERMINATEDWITHERROR("terminatedWithError"),
 
@@ -18,7 +16,7 @@ public enum TaskStateType {
 
     private String value;
 
-    TaskStateType(String value) {
+    Status(String value) {
         this.value = value;
     }
 
@@ -29,8 +27,8 @@ public enum TaskStateType {
     }
 
     @JsonCreator
-    public static TaskStateType fromValue(String text) {
-        for (TaskStateType b : TaskStateType.values()) {
+    public static Status fromValue(String text) {
+        for (Status b : Status.values()) {
             if (String.valueOf(b.value).equals(text)) {
                 return b;
             }

@@ -1,6 +1,6 @@
 package it.nextworks.tmf_offering_catalog.information_models.product;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -10,8 +10,6 @@ import org.threeten.bp.OffsetDateTime;
 
 import javax.persistence.*;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -24,15 +22,17 @@ import java.util.Objects;
 @Table(name = "geographic_address_validations")
 public class GeographicAddressValidation {
 
-    @JsonProperty("id")
+    @JsonIgnoreProperties(allowGetters = true)
+    @Id
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id = null;
 
     @JsonProperty("href")
     private String href = null;
 
-    @JsonProperty("provideAlternative")
-    @Column(name = "provide_alternative")
-    private Boolean provideAlternative = null;
+    @JsonProperty("status")
+    private Status status = null;
 
     @JsonProperty("validationDate")
     @Column(name = "validation_date")
@@ -42,60 +42,17 @@ public class GeographicAddressValidation {
     @Column(name = "validation_result")
     private String validationResult = null;
 
-    @JsonProperty("alternateGeographicAddress")
-    @Valid
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "geographic_address_fk", referencedColumnName = "uuid")
-    private List<GeographicAddress> alternateGeographicAddress = null;
-
-    @JsonProperty("state")
-    private TaskStateType state = null;
-
-    @JsonProperty("submittedGeographicAddress")
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "submitted_geographic_address_id", referencedColumnName = "uuid")
-    private GeographicAddress submittedGeographicAddress = null;
-
-    @JsonProperty("validGeographicAddress")
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "valid_geographic_address_id", referencedColumnName = "uuid")
-    private GeographicAddress validGeographicAddress = null;
-
-    @JsonProperty("@baseType")
-    @Column(name = "base_type")
-    private String baseType = null;
+    @JsonProperty("@type")
+    private String type = null;
 
     @JsonProperty("@schemaLocation")
     @Column(name = "schema_location")
     private String schemaLocation = null;
 
-    @JsonProperty("@type")
-    private String type = null;
-
-    @JsonIgnore
-    @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    private String uuid = null;
-
-    public GeographicAddressValidation uuid(String uuid) {
-        this.uuid = uuid;
-        return this;
-    }
-
-    /**
-     * Get uuid
-     *
-     * @return uuid
-     **/
-    @ApiModelProperty(value = "")
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
+    @JsonProperty("validGeographicAddress")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "valid_geographic_address_id", referencedColumnName = "id")
+    private GeographicAddress validGeographicAddress = null;
 
     public GeographicAddressValidation id(String id) {
         this.id = id;
@@ -127,35 +84,12 @@ public class GeographicAddressValidation {
      * @return href
      **/
     @ApiModelProperty(value = "An URI used to access to the address validation resource")
-
-
     public String getHref() {
         return href;
     }
 
     public void setHref(String href) {
         this.href = href;
-    }
-
-    public GeographicAddressValidation provideAlternative(Boolean provideAlternative) {
-        this.provideAlternative = provideAlternative;
-        return this;
-    }
-
-    /**
-     * Indicator provided by the requester to specify if alternate addresses must be provided in case of partial or fail result.
-     *
-     * @return provideAlternative
-     **/
-    @ApiModelProperty(value = "Indicator provided by the requester to specify if alternate addresses must be provided in case of partial or fail result.")
-
-
-    public Boolean isProvideAlternative() {
-        return provideAlternative;
-    }
-
-    public void setProvideAlternative(Boolean provideAlternative) {
-        this.provideAlternative = provideAlternative;
     }
 
     public GeographicAddressValidation validationDate(OffsetDateTime validationDate) {
@@ -169,9 +103,7 @@ public class GeographicAddressValidation {
      * @return validationDate
      **/
     @ApiModelProperty(value = "Date when the address validation is performed")
-
     @Valid
-
     public OffsetDateTime getValidationDate() {
         return validationDate;
     }
@@ -191,8 +123,6 @@ public class GeographicAddressValidation {
      * @return validationResult
      **/
     @ApiModelProperty(value = "Result of the address validation (success, partial, fails)")
-
-
     public String getValidationResult() {
         return validationResult;
     }
@@ -201,38 +131,8 @@ public class GeographicAddressValidation {
         this.validationResult = validationResult;
     }
 
-    public GeographicAddressValidation alternateGeographicAddress(List<GeographicAddress> alternateGeographicAddress) {
-        this.alternateGeographicAddress = alternateGeographicAddress;
-        return this;
-    }
-
-    public GeographicAddressValidation addAlternateGeographicAddressItem(GeographicAddress alternateGeographicAddressItem) {
-        if (this.alternateGeographicAddress == null) {
-            this.alternateGeographicAddress = new ArrayList<GeographicAddress>();
-        }
-        this.alternateGeographicAddress.add(alternateGeographicAddressItem);
-        return this;
-    }
-
-    /**
-     * Get alternateGeographicAddress
-     *
-     * @return alternateGeographicAddress
-     **/
-    @ApiModelProperty(value = "")
-
-    @Valid
-
-    public List<GeographicAddress> getAlternateGeographicAddress() {
-        return alternateGeographicAddress;
-    }
-
-    public void setAlternateGeographicAddress(List<GeographicAddress> alternateGeographicAddress) {
-        this.alternateGeographicAddress = alternateGeographicAddress;
-    }
-
-    public GeographicAddressValidation state(TaskStateType state) {
-        this.state = state;
+    public GeographicAddressValidation status(Status status) {
+        this.status = status;
         return this;
     }
 
@@ -242,37 +142,13 @@ public class GeographicAddressValidation {
      * @return state
      **/
     @ApiModelProperty(value = "")
-
     @Valid
-
-    public TaskStateType getState() {
-        return state;
+    public Status getStatus() {
+        return status;
     }
 
-    public void setState(TaskStateType state) {
-        this.state = state;
-    }
-
-    public GeographicAddressValidation submittedGeographicAddress(GeographicAddress submittedGeographicAddress) {
-        this.submittedGeographicAddress = submittedGeographicAddress;
-        return this;
-    }
-
-    /**
-     * the address as submitted to validation
-     *
-     * @return submittedGeographicAddress
-     **/
-    @ApiModelProperty(value = "the address as submitted to validation")
-
-    @Valid
-
-    public GeographicAddress getSubmittedGeographicAddress() {
-        return submittedGeographicAddress;
-    }
-
-    public void setSubmittedGeographicAddress(GeographicAddress submittedGeographicAddress) {
-        this.submittedGeographicAddress = submittedGeographicAddress;
+    public void setState(Status status) {
+        this.status = status;
     }
 
     public GeographicAddressValidation validGeographicAddress(GeographicAddress validGeographicAddress) {
@@ -286,36 +162,13 @@ public class GeographicAddressValidation {
      * @return validGeographicAddress
      **/
     @ApiModelProperty(value = "the correct form of the validated address in case of validation success")
-
     @Valid
-
     public GeographicAddress getValidGeographicAddress() {
         return validGeographicAddress;
     }
 
     public void setValidGeographicAddress(GeographicAddress validGeographicAddress) {
         this.validGeographicAddress = validGeographicAddress;
-    }
-
-    public GeographicAddressValidation baseType(String baseType) {
-        this.baseType = baseType;
-        return this;
-    }
-
-    /**
-     * When sub-classing, this defines the super-class
-     *
-     * @return baseType
-     **/
-    @ApiModelProperty(value = "When sub-classing, this defines the super-class")
-
-
-    public String getBaseType() {
-        return baseType;
-    }
-
-    public void setBaseType(String baseType) {
-        this.baseType = baseType;
     }
 
     public GeographicAddressValidation schemaLocation(String schemaLocation) {
@@ -329,8 +182,6 @@ public class GeographicAddressValidation {
      * @return schemaLocation
      **/
     @ApiModelProperty(value = "A URI to a JSON-Schema file that defines additional attributes and relationships")
-
-
     public String getSchemaLocation() {
         return schemaLocation;
     }
@@ -350,8 +201,6 @@ public class GeographicAddressValidation {
      * @return type
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the sub-class entity name")
-
-
     public String getType() {
         return type;
     }
@@ -372,21 +221,17 @@ public class GeographicAddressValidation {
         GeographicAddressValidation geographicAddressValidation = (GeographicAddressValidation) o;
         return Objects.equals(this.id, geographicAddressValidation.id) &&
                 Objects.equals(this.href, geographicAddressValidation.href) &&
-                Objects.equals(this.provideAlternative, geographicAddressValidation.provideAlternative) &&
+                Objects.equals(this.status, geographicAddressValidation.status) &&
                 Objects.equals(this.validationDate, geographicAddressValidation.validationDate) &&
                 Objects.equals(this.validationResult, geographicAddressValidation.validationResult) &&
-                Objects.equals(this.alternateGeographicAddress, geographicAddressValidation.alternateGeographicAddress) &&
-                Objects.equals(this.state, geographicAddressValidation.state) &&
-                Objects.equals(this.submittedGeographicAddress, geographicAddressValidation.submittedGeographicAddress) &&
                 Objects.equals(this.validGeographicAddress, geographicAddressValidation.validGeographicAddress) &&
-                Objects.equals(this.baseType, geographicAddressValidation.baseType) &&
                 Objects.equals(this.schemaLocation, geographicAddressValidation.schemaLocation) &&
                 Objects.equals(this.type, geographicAddressValidation.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, href, provideAlternative, validationDate, validationResult, alternateGeographicAddress, state, submittedGeographicAddress, validGeographicAddress, baseType, schemaLocation, type);
+        return Objects.hash(id, href, status, validationDate, validationResult, validGeographicAddress, schemaLocation, type);
     }
 
     @Override
@@ -396,14 +241,10 @@ public class GeographicAddressValidation {
 
         sb.append("    id: ").append(toIndentedString(id)).append("\n");
         sb.append("    href: ").append(toIndentedString(href)).append("\n");
-        sb.append("    provideAlternative: ").append(toIndentedString(provideAlternative)).append("\n");
+        sb.append("    status: ").append(toIndentedString(status)).append("\n");
         sb.append("    validationDate: ").append(toIndentedString(validationDate)).append("\n");
         sb.append("    validationResult: ").append(toIndentedString(validationResult)).append("\n");
-        sb.append("    alternateGeographicAddress: ").append(toIndentedString(alternateGeographicAddress)).append("\n");
-        sb.append("    state: ").append(toIndentedString(state)).append("\n");
-        sb.append("    submittedGeographicAddress: ").append(toIndentedString(submittedGeographicAddress)).append("\n");
         sb.append("    validGeographicAddress: ").append(toIndentedString(validGeographicAddress)).append("\n");
-        sb.append("    baseType: ").append(toIndentedString(baseType)).append("\n");
         sb.append("    schemaLocation: ").append(toIndentedString(schemaLocation)).append("\n");
         sb.append("    type: ").append(toIndentedString(type)).append("\n");
         sb.append("}");
