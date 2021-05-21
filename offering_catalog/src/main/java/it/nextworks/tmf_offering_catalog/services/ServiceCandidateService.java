@@ -73,6 +73,8 @@ public class ServiceCandidateService {
 
                 ServiceCategory sCategory = serviceCategoryService.get(ScrId);
 
+                log.info("Updating Service Category " + ScrId + ".");
+
                 sCategory.getServiceCandidate().add(new ServiceCandidateRef()
                         .href(serviceCandidate.getHref())
                         .id(id)
@@ -80,6 +82,8 @@ public class ServiceCandidateService {
                         .name(serviceCandidate.getName()));
 
                 serviceCategoryService.save(sCategory);
+
+                log.info("Service Category " + ScrId + " updated.");
             }
         }
 

@@ -72,6 +72,8 @@ public class ResourceCandidateService {
 
                 ResourceCategory rCategory = resourceCategoryService.get(RcrId);
 
+                log.info("Updating Resource Category " + RcrId + ".");
+
                 rCategory.getResourceCandidate().add(new ResourceCandidateRef()
                         .href(resourceCandidate.getHref())
                         .id(id)
@@ -79,6 +81,8 @@ public class ResourceCandidateService {
                         .name(resourceCandidate.getName()));
 
                 resourceCategoryService.save(rCategory);
+
+                log.info("Resource Category " + RcrId + " updated.");
             }
         }
 

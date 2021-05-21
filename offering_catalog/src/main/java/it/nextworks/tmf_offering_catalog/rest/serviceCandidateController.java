@@ -79,11 +79,11 @@ public class serviceCandidateController implements ServiceCandidateInterface {
                     .body(new ErrMsg("Invalid request body (serviceCandidate) received."));
         }
 
-        ServiceCandidate sc = null;
+        ServiceCandidate sc;
         try {
             sc = serviceCandidateService.create(serviceCandidate);
         } catch (NullIdentifierException | NotExistingEntityException e) {
-            log.info("Web-Server: " + e.getMessage());
+            log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg(e.getMessage()));
         }
 

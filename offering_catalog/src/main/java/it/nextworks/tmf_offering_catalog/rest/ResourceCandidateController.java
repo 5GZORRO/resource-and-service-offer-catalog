@@ -82,7 +82,7 @@ public class ResourceCandidateController implements ResourceCandidateInterface {
         try {
             rc = resourceCandidateService.create(resourceCandidate);
         } catch (NotExistingEntityException | NullIdentifierException e) {
-            log.info("Web-Server: " + e.getMessage());
+            log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg(e.getMessage()));
         }
 
