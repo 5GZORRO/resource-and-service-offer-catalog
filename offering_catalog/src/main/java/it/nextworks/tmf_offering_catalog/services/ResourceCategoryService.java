@@ -1,5 +1,6 @@
 package it.nextworks.tmf_offering_catalog.services;
 
+import it.nextworks.tmf_offering_catalog.common.exception.CategoryAlreadyExistingException;
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
 import it.nextworks.tmf_offering_catalog.information_models.common.ResourceCandidateRef;
 import it.nextworks.tmf_offering_catalog.information_models.resource.ResourceCategory;
@@ -35,9 +36,13 @@ public class ResourceCategoryService {
     @Autowired
     private ResourceCategoryRepository resourceCategoryRepository;
 
-    public ResourceCategory create(ResourceCategoryCreate resourceCategoryCreate) {
+    public ResourceCategory create(ResourceCategoryCreate resourceCategoryCreate) throws CategoryAlreadyExistingException {
 
         log.info("Received request to create a Resource Category.");
+
+        String name = resourceCategoryCreate.getName();
+        if(resourceCategoryRepository.findByName(name).isPresent())
+            throw new CategoryAlreadyExistingException("Resource Category with name " + name + " already exists.");
 
         final String id = UUID.randomUUID().toString();
         ResourceCategory resourceCategory = new ResourceCategory()
@@ -50,7 +55,7 @@ public class ResourceCategoryService {
                 .id(id)
                 .isRoot(resourceCategoryCreate.isIsRoot())
                 .lifecycleStatus(resourceCategoryCreate.getLifecycleStatus())
-                .name(resourceCategoryCreate.getName())
+                .name(name)
                 .parentId(resourceCategoryCreate.getParentId())
                 .resourceCandidate(resourceCategoryCreate.getResourceCandidate())
                 .validFor(resourceCategoryCreate.getValidFor())
@@ -94,6 +99,25 @@ public class ResourceCategoryService {
         log.info("Resource Categories retrieved.");
 
         return resourceCategories;
+    }
+
+    /* Method used to retrieve a VNFD or PNFD Resource Category in order to be associated to a Resource Candidate */
+    @Transactional
+    public ResourceCategory findByName(String name) throws NotExistingEntityException {
+
+        log.info("Received request to retrieve Resource Category by name");
+
+        Optional<ResourceCategory> opt = resourceCategoryRepository.findByName(name);
+        if(!opt.isPresent())
+            throw new NotExistingEntityException("Resource Category with name " + name + " not found in DB.");
+
+        ResourceCategory rc = opt.get();
+        rc.setCategory((List<ResourceCategoryRef>) Hibernate.unproxy(rc.getCategory()));
+        rc.setResourceCandidate((List<ResourceCandidateRef>) Hibernate.unproxy(rc.getResourceCandidate()));
+
+        log.info("Resource Category retrieved.");
+
+        return rc;
     }
 
     public ResourceCategory patch(String id, ResourceCategoryUpdate resourceCategoryUpdate, String lastUpdate)
