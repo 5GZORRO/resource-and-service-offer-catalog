@@ -190,4 +190,8 @@ public class ResourceCategoryService {
 
         return rc;
     }
+
+    public ResourceCategory save(ResourceCategory rc) {
+        return resourceCategoryRepository.save(rc);
+    }
 }

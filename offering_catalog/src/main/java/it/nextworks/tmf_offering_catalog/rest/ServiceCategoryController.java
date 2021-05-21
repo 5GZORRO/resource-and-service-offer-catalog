@@ -198,7 +198,7 @@ public class ServiceCategoryController implements ServiceCategoryInterface {
             method = RequestMethod.GET)
     public ResponseEntity<?>
     findServiceCategoryByName(@ApiParam(value = "For filtering: Name of the category")
-                              @Valid @RequestParam(value = "name", required = false) String name) {
+                              @Valid @RequestParam(value = "name") String name) {
 
         log.info("Web-Server: Received request to retrieve Service Category with name " + name + ".");
 

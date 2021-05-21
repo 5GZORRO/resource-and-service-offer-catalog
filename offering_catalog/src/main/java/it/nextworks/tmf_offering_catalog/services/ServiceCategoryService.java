@@ -188,4 +188,8 @@ public class ServiceCategoryService {
 
         return sc;
     }
+
+    public ServiceCategory save(ServiceCategory sc) {
+        return serviceCategoryRepository.save(sc);
+    }
 }

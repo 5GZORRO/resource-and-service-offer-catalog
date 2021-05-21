@@ -221,7 +221,7 @@ public class ResourceCategoryController implements ResourceCategoryInterface {
             method = RequestMethod.GET)
     public ResponseEntity<?>
     findResourceCategoryByName(@ApiParam(value = "For filtering: Name of the category")
-                               @Valid @RequestParam(value = "name", required = false) String name) {
+                               @Valid @RequestParam(value = "name") String name) {
 
         log.info("Web-Server: Received request to retrieve Resource Category with name " + name + ".");
 

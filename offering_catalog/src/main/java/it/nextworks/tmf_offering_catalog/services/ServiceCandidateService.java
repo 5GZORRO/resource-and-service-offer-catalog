@@ -1,12 +1,11 @@
 package it.nextworks.tmf_offering_catalog.services;
 
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
+import it.nextworks.tmf_offering_catalog.common.exception.NullIdentifierException;
+import it.nextworks.tmf_offering_catalog.information_models.common.ServiceCandidateRef;
 import it.nextworks.tmf_offering_catalog.information_models.common.ServiceSpecificationRef;
 import it.nextworks.tmf_offering_catalog.information_models.common.TargetServiceSchema;
-import it.nextworks.tmf_offering_catalog.information_models.service.ServiceCandidate;
-import it.nextworks.tmf_offering_catalog.information_models.service.ServiceCandidateCreate;
-import it.nextworks.tmf_offering_catalog.information_models.service.ServiceCandidateUpdate;
-import it.nextworks.tmf_offering_catalog.information_models.service.ServiceCategoryRef;
+import it.nextworks.tmf_offering_catalog.information_models.service.*;
 import it.nextworks.tmf_offering_catalog.repo.ServiceCandidateRepository;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
@@ -15,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
+import org.threeten.bp.ZoneId;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +37,10 @@ public class ServiceCandidateService {
     @Autowired
     private ServiceCandidateRepository serviceCandidateRepository;
 
-    public ServiceCandidate create(ServiceCandidateCreate serviceCandidateCreate) {
+    @Autowired
+    private ServiceCategoryService serviceCategoryService;
+
+    public ServiceCandidate create(ServiceCandidateCreate serviceCandidateCreate) throws NullIdentifierException, NotExistingEntityException {
 
         log.info("Received request to create a Service Specification.");
 
@@ -58,6 +62,26 @@ public class ServiceCandidateService {
         final OffsetDateTime lastUpdate = serviceCandidateCreate.getLastUpdate();
         if(lastUpdate != null)
             serviceCandidate.setLastUpdate(lastUpdate.toString());
+
+        List<ServiceCategoryRef> serviceCategoryRefs = serviceCandidate.getCategory();
+        if(serviceCategoryRefs != null) {
+            for(ServiceCategoryRef serviceCategoryRef : serviceCategoryRefs) {
+
+                String ScrId = serviceCategoryRef.getId();
+                if(ScrId == null)
+                    throw new NullIdentifierException("Referenced Service Category with null identifier not allowed.");
+
+                ServiceCategory sCategory = serviceCategoryService.get(ScrId);
+
+                sCategory.getServiceCandidate().add(new ServiceCandidateRef()
+                        .href(serviceCandidate.getHref())
+                        .id(id)
+                        .lastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString())
+                        .name(serviceCandidate.getName()));
+
+                serviceCategoryService.save(sCategory);
+            }
+        }
 
         serviceCandidateRepository.save(serviceCandidate);
 
