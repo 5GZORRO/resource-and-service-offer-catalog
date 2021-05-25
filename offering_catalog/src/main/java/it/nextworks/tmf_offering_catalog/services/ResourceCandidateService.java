@@ -66,13 +66,13 @@ public class ResourceCandidateService {
         if(resourceCategoryRefs != null) {
             for(ResourceCategoryRef resourceCategoryRef : resourceCategoryRefs) {
 
-                String RcrId = resourceCategoryRef.getId();
-                if(RcrId == null)
+                String rcrId = resourceCategoryRef.getId();
+                if(rcrId == null)
                     throw new NullIdentifierException("Referenced Resource Category with null identified not allowed.");
 
-                ResourceCategory rCategory = resourceCategoryService.get(RcrId);
+                ResourceCategory rCategory = resourceCategoryService.get(rcrId);
 
-                log.info("Updating Resource Category " + RcrId + ".");
+                log.info("Updating Resource Category " + rcrId + ".");
 
                 rCategory.getResourceCandidate().add(new ResourceCandidateRef()
                         .href(resourceCandidate.getHref())
@@ -82,7 +82,7 @@ public class ResourceCandidateService {
 
                 resourceCategoryService.save(rCategory);
 
-                log.info("Resource Category " + RcrId + " updated.");
+                log.info("Resource Category " + rcrId + " updated.");
             }
         }
 
@@ -93,7 +93,7 @@ public class ResourceCandidateService {
         return resourceCandidate;
     }
 
-    public void delete(String id) throws NotExistingEntityException {
+    public void delete(String id) throws NotExistingEntityException, NullIdentifierException {
 
         log.info("Received request to delete Resource Candidate with id " + id + ".");
 
@@ -101,7 +101,31 @@ public class ResourceCandidateService {
         if(!toDelete.isPresent())
             throw new NotExistingEntityException("Resource Candidate with id " + id + " not found in DB.");
 
-        resourceCandidateRepository.delete(toDelete.get());
+        ResourceCandidate rc = toDelete.get();
+
+        List<ResourceCategoryRef> resourceCategoryRefs = rc.getCategory();
+        if(resourceCategoryRefs != null) {
+            for(ResourceCategoryRef resourceCategoryRef : resourceCategoryRefs) {
+
+                String rcrId = resourceCategoryRef.getId();
+                if(rcrId == null)
+                    throw new NullIdentifierException("Referenced Resource Category with null identifier not allowed.");
+
+                ResourceCategory rCategory = resourceCategoryService.get(rcrId);
+
+                log.info("Updating Resource Category " + rcrId + ".");
+
+                List<ResourceCandidateRef> resourceCandidateRefs = rCategory.getResourceCandidate();
+                if(resourceCandidateRefs != null)
+                    resourceCandidateRefs.removeIf(rcr -> rcr.getId().equals(rc.getId()));
+
+                resourceCategoryService.save(rCategory);
+
+                log.info("Resource Category " + rcrId + " updated.");
+            }
+        }
+
+        resourceCandidateRepository.delete(rc);
 
         log.info("Resource Candidate " + id + " deleted.");
     }

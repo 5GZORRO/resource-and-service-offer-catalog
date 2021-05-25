@@ -203,7 +203,7 @@ public class CommunicationService {
         HttpPost httpPost = new HttpPost(request);
 
         Offer requestOffer =
-                new Offer(token, "", new ArrayList<>(),
+                new Offer(token, "ProductOffer", new ArrayList<>(),
                         protocol + hostname + ":" + port +
                                 "/tmf-api/productCatalogManagement/v4/productOffering/did/" + catalogId);
         String roJson = objectMapper.writeValueAsString(requestOffer);

@@ -67,13 +67,13 @@ public class ServiceCandidateService {
         if(serviceCategoryRefs != null) {
             for(ServiceCategoryRef serviceCategoryRef : serviceCategoryRefs) {
 
-                String ScrId = serviceCategoryRef.getId();
-                if(ScrId == null)
+                String scrId = serviceCategoryRef.getId();
+                if(scrId == null)
                     throw new NullIdentifierException("Referenced Service Category with null identifier not allowed.");
 
-                ServiceCategory sCategory = serviceCategoryService.get(ScrId);
+                ServiceCategory sCategory = serviceCategoryService.get(scrId);
 
-                log.info("Updating Service Category " + ScrId + ".");
+                log.info("Updating Service Category " + scrId + ".");
 
                 sCategory.getServiceCandidate().add(new ServiceCandidateRef()
                         .href(serviceCandidate.getHref())
@@ -83,7 +83,7 @@ public class ServiceCandidateService {
 
                 serviceCategoryService.save(sCategory);
 
-                log.info("Service Category " + ScrId + " updated.");
+                log.info("Service Category " + scrId + " updated.");
             }
         }
 
@@ -94,7 +94,7 @@ public class ServiceCandidateService {
         return serviceCandidate;
     }
 
-    public void delete(String id) throws NotExistingEntityException {
+    public void delete(String id) throws NotExistingEntityException, NullIdentifierException {
 
         log.info("Received request to delete Service Candidate with id " + id + ".");
 
@@ -102,7 +102,31 @@ public class ServiceCandidateService {
         if(!toDelete.isPresent())
             throw new NotExistingEntityException("Service Candidate with id " + id + " not found in DB.");
 
-        serviceCandidateRepository.delete(toDelete.get());
+        ServiceCandidate sc = toDelete.get();
+
+        List<ServiceCategoryRef> serviceCategoryRefs = sc.getCategory();
+        if(serviceCategoryRefs != null) {
+            for(ServiceCategoryRef serviceCategoryRef : serviceCategoryRefs) {
+
+                String scrId = serviceCategoryRef.getId();
+                if(scrId == null)
+                    throw new NullIdentifierException("Referenced Service Category with null identified not allowed.");
+
+                ServiceCategory sCategory = serviceCategoryService.get(scrId);
+
+                log.info("Updating Service Category " + scrId + ".");
+
+                List<ServiceCandidateRef> serviceCandidateRefs = sCategory.getServiceCandidate();
+                if(serviceCandidateRefs != null)
+                    serviceCandidateRefs.removeIf(scr -> scr.getId().equals(sc.getId()));
+
+                serviceCategoryService.save(sCategory);
+
+                log.info("Service Category " + scrId + " updated.");
+            }
+        }
+
+        serviceCandidateRepository.delete(sc);
 
         log.info("Service Candidate " + id + " deleted");
     }
