@@ -13,4 +13,6 @@ public interface ResourceCategoryRepository extends JpaRepository<ResourceCatego
     Optional<ResourceCategory> findByResourceCategoryId(String id);
 
     List<ResourceCategory> findAll();
+
+    Optional<ResourceCategory> findByName(String name);
 }

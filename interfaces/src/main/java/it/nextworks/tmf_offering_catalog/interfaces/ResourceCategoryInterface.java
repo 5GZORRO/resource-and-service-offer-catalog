@@ -32,6 +32,8 @@ public interface ResourceCategoryInterface {
                                                                 OffsetDateTime validForStartDateTime,
                                                                 String version);
 
+    ResponseEntity<?> findResourceCategoryByName(String name);
+
     ResponseEntity<?> patchResourceCategory(String id, ResourceCategoryUpdate resourceCategory);
 
     ResponseEntity<?> retrieveResourceCategory(String id);

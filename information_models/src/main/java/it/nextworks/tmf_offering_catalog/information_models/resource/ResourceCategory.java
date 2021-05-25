@@ -68,6 +68,7 @@ public class ResourceCategory {
   private String lifecycleStatus = null;
 
   @JsonProperty("name")
+  @Column(unique = true)
   private String name = null;
 
   @JsonProperty("parentId")

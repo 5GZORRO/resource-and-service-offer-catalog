@@ -3,6 +3,7 @@ package it.nextworks.tmf_offering_catalog.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
+import it.nextworks.tmf_offering_catalog.common.exception.NullIdentifierException;
 import it.nextworks.tmf_offering_catalog.information_models.service.ServiceCandidate;
 import it.nextworks.tmf_offering_catalog.information_models.service.ServiceCandidateCreate;
 import it.nextworks.tmf_offering_catalog.information_models.service.ServiceCandidateUpdate;
@@ -78,7 +79,13 @@ public class serviceCandidateController implements ServiceCandidateInterface {
                     .body(new ErrMsg("Invalid request body (serviceCandidate) received."));
         }
 
-        ServiceCandidate sc = serviceCandidateService.create(serviceCandidate);
+        ServiceCandidate sc;
+        try {
+            sc = serviceCandidateService.create(serviceCandidate);
+        } catch (NullIdentifierException | NotExistingEntityException e) {
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg(e.getMessage()));
+        }
 
         log.info("Web-Server: Service Candidate created with id " + sc.getId() + ".");
 
