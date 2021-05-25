@@ -2,6 +2,7 @@ package it.nextworks.tmf_offering_catalog.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
+import it.nextworks.tmf_offering_catalog.common.exception.CategoryAlreadyExistingException;
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
 import it.nextworks.tmf_offering_catalog.information_models.service.ServiceCategory;
 import it.nextworks.tmf_offering_catalog.information_models.service.ServiceCategoryCreate;
@@ -78,7 +79,13 @@ public class ServiceCategoryController implements ServiceCategoryInterface {
                     .body(new ErrMsg("Invalid request body (serviceCategory) received."));
         }
 
-        ServiceCategory sc = serviceCategoryService.create(serviceCategory);
+        ServiceCategory sc;
+        try {
+            sc = serviceCategoryService.create(serviceCategory);
+        } catch (CategoryAlreadyExistingException e) {
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg(e.getMessage()));
+        }
 
         log.info("Web-Server: Service Category created with id " + sc.getId() + ".");
 
@@ -164,6 +171,48 @@ public class ServiceCategoryController implements ServiceCategoryInterface {
                         @Valid @RequestParam(value = "offset", required = false) Integer offset) {
 
         return ResponseEntity.status(HttpStatus.OK).body(serviceCategoryService.list());
+    }
+
+    @ApiOperation(value = "Find ServiceCategory object by name for Service Candidate NSD ",
+            nickname = "findServiceCategoryByName", notes = "This operation list or find ServiceCategory entities",
+            response = ServiceCategory.class, authorizations = {
+            @Authorization(value = "spring_oauth", scopes = {
+                    @AuthorizationScope(scope = "read", description = "for read operations"),
+                    @AuthorizationScope(scope = "openapi", description = "Access openapi API"),
+                    @AuthorizationScope(scope = "admin", description = "Access admin API"),
+                    @AuthorizationScope(scope = "write", description = "for write operations")
+            })
+    })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = ServiceCategory.class),
+            //@ApiResponse(code = 400, message = "Bad Request", response = Error.class),
+            //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+            //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
+            @ApiResponse(code = 404, message = "Not Found", response = ErrMsg.class),
+            //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
+            //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
+            //@ApiResponse(code = 413, message = "Not modified", response = Error.class),
+            @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
+    @RequestMapping(value = "/serviceCatalogManagement/v4/serviceCategory/filter",
+            produces = { "application/json;charset=utf-8" },
+            method = RequestMethod.GET)
+    public ResponseEntity<?>
+    findServiceCategoryByName(@ApiParam(value = "For filtering: Name of the category")
+                              @Valid @RequestParam(value = "name") String name) {
+
+        log.info("Web-Server: Received request to retrieve Service Category with name " + name + ".");
+
+        ServiceCategory sc;
+        try {
+            sc = serviceCategoryService.findByName(name);
+        } catch (NotExistingEntityException e) {
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrMsg(e.getMessage()));
+        }
+
+        log.info("Web-Server: Service Category with name " + name + " retrieved.");
+
+        return ResponseEntity.status(HttpStatus.OK).body(sc);
     }
 
     @ApiOperation(value = "Updates partially a ServiceCategory", nickname = "patchServiceCategory",

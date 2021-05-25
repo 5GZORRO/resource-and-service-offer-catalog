@@ -1,11 +1,10 @@
 package it.nextworks.tmf_offering_catalog.services;
 
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
+import it.nextworks.tmf_offering_catalog.common.exception.NullIdentifierException;
+import it.nextworks.tmf_offering_catalog.information_models.common.ResourceCandidateRef;
 import it.nextworks.tmf_offering_catalog.information_models.common.ResourceSpecificationRef;
-import it.nextworks.tmf_offering_catalog.information_models.resource.ResourceCandidate;
-import it.nextworks.tmf_offering_catalog.information_models.resource.ResourceCandidateCreate;
-import it.nextworks.tmf_offering_catalog.information_models.resource.ResourceCandidateUpdate;
-import it.nextworks.tmf_offering_catalog.information_models.resource.ResourceCategoryRef;
+import it.nextworks.tmf_offering_catalog.information_models.resource.*;
 import it.nextworks.tmf_offering_catalog.repo.ResourceCandidateRepository;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
@@ -14,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
+import org.threeten.bp.ZoneId;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +36,10 @@ public class ResourceCandidateService {
     @Autowired
     private ResourceCandidateRepository resourceCandidateRepository;
 
-    public ResourceCandidate create(ResourceCandidateCreate resourceCandidateCreate) {
+    @Autowired
+    private ResourceCategoryService resourceCategoryService;
+
+    public ResourceCandidate create(ResourceCandidateCreate resourceCandidateCreate) throws NotExistingEntityException, NullIdentifierException {
 
         log.info("Received request to create a Resource Candidate.");
 
@@ -57,6 +61,30 @@ public class ResourceCandidateService {
         final OffsetDateTime lastUpdate = resourceCandidateCreate.getLastUpdate();
         if(lastUpdate != null)
             resourceCandidate.setLastUpdate(lastUpdate.toString());
+
+        List<ResourceCategoryRef> resourceCategoryRefs = resourceCandidate.getCategory();
+        if(resourceCategoryRefs != null) {
+            for(ResourceCategoryRef resourceCategoryRef : resourceCategoryRefs) {
+
+                String RcrId = resourceCategoryRef.getId();
+                if(RcrId == null)
+                    throw new NullIdentifierException("Referenced Resource Category with null identified not allowed.");
+
+                ResourceCategory rCategory = resourceCategoryService.get(RcrId);
+
+                log.info("Updating Resource Category " + RcrId + ".");
+
+                rCategory.getResourceCandidate().add(new ResourceCandidateRef()
+                        .href(resourceCandidate.getHref())
+                        .id(id)
+                        .lastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString())
+                        .name(resourceCandidate.getName()));
+
+                resourceCategoryService.save(rCategory);
+
+                log.info("Resource Category " + RcrId + " updated.");
+            }
+        }
 
         resourceCandidateRepository.save(resourceCandidate);
 

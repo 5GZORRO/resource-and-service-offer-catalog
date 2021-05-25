@@ -12,6 +12,8 @@ public interface ServiceCategoryInterface {
 
     ResponseEntity<?> listServiceCategory(String fields, Integer limit, Integer offset);
 
+    ResponseEntity<?> findServiceCategoryByName(String name);
+
     ResponseEntity<?> patchServiceCategory(String id, ServiceCategoryUpdate serviceCategory);
 
     ResponseEntity<?> retrieveServiceCategory(String id, String fields);

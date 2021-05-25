@@ -2,6 +2,7 @@ package it.nextworks.tmf_offering_catalog.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
+import it.nextworks.tmf_offering_catalog.common.exception.CategoryAlreadyExistingException;
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
 import it.nextworks.tmf_offering_catalog.information_models.resource.ResourceCategory;
 import it.nextworks.tmf_offering_catalog.information_models.resource.ResourceCategoryCreate;
@@ -77,7 +78,13 @@ public class ResourceCategoryController implements ResourceCategoryInterface {
                     .body(new ErrMsg("Invalid request body (resCategory) received."));
         }
 
-        ResourceCategory rc = resourceCategoryService.create(resCategory);
+        ResourceCategory rc;
+        try {
+            rc = resourceCategoryService.create(resCategory);
+        } catch (CategoryAlreadyExistingException e) {
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg(e.getMessage()));
+        }
 
         log.info("Web-Server: Resource Category created with id " + rc.getId() + ".");
 
@@ -191,6 +198,44 @@ public class ResourceCategoryController implements ResourceCategoryInterface {
                          @Valid @RequestParam(value = "version", required = false) String version) {
 
         return ResponseEntity.status(HttpStatus.OK).body(resourceCategoryService.list());
+    }
+
+    @ApiOperation(value = "Find 'ResourceCategory' object by name for Resource Candidate VNFD or PNFD",
+            nickname = "findResourceCategoryByName", notes = "", response = ResourceCategory.class, authorizations = {
+            @Authorization(value = "spring_oauth", scopes = {
+                    @AuthorizationScope(scope = "read", description = "for read operations"),
+                    @AuthorizationScope(scope = "openapi", description = "Access openapi API"),
+                    @AuthorizationScope(scope = "admin", description = "Access admin API"),
+                    @AuthorizationScope(scope = "write", description = "for write operations")
+            })
+    })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok", response = ResourceCategory.class),
+            //@ApiResponse(code = 400, message = "Bad Request", response = Error.class),
+            //@ApiResponse(code = 401, message = "Unauthorized"),
+            //@ApiResponse(code = 403, message = "Forbidden"),
+            @ApiResponse(code = 404, message = "Not Found", response = ErrMsg.class),
+            @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
+    @RequestMapping(value = "/resourceCatalogManagement/v2/resourceCategory/filter",
+            produces = { "application/json;charset=utf-8" },
+            method = RequestMethod.GET)
+    public ResponseEntity<?>
+    findResourceCategoryByName(@ApiParam(value = "For filtering: Name of the category")
+                               @Valid @RequestParam(value = "name") String name) {
+
+        log.info("Web-Server: Received request to retrieve Resource Category with name " + name + ".");
+
+        ResourceCategory rc;
+        try {
+            rc = resourceCategoryService.findByName(name);
+        } catch (NotExistingEntityException e) {
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrMsg(e.getMessage()));
+        }
+
+        log.info("Web-Server: Resource Category with name " + name + " retrieved.");
+
+        return ResponseEntity.status(HttpStatus.OK).body(rc);
     }
 
     @ApiOperation(value = "Updates partially a 'ResourceCategory' by Id", nickname = "patchResourceCategory",

@@ -1,5 +1,6 @@
 package it.nextworks.tmf_offering_catalog.services;
 
+import it.nextworks.tmf_offering_catalog.common.exception.CategoryAlreadyExistingException;
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
 import it.nextworks.tmf_offering_catalog.information_models.common.ServiceCandidateRef;
 import it.nextworks.tmf_offering_catalog.information_models.service.ServiceCategory;
@@ -35,9 +36,13 @@ public class ServiceCategoryService {
     @Autowired
     private ServiceCategoryRepository serviceCategoryRepository;
 
-    public ServiceCategory create(ServiceCategoryCreate serviceCategoryCreate) {
+    public ServiceCategory create(ServiceCategoryCreate serviceCategoryCreate) throws CategoryAlreadyExistingException {
 
         log.info("Received request to create a Service Category.");
+
+        String name = serviceCategoryCreate.getName();
+        if(serviceCategoryRepository.findByName(name).isPresent())
+            throw new CategoryAlreadyExistingException("Service Category with name " + name + " already exists.");
 
         final String id = UUID.randomUUID().toString();
         ServiceCategory serviceCategory = new ServiceCategory()
@@ -50,7 +55,7 @@ public class ServiceCategoryService {
                 .id(id)
                 .isRoot(serviceCategoryCreate.isIsRoot())
                 .lifecycleStatus(serviceCategoryCreate.getLifecycleStatus())
-                .name(serviceCategoryCreate.getName())
+                .name(name)
                 .parentId(serviceCategoryCreate.getParentId())
                 .serviceCandidate(serviceCategoryCreate.getServiceCandidate())
                 .validFor(serviceCategoryCreate.getValidFor())
@@ -94,6 +99,23 @@ public class ServiceCategoryService {
         log.info("Service Categories retrieved.");
 
         return serviceCategories;
+    }
+
+    /* Method used to retrieve NSD Resource Category in order to be associated to a Service Candidate */
+    @Transactional
+    public ServiceCategory findByName(String name) throws NotExistingEntityException {
+
+        log.info("Received request to retrieve Service Category by name");
+
+        Optional<ServiceCategory> opt = serviceCategoryRepository.findByName(name);
+        if(!opt.isPresent())
+            throw new NotExistingEntityException("Service Category with name " + name + " not found in DB.");
+
+        ServiceCategory sc = opt.get();
+        sc.setCategory((List<ServiceCategoryRef>) Hibernate.unproxy(sc.getCategory()));
+        sc.setServiceCandidate((List<ServiceCandidateRef>) Hibernate.unproxy(sc.getServiceCandidate()));
+
+        return sc;
     }
 
     public ServiceCategory patch(String id, ServiceCategoryUpdate serviceCategoryUpdate, String lastUpdate)
@@ -165,5 +187,9 @@ public class ServiceCategoryService {
         log.info("Service Category " + id + " retrieved.");
 
         return sc;
+    }
+
+    public ServiceCategory save(ServiceCategory sc) {
+        return serviceCategoryRepository.save(sc);
     }
 }

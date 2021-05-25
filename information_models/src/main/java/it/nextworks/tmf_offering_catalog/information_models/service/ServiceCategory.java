@@ -67,6 +67,7 @@ public class ServiceCategory {
   private String lifecycleStatus = null;
 
   @JsonProperty("name")
+  @Column(unique = true)
   private String name = null;
 
   @JsonProperty("parentId")
