@@ -243,6 +243,9 @@ public class ResourceCandidateController implements ResourceCandidateInterface {
         } catch (NotExistingEntityException e) {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrMsg(e.getMessage()));
+        } catch (NullIdentifierException e) {
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg(e.getMessage()));
         }
 
         log.info("Web-Server: Resource Candidate " + id + " patched.");
