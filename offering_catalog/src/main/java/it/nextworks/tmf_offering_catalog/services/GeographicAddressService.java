@@ -29,7 +29,7 @@ public class GeographicAddressService {
     @Transactional
     public GeographicAddress get(String id) throws NotExistingEntityException {
         log.info("Received request to retrieve Geographic Address with id " + id + ".");
-        Optional<GeographicAddress> retrieved = geographicAddressRepository.findByGeographicAddressId(id);
+        Optional<GeographicAddress> retrieved = geographicAddressRepository.findById(id);
         if (!retrieved.isPresent()) {
             throw new NotExistingEntityException("Geographic Address with id " + id + " not found in DB.");
         }

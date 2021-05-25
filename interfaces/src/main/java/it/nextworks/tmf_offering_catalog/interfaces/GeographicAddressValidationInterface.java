@@ -8,7 +8,7 @@ public interface GeographicAddressValidationInterface {
 
     ResponseEntity<?> createGeographicAddressValidation(GeographicAddressValidationCreate geographicAddressValidation);
 
-    ResponseEntity<?> listGeographicAddressValidation(String fields, Integer offset, Integer limit);
+    ResponseEntity<?> listGeographicAddressValidation(String fields);
 
     ResponseEntity<?> patchGeographicAddressValidation(String id, GeographicAddressValidationUpdate geographicAddressValidation);
 

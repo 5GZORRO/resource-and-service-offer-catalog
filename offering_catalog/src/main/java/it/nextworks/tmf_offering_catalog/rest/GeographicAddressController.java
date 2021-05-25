@@ -5,6 +5,7 @@ import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityExcep
 import it.nextworks.tmf_offering_catalog.information_models.product.GeographicAddress;
 import it.nextworks.tmf_offering_catalog.interfaces.GeographicAddressInterface;
 import it.nextworks.tmf_offering_catalog.services.GeographicAddressService;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class GeographicAddressController implements GeographicAddressInterface {
@@ -35,17 +39,39 @@ public class GeographicAddressController implements GeographicAddressInterface {
             })
     })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Success", response = GeographicAddress.class, responseContainer = "List")})
+            @ApiResponse(code = 200, message = "Success", response = GeographicAddress.class, responseContainer = "List"),
+            @ApiResponse(code = 400, message = "Bad Request", response = Error.class)})
     @RequestMapping(value = "/geographicAddressManagement/v4/geographicAddress",
             produces = {"application/json;charset=utf-8"},
             method = RequestMethod.GET)
     public ResponseEntity<?> listGeographicAddress(@ApiParam(value = "Comma-separated properties to be provided in response")
-                                                   @Valid @RequestParam(value = "fields", required = false) String fields,
-                                                   @ApiParam(value = "Requested index for start of resources to be provided in response")
-                                                   @Valid @RequestParam(value = "offset", required = false) Integer offset,
-                                                   @ApiParam(value = "Requested number of resources to be provided in response")
-                                                   @Valid @RequestParam(value = "limit", required = false) Integer limit) {
-        return ResponseEntity.status(HttpStatus.OK).body(geographicAddressService.list());
+                                                   @Valid @RequestParam(value = "fields", required = false) String fields) {
+        List<GeographicAddress> geographicAddresses = geographicAddressService.list();
+        ResponseEntity<?> responseEntity;
+        if (fields != null) {
+            List<JSONObject> responseList = new ArrayList<>();
+            for (GeographicAddress geographicAddress : geographicAddresses) {
+                JSONObject responseJson = new JSONObject();
+                for (String field : fields.split(",")) {
+                    Class<?> geographicAddressClass = geographicAddress.getClass();
+                    Field geographicAddressField;
+                    try {
+                        geographicAddressField = geographicAddressClass.getDeclaredField(field);
+                        geographicAddressField.setAccessible(true);
+                        responseJson.put(field, geographicAddressField.get(geographicAddress));
+                    } catch (NoSuchFieldException | IllegalAccessException e) {
+                        log.error("Web-Server: Field " + field + " does not exists.");
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg("Web-Server: Field " + field + " does not exists."));
+                    }
+                }
+                responseList.add(responseJson);
+            }
+            responseEntity = ResponseEntity.status(HttpStatus.OK).body(responseList.toString());
+        } else {
+            responseEntity = ResponseEntity.status(HttpStatus.OK).body(geographicAddresses);
+        }
+        return responseEntity;
+
     }
 
     @ApiOperation(value = "Retrieves a GeographicAddress by ID", nickname = "retrieveGeographicAddress",
@@ -83,8 +109,28 @@ public class GeographicAddressController implements GeographicAddressInterface {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrMsg(e.getMessage()));
         }
+
+        ResponseEntity<?> responseEntity;
+        if (fields != null) {
+            JSONObject responseJson = new JSONObject();
+            for (String field : fields.split(",")) {
+                Class<?> geographicAddressClass = geographicAddress.getClass();
+                Field geographicAddressField;
+                try {
+                    geographicAddressField = geographicAddressClass.getDeclaredField(field);
+                    geographicAddressField.setAccessible(true);
+                    responseJson.put(field, geographicAddressField.get(geographicAddress));
+                } catch (NoSuchFieldException | IllegalAccessException e) {
+                    log.error("Web-Server: Field " + field + " does not exists.");
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg("Web-Server: Field " + field + " does not exists."));
+                }
+            }
+            responseEntity = ResponseEntity.status(HttpStatus.OK).body(responseJson.toString());
+        } else {
+            responseEntity = ResponseEntity.status(HttpStatus.OK).body(geographicAddress);
+        }
         log.info("Web-Server: Geographic Address " + id + " retrieved.");
-        return ResponseEntity.status(HttpStatus.OK).body(geographicAddress);
+        return responseEntity;
     }
 
 }

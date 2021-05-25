@@ -5,9 +5,9 @@ import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityExcep
 import it.nextworks.tmf_offering_catalog.information_models.product.GeographicAddressValidation;
 import it.nextworks.tmf_offering_catalog.information_models.product.GeographicAddressValidationCreate;
 import it.nextworks.tmf_offering_catalog.information_models.product.GeographicAddressValidationUpdate;
-import it.nextworks.tmf_offering_catalog.information_models.product.ProductOffering;
 import it.nextworks.tmf_offering_catalog.interfaces.GeographicAddressValidationInterface;
 import it.nextworks.tmf_offering_catalog.services.GeographicAddressValidationService;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +19,9 @@ import org.threeten.bp.OffsetDateTime;
 import org.threeten.bp.ZoneId;
 
 import javax.validation.Valid;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class GeographicAddressValidationController implements GeographicAddressValidationInterface {
@@ -78,12 +81,32 @@ public class GeographicAddressValidationController implements GeographicAddressV
             produces = {"application/json;charset=utf-8"},
             method = RequestMethod.GET)
     public ResponseEntity<?> listGeographicAddressValidation(@ApiParam(value = "Comma-separated properties to be provided in response")
-                                                             @Valid @RequestParam(value = "fields", required = false) String fields,
-                                                             @ApiParam(value = "Requested index for start of resources to be provided in response")
-                                                             @Valid @RequestParam(value = "offset", required = false) Integer offset,
-                                                             @ApiParam(value = "Requested number of resources to be provided in response")
-                                                             @Valid @RequestParam(value = "limit", required = false) Integer limit) {
-        return ResponseEntity.status(HttpStatus.OK).body(geographicAddressValidationService.list());
+                                                             @Valid @RequestParam(value = "fields", required = false) String fields) {
+        List<GeographicAddressValidation> geographicAddressValidations = geographicAddressValidationService.list();
+        ResponseEntity<?> responseEntity;
+        if (fields != null) {
+            List<JSONObject> responseList = new ArrayList<>();
+            for (GeographicAddressValidation geographicAddressValidation : geographicAddressValidations) {
+                JSONObject responseJson = new JSONObject();
+                for (String field : fields.split(",")) {
+                    Class<?> geographicAddressValidationClass = geographicAddressValidation.getClass();
+                    Field geographicAddressValidationField;
+                    try {
+                        geographicAddressValidationField = geographicAddressValidationClass.getDeclaredField(field);
+                        geographicAddressValidationField.setAccessible(true);
+                        responseJson.put(field, geographicAddressValidationField.get(geographicAddressValidation));
+                    } catch (NoSuchFieldException | IllegalAccessException e) {
+                        log.error("Web-Server: Field " + field + " does not exists.");
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg("Web-Server: Field " + field + " does not exists."));
+                    }
+                }
+                responseList.add(responseJson);
+            }
+            responseEntity = ResponseEntity.status(HttpStatus.OK).body(responseList.toString());
+        } else {
+            responseEntity = ResponseEntity.status(HttpStatus.OK).body(geographicAddressValidations);
+        }
+        return responseEntity;
     }
 
     @ApiOperation(value = "Updates partially a GeographicAddressValidation", nickname = "patchGeographicAddressValidation",
@@ -168,8 +191,28 @@ public class GeographicAddressValidationController implements GeographicAddressV
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrMsg(e.getMessage()));
         }
+
+        ResponseEntity<?> responseEntity;
+        if (fields != null) {
+            JSONObject responseJson = new JSONObject();
+            for (String field : fields.split(",")) {
+                Class<?> geographicAddressValidationClass = geographicAddressValidation.getClass();
+                Field geographicAddressValidationField;
+                try {
+                    geographicAddressValidationField = geographicAddressValidationClass.getDeclaredField(field);
+                    geographicAddressValidationField.setAccessible(true);
+                    responseJson.put(field, geographicAddressValidationField.get(geographicAddressValidation));
+                } catch (NoSuchFieldException | IllegalAccessException e) {
+                    log.error("Web-Server: Field " + field + " does not exists.");
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg("Web-Server: Field " + field + " does not exists."));
+                }
+            }
+            responseEntity = ResponseEntity.status(HttpStatus.OK).body(responseJson.toString());
+        } else {
+            responseEntity = ResponseEntity.status(HttpStatus.OK).body(geographicAddressValidation);
+        }
         log.info("Web-Server: Geographic Address Validation " + id + " retrieved.");
-        return ResponseEntity.status(HttpStatus.OK).body(geographicAddressValidation);
+        return responseEntity;
     }
 
     @ApiOperation(value = "Deletes a GeographicAddressValidation", nickname = "deleteGeographicAddressValidation",
@@ -188,8 +231,8 @@ public class GeographicAddressValidationController implements GeographicAddressV
             method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteGeographicAddressValidation(@ApiParam(value = "Identifier of the GeographicAddressValidation", required = true)
                                                                @PathVariable("id") String id) {
-    geographicAddressValidationService.delete(id);
-    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        geographicAddressValidationService.delete(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }
