@@ -4,6 +4,7 @@ import io.swagger.annotations.*;
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
 import it.nextworks.tmf_offering_catalog.information_models.product.GeographicAddress;
 import it.nextworks.tmf_offering_catalog.interfaces.GeographicAddressInterface;
+import it.nextworks.tmf_offering_catalog.rest.filter.GeographicAddressFilter;
 import it.nextworks.tmf_offering_catalog.services.GeographicAddressService;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -45,8 +46,9 @@ public class GeographicAddressController implements GeographicAddressInterface {
             produces = {"application/json;charset=utf-8"},
             method = RequestMethod.GET)
     public ResponseEntity<?> listGeographicAddress(@ApiParam(value = "Comma-separated properties to be provided in response")
-                                                   @Valid @RequestParam(value = "fields", required = false) String fields) {
-        List<GeographicAddress> geographicAddresses = geographicAddressService.list();
+                                                   @Valid @RequestParam(value = "fields", required = false) String fields,
+                                                   GeographicAddressFilter geographicAddressFilter) {
+        List<GeographicAddress> geographicAddresses = geographicAddressService.list(geographicAddressFilter);
         ResponseEntity<?> responseEntity;
         if (fields != null) {
             List<JSONObject> responseList = new ArrayList<>();

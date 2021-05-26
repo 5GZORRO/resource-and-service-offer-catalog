@@ -3,6 +3,7 @@ package it.nextworks.tmf_offering_catalog.services;
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
 import it.nextworks.tmf_offering_catalog.information_models.product.GeographicAddress;
 import it.nextworks.tmf_offering_catalog.repo.GeographicAddressRepository;
+import it.nextworks.tmf_offering_catalog.rest.filter.GeographicAddressFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,13 @@ public class GeographicAddressService {
     private GeographicAddressRepository geographicAddressRepository;
 
     @Transactional
-    public List<GeographicAddress> list() {
+    public List<GeographicAddress> list(GeographicAddressFilter geographicAddressFilter) {
         log.info("Received request to retrieve all Geographic Addresses");
-        return geographicAddressRepository.findAll();
+        if (geographicAddressFilter != null) {
+            return geographicAddressRepository.filteredFindAll(geographicAddressFilter);
+        } else {
+            return geographicAddressRepository.findAll();
+        }
     }
 
     @Transactional

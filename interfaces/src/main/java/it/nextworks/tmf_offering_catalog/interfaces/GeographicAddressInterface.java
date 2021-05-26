@@ -4,8 +4,6 @@ import org.springframework.http.ResponseEntity;
 
 public interface GeographicAddressInterface {
 
-    ResponseEntity<?> listGeographicAddress(String fields);
-
     ResponseEntity<?> retrieveGeographicAddress(String id, String fields);
 
 }
