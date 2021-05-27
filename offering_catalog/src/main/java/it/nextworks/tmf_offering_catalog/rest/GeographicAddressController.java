@@ -31,14 +31,7 @@ public class GeographicAddressController implements GeographicAddressInterface {
 
     @ApiOperation(value = "List or find GeographicAddress objects", nickname = "listGeographicAddress",
             notes = "This operation list or find GeographicAddress entities", response = GeographicAddress.class,
-            responseContainer = "List", authorizations = {
-            @Authorization(value = "spring_oauth", scopes = {
-                    @AuthorizationScope(scope = "read", description = "for read operations"),
-                    @AuthorizationScope(scope = "openapi", description = "Access openapi API"),
-                    @AuthorizationScope(scope = "admin", description = "Access admin API"),
-                    @AuthorizationScope(scope = "write", description = "for write operations")
-            })
-    })
+            responseContainer = "List")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success", response = GeographicAddress.class, responseContainer = "List"),
             @ApiResponse(code = 400, message = "Bad Request", response = Error.class)})
@@ -77,15 +70,7 @@ public class GeographicAddressController implements GeographicAddressInterface {
     }
 
     @ApiOperation(value = "Retrieves a GeographicAddress by ID", nickname = "retrieveGeographicAddress",
-            notes = "This operation retrieves a GeographicAddress entity. Attribute selection is enabled for all first level attributes.", response = GeographicAddress.class,
-            authorizations = {
-                    @Authorization(value = "spring_oauth", scopes = {
-                            @AuthorizationScope(scope = "read", description = "for read operations"),
-                            @AuthorizationScope(scope = "openapi", description = "Access openapi API"),
-                            @AuthorizationScope(scope = "admin", description = "Access admin API"),
-                            @AuthorizationScope(scope = "write", description = "for write operations")
-                    })
-            })
+            notes = "This operation retrieves a GeographicAddress entity. Attribute selection is enabled for all first level attributes.", response = GeographicAddress.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success", response = GeographicAddress.class),
             @ApiResponse(code = 400, message = "Bad Request", response = Error.class),

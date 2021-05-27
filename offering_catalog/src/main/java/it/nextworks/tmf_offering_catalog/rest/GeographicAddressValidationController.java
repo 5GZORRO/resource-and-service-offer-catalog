@@ -34,15 +34,7 @@ public class GeographicAddressValidationController implements GeographicAddressV
     private GeographicAddressValidationService geographicAddressValidationService;
 
     @ApiOperation(value = "Creates a GeographicAddressValidation", nickname = "createGeographicAddressValidation",
-            notes = "This operation creates a GeographicAddressValidation entity.", response = GeographicAddressValidation.class,
-            authorizations = {
-                    @Authorization(value = "spring_oauth", scopes = {
-                            @AuthorizationScope(scope = "read", description = "for read operations"),
-                            @AuthorizationScope(scope = "openapi", description = "Access openapi API"),
-                            @AuthorizationScope(scope = "admin", description = "Access admin API"),
-                            @AuthorizationScope(scope = "write", description = "for write operations")
-                    })
-            })
+            notes = "This operation creates a GeographicAddressValidation entity.", response = GeographicAddressValidation.class)
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created", response = GeographicAddressValidation.class),
             @ApiResponse(code = 400, message = "Bad Request", response = Error.class)})
@@ -66,15 +58,7 @@ public class GeographicAddressValidationController implements GeographicAddressV
     }
 
     @ApiOperation(value = "List or find GeographicAddressValidation objects", nickname = "listGeographicAddressValidation",
-            notes = "This operation list or find GeographicAddressValidation entities", response = GeographicAddressValidation.class, responseContainer = "List",
-            authorizations = {
-                    @Authorization(value = "spring_oauth", scopes = {
-                            @AuthorizationScope(scope = "read", description = "for read operations"),
-                            @AuthorizationScope(scope = "openapi", description = "Access openapi API"),
-                            @AuthorizationScope(scope = "admin", description = "Access admin API"),
-                            @AuthorizationScope(scope = "write", description = "for write operations")
-                    })
-            })
+            notes = "This operation list or find GeographicAddressValidation entities", response = GeographicAddressValidation.class, responseContainer = "List")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success", response = GeographicAddressValidation.class, responseContainer = "List")})
     @RequestMapping(value = "/geographicAddressManagement/v4/geographicAddressValidation",
@@ -110,15 +94,7 @@ public class GeographicAddressValidationController implements GeographicAddressV
     }
 
     @ApiOperation(value = "Updates partially a GeographicAddressValidation", nickname = "patchGeographicAddressValidation",
-            notes = "This operation updates partially a GeographicAddressValidation entity.", response = GeographicAddressValidation.class,
-            authorizations = {
-                    @Authorization(value = "spring_oauth", scopes = {
-                            @AuthorizationScope(scope = "read", description = "for read operations"),
-                            @AuthorizationScope(scope = "openapi", description = "Access openapi API"),
-                            @AuthorizationScope(scope = "admin", description = "Access admin API"),
-                            @AuthorizationScope(scope = "write", description = "for write operations")
-                    })
-            })
+            notes = "This operation updates partially a GeographicAddressValidation entity.", response = GeographicAddressValidation.class)
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Updated", response = GeographicAddressValidation.class),
             @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
@@ -157,15 +133,7 @@ public class GeographicAddressValidationController implements GeographicAddressV
     }
 
     @ApiOperation(value = "Retrieves a GeographicAddressValidation by ID", nickname = "retrieveGeographicAddressValidation",
-            notes = "This operation retrieves a GeographicAddressValidation entity. Attribute selection is enabled for all first level attributes.", response = GeographicAddressValidation.class,
-            authorizations = {
-                    @Authorization(value = "spring_oauth", scopes = {
-                            @AuthorizationScope(scope = "read", description = "for read operations"),
-                            @AuthorizationScope(scope = "openapi", description = "Access openapi API"),
-                            @AuthorizationScope(scope = "admin", description = "Access admin API"),
-                            @AuthorizationScope(scope = "write", description = "for write operations")
-                    })
-            })
+            notes = "This operation retrieves a GeographicAddressValidation entity. Attribute selection is enabled for all first level attributes.", response = GeographicAddressValidation.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success", response = GeographicAddressValidation.class),
             @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
@@ -216,15 +184,7 @@ public class GeographicAddressValidationController implements GeographicAddressV
     }
 
     @ApiOperation(value = "Deletes a GeographicAddressValidation", nickname = "deleteGeographicAddressValidation",
-            notes = "This operation deletes a GeographicAddressValidation entity.",
-            authorizations = {
-                    @Authorization(value = "spring_oauth", scopes = {
-                            @AuthorizationScope(scope = "read", description = "for read operations"),
-                            @AuthorizationScope(scope = "openapi", description = "Access openapi API"),
-                            @AuthorizationScope(scope = "admin", description = "Access admin API"),
-                            @AuthorizationScope(scope = "write", description = "for write operations")
-                    })
-            })
+            notes = "This operation deletes a GeographicAddressValidation entity.")
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Deleted", response = GeographicAddressValidation.class)})
     @RequestMapping(value = "/geographicAddressManagement/v4/geographicAddressValidation/{id}",
