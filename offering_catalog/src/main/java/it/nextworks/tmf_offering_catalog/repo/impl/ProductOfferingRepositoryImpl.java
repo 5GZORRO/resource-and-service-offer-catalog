@@ -1,5 +1,7 @@
 package it.nextworks.tmf_offering_catalog.repo.impl;
 
+import it.nextworks.tmf_offering_catalog.information_models.common.RelatedParty;
+import it.nextworks.tmf_offering_catalog.information_models.common.RelatedParty_;
 import it.nextworks.tmf_offering_catalog.information_models.product.*;
 import it.nextworks.tmf_offering_catalog.repo.ProductOfferingRepositoryCustom;
 import it.nextworks.tmf_offering_catalog.rest.Filter;
@@ -45,7 +47,7 @@ public class ProductOfferingRepositoryImpl implements ProductOfferingRepositoryC
                     productOfferingRoot.join(ProductOffering_.productOfferingPrice);
             Root<ProductOfferingPrice> productOfferingPriceRoot = cq.from(ProductOfferingPrice.class);
 
-            if(predicates.isEmpty())
+            if(!predicates.isEmpty())
                 predicates.add(cb.and(cb.equal(productOfferingPriceRefJoin.get(ProductOfferingPriceRef_.id),
                         productOfferingPriceRoot.get(ProductOfferingPrice_.id))));
             else
@@ -57,6 +59,24 @@ public class ProductOfferingRepositoryImpl implements ProductOfferingRepositoryC
             predicates.add(cb.and(cb.equal(productOfferingPriceRoot.get(ProductOfferingPrice_.price).get(Money_.unit),
                     currency)));
 
+        }
+
+        String stakeholder = filter.getStakeholder();
+        if(stakeholder != null && !stakeholder.isEmpty()) {
+            Join<ProductOffering, ProductSpecificationRef> productSpecificationRefJoin =
+                    productOfferingRoot.join(ProductOffering_.productSpecification);
+            Root<ProductSpecification> productSpecificationRoot = cq.from(ProductSpecification.class);
+            Join<ProductSpecification, RelatedParty> relatedPartyJoin =
+                    productSpecificationRoot.join(ProductSpecification_.relatedParty);
+
+            if(!predicates.isEmpty())
+                predicates.add(cb.and(cb.equal(productSpecificationRefJoin.get(ProductSpecificationRef_.id),
+                        productSpecificationRoot.get(ProductSpecification_.id))));
+            else
+                predicates.add(cb.equal(productSpecificationRefJoin.get(ProductSpecificationRef_.id),
+                        productSpecificationRoot.get(ProductSpecification_.id)));
+
+            predicates.add(cb.and(cb.equal(relatedPartyJoin.get(RelatedParty_.name), stakeholder)));
         }
 
         cq.where(predicates.toArray(new Predicate[0]));
