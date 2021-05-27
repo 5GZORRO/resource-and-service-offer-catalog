@@ -304,7 +304,7 @@ public class ProductOfferingController implements ProductOfferingInterface {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(new ErrMsg("The minimum price specified is greater then the maximum one."));
 
-            if(currency == null || !currency.isEmpty())
+            if(currency == null || currency.isEmpty())
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg("Currency not specified."));
         }
 
