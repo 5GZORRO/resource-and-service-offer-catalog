@@ -70,7 +70,7 @@ public class ExternalProductOfferingConsumer {
     private ProductOfferingService productOfferingService;
 
     @KafkaListener(
-            topics = "operatora-dlt-product-offerings",
+            topics = "#{@topic}",
             containerFactory = "kafkaListenerContainerFactory")
     public void listener(ExternalProductOffering externalProductOffering) {
 
