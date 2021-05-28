@@ -25,6 +25,15 @@ public class GeographicAddressFilter {
     @ApiModelProperty("Postcode of the Geographic Address to be provided in response.")
     private String postcode;
 
+    public GeographicAddressFilter() { }
+
+    public GeographicAddressFilter(String locality, String city, String country, String postcode) {
+        this.locality = locality;
+        this.city = city;
+        this.country = country;
+        this.postcode = postcode;
+    }
+
     public String getLocality() {
         return locality;
     }
@@ -55,6 +64,26 @@ public class GeographicAddressFilter {
 
     public void setPostcode(String postcode) {
         this.postcode = postcode;
+    }
+
+    public GeographicAddressFilter locality(String locality) {
+        this.locality = locality;
+        return this;
+    }
+
+    public GeographicAddressFilter city(String city) {
+        this.city = city;
+        return this;
+    }
+
+    public GeographicAddressFilter country(String country) {
+        this.country = country;
+        return this;
+    }
+
+    public GeographicAddressFilter postcode(String postcode) {
+        this.postcode = postcode;
+        return this;
     }
 
     public Map<String, String> getAllAttributes() {

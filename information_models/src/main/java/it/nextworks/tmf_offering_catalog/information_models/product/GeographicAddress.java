@@ -75,7 +75,7 @@ public class GeographicAddress {
     private String streetType = null;
 
     @JsonProperty("geographicLocation")
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, orphanRemoval = true)
     @JoinColumn(name = "geographic_location_id", referencedColumnName = "id")
     private GeographicLocation geographicLocation = null;
 
@@ -179,6 +179,11 @@ public class GeographicAddress {
 
     public void setLocality(String locality) {
         this.locality = locality;
+    }
+
+    public GeographicAddress postcode(String postcode) {
+        this.postcode = postcode;
+        return this;
     }
 
     /**
