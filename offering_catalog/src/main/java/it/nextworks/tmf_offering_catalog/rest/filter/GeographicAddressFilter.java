@@ -6,6 +6,7 @@ import it.nextworks.tmf_offering_catalog.information_models.product.GeographicAd
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class GeographicAddressFilter {
 
@@ -95,4 +96,23 @@ public class GeographicAddressFilter {
         return attributes;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        GeographicAddressFilter that = (GeographicAddressFilter) o;
+        return Objects.equals(locality, that.locality)
+                && Objects.equals(city, that.city)
+                && Objects.equals(country, that.country)
+                && Objects.equals(postcode, that.postcode);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(locality, city, country, postcode);
+    }
 }

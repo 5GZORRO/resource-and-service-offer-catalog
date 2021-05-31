@@ -2,6 +2,7 @@ package it.nextworks.tmf_offering_catalog.repo;
 
 import it.nextworks.tmf_offering_catalog.information_models.product.GeographicAddress;
 import it.nextworks.tmf_offering_catalog.rest.filter.GeographicAddressFilter;
+import org.assertj.core.groups.Tuple;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class GeographicAddressRepositoryTest {
     }
 
     @Test
-    public void whenInvalidId_thenReturnVoid() {
+    public void whenFindByInvalidId_thenReturnVoid() {
         Optional<GeographicAddress> foundGeographicAddress = geographicAddressRepository.findById("invalidId");
 
         assertThat(foundGeographicAddress.isPresent()).isFalse();
@@ -57,9 +58,20 @@ public class GeographicAddressRepositoryTest {
     }
 
     @Test
+    public void givenSetOfGeographicAddresses_whenFindByInvalidLocality_thenReturnVoid() {
+        GeographicAddress geographicAddress = testEntityManager.persistAndFlush(new GeographicAddress().locality("Montjuic"));
+        testEntityManager.persistAndFlush(new GeographicAddress().locality(geographicAddress.getLocality()));
+        GeographicAddressFilter geographicAddressFilter = new GeographicAddressFilter().locality("Harlem");
+
+        List<GeographicAddress> foundGeographicAddresses = geographicAddressRepository.filteredFindAll(geographicAddressFilter);
+
+        assertThat(foundGeographicAddresses).hasSize(0);
+    }
+
+    @Test
     public void givenSetOfGeographicAddresses_whenFindByCity_thenReturnGeographicAddresses() {
         GeographicAddress geographicAddress = testEntityManager.persistAndFlush(new GeographicAddress().city("Barcelona"));
-        testEntityManager.persistAndFlush(new GeographicAddress().city("New York"));
+        testEntityManager.persistAndFlush(new GeographicAddress().city("New York City"));
         testEntityManager.persistAndFlush(new GeographicAddress().city(geographicAddress.getCity()));
         GeographicAddressFilter geographicAddressFilter = new GeographicAddressFilter().city(geographicAddress.getCity());
 
@@ -72,7 +84,7 @@ public class GeographicAddressRepositoryTest {
     @Test
     public void givenSetOfGeographicAddresses_whenFindByCountry_thenReturnGeographicAddresses() {
         GeographicAddress geographicAddress = testEntityManager.persistAndFlush(new GeographicAddress().country("Spain"));
-        testEntityManager.persistAndFlush(new GeographicAddress().country("UEA"));
+        testEntityManager.persistAndFlush(new GeographicAddress().country("USA"));
         testEntityManager.persistAndFlush(new GeographicAddress().country(geographicAddress.getCountry()));
         GeographicAddressFilter geographicAddressFilter = new GeographicAddressFilter().country(geographicAddress.getCountry());
 
@@ -87,12 +99,60 @@ public class GeographicAddressRepositoryTest {
         GeographicAddress geographicAddress = testEntityManager.persistAndFlush(new GeographicAddress().postcode("08000"));
         testEntityManager.persistAndFlush(new GeographicAddress().postcode("01000"));
         testEntityManager.persistAndFlush(new GeographicAddress().postcode(geographicAddress.getPostcode()));
-        GeographicAddressFilter geographicAddressFilter = new GeographicAddressFilter().city(geographicAddress.getPostcode());
+        GeographicAddressFilter geographicAddressFilter = new GeographicAddressFilter().postcode(geographicAddress.getPostcode());
 
         List<GeographicAddress> foundGeographicAddresses = geographicAddressRepository.filteredFindAll(geographicAddressFilter);
 
         assertThat(foundGeographicAddresses).hasSize(2);
         assertThat(foundGeographicAddresses).extracting(GeographicAddress::getPostcode).containsOnly(geographicAddress.getPostcode());
+    }
+
+    @Test
+    public void givenSetOfGeographicAddresses_whenFindByCityAndCountry_thenReturnGeographicAddresses() {
+        GeographicAddress geographicAddress = testEntityManager.persistAndFlush(new GeographicAddress().city("Barcelona").country("Spain"));
+        testEntityManager.persistAndFlush(new GeographicAddress().city("New York City").country("USA"));
+        testEntityManager.persistAndFlush(new GeographicAddress().city(geographicAddress.getCity()).country(geographicAddress.getCountry()));
+        GeographicAddressFilter geographicAddressFilter = new GeographicAddressFilter().city(geographicAddress.getCity()).country(geographicAddress.getCountry());
+
+        List<GeographicAddress> foundGeographicAddresses = geographicAddressRepository.filteredFindAll(geographicAddressFilter);
+
+        assertThat(foundGeographicAddresses).hasSize(2);
+        assertThat(foundGeographicAddresses).extracting(GeographicAddress::getCity, GeographicAddress::getCountry).containsOnly(new Tuple(geographicAddress.getCity(), geographicAddress.getCountry()));
+    }
+
+    @Test
+    public void givenSetOfGeographicAddresses_whenFindByLocalityAndPostcode_thenReturnGeographicAddresses() {
+        GeographicAddress geographicAddress = testEntityManager.persistAndFlush(new GeographicAddress().locality("Montjuic").postcode("08000"));
+        testEntityManager.persistAndFlush(new GeographicAddress().locality("Harlem").postcode("01000"));
+        testEntityManager.persistAndFlush(new GeographicAddress().locality(geographicAddress.getLocality()).postcode(geographicAddress.getPostcode()));
+        GeographicAddressFilter geographicAddressFilter = new GeographicAddressFilter().locality(geographicAddress.getLocality()).postcode(geographicAddress.getPostcode());
+
+        List<GeographicAddress> foundGeographicAddresses = geographicAddressRepository.filteredFindAll(geographicAddressFilter);
+
+        assertThat(foundGeographicAddresses).hasSize(2);
+        assertThat(foundGeographicAddresses).extracting(GeographicAddress::getLocality, GeographicAddress::getPostcode).containsOnly(new Tuple(geographicAddress.getLocality(), geographicAddress.getPostcode()));
+    }
+
+    @Test
+    public void givenSetOfGeographicAddresses_whenFindByLocalityAndPostcodeAndCityAndCountry_thenReturnGeographicAddresses() {
+        GeographicAddress geographicAddress = testEntityManager.persistAndFlush(
+                new GeographicAddress().locality("Montjuic").postcode("08000").city("Barcelona").country("Spain")
+        );
+        testEntityManager.persistAndFlush(
+                new GeographicAddress().locality("Harlem").postcode("01000").city("New York City").country("USA")
+        );
+        testEntityManager.persistAndFlush(
+                new GeographicAddress().locality(geographicAddress.getLocality()).postcode(geographicAddress.getPostcode()).city(geographicAddress.getCity()).country(geographicAddress.getCountry())
+        );
+        GeographicAddressFilter geographicAddressFilter = new GeographicAddressFilter()
+                .locality(geographicAddress.getLocality()).postcode(geographicAddress.getPostcode()).city(geographicAddress.getCity()).country(geographicAddress.getCountry());
+
+        List<GeographicAddress> foundGeographicAddresses = geographicAddressRepository.filteredFindAll(geographicAddressFilter);
+
+        assertThat(foundGeographicAddresses).hasSize(2);
+        assertThat(foundGeographicAddresses)
+                .extracting(GeographicAddress::getLocality, GeographicAddress::getPostcode, GeographicAddress::getCity, GeographicAddress::getCountry)
+                .containsOnly(new Tuple(geographicAddress.getLocality(), geographicAddress.getPostcode(), geographicAddress.getCity(), geographicAddress.getCountry()));
     }
 
     @Test
