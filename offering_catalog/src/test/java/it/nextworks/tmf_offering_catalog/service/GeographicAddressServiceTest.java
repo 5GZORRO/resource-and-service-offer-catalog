@@ -1,6 +1,6 @@
 package it.nextworks.tmf_offering_catalog.service;
 
-import it.nextworks.tmf_offering_catalog.common.config.GeographicAddressServiceTestContextConfiguration;
+import it.nextworks.tmf_offering_catalog.common.config.GeographicAddressTestContextConfiguration;
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
 import it.nextworks.tmf_offering_catalog.information_models.product.GeographicAddress;
 import it.nextworks.tmf_offering_catalog.repo.GeographicAddressRepository;
@@ -10,7 +10,7 @@ import org.assertj.core.groups.Tuple;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
+import org.mockito.internal.verification.VerificationModeFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
@@ -21,9 +21,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
-@Import(GeographicAddressServiceTestContextConfiguration.class)
+@Import(GeographicAddressTestContextConfiguration.class)
 public class GeographicAddressServiceTest {
 
     @Autowired
@@ -42,9 +43,9 @@ public class GeographicAddressServiceTest {
         List<GeographicAddress> sameCityGeographicAddresses = Arrays.asList(geographicAddressOne, geographicAddressThree);
         GeographicAddressFilter sameCityGeographicAddressesFilter = new GeographicAddressFilter().city(geographicAddressOne.getCity());
 
-        Mockito.when(geographicAddressRepository.findById(geographicAddressZero.getId())).thenReturn(Optional.of(geographicAddressZero));
-        Mockito.when(geographicAddressRepository.findAll()).thenReturn(allGeographicAddresses);
-        Mockito.when(geographicAddressRepository.filteredFindAll(sameCityGeographicAddressesFilter)).thenReturn((sameCityGeographicAddresses));
+        when(geographicAddressRepository.findById(geographicAddressZero.getId())).thenReturn(Optional.of(geographicAddressZero));
+        when(geographicAddressRepository.findAll()).thenReturn(allGeographicAddresses);
+        when(geographicAddressRepository.filteredFindAll(sameCityGeographicAddressesFilter)).thenReturn((sameCityGeographicAddresses));
     }
 
     @Test
@@ -53,6 +54,7 @@ public class GeographicAddressServiceTest {
 
         assertThat(foundGeographicAddress).isNotNull();
         assertThat(foundGeographicAddress.getId()).isEqualTo("0");
+        checkRepositoryFindByIdMethod("0");
     }
 
     @Test(expected = NotExistingEntityException.class)
@@ -66,22 +68,41 @@ public class GeographicAddressServiceTest {
 
         assertThat(geographicAddresses).hasSize(3);
         assertThat(geographicAddresses).extracting(GeographicAddress::getId).containsOnly("1", "2", "3");
+        checkRepositoryFindAllMethod();
     }
 
     @Test
     public void whenListFiltered_thenFilteredGeographicAddressesShouldBeFound() {
-        List<GeographicAddress> geographicAddresses = geographicAddressService.list(new GeographicAddressFilter().city("Barcelona"));
+        GeographicAddressFilter geographicAddressFilter = new GeographicAddressFilter().city("Barcelona");
+        List<GeographicAddress> geographicAddresses = geographicAddressService.list(geographicAddressFilter);
 
         assertThat(geographicAddresses).hasSize(2);
         assertThat(geographicAddresses).extracting(GeographicAddress::getId, GeographicAddress::getCity).containsOnly(new Tuple("1", "Barcelona"), new Tuple("3", "Barcelona"));
+        checkRepositoryFilteredFindAllMethod(geographicAddressFilter);
     }
 
     @Test
     public void whenListFilteredInvalid_thenGeographicAddressesShouldNotBeFound() {
-        List<GeographicAddress> geographicAddresses = geographicAddressService.list(new GeographicAddressFilter().city("Invalid city"));
+        GeographicAddressFilter geographicAddressFilter = new GeographicAddressFilter().city("Invalid city");
+        List<GeographicAddress> geographicAddresses = geographicAddressService.list(geographicAddressFilter);
 
         assertThat(geographicAddresses).hasSize(0);
+        checkRepositoryFilteredFindAllMethod(geographicAddressFilter);
     }
 
+    private void checkRepositoryFindByIdMethod(String id) throws NotExistingEntityException {
+        verify(geographicAddressRepository, VerificationModeFactory.times(1)).findById(id);
+        reset(geographicAddressRepository);
+    }
+
+    private void checkRepositoryFindAllMethod() {
+        verify(geographicAddressRepository, VerificationModeFactory.times(1)).findAll();
+        reset(geographicAddressRepository);
+    }
+
+    private void checkRepositoryFilteredFindAllMethod(GeographicAddressFilter geographicAddressFilter) {
+        verify(geographicAddressRepository, VerificationModeFactory.times(1)).filteredFindAll(geographicAddressFilter);
+        reset(geographicAddressRepository);
+    }
 
 }

@@ -34,8 +34,10 @@ public class GeographicAddressValidationService {
     @Transactional
     public GeographicAddressValidation create(GeographicAddressValidationCreate geographicAddressValidationCreate) {
         log.info("Received request to create a Geographic Address.");
-        GeographicAddressValidation geographicAddressValidation = createAndPopulateGeographicAddressValidation(geographicAddressValidationCreate);
-        geographicAddressValidationRepository.save(geographicAddressValidation);
+        GeographicAddressValidation geographicAddressValidation = geographicAddressValidationRepository.save(
+                createAndPopulateGeographicAddressValidation(geographicAddressValidationCreate)
+        );
+        geographicAddressValidation.href(protocol + hostname + ":" + port + path + geographicAddressValidation.getId());
         log.info("Geographic Address Validation created with id " + geographicAddressValidation.getId() + ".");
         return geographicAddressValidation;
     }
@@ -49,7 +51,7 @@ public class GeographicAddressValidationService {
     @Transactional
     public GeographicAddressValidation get(String id) throws NotExistingEntityException {
         log.info("Received request to retrieve Geographic Address Validation with id " + id + ".");
-        Optional<GeographicAddressValidation> retrieved = geographicAddressValidationRepository.findByGeographicAddressValidationId(id);
+        Optional<GeographicAddressValidation> retrieved = geographicAddressValidationRepository.findById(id);
         if (!retrieved.isPresent()) {
             throw new NotExistingEntityException("Geographic Address Validation with id " + id + " not found in DB.");
         }
@@ -60,7 +62,7 @@ public class GeographicAddressValidationService {
     @Transactional
     public GeographicAddressValidation patch(String id, GeographicAddressValidationUpdate geographicAddressValidationUpdate, String lastUpdate) throws NotExistingEntityException {
         log.info("Received request to patch Product Offering with id " + id + ".");
-        Optional<GeographicAddressValidation> toUpdate = geographicAddressValidationRepository.findByGeographicAddressValidationId(id);
+        Optional<GeographicAddressValidation> toUpdate = geographicAddressValidationRepository.findById(id);
         if (!toUpdate.isPresent()) {
             throw new NotExistingEntityException("Product Offering with id " + id + " not found in DB.");
         }
@@ -76,12 +78,9 @@ public class GeographicAddressValidationService {
     }
 
     private GeographicAddressValidation createAndPopulateGeographicAddressValidation(GeographicAddressValidationCreate geographicAddressValidationCreate) {
-        final String id = UUID.randomUUID().toString();
         return new GeographicAddressValidation()
                 .schemaLocation(geographicAddressValidationCreate.getSchemaLocation())
                 .type(geographicAddressValidationCreate.getType())
-                .href(protocol + hostname + ":" + port + path + id)
-                .id(id)
                 .validGeographicAddress(geographicAddressValidationCreate.getSubmittedGeographicAddress());
     }
 

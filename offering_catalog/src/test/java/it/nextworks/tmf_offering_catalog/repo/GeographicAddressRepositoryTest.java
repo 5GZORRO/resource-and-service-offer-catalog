@@ -39,9 +39,7 @@ public class GeographicAddressRepositoryTest {
 
     @Test
     public void whenFindByInvalidId_thenReturnVoid() {
-        Optional<GeographicAddress> foundGeographicAddress = geographicAddressRepository.findById("invalidId");
-
-        assertThat(foundGeographicAddress.isPresent()).isFalse();
+        assertThat(geographicAddressRepository.findById("invalidId").isPresent()).isFalse();
     }
 
     @Test
