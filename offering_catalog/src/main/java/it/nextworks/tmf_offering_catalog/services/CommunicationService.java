@@ -168,6 +168,11 @@ public class CommunicationService {
     @Value("${sc_lcm.sc_lcm_request_path}")
     private String scLcmRequestPath;
 
+    @Value("${skip_sc_lcm_post}")
+    private boolean skipSCLCMPost;
+    @Value("${skip_srsd_post}")
+    private boolean skipSRSDPost;
+
     private final ObjectMapper objectMapper;
 
     @Autowired
@@ -270,6 +275,14 @@ public class CommunicationService {
 
         productOfferingStatusRepository.save(productOfferingStatus);
 
+        log.info("Status of Product Offering " + catalogId + " updated with DID " + did + ".");
+
+        if(skipSRSDPost && skipSCLCMPost) {
+            log.info("Skipping POST request to Smart Resource & Service Discovery.");
+            log.info("Skipping POST request to Smart Contract Lifecycle Manager.");
+            return;
+        }
+
         // Construct the payloads for the classify and publish POST requests
 
         List<ProductOfferingPrice> productOfferingPrices = getProductOfferingPrices(po);
@@ -277,21 +290,17 @@ public class CommunicationService {
         List<ResourceSpecification> resourceSpecifications = getResourceSpecifications(productSpecification);
         List<ServiceSpecification> serviceSpecifications = getServiceSpecifications(productSpecification);
 
-        ClassificationWrapper classificationWrapper =
-                new ClassificationWrapper(po, did, productOfferingPrices, productSpecification,
-                        resourceSpecifications, serviceSpecifications);
-        String cwJson = objectMapper.writeValueAsString(classificationWrapper);
-        log.info(cwJson);
+        String cwJson = null;
+        if(!skipSRSDPost)
+            cwJson = objectMapper.writeValueAsString(new ClassificationWrapper(po, did, productOfferingPrices,
+                    productSpecification, resourceSpecifications, serviceSpecifications));
 
-        PublicationWrapper publicationWrapper =
-                new PublicationWrapper(po, null, null, did,
-                        productOfferingPrices, productSpecification, resourceSpecifications, serviceSpecifications);
-        String pwJson = objectMapper.writeValueAsString(publicationWrapper);
-        log.info(pwJson);
+        String pwJson = null;
+        if(!skipSCLCMPost)
+            pwJson = objectMapper.writeValueAsString(new PublicationWrapper(po, null, null,
+                    did, productOfferingPrices, productSpecification, resourceSpecifications, serviceSpecifications));
 
         classifyAndPublishProductOfferingService.classifyAndPublish(catalogId, cwJson, pwJson);
-
-        log.info("Status of Product Offering " + catalogId + " updated.");
     }
 
     private List<ProductOfferingPrice> getProductOfferingPrices(ProductOffering po) {

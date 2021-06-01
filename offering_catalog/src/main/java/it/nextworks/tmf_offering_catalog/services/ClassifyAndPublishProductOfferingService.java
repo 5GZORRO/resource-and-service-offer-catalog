@@ -34,6 +34,8 @@ public class ClassifyAndPublishProductOfferingService {
     private String scLcmPort;
     @Value("${sc_lcm.sc_lcm_request_path}")
     private String scLcmRequestPath;
+    @Value("${skip_sc_lcm_post}")
+    private boolean skipSCLCMPost;
 
     @Value("${srsd.hostname}")
     private String srsdHostname;
@@ -41,6 +43,8 @@ public class ClassifyAndPublishProductOfferingService {
     private String srsdPort;
     @Value("${srsd.srsd_request_path}")
     private String srsdRequestPath;
+    @Value("${skip_srsd_post}")
+    private boolean skipSRSDPost;
 
     @Autowired
     private ProductOfferingStatusRepository productOfferingStatusRepository;
@@ -55,23 +59,31 @@ public class ClassifyAndPublishProductOfferingService {
 
         ProductOfferingStatus productOfferingStatus = toClassify.get();
 
-        if(!classifyProductOffering(catalogId, cwJson)) {
-            productOfferingStatus.setStatus(ProductOfferingStatesEnum.CLASSIFICATION_FAILED);
+        if(skipSRSDPost)
+            log.info("Skipping POST request to Smart Resource & Service Discovery.");
+        else {
+            if (!classifyProductOffering(catalogId, cwJson)) {
+                productOfferingStatus.setStatus(ProductOfferingStatesEnum.CLASSIFICATION_FAILED);
+                productOfferingStatusRepository.save(productOfferingStatus);
+                return;
+            }
+
+            productOfferingStatus.setStatus(ProductOfferingStatesEnum.CLASSIFIED);
             productOfferingStatusRepository.save(productOfferingStatus);
-            return;
         }
 
-        productOfferingStatus.setStatus(ProductOfferingStatesEnum.CLASSIFIED);
-        productOfferingStatusRepository.save(productOfferingStatus);
+        if(skipSCLCMPost)
+            log.info("Skipping POST request to Smart Contract Lifecycle Manager.");
+        else {
+            if (!publicProductOffering(catalogId, pwJson)) {
+                productOfferingStatus.setStatus(ProductOfferingStatesEnum.PUBLISHING_FAILED);
+                productOfferingStatusRepository.save(productOfferingStatus);
+                return;
+            }
 
-        if(!publicProductOffering(catalogId, pwJson)) {
-            productOfferingStatus.setStatus(ProductOfferingStatesEnum.PUBLISHING_FAILED);
+            productOfferingStatus.setStatus(ProductOfferingStatesEnum.PUBLISHED);
             productOfferingStatusRepository.save(productOfferingStatus);
-            return;
         }
-
-        productOfferingStatus.setStatus(ProductOfferingStatesEnum.PUBLISHED);
-        productOfferingStatusRepository.save(productOfferingStatus);
     }
 
     private boolean classifyProductOffering(String catalogId, String cwJson) {
