@@ -28,5 +28,5 @@ jobs:
           file: deployment/catalog_dockerfile/Dockerfile
           push: true
           tags: |
-            docker.pkg.github.com/${{ github.repository }}/octo-image:${{ github.sha }}
-            docker.pkg.github.com/${{ github.repository }}/octo-image:${{ github.ref }}
+            docker.pkg.github.com/5gzorro/resource-and-service-offer-catalog/octo-image:${{ github.sha }}
+            docker.pkg.github.com/5gzorro/resource-and-service-offer-catalog/octo-image:${{ github.ref }}
