@@ -7,9 +7,26 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  build-and-push-latest:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
-    - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: docker build . --file deployment/catalog_dockerfile/Dockerfile --tag resource_and_service_offer_catalog:$(date +%s)
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Log in to GitHub Docker Registry
+        uses: docker/login-action@v1
+        with:
+          registry: docker.pkg.github.com
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Container image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: deployment/catalog_dockerfile/Dockerfile
+          push: true
+          tags: |
+            docker.pkg.github.com/${{ github.repository }}/octo-image:${{ github.sha }}
+            docker.pkg.github.com/${{ github.repository }}/octo-image:${{ github.ref }}
