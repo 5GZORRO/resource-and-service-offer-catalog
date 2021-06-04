@@ -22,18 +22,8 @@ public class OrganizationController implements OrganizationInterface {
 
     private final static Logger log = LoggerFactory.getLogger(OrganizationController.class);
 
-    private final ObjectMapper objectMapper;
-
-    private final HttpServletRequest request;
-
     @Autowired
     private OrganizationService organizationService;
-
-    @Autowired
-    public OrganizationController(ObjectMapper objectMapper, HttpServletRequest request) {
-        this.objectMapper = objectMapper;
-        this.request = request;
-    }
 
     @ApiOperation(value = "Creates the Organization", nickname = "createOrganization",
             notes = "This operation creates a Organization entity.", response = OrganizationWrapper.class, authorizations = {

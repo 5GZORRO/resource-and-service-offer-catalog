@@ -28,18 +28,8 @@ public class serviceSpecificationController implements ServiceSpecificationInter
 
     private static final String uuidRegex = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
 
-    private final ObjectMapper objectMapper;
-
-    private final HttpServletRequest request;
-
     @Autowired
     private ServiceSpecificationService serviceSpecificationService;
-
-    @Autowired
-    public serviceSpecificationController(ObjectMapper objectMapper, HttpServletRequest request) {
-        this.objectMapper = objectMapper;
-        this.request = request;
-    }
 
     @ApiOperation(value = "Creates a ServiceSpecification", nickname = "createServiceSpecification", notes = "This operation creates a ServiceSpecification entity.", response = ServiceSpecification.class, authorizations = {
             @Authorization(value = "spring_oauth", scopes = {
