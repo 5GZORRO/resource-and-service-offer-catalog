@@ -1,0 +1,86 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: catalogue
+    domain: operator-a
+  name: catalogue-svc
+  namespace: domain-operator-a
+spec:
+  type: NodePort
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+    nodePort: 31080
+  selector:
+    app: catalogue
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: catalogue-config
+  namespace: domain-operator-a
+  labels:
+    domain: operator-a
+data:
+  OFFER_CATALOG_HOSTNAME: localhost
+  SERVER_PORT: "8080"
+  POSTGRES_HOSTNAME: postgresql.domain-operator-a.svc.cluster.local
+  POSTGRES_PORT: "5432"
+  POSTGRES_MODE: create
+  POSTGRES_USER: postgres
+  POSTGRES_PSW: mysecretpassword
+  KAFKA_BOOTSTRAP_ADDRESS: 172.28.3.196:9092
+  KAFKA_TOPIC: operatora-dlt-product-offerings
+  DID_SERVICE_HOSTNAME: 172.28.3.153
+  DID_SERVICE_PORT: "6200"
+  DID_SERVICE_REQUEST_PATH: /holder/create_did
+  SC_LCM_HOSTNAME: 172.28.3.111/operatora/smart-contract-lifecycle-manager
+  SC_LCM_PORT: "8082"
+  SC_LCM_REQUEST_PATH: /product-offer/
+  SKIP_SC_LCM_POST: "false"
+  SRSD_HOSTNAME: smart-resource-discovery.default.svc.cluster.local
+  SRSD_PORT: "8083"
+  SRSD_REQUEST_PATH: /classifyOffer
+  SKIP_SRSD_POST: "false"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: catalogue
+    domain: operator-a
+  name: catalogue-app
+  namespace: domain-operator-a
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: catalogue
+  template:
+    metadata:
+      labels:
+        app: catalogue
+        domain: operator-a
+    spec:
+      containers:
+      - name: resource-and-service-offer-catalog
+        image: docker.pkg.github.com/5gzorro/resource-and-service-offer-catalog/resource-and-service-offer-catalog:latest
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: catalogue-config
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources:
+          requests:
+            cpu: "1"
+            memory: "2Gi"
+          limits:
+            cpu: "2"
+            memory: "4Gi"
+      imagePullSecrets:
+      - name: operator-a-regcred

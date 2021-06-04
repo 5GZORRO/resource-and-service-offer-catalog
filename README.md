@@ -1,7 +1,7 @@
-# tmf-offering-catalog
-Implementation of the TM Forum Product Catalog Management APIs for a VNF/PNF offering catalog.
-If you want to install the Offering Catalog using docker-compose skip the Requirements, and the first Installation
-sections. </br>
+# Resource and Service Offer Catalog
+Implementation of the TM Forum Product Catalog Management APIs for a Resources and Services offering catalog.
+If you want to install the Offering Catalog using docker-compose or running only the catalog by itself skip the 
+Requirements, and the first Installation sections.</br>
 
 ## Requirements
 - Java 8 </br>
@@ -32,6 +32,14 @@ Customize your Offering Catalog properties in ```offering_catalog/deployment/.en
 run the following command.
 ```bash
 docker-compose -f deployment/docker-compose.yaml up -d
+```
+
+## Installation [Dockerfile]
+Customize you Offering Catalog properties in ```offering_catalog/deployment/catalog_dockerfile/env_file``` then from
+```offering_catalog/``` run the following command.
+```bash
+docker build -t offering_catalog -f deployment/catalog_dockerfile/Dockerfile .
+docker run --env-file=env_file offering_catalog:latest
 ```
 
 ## Usage

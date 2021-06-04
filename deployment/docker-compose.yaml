@@ -7,8 +7,8 @@ services:
     volumes:
       - /opt/offer_catalog/postgres:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PSW}
     ports:
       - ${POSTGRES_PORT}:5432
 
@@ -22,8 +22,11 @@ services:
     environment:
       OFFER_CATALOG_HOSTNAME: ${OFFER_CATALOG_HOSTNAME}
       SERVER_PORT: ${SERVER_PORT}
+      POSTGRES_HOSTNAME: ${POSTGRES_HOSTNAME}
       POSTGRES_PORT: ${POSTGRES_PORT}
       POSTGRES_MODE: ${POSTGRES_MODE}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PSW: ${POSTGRES_PSW}
       KAFKA_BOOTSTRAP_ADDRESS: ${KAFKA_BOOTSTRAP_ADDRESS}
       KAFKA_TOPIC: ${KAFKA_TOPIC}
       DID_SERVICE_HOSTNAME: ${DID_SERVICE_HOSTNAME}
