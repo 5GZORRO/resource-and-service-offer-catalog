@@ -2,9 +2,9 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
 
 jobs:
   build-and-push-latest:
@@ -21,10 +21,14 @@ jobs:
           registry: docker.pkg.github.com
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+        with:
+          driver-opts: env.BUILDKIT_STEP_LOG_MAX_SIZE=10485760
       - name: Build Container image
         uses: docker/build-push-action@v2
         with:
           context: .
           file: deployment/catalog_dockerfile/Dockerfile
           push: true
-          tags: docker.pkg.github.com/5gzorro/resource-and-service-offer-catalog/resource-and-service-offer-catalog:${{ github.sha }}
+          tags: docker.pkg.github.com/5gzorro/resource-and-service-offer-catalog/resource-and-service-offer-catalog:latest
