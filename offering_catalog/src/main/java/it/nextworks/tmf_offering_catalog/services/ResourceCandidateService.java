@@ -45,10 +45,9 @@ public class ResourceCandidateService {
             throws NullIdentifierException, NotExistingEntityException {
 
         if(resourceCategoryRefs != null) {
-
             // Check that the references are well-formatted and exist in the DB
             List<ResourceCategory> resourceCategories = new ArrayList<>();
-            for (ResourceCategoryRef resourceCategoryRef : resourceCategoryRefs) {
+            for(ResourceCategoryRef resourceCategoryRef : resourceCategoryRefs) {
                 String rcrId = resourceCategoryRef.getId();
                 if(rcrId == null)
                     throw new NullIdentifierException("Referenced Resource Category with null identified not allowed.");
@@ -113,7 +112,7 @@ public class ResourceCandidateService {
 
         if(resourceCategoryRefs != null) {
             List<ResourceCategory> resourceCategories = new ArrayList<>();
-            for (ResourceCategoryRef resourceCategoryRef : resourceCategoryRefs) {
+            for(ResourceCategoryRef resourceCategoryRef : resourceCategoryRefs) {
                 String rcrId = resourceCategoryRef.getId();
                 if(rcrId == null)
                     throw new NullIdentifierException("Referenced Resource Category with null identifier not allowed.");
@@ -171,7 +170,7 @@ public class ResourceCandidateService {
     }
 
     private void updateResourceCategoryPatch(List<ResourceCategoryRef> oldResourceCategoryRefs,
-                                             List<ResourceCategoryRef> newResourceCategoryRef,
+                                             List<ResourceCategoryRef> newResourceCategoryRefs,
                                              String href,
                                              String id,
                                              String name)
@@ -189,8 +188,8 @@ public class ResourceCandidateService {
         }
 
         List<ResourceCategory> newResourceCategories = new ArrayList<>();
-        if(newResourceCategoryRef != null) {
-            for(ResourceCategoryRef resourceCategoryRef : newResourceCategoryRef) {
+        if(newResourceCategoryRefs != null) {
+            for(ResourceCategoryRef resourceCategoryRef : newResourceCategoryRefs) {
                 String rcrId = resourceCategoryRef.getId();
                 if (rcrId == null)
                     throw new NullIdentifierException("Referenced Resource Category with null identifier not allowed.");
