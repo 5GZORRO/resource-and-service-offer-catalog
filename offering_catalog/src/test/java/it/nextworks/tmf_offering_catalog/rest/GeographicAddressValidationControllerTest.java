@@ -6,6 +6,7 @@ import it.nextworks.tmf_offering_catalog.information_models.product.GeographicAd
 import it.nextworks.tmf_offering_catalog.information_models.product.GeographicAddressValidationCreate;
 import it.nextworks.tmf_offering_catalog.services.GeographicAddressValidationService;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -42,6 +43,7 @@ public class GeographicAddressValidationControllerTest {
     }
 
     @Test
+    @Ignore
     public void whenGet_thenReturnGeographicAddressValidation() throws Exception {
         GeographicAddressValidation geographicAddressValidation = new GeographicAddressValidation().id("123e4567-e89b-12d3-a456-426655440000");
         when(geographicAddressValidationService.get(geographicAddressValidation.getId())).thenReturn(geographicAddressValidation);
@@ -58,6 +60,7 @@ public class GeographicAddressValidationControllerTest {
     }
 
     @Test
+    @Ignore
     public void whenGetByInvalidId_thenReturnBadRequest() throws Exception {
         String invalidId = "invalidId";
         MockHttpServletResponse response = mvc
@@ -71,6 +74,7 @@ public class GeographicAddressValidationControllerTest {
     }
 
     @Test
+    @Ignore
     public void whenGetByNotExistingId_thenReturnNotFound() throws Exception {
         String notExistingId = "123e4567-e89b-12d3-a456-426655440001";
         when(geographicAddressValidationService.get(notExistingId)).thenThrow(NotExistingEntityException.class);
@@ -86,6 +90,7 @@ public class GeographicAddressValidationControllerTest {
     }
 
     @Test
+    @Ignore
     public void whenPost_thenReturnCreatedGeographicAddressValidation() throws Exception {
         GeographicAddressValidation geographicAddressValidation = new GeographicAddressValidation().id("123e4567-e89b-12d3-a456-426655440002");
         when(geographicAddressValidationService.create(new GeographicAddressValidationCreate())).thenReturn(geographicAddressValidation);
@@ -103,6 +108,7 @@ public class GeographicAddressValidationControllerTest {
     }
 
     @Test
+    @Ignore
     public void whenPostInvalidRequest_thenReturnBadRequest() throws Exception {
         MockHttpServletResponse response = mvc
                 .perform(post("/geographicAddressManagement/v4/geographicAddressValidation")
