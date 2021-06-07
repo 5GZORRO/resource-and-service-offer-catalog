@@ -2,6 +2,7 @@ package it.nextworks.tmf_offering_catalog.repo;
 
 import it.nextworks.tmf_offering_catalog.information_models.product.GeographicAddress;
 import it.nextworks.tmf_offering_catalog.information_models.product.GeographicAddressValidation;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ public class GeographicAddressValidationRepositoryTest {
     private GeographicAddressValidationRepository geographicAddressValidationRepository;
 
     @Test
+    @Ignore
     public void whenFindById_thenReturnGeographicAddressValidation() {
         GeographicAddressValidation geographicAddressValidation = testEntityManager.persistAndFlush(new GeographicAddressValidation());
 
@@ -37,11 +39,13 @@ public class GeographicAddressValidationRepositoryTest {
     }
 
     @Test
+    @Ignore
     public void whenFindByInvalidId_thenReturnVoid() {
         assertThat(geographicAddressValidationRepository.findById("invalidId").isPresent()).isFalse();
     }
 
     @Test
+    @Ignore
     public void whenSave_thenCreateGeographicAddressValidation() {
         GeographicAddressValidation createdGeographicAddressValidation = geographicAddressValidationRepository.save(new GeographicAddressValidation());
 
@@ -49,6 +53,7 @@ public class GeographicAddressValidationRepositoryTest {
     }
 
     @Test
+    @Ignore
     public void givenSetOfGeographicAddressValidations_whenFindAll_thenReturnAllGeographicAddressValidations() {
         GeographicAddressValidation geographicAddressValidationOne = testEntityManager.persistAndFlush(new GeographicAddressValidation());
         GeographicAddressValidation geographicAddressValidationTwo = testEntityManager.persistAndFlush(new GeographicAddressValidation());
