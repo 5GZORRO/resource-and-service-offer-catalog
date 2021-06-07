@@ -1,5 +1,6 @@
 package it.nextworks.tmf_offering_catalog.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
 import it.nextworks.tmf_offering_catalog.information_models.product.GeographicAddress;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -26,8 +28,18 @@ public class GeographicAddressController implements GeographicAddressInterface {
 
     private static final String uuidRegex = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
 
+    private final ObjectMapper objectMapper;
+
+    private final HttpServletRequest request;
+
     @Autowired
     private GeographicAddressService geographicAddressService;
+
+    @Autowired
+    public GeographicAddressController(ObjectMapper objectMapper, HttpServletRequest request) {
+        this.objectMapper = objectMapper;
+        this.request = request;
+    }
 
     @ApiOperation(value = "List or find GeographicAddress objects", nickname = "listGeographicAddress",
             notes = "This operation list or find GeographicAddress entities", response = GeographicAddress.class,
