@@ -27,4 +27,4 @@ jobs:
           context: .
           file: deployment/catalog_dockerfile/Dockerfile
           push: true
-          tags: docker.pkg.github.com/5gzorro/resource-and-service-offer-catalog/resource-and-service-offer-catalog:${{ github.sha }}
+          tags: docker.pkg.github.com/5gzorro/resource-and-service-offer-catalog/resource-and-service-offer-catalog:latest
