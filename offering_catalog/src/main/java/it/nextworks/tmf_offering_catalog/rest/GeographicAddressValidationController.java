@@ -1,5 +1,6 @@
 package it.nextworks.tmf_offering_catalog.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
 import it.nextworks.tmf_offering_catalog.information_models.product.GeographicAddressValidation;
@@ -18,6 +19,7 @@ import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
 import org.threeten.bp.ZoneId;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -29,6 +31,16 @@ public class GeographicAddressValidationController implements GeographicAddressV
     private final static Logger log = LoggerFactory.getLogger(GeographicAddressValidationController.class);
 
     private static final String uuidRegex = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
+
+    private final ObjectMapper objectMapper;
+
+    private final HttpServletRequest request;
+
+    @Autowired
+    public GeographicAddressValidationController(ObjectMapper objectMapper, HttpServletRequest request) {
+        this.objectMapper = objectMapper;
+        this.request = request;
+    }
 
     @Autowired
     private GeographicAddressValidationService geographicAddressValidationService;
