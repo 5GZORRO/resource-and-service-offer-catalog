@@ -51,6 +51,11 @@ public class GeographicAddressValidationController implements GeographicAddressV
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg("Invalid request body (geographicAddressValidation) received"));
         }
 
+        if (geographicAddressValidationCreate.getSubmittedGeographicAddress() == null) {
+            log.error("Web-Server: Invalid request body (submittedGeographicAddress) received.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg("Invalid request body (submittedGeographicAddress) received"));
+        }
+
         GeographicAddressValidation geographicAddressValidation = geographicAddressValidationService.create(geographicAddressValidationCreate);
 
         log.info("Web-Server: Geographic Address Validation created with id " + geographicAddressValidation.getId() + ".");

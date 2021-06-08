@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.nextworks.tmf_offering_catalog.common.exception.*;
+import it.nextworks.tmf_offering_catalog.information_models.common.PlaceRef;
 import it.nextworks.tmf_offering_catalog.information_models.common.ResourceSpecificationRef;
 import it.nextworks.tmf_offering_catalog.information_models.common.ServiceSpecificationRef;
 import it.nextworks.tmf_offering_catalog.information_models.product.*;
@@ -125,6 +126,9 @@ public class CommunicationService {
         @JsonProperty("serviceSpecifications")
         private final List<ServiceSpecification> serviceSpecifications;
 
+        @JsonProperty("geographicAddresses")
+        private final List<GeographicAddress> geographicAddresses;
+
         @JsonCreator
         public PublicationWrapper(@JsonProperty("productOffering") ProductOffering productOffering,
                                   @JsonProperty("invitations") Map<String, Invitation> invitations,
@@ -134,7 +138,8 @@ public class CommunicationService {
                                   @JsonProperty("productOfferingPrices") List<ProductOfferingPrice> productOfferingPrices,
                                   @JsonProperty("productSpecification") ProductSpecification productSpecification,
                                   @JsonProperty("resourceSpecifications") List<ResourceSpecification> resourceSpecifications,
-                                  @JsonProperty("serviceSpecifications") List<ServiceSpecification> serviceSpecifications) {
+                                  @JsonProperty("serviceSpecifications") List<ServiceSpecification> serviceSpecifications,
+                                  @JsonProperty("geographicAddresses") List<GeographicAddress> geographicAddresses) {
             this.productOffering        = productOffering;
             this.invitations            = invitations;
             this.verifiableCredentials  = verifiableCredentials;
@@ -143,6 +148,7 @@ public class CommunicationService {
             this.productSpecification   = productSpecification;
             this.resourceSpecifications = resourceSpecifications;
             this.serviceSpecifications  = serviceSpecifications;
+            this.geographicAddresses = geographicAddresses;
         }
     }
 
@@ -192,6 +198,9 @@ public class CommunicationService {
 
     @Autowired
     private ServiceSpecificationService serviceSpecificationService;
+
+    @Autowired
+    private GeographicAddressService geographicAddressService;
 
     @Autowired
     private ClassifyAndPublishProductOfferingService classifyAndPublishProductOfferingService;
@@ -289,6 +298,7 @@ public class CommunicationService {
         ProductSpecification productSpecification = getProductSpecification(po);
         List<ResourceSpecification> resourceSpecifications = getResourceSpecifications(productSpecification);
         List<ServiceSpecification> serviceSpecifications = getServiceSpecifications(productSpecification);
+        List<GeographicAddress> geographicAddresses = getGeographicAddresses(po);
 
         String cwJson = null;
         if(!skipSRSDPost)
@@ -298,7 +308,7 @@ public class CommunicationService {
         String pwJson = null;
         if(!skipSCLCMPost)
             pwJson = objectMapper.writeValueAsString(new PublicationWrapper(po, null, null,
-                    did, productOfferingPrices, productSpecification, resourceSpecifications, serviceSpecifications));
+                    did, productOfferingPrices, productSpecification, resourceSpecifications, serviceSpecifications, geographicAddresses));
 
         classifyAndPublishProductOfferingService.classifyAndPublish(catalogId, cwJson, pwJson);
     }
@@ -373,6 +383,20 @@ public class CommunicationService {
         }
 
         return serviceSpecifications;
+    }
+
+    private List<GeographicAddress> getGeographicAddresses(ProductOffering productOffering) {
+        List<PlaceRef> placeRefs = productOffering.getPlace();
+        List<GeographicAddress> geographicAddresses = new ArrayList<>();
+        placeRefs.forEach((placeRef) -> {
+            String id = placeRef.getId();
+            try {
+                geographicAddresses.add(geographicAddressService.get(id));
+            } catch (NotExistingEntityException e) {
+                log.warn("GeographicAddress with id " + id + " not found in DB.");
+            }
+        });
+        return geographicAddresses;
     }
 
     public void deleteProductOffering(String catalogId)

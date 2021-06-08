@@ -1,9 +1,7 @@
 package it.nextworks.tmf_offering_catalog.services;
 
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
-import it.nextworks.tmf_offering_catalog.information_models.product.GeographicAddressValidation;
-import it.nextworks.tmf_offering_catalog.information_models.product.GeographicAddressValidationCreate;
-import it.nextworks.tmf_offering_catalog.information_models.product.GeographicAddressValidationUpdate;
+import it.nextworks.tmf_offering_catalog.information_models.product.*;
 import it.nextworks.tmf_offering_catalog.repo.GeographicAddressValidationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,10 +76,22 @@ public class GeographicAddressValidationService {
     }
 
     private GeographicAddressValidation createAndPopulateGeographicAddressValidation(GeographicAddressValidationCreate geographicAddressValidationCreate) {
+        GeographicAddress submittedGeographicAddress = geographicAddressValidationCreate.getSubmittedGeographicAddress();
+        GeographicLocation geographicLocation = submittedGeographicAddress.getGeographicLocation();
+        if (geographicLocation.getId() != null) {
+            geographicLocation = geographicAddressValidationRepository.findById(geographicLocation.getId()).get();
+        }
+        geographicLocation.getGeometry().forEach((geographicPoint) -> {
+            if (geographicPoint.getId() != null) {
+                geographicPoint.setId(UUID.randomUUID().toString());
+            }
+        });
+        submittedGeographicAddress.id(UUID.randomUUID().toString());
         return new GeographicAddressValidation()
+                .id(UUID.randomUUID().toString())
                 .schemaLocation(geographicAddressValidationCreate.getSchemaLocation())
                 .type(geographicAddressValidationCreate.getType())
-                .validGeographicAddress(geographicAddressValidationCreate.getSubmittedGeographicAddress());
+                .validGeographicAddress(submittedGeographicAddress);
     }
 
     private GeographicAddressValidation updateGeographicAddressValidation(GeographicAddressValidation geographicAddressValidation, GeographicAddressValidationUpdate geographicAddressValidationUpdate) {
