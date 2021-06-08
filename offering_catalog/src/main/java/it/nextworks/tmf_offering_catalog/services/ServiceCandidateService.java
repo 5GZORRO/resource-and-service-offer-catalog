@@ -18,6 +18,7 @@ import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
 import org.threeten.bp.ZoneId;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -40,28 +41,33 @@ public class ServiceCandidateService {
     @Autowired
     private ServiceCategoryService serviceCategoryService;
 
-    private void updateServiceCategoryCreate(ServiceCandidate sc)
+    private void updateServiceCategory(List<ServiceCategoryRef> serviceCategoryRefs,
+                                       String href, String id, String name)
             throws NullIdentifierException, NotExistingEntityException {
 
-        List<ServiceCategoryRef> serviceCategoryRefs = sc.getCategory();
         if(serviceCategoryRefs != null) {
+            // Check that the references are well-formatted and exist in the DB
+            List<ServiceCategory> serviceCategories = new ArrayList<>();
             for(ServiceCategoryRef serviceCategoryRef : serviceCategoryRefs) {
-
                 String scrId = serviceCategoryRef.getId();
                 if(scrId == null)
                     throw new NullIdentifierException("Referenced Service Category with null identifier not allowed.");
 
-                ServiceCategory sCategory = serviceCategoryService.get(scrId);
+                serviceCategories.add(serviceCategoryService.get(scrId));
+            }
 
+            for(ServiceCategory serviceCategory : serviceCategories) {
+
+                String scrId = serviceCategory.getId();
                 log.info("Updating Service Category " + scrId + ".");
 
-                sCategory.getServiceCandidate().add(new ServiceCandidateRef()
-                        .href(sc.getHref())
-                        .id(sc.getId())
+                serviceCategory.getServiceCandidate().add(new ServiceCandidateRef()
+                        .href(href)
+                        .id(id)
                         .lastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString())
-                        .name(sc.getName()));
+                        .name(name));
 
-                serviceCategoryService.save(sCategory);
+                serviceCategoryService.save(serviceCategory);
 
                 log.info("Service Category " + scrId + " updated.");
             }
@@ -92,7 +98,8 @@ public class ServiceCandidateService {
         if(lastUpdate != null)
             serviceCandidate.setLastUpdate(lastUpdate.toString());
 
-        updateServiceCategoryCreate(serviceCandidate);
+        updateServiceCategory(serviceCandidate.getCategory(), serviceCandidate.getHref(),
+                id, serviceCandidate.getName());
 
         serviceCandidateRepository.save(serviceCandidate);
 
@@ -101,26 +108,29 @@ public class ServiceCandidateService {
         return serviceCandidate;
     }
 
-    private void updateServiceCategoryDelete(ServiceCandidate sc)
+    private void updateServiceCategoryDelete(List<ServiceCategoryRef> serviceCategoryRefs, String id)
             throws NullIdentifierException, NotExistingEntityException {
 
-        List<ServiceCategoryRef> serviceCategoryRefs = sc.getCategory();
         if(serviceCategoryRefs != null) {
+            List<ServiceCategory> serviceCategories = new ArrayList<>();
             for(ServiceCategoryRef serviceCategoryRef : serviceCategoryRefs) {
-
                 String scrId = serviceCategoryRef.getId();
                 if(scrId == null)
                     throw new NullIdentifierException("Referenced Service Category with null identified not allowed.");
 
-                ServiceCategory sCategory = serviceCategoryService.get(scrId);
+                serviceCategories.add(serviceCategoryService.get(scrId));
+            }
 
+            for(ServiceCategory serviceCategory : serviceCategories) {
+
+                String scrId = serviceCategory.getId();
                 log.info("Updating Service Category " + scrId + ".");
 
-                List<ServiceCandidateRef> serviceCandidateRefs = sCategory.getServiceCandidate();
+                List<ServiceCandidateRef> serviceCandidateRefs = serviceCategory.getServiceCandidate();
                 if(serviceCandidateRefs != null)
-                    serviceCandidateRefs.removeIf(scr -> scr.getId().equals(sc.getId()));
+                    serviceCandidateRefs.removeIf(scr -> scr.getId().equals(id));
 
-                serviceCategoryService.save(sCategory);
+                serviceCategoryService.save(serviceCategory);
 
                 log.info("Service Category " + scrId + " updated.");
             }
@@ -137,7 +147,7 @@ public class ServiceCandidateService {
 
         ServiceCandidate sc = toDelete.get();
 
-        updateServiceCategoryDelete(sc);
+        updateServiceCategoryDelete(sc.getCategory(), sc.getId());
 
         serviceCandidateRepository.delete(sc);
 
@@ -164,6 +174,66 @@ public class ServiceCandidateService {
         return serviceCandidates;
     }
 
+    private void updateServiceCategoryPatch(List<ServiceCategoryRef> oldServiceCategoryRefs,
+                                            List<ServiceCategoryRef> newServiceCategoryRefs,
+                                            String href,
+                                            String id,
+                                            String name)
+            throws NullIdentifierException, NotExistingEntityException {
+
+        List<ServiceCategory> oldServiceCategories = new ArrayList<>();
+        if(oldServiceCategoryRefs != null) {
+            for (ServiceCategoryRef serviceCategoryRef : oldServiceCategoryRefs) {
+                String scrId = serviceCategoryRef.getId();
+                if (scrId == null)
+                    throw new NullIdentifierException("Referenced Service Category with null identified not allowed.");
+
+                oldServiceCategories.add(serviceCategoryService.get(scrId));
+            }
+        }
+
+        List<ServiceCategory> newServiceCategories = new ArrayList<>();
+        if(newServiceCategoryRefs != null) {
+            for(ServiceCategoryRef serviceCategoryRef : newServiceCategoryRefs) {
+                String scrId = serviceCategoryRef.getId();
+                if (scrId == null)
+                    throw new NullIdentifierException("Referenced Service Category with null identifier not allowed.");
+
+                newServiceCategories.add(serviceCategoryService.get(scrId));
+            }
+        }
+
+        for(ServiceCategory serviceCategory : oldServiceCategories) {
+
+            String scrId = serviceCategory.getId();
+            log.info("Updating Service Category " + scrId + ".");
+
+            List<ServiceCandidateRef> serviceCandidateRefs = serviceCategory.getServiceCandidate();
+            if(serviceCandidateRefs != null)
+                serviceCandidateRefs.removeIf(scr -> scr.getId().equals(id));
+
+            serviceCategoryService.save(serviceCategory);
+
+            log.info("Service Category " + scrId + " updated.");
+        }
+
+        for(ServiceCategory serviceCategory : newServiceCategories) {
+
+            String scrId = serviceCategory.getId();
+            log.info("Updating Service Category " + scrId + ".");
+
+            serviceCategory.getServiceCandidate().add(new ServiceCandidateRef()
+                    .href(href)
+                    .id(id)
+                    .lastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString())
+                    .name(name));
+
+            serviceCategoryService.save(serviceCategory);
+
+            log.info("Service Category " + scrId + " updated.");
+        }
+    }
+
     public ServiceCandidate patch(String id, ServiceCandidateUpdate serviceCandidateUpdate, String lastUpdate)
             throws NotExistingEntityException, NullIdentifierException {
 
@@ -175,25 +245,26 @@ public class ServiceCandidateService {
 
         ServiceCandidate serviceCandidate = toUpdate.get();
 
-        serviceCandidate.setBaseType(serviceCandidateUpdate.getBaseType());
-        serviceCandidate.setSchemaLocation(serviceCandidateUpdate.getSchemaLocation());
-        serviceCandidate.setType(serviceCandidateUpdate.getType());
-
         final List<ServiceCategoryRef> category = serviceCandidateUpdate.getCategory();
         if(serviceCandidate.getCategory() == null) {
+            updateServiceCategory(category, serviceCandidate.getHref(),
+                    serviceCandidate.getId(), serviceCandidate.getName());
             serviceCandidate.setCategory(category);
-            updateServiceCategoryCreate(serviceCandidate);
         } else if(category != null) {
-            updateServiceCategoryDelete(serviceCandidate);
-            serviceCandidate.getCategory().clear();
+            updateServiceCategoryPatch(serviceCandidate.getCategory(),
+                    category, serviceCandidate.getHref(), serviceCandidate.getId(),
+                    serviceCandidate.getName());
 
+            serviceCandidate.getCategory().clear();
             serviceCandidate.getCategory().addAll(category);
-            updateServiceCategoryCreate(serviceCandidate);
         } else {
-            updateServiceCategoryDelete(serviceCandidate);
+            updateServiceCategoryDelete(serviceCandidate.getCategory(), serviceCandidate.getId());
             serviceCandidate.getCategory().clear();
         }
 
+        serviceCandidate.setBaseType(serviceCandidateUpdate.getBaseType());
+        serviceCandidate.setSchemaLocation(serviceCandidateUpdate.getSchemaLocation());
+        serviceCandidate.setType(serviceCandidateUpdate.getType());
         serviceCandidate.setDescription(serviceCandidateUpdate.getDescription());
         serviceCandidate.setLastUpdate(lastUpdate);
         serviceCandidate.setLifecycleStatus(serviceCandidateUpdate.getLifecycleStatus());

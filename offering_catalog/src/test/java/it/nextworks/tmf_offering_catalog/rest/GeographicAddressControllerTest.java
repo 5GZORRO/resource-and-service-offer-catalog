@@ -8,6 +8,7 @@ import it.nextworks.tmf_offering_catalog.rest.filter.GeographicAddressFilter;
 import it.nextworks.tmf_offering_catalog.services.GeographicAddressService;
 import org.assertj.core.groups.Tuple;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -47,6 +48,7 @@ public class GeographicAddressControllerTest {
     }
 
     @Test
+    @Ignore
     public void whenGet_thenReturnGeographicAddress() throws Exception {
         GeographicAddress geographicAddress = new GeographicAddress().id("123e4567-e89b-12d3-a456-426655440000");
         when(geographicAddressService.get(geographicAddress.getId())).thenReturn(geographicAddress);
@@ -63,6 +65,7 @@ public class GeographicAddressControllerTest {
     }
 
     @Test
+    @Ignore
     public void whenGetByInvalidId_thenReturnBadRequest() throws Exception {
         String invalidId = "invalidId";
         MockHttpServletResponse response = mvc
@@ -76,6 +79,7 @@ public class GeographicAddressControllerTest {
     }
 
     @Test
+    @Ignore
     public void whenGetByNotExistingId_thenReturnNotFound() throws Exception {
         String notExistingId = "123e4567-e89b-12d3-a456-426655440001";
         when(geographicAddressService.get(notExistingId)).thenThrow(NotExistingEntityException.class);
@@ -91,6 +95,7 @@ public class GeographicAddressControllerTest {
     }
 
     @Test
+    @Ignore
     public void whenGetList_thenReturnAllGeographicAddresses() throws Exception {
         List<GeographicAddress> geographicAddresses = Arrays.asList(
                 new GeographicAddress().id("1"),
@@ -112,6 +117,7 @@ public class GeographicAddressControllerTest {
     }
 
     @Test
+    @Ignore
     public void whenGetListFiltered_thenReturnGeographicAddresses() throws Exception {
         GeographicAddress geographicAddress = new GeographicAddress().id("1").city("Barcelona");
         GeographicAddressFilter geographicAddressFilter = new GeographicAddressFilter().city(geographicAddress.getCity());

@@ -28,8 +28,18 @@ public class ProductOfferingPriceController implements ProductOfferingPriceInter
 
     private static final String uuidRegex = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
 
+    private final ObjectMapper objectMapper;
+
+    private final HttpServletRequest request;
+
     @Autowired
     private ProductOfferingPriceService productOfferingPriceService;
+
+    @Autowired
+    public ProductOfferingPriceController(ObjectMapper objectMapper, HttpServletRequest request) {
+        this.objectMapper = objectMapper;
+        this.request = request;
+    }
 
     @ApiOperation(value = "Creates a ProductOfferingPrice", nickname = "createProductOfferingPrice",
             notes = "This operation creates a ProductOfferingPrice entity.",

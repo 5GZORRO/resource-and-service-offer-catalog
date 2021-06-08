@@ -17,6 +17,7 @@ import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
 import org.threeten.bp.ZoneId;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -39,28 +40,33 @@ public class ResourceCandidateService {
     @Autowired
     private ResourceCategoryService resourceCategoryService;
 
-    private void updateResourceCategoryCreate(ResourceCandidate rc)
+    private void updateResourceCategory(List<ResourceCategoryRef> resourceCategoryRefs,
+                                        String href, String id, String name)
             throws NullIdentifierException, NotExistingEntityException {
 
-        List<ResourceCategoryRef> resourceCategoryRefs = rc.getCategory();
         if(resourceCategoryRefs != null) {
+            // Check that the references are well-formatted and exist in the DB
+            List<ResourceCategory> resourceCategories = new ArrayList<>();
             for(ResourceCategoryRef resourceCategoryRef : resourceCategoryRefs) {
-
                 String rcrId = resourceCategoryRef.getId();
                 if(rcrId == null)
                     throw new NullIdentifierException("Referenced Resource Category with null identified not allowed.");
 
-                ResourceCategory rCategory = resourceCategoryService.get(rcrId);
+                resourceCategories.add(resourceCategoryService.get(rcrId));
+            }
 
+            for(ResourceCategory resourceCategory : resourceCategories) {
+
+                String rcrId = resourceCategory.getId();
                 log.info("Updating Resource Category " + rcrId + ".");
 
-                rCategory.getResourceCandidate().add(new ResourceCandidateRef()
-                        .href(rc.getHref())
-                        .id(rc.getId())
+                resourceCategory.getResourceCandidate().add(new ResourceCandidateRef()
+                        .href(href)
+                        .id(id)
                         .lastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString())
-                        .name(rc.getName()));
+                        .name(name));
 
-                resourceCategoryService.save(rCategory);
+                resourceCategoryService.save(resourceCategory);
 
                 log.info("Resource Category " + rcrId + " updated.");
             }
@@ -91,7 +97,8 @@ public class ResourceCandidateService {
         if(lastUpdate != null)
             resourceCandidate.setLastUpdate(lastUpdate.toString());
 
-        updateResourceCategoryCreate(resourceCandidate);
+        updateResourceCategory(resourceCandidate.getCategory(), resourceCandidate.getHref(),
+                id, resourceCandidate.getName());
 
         resourceCandidateRepository.save(resourceCandidate);
 
@@ -100,26 +107,29 @@ public class ResourceCandidateService {
         return resourceCandidate;
     }
 
-    private void updateResourceCategoryDelete(ResourceCandidate rc)
+    private void updateResourceCategoryDelete(List<ResourceCategoryRef> resourceCategoryRefs, String id)
             throws NullIdentifierException, NotExistingEntityException {
 
-        List<ResourceCategoryRef> resourceCategoryRefs = rc.getCategory();
         if(resourceCategoryRefs != null) {
+            List<ResourceCategory> resourceCategories = new ArrayList<>();
             for(ResourceCategoryRef resourceCategoryRef : resourceCategoryRefs) {
-
                 String rcrId = resourceCategoryRef.getId();
                 if(rcrId == null)
                     throw new NullIdentifierException("Referenced Resource Category with null identifier not allowed.");
 
-                ResourceCategory rCategory = resourceCategoryService.get(rcrId);
+                resourceCategories.add(resourceCategoryService.get(rcrId));
+            }
 
+            for(ResourceCategory resourceCategory : resourceCategories) {
+
+                String rcrId = resourceCategory.getId();
                 log.info("Updating Resource Category " + rcrId + ".");
 
-                List<ResourceCandidateRef> resourceCandidateRefs = rCategory.getResourceCandidate();
+                List<ResourceCandidateRef> resourceCandidateRefs = resourceCategory.getResourceCandidate();
                 if(resourceCandidateRefs != null)
-                    resourceCandidateRefs.removeIf(rcr -> rcr.getId().equals(rc.getId()));
+                    resourceCandidateRefs.removeIf(rcr -> rcr.getId().equals(id));
 
-                resourceCategoryService.save(rCategory);
+                resourceCategoryService.save(resourceCategory);
 
                 log.info("Resource Category " + rcrId + " updated.");
             }
@@ -136,7 +146,7 @@ public class ResourceCandidateService {
 
         ResourceCandidate rc = toDelete.get();
 
-        updateResourceCategoryDelete(rc);
+        updateResourceCategoryDelete(rc.getCategory(), rc.getId());
 
         resourceCandidateRepository.delete(rc);
 
@@ -159,6 +169,66 @@ public class ResourceCandidateService {
         return resourceCandidates;
     }
 
+    private void updateResourceCategoryPatch(List<ResourceCategoryRef> oldResourceCategoryRefs,
+                                             List<ResourceCategoryRef> newResourceCategoryRefs,
+                                             String href,
+                                             String id,
+                                             String name)
+            throws NullIdentifierException, NotExistingEntityException {
+
+        List<ResourceCategory> oldResourceCategories = new ArrayList<>();
+        if(oldResourceCategoryRefs != null) {
+            for(ResourceCategoryRef resourceCategoryRef : oldResourceCategoryRefs) {
+                String rcrId = resourceCategoryRef.getId();
+                if (rcrId == null)
+                    throw new NullIdentifierException("Referenced Resource Category with null identifier not allowed.");
+
+                oldResourceCategories.add(resourceCategoryService.get(rcrId));
+            }
+        }
+
+        List<ResourceCategory> newResourceCategories = new ArrayList<>();
+        if(newResourceCategoryRefs != null) {
+            for(ResourceCategoryRef resourceCategoryRef : newResourceCategoryRefs) {
+                String rcrId = resourceCategoryRef.getId();
+                if (rcrId == null)
+                    throw new NullIdentifierException("Referenced Resource Category with null identifier not allowed.");
+
+                newResourceCategories.add(resourceCategoryService.get(rcrId));
+            }
+        }
+
+        for(ResourceCategory resourceCategory : oldResourceCategories) {
+
+            String rcrId = resourceCategory.getId();
+            log.info("Updating Resource Category " + rcrId + ".");
+
+            List<ResourceCandidateRef> resourceCandidateRefs = resourceCategory.getResourceCandidate();
+            if(resourceCandidateRefs != null)
+                resourceCandidateRefs.removeIf(rcr -> rcr.getId().equals(id));
+
+            resourceCategoryService.save(resourceCategory);
+
+            log.info("Resource Category " + rcrId + " updated.");
+        }
+
+        for(ResourceCategory resourceCategory : newResourceCategories) {
+
+            String rcrId = resourceCategory.getId();
+            log.info("Updating Resource Category " + rcrId + ".");
+
+            resourceCategory.getResourceCandidate().add(new ResourceCandidateRef()
+                    .href(href)
+                    .id(id)
+                    .lastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString())
+                    .name(name));
+
+            resourceCategoryService.save(resourceCategory);
+
+            log.info("Resource Category " + rcrId + " updated.");
+        }
+    }
+
     public ResourceCandidate patch(String id, ResourceCandidateUpdate resourceCandidateUpdate, String lastUpdate)
             throws NotExistingEntityException, NullIdentifierException {
 
@@ -170,25 +240,26 @@ public class ResourceCandidateService {
 
         ResourceCandidate resourceCandidate = toUpdate.get();
 
-        resourceCandidate.setBaseType(resourceCandidateUpdate.getBaseType());
-        resourceCandidate.setSchemaLocation(resourceCandidateUpdate.getSchemaLocation());
-        resourceCandidate.setType(resourceCandidateUpdate.getType());
-
         final List<ResourceCategoryRef> category = resourceCandidateUpdate.getCategory();
         if(resourceCandidate.getCategory() == null) {
+            updateResourceCategory(category, resourceCandidate.getHref(),
+                    resourceCandidate.getId(), resourceCandidate.getName());
             resourceCandidate.setCategory(category);
-            updateResourceCategoryCreate(resourceCandidate);
         } else if(category != null) {
-            updateResourceCategoryDelete(resourceCandidate);
-            resourceCandidate.getCategory().clear();
+            updateResourceCategoryPatch(resourceCandidate.getCategory(),
+                    category, resourceCandidate.getHref(), resourceCandidate.getId(),
+                    resourceCandidate.getName());
 
+            resourceCandidate.getCategory().clear();
             resourceCandidate.getCategory().addAll(category);
-            updateResourceCategoryCreate(resourceCandidate);
         } else {
-            updateResourceCategoryDelete(resourceCandidate);
+            updateResourceCategoryDelete(resourceCandidate.getCategory(), resourceCandidate.getId());
             resourceCandidate.getCategory().clear();
         }
 
+        resourceCandidate.setBaseType(resourceCandidateUpdate.getBaseType());
+        resourceCandidate.setSchemaLocation(resourceCandidateUpdate.getSchemaLocation());
+        resourceCandidate.setType(resourceCandidateUpdate.getType());
         resourceCandidate.setDescription(resourceCandidateUpdate.getDescription());
         resourceCandidate.setLastUpdate(resourceCandidateUpdate.getLastUpdate().toString());
         resourceCandidate.setLastUpdate(lastUpdate);
