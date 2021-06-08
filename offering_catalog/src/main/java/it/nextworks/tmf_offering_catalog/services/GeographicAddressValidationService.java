@@ -98,7 +98,6 @@ public class GeographicAddressValidationService {
             });
         }
 
-        submittedGeographicAddress.id(UUID.randomUUID().toString());
         return new GeographicAddressValidation()
                 .id(UUID.randomUUID().toString())
                 .schemaLocation(geographicAddressValidationCreate.getSchemaLocation())
