@@ -22,10 +22,10 @@ import java.util.Objects;
 @Table(name = "geographic_points")
 public class GeographicPoint {
 
-    //    @JsonIgnoreProperties(allowGetters = true)
+    @JsonIgnoreProperties(allowGetters = true)
     @Id
-//    @GeneratedValue(generator = "uuid")
-//    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id = null;
 
     @JsonProperty("x")

@@ -3,6 +3,8 @@ package it.nextworks.tmf_offering_catalog.services;
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
 import it.nextworks.tmf_offering_catalog.information_models.product.*;
 import it.nextworks.tmf_offering_catalog.repo.GeographicAddressValidationRepository;
+import it.nextworks.tmf_offering_catalog.repo.GeographicLocationRepository;
+import it.nextworks.tmf_offering_catalog.repo.GeographicPointRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+;
 
 @Service
 public class GeographicAddressValidationService {
@@ -28,6 +32,12 @@ public class GeographicAddressValidationService {
 
     @Autowired
     private GeographicAddressValidationRepository geographicAddressValidationRepository;
+
+    @Autowired
+    private GeographicLocationRepository geographicLocationRepository;
+
+    @Autowired
+    private GeographicPointRepository geographicPointRepository;
 
     @Transactional
     public GeographicAddressValidation create(GeographicAddressValidationCreate geographicAddressValidationCreate) {
@@ -78,14 +88,16 @@ public class GeographicAddressValidationService {
     private GeographicAddressValidation createAndPopulateGeographicAddressValidation(GeographicAddressValidationCreate geographicAddressValidationCreate) {
         GeographicAddress submittedGeographicAddress = geographicAddressValidationCreate.getSubmittedGeographicAddress();
         GeographicLocation geographicLocation = submittedGeographicAddress.getGeographicLocation();
-        if (geographicLocation.getId() != null) {
-            geographicLocation = geographicAddressValidationRepository.findById(geographicLocation.getId()).get();
+        if (geographicLocation != null && geographicLocation.getId() != null) {
+            submittedGeographicAddress.setGeographicLocation(geographicLocationRepository.findById(geographicLocation.getId()).get());
+        } else if (geographicLocation != null && geographicLocation.getGeometry() == null && !geographicLocation.getGeometry().isEmpty()) {
+            geographicLocation.getGeometry().forEach((point) -> {
+                if (point.getId() != null) {
+                    point = geographicPointRepository.findById(point.getId()).get();
+                }
+            });
         }
-        geographicLocation.getGeometry().forEach((geographicPoint) -> {
-            if (geographicPoint.getId() != null) {
-                geographicPoint.setId(UUID.randomUUID().toString());
-            }
-        });
+
         submittedGeographicAddress.id(UUID.randomUUID().toString());
         return new GeographicAddressValidation()
                 .id(UUID.randomUUID().toString())

@@ -1,6 +1,5 @@
 package it.nextworks.tmf_offering_catalog.information_models.product;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
@@ -23,10 +22,10 @@ import java.util.Objects;
 @Table(name = "geographic_address_validations")
 public class GeographicAddressValidation {
 
-//    @JsonIgnoreProperties(allowGetters = true)
+    @JsonIgnoreProperties(allowGetters = true)
     @Id
-//    @GeneratedValue(generator = "uuid")
-//    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id = null;
 
     @JsonProperty("href")

@@ -23,10 +23,10 @@ import java.util.Objects;
 @Table(name = "geographic_locations")
 public class GeographicLocation {
 
-    //    @JsonIgnoreProperties(allowGetters = true)
+    @JsonIgnoreProperties(allowGetters = true)
     @Id
-//    @GeneratedValue(generator = "uuid")
-//    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id = null;
 
     @JsonProperty("href")
