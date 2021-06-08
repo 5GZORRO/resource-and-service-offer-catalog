@@ -99,7 +99,6 @@ public class GeographicAddressValidationService {
         }
 
         return new GeographicAddressValidation()
-                .id(UUID.randomUUID().toString())
                 .schemaLocation(geographicAddressValidationCreate.getSchemaLocation())
                 .type(geographicAddressValidationCreate.getType())
                 .validGeographicAddress(submittedGeographicAddress);
