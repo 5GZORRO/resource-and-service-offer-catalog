@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 ;
 
@@ -45,7 +44,12 @@ public class GeographicAddressValidationService {
         GeographicAddressValidation geographicAddressValidation = geographicAddressValidationRepository.save(
                 createAndPopulateGeographicAddressValidation(geographicAddressValidationCreate)
         );
-        geographicAddressValidation.href(protocol + hostname + ":" + port + path + geographicAddressValidation.getId());
+        geographicAddressValidation.href(protocol + hostname + ":" + port + path + geographicAddressValidation.getId())
+                .getValidGeographicAddress().href(protocol + hostname + ":" + port + path + geographicAddressValidation.getValidGeographicAddress().getId());
+        if (geographicAddressValidation.getValidGeographicAddress().getGeographicLocation() != null) {
+            geographicAddressValidation.getValidGeographicAddress().getGeographicLocation()
+                    .href(protocol + hostname + ":" + port + path + geographicAddressValidation.getValidGeographicAddress().getGeographicLocation().getId());
+        }
         log.info("Geographic Address Validation created with id " + geographicAddressValidation.getId() + ".");
         return geographicAddressValidation;
     }
