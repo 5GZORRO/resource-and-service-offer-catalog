@@ -18,7 +18,7 @@ import java.util.Objects;
 public class GeographicAddressValidationCreate {
 
     @JsonProperty("submittedGeographicAddress")
-    private GeographicAddress submittedGeographicAddress = null;
+    private GeographicAddressCreate submittedGeographicAddress = null;
 
     @JsonProperty("@schemaLocation")
     private String schemaLocation = null;
@@ -26,7 +26,7 @@ public class GeographicAddressValidationCreate {
     @JsonProperty("@type")
     private String type = null;
 
-    public GeographicAddressValidationCreate submittedGeographicAddress(GeographicAddress submittedGeographicAddress) {
+    public GeographicAddressValidationCreate submittedGeographicAddress(GeographicAddressCreate submittedGeographicAddress) {
         this.submittedGeographicAddress = submittedGeographicAddress;
         return this;
     }
@@ -39,11 +39,11 @@ public class GeographicAddressValidationCreate {
     @ApiModelProperty(required = true, value = "the address as submitted to validation")
     @NotNull
     @Valid
-    public GeographicAddress getSubmittedGeographicAddress() {
+    public GeographicAddressCreate getSubmittedGeographicAddress() {
         return submittedGeographicAddress;
     }
 
-    public void setSubmittedGeographicAddress(GeographicAddress submittedGeographicAddress) {
+    public void setSubmittedGeographicAddress(GeographicAddressCreate submittedGeographicAddress) {
         this.submittedGeographicAddress = submittedGeographicAddress;
     }
 
