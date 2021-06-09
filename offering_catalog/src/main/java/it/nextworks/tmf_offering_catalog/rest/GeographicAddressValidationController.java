@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
-import it.nextworks.tmf_offering_catalog.information_models.product.GeographicAddress;
+import it.nextworks.tmf_offering_catalog.information_models.product.GeographicAddressCreate;
 import it.nextworks.tmf_offering_catalog.information_models.product.GeographicAddressValidation;
 import it.nextworks.tmf_offering_catalog.information_models.product.GeographicAddressValidationCreate;
 import it.nextworks.tmf_offering_catalog.information_models.product.GeographicAddressValidationUpdate;
@@ -68,8 +68,8 @@ public class GeographicAddressValidationController implements GeographicAddressV
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg("Invalid request body (geographicAddressValidation) received"));
         }
 
-        GeographicAddress submittedGeographicAddress = geographicAddressValidationCreate.getSubmittedGeographicAddress();
-        if (submittedGeographicAddress == null || submittedGeographicAddress.getId() != null) {
+        GeographicAddressCreate submittedGeographicAddress = geographicAddressValidationCreate.getSubmittedGeographicAddress();
+        if (submittedGeographicAddress == null) {
             log.error("Web-Server: Invalid request body (submittedGeographicAddress) received.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg("Invalid request body (submittedGeographicAddress) received"));
         }

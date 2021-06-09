@@ -90,7 +90,7 @@ public class GeographicAddressValidationService {
     }
 
     private GeographicAddressValidation createAndPopulateGeographicAddressValidation(GeographicAddressValidationCreate geographicAddressValidationCreate) {
-        GeographicAddress submittedGeographicAddress = geographicAddressValidationCreate.getSubmittedGeographicAddress();
+        GeographicAddressCreate submittedGeographicAddress = geographicAddressValidationCreate.getSubmittedGeographicAddress();
         GeographicLocation geographicLocation = submittedGeographicAddress.getGeographicLocation();
         if (geographicLocation != null && geographicLocation.getId() != null) {
             submittedGeographicAddress.setGeographicLocation(geographicLocationRepository.findById(geographicLocation.getId()).get());
@@ -105,7 +105,21 @@ public class GeographicAddressValidationService {
         return new GeographicAddressValidation()
                 .schemaLocation(geographicAddressValidationCreate.getSchemaLocation())
                 .type(geographicAddressValidationCreate.getType())
-                .validGeographicAddress(submittedGeographicAddress);
+                .validGeographicAddress(new GeographicAddress()
+                        .geographicLocation(submittedGeographicAddress.getGeographicLocation())
+                        .city(submittedGeographicAddress.getCity())
+                        .country(submittedGeographicAddress.getCountry())
+                        .locality(submittedGeographicAddress.getLocality())
+                        .postcode(submittedGeographicAddress.getPostcode())
+                        .stateOrProvince(submittedGeographicAddress.getStateOrProvince())
+                        .streetName(submittedGeographicAddress.getStreetName())
+                        .streetNr(submittedGeographicAddress.getStreetNr())
+                        .streetNrLast(submittedGeographicAddress.getStreetNrLast())
+                        .streetNrLastSuffix(submittedGeographicAddress.getStreetNrLastSuffix())
+                        .streetNrSuffix(submittedGeographicAddress.getStreetNrSuffix())
+                        .streetSuffix(submittedGeographicAddress.getStreetSuffix())
+                        .streetType(submittedGeographicAddress.getStreetType())
+                        .type(submittedGeographicAddress.getType()));
     }
 
     private GeographicAddressValidation updateGeographicAddressValidation(GeographicAddressValidation geographicAddressValidation, GeographicAddressValidationUpdate geographicAddressValidationUpdate) {
