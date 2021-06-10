@@ -69,6 +69,12 @@ public class ExternalProductOfferingConsumer {
     @Autowired
     private ProductOfferingService productOfferingService;
 
+    @Autowired
+    private GeographicAddressRepository geographicAddressRepository;
+
+    @Autowired
+    private ExternalGeographicAddressRepository externalGeographicAddressRepository;
+
     @KafkaListener(
             topics = "#{@topic}",
             containerFactory = "kafkaListenerContainerFactory")
@@ -99,6 +105,7 @@ public class ExternalProductOfferingConsumer {
         syncProductSpecification(externalProductOffering.getProductSpecification());
         syncResourceSpecifications(externalProductOffering.getResourceSpecifications());
         syncServiceSpecifications(externalProductOffering.getServiceSpecifications());
+        syncGeographicAddresses(externalProductOffering.getGeographicAddresses());
         syncProductOffering(po, did);
     }
 
@@ -349,6 +356,37 @@ public class ExternalProductOfferingConsumer {
 
             log.info("Synced Service Specification " + id + " (update).");
         }
+    }
+
+    private void syncGeographicAddresses(List<GeographicAddress> geographicAddresses) {
+        if (geographicAddresses == null) {
+            return;
+        }
+
+        geographicAddresses.forEach((geographicAddress) -> {
+            String id = geographicAddress.getId();
+
+            log.info("Syncing Geographic Address " + id + ".");
+
+            Optional<GeographicAddress> optionalGeographicAddress = geographicAddressRepository.findById(id);
+            if (!optionalGeographicAddress.isPresent()) {
+                geographicAddressRepository.save(geographicAddress);
+                externalGeographicAddressRepository.save(new ExternalGeographicAddress(id));
+
+                log.info("Synced Geographic Address " + id + " (new).");
+                return;
+            }
+
+            Optional<ExternalGeographicAddress> externalGeographicAddress = externalGeographicAddressRepository.findById(id);
+            if (!externalGeographicAddress.isPresent()) {
+                log.info("Geographic Address " + id + " not external, skip.");
+                return;
+            }
+
+            geographicAddressRepository.save(geographicAddress);
+
+            log.info("Synced Geographic Address " + id + " (update).");
+        });
     }
 
     private void syncProductOffering(ProductOffering po, String did) {

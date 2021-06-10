@@ -2,6 +2,7 @@ package it.nextworks.tmf_offering_catalog.information_models.kafka;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.nextworks.tmf_offering_catalog.information_models.product.GeographicAddress;
 import it.nextworks.tmf_offering_catalog.information_models.product.ProductOffering;
 import it.nextworks.tmf_offering_catalog.information_models.product.ProductOfferingPrice;
 import it.nextworks.tmf_offering_catalog.information_models.product.ProductSpecification;
@@ -41,6 +42,9 @@ public class ExternalProductOffering {
     @JsonProperty("invitations")
     private final Map<String, Invitation> invitations;
 
+    @JsonProperty
+    private final List<GeographicAddress> geographicAddresses;
+
     @JsonProperty("identifier")
     private final String identifier;
 
@@ -63,6 +67,7 @@ public class ExternalProductOffering {
                                    @JsonProperty("resourceSpecifications") List<ResourceSpecification> resourceSpecifications,
                                    @JsonProperty("serviceSpecifications") List<ServiceSpecification> serviceSpecifications,
                                    @JsonProperty("invitations") Map<String, Invitation> invitations,
+                                   @JsonProperty("geographicAddresses") List<GeographicAddress> geographicAddresses,
                                    @JsonProperty("identifier") String identifier,
                                    @JsonProperty("verifiableCredentials") Collection<VerifiableCredential> verifiableCredentials,
                                    @JsonProperty("updateType") UpdateType updateType,
@@ -74,6 +79,7 @@ public class ExternalProductOffering {
         this.resourceSpecifications = resourceSpecifications;
         this.serviceSpecifications  = serviceSpecifications;
         this.invitations            = invitations;
+        this.geographicAddresses    = geographicAddresses;
         this.identifier             = identifier;
         this.verifiableCredentials  = verifiableCredentials;
         this.updateType             = updateType;
@@ -92,6 +98,10 @@ public class ExternalProductOffering {
     public List<ServiceSpecification> getServiceSpecifications() { return serviceSpecifications; }
 
     public Map<String, Invitation> getInvitations() { return invitations; }
+
+    public List<GeographicAddress> getGeographicAddresses() {
+        return geographicAddresses;
+    }
 
     public String getIdentifier() { return identifier; }
 
