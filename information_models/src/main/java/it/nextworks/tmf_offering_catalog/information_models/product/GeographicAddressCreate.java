@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
@@ -12,23 +11,11 @@ import javax.validation.Valid;
 import java.util.Objects;
 
 /**
- * Structured textual way of describing how to find a Property in an urban area (country properties are often defined differently). Note : Address corresponds to SID UrbanPropertyAddress
+ * This resource is used to manage address request.
  */
-@ApiModel(description = "Structured textual way of describing how to find a Property in an urban area (country properties are often defined differently). Note : Address corresponds to SID UrbanPropertyAddress")
+@ApiModel(description = "This resource is used to manage address request.")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-05-14T06:22:11.015Z")
-@Entity
-@Table(name = "geographic_addresses")
-public class GeographicAddress {
-
-    @JsonIgnoreProperties(allowGetters = true)
-    @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    private String id = null;
-
-    @JsonProperty("href")
-    private String href = null;
+public class GeographicAddressCreate {
 
     @JsonProperty("city")
     private String city = null;
@@ -87,45 +74,7 @@ public class GeographicAddress {
     @JsonProperty("@type")
     private String type = null;
 
-    public GeographicAddress id(String id) {
-        this.id = id;
-        return this;
-    }
-
-    /**
-     * Unique identifier of the place
-     *
-     * @return id
-     **/
-    @ApiModelProperty(value = "Unique identifier of the place")
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public GeographicAddress href(String href) {
-        this.href = href;
-        return this;
-    }
-
-    /**
-     * Unique reference of the place
-     *
-     * @return href
-     **/
-    @ApiModelProperty(value = "Unique reference of the place")
-    public String getHref() {
-        return href;
-    }
-
-    public void setHref(String href) {
-        this.href = href;
-    }
-
-    public GeographicAddress city(String city) {
+    public GeographicAddressCreate city(String city) {
         this.city = city;
         return this;
     }
@@ -144,7 +93,7 @@ public class GeographicAddress {
         this.city = city;
     }
 
-    public GeographicAddress country(String country) {
+    public GeographicAddressCreate country(String country) {
         this.country = country;
         return this;
     }
@@ -163,7 +112,7 @@ public class GeographicAddress {
         this.country = country;
     }
 
-    public GeographicAddress locality(String locality) {
+    public GeographicAddressCreate locality(String locality) {
         this.locality = locality;
         return this;
     }
@@ -182,7 +131,7 @@ public class GeographicAddress {
         this.locality = locality;
     }
 
-    public GeographicAddress postcode(String postcode) {
+    public GeographicAddressCreate postcode(String postcode) {
         this.postcode = postcode;
         return this;
     }
@@ -201,7 +150,7 @@ public class GeographicAddress {
         this.postcode = postcode;
     }
 
-    public GeographicAddress stateOrProvince(String stateOrProvince) {
+    public GeographicAddressCreate stateOrProvince(String stateOrProvince) {
         this.stateOrProvince = stateOrProvince;
         return this;
     }
@@ -220,7 +169,7 @@ public class GeographicAddress {
         this.stateOrProvince = stateOrProvince;
     }
 
-    public GeographicAddress streetName(String streetName) {
+    public GeographicAddressCreate streetName(String streetName) {
         this.streetName = streetName;
         return this;
     }
@@ -239,7 +188,7 @@ public class GeographicAddress {
         this.streetName = streetName;
     }
 
-    public GeographicAddress streetNr(String streetNr) {
+    public GeographicAddressCreate streetNr(String streetNr) {
         this.streetNr = streetNr;
         return this;
     }
@@ -258,7 +207,7 @@ public class GeographicAddress {
         this.streetNr = streetNr;
     }
 
-    public GeographicAddress streetNrLast(String streetNrLast) {
+    public GeographicAddressCreate streetNrLast(String streetNrLast) {
         this.streetNrLast = streetNrLast;
         return this;
     }
@@ -277,7 +226,7 @@ public class GeographicAddress {
         this.streetNrLast = streetNrLast;
     }
 
-    public GeographicAddress streetNrLastSuffix(String streetNrLastSuffix) {
+    public GeographicAddressCreate streetNrLastSuffix(String streetNrLastSuffix) {
         this.streetNrLastSuffix = streetNrLastSuffix;
         return this;
     }
@@ -296,7 +245,7 @@ public class GeographicAddress {
         this.streetNrLastSuffix = streetNrLastSuffix;
     }
 
-    public GeographicAddress streetNrSuffix(String streetNrSuffix) {
+    public GeographicAddressCreate streetNrSuffix(String streetNrSuffix) {
         this.streetNrSuffix = streetNrSuffix;
         return this;
     }
@@ -315,7 +264,7 @@ public class GeographicAddress {
         this.streetNrSuffix = streetNrSuffix;
     }
 
-    public GeographicAddress streetSuffix(String streetSuffix) {
+    public GeographicAddressCreate streetSuffix(String streetSuffix) {
         this.streetSuffix = streetSuffix;
         return this;
     }
@@ -334,7 +283,7 @@ public class GeographicAddress {
         this.streetSuffix = streetSuffix;
     }
 
-    public GeographicAddress streetType(String streetType) {
+    public GeographicAddressCreate streetType(String streetType) {
         this.streetType = streetType;
         return this;
     }
@@ -353,7 +302,7 @@ public class GeographicAddress {
         this.streetType = streetType;
     }
 
-    public GeographicAddress geographicLocation(GeographicLocation geographicLocation) {
+    public GeographicAddressCreate geographicLocation(GeographicLocation geographicLocation) {
         this.geographicLocation = geographicLocation;
         return this;
     }
@@ -387,7 +336,7 @@ public class GeographicAddress {
         this.schemaLocation = schemaLocation;
     }
 
-    public GeographicAddress type(String type) {
+    public GeographicAddressCreate type(String type) {
         this.type = type;
         return this;
     }
@@ -408,17 +357,15 @@ public class GeographicAddress {
 
 
     @Override
-    public boolean equals(java.lang.Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        GeographicAddress geographicAddress = (GeographicAddress) o;
-        return Objects.equals(this.id, geographicAddress.id) &&
-                Objects.equals(this.href, geographicAddress.href) &&
-                Objects.equals(this.city, geographicAddress.city) &&
+        GeographicAddressCreate geographicAddress = (GeographicAddressCreate) o;
+        return Objects.equals(this.city, geographicAddress.city) &&
                 Objects.equals(this.country, geographicAddress.country) &&
                 Objects.equals(this.locality, geographicAddress.locality) &&
                 Objects.equals(this.postcode, geographicAddress.postcode) &&
@@ -437,16 +384,14 @@ public class GeographicAddress {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, href, city, country, locality, postcode, stateOrProvince, streetName, streetNr, streetNrLast, streetNrLastSuffix, streetNrSuffix, streetSuffix, streetType, geographicLocation, schemaLocation, type);
+        return Objects.hash(city, country, locality, postcode, stateOrProvince, streetName, streetNr, streetNrLast, streetNrLastSuffix, streetNrSuffix, streetSuffix, streetType, geographicLocation, schemaLocation, type);
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("class GeographicAddress {\n");
+        sb.append("class GeographicAddressCreate {\n");
 
-        sb.append("    id: ").append(toIndentedString(id)).append("\n");
-        sb.append("    href: ").append(toIndentedString(href)).append("\n");
         sb.append("    city: ").append(toIndentedString(city)).append("\n");
         sb.append("    country: ").append(toIndentedString(country)).append("\n");
         sb.append("    locality: ").append(toIndentedString(locality)).append("\n");
@@ -470,7 +415,7 @@ public class GeographicAddress {
      * Convert the given object to string with each line indented by 4 spaces
      * (except the first line).
      */
-    private String toIndentedString(java.lang.Object o) {
+    private String toIndentedString(Object o) {
         if (o == null) {
             return "null";
         }

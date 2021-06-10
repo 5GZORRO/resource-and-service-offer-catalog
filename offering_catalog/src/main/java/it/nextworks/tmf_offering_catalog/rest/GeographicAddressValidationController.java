@@ -1,7 +1,12 @@
 package it.nextworks.tmf_offering_catalog.rest;
 
-import io.swagger.annotations.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
+import it.nextworks.tmf_offering_catalog.information_models.product.GeographicAddressCreate;
 import it.nextworks.tmf_offering_catalog.information_models.product.GeographicAddressValidation;
 import it.nextworks.tmf_offering_catalog.information_models.product.GeographicAddressValidationCreate;
 import it.nextworks.tmf_offering_catalog.information_models.product.GeographicAddressValidationUpdate;
@@ -18,10 +23,12 @@ import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
 import org.threeten.bp.ZoneId;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @RestController
 public class GeographicAddressValidationController implements GeographicAddressValidationInterface {
@@ -29,6 +36,16 @@ public class GeographicAddressValidationController implements GeographicAddressV
     private final static Logger log = LoggerFactory.getLogger(GeographicAddressValidationController.class);
 
     private static final String uuidRegex = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
+
+    private final ObjectMapper objectMapper;
+
+    private final HttpServletRequest request;
+
+    @Autowired
+    public GeographicAddressValidationController(ObjectMapper objectMapper, HttpServletRequest request) {
+        this.objectMapper = objectMapper;
+        this.request = request;
+    }
 
     @Autowired
     private GeographicAddressValidationService geographicAddressValidationService;
@@ -49,6 +66,34 @@ public class GeographicAddressValidationController implements GeographicAddressV
         if (geographicAddressValidationCreate == null) {
             log.error("Web-Server: Invalid request body (geographicAddressValidation) received.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg("Invalid request body (geographicAddressValidation) received"));
+        }
+
+        GeographicAddressCreate submittedGeographicAddress = geographicAddressValidationCreate.getSubmittedGeographicAddress();
+        if (submittedGeographicAddress == null) {
+            log.error("Web-Server: Invalid request body (submittedGeographicAddress) received.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg("Invalid request body (submittedGeographicAddress) received"));
+        }
+
+
+        if (submittedGeographicAddress.getGeographicLocation() != null
+                && submittedGeographicAddress.getGeographicLocation().getId() != null
+                && !submittedGeographicAddress.getGeographicLocation().getId().matches(uuidRegex)) {
+            log.error("Web-Server: Invalid request body (geographicLocation) received.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg("Invalid request body (geographicLocation) received"));
+        }
+
+        if (submittedGeographicAddress.getGeographicLocation() != null
+                && (submittedGeographicAddress.getGeographicLocation().getGeometry() != null && !submittedGeographicAddress.getGeographicLocation().getGeometry().isEmpty())) {
+            AtomicBoolean invalidPoint = new AtomicBoolean(false);
+            submittedGeographicAddress.getGeographicLocation().getGeometry().forEach((point) -> {
+                if (point.getId() != null && !point.getId().matches(uuidRegex)) {
+                    invalidPoint.set(true);
+                }
+            });
+            if (invalidPoint.get()) {
+                log.error("Web-Server: Invalid request body (geographicPoint) received.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg("Invalid request body (geographicPoint) received"));
+            }
         }
 
         GeographicAddressValidation geographicAddressValidation = geographicAddressValidationService.create(geographicAddressValidationCreate);

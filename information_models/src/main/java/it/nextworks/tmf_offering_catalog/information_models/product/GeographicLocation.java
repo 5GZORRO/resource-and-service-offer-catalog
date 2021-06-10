@@ -56,6 +56,7 @@ public class GeographicLocation {
     @JsonProperty("geometry")
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "geographic_location_fk", referencedColumnName = "id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private List<GeographicPoint> geometry = null;
 
     public GeographicLocation id(String id) {

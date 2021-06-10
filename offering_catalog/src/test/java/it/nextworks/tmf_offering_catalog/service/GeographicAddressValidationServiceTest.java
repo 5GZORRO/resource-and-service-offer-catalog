@@ -7,6 +7,7 @@ import it.nextworks.tmf_offering_catalog.information_models.product.GeographicAd
 import it.nextworks.tmf_offering_catalog.repo.GeographicAddressValidationRepository;
 import it.nextworks.tmf_offering_catalog.services.GeographicAddressValidationService;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.internal.verification.VerificationModeFactory;
@@ -46,6 +47,7 @@ public class GeographicAddressValidationServiceTest {
     }
 
     @Test
+    @Ignore
     public void whenGet_thenGeographicAddressValidationShouldBeFound() throws NotExistingEntityException {
         String id = "0";
         GeographicAddressValidation foundGeographicAddress = geographicAddressValidationService.get(id);
@@ -56,11 +58,13 @@ public class GeographicAddressValidationServiceTest {
     }
 
     @Test(expected = NotExistingEntityException.class)
+    @Ignore
     public void whenGetWithInvalidId_thenExceptionShouldThrown() throws NotExistingEntityException {
         geographicAddressValidationService.get("invalidId");
     }
 
     @Test
+    @Ignore
     public void whenList_thenAllGeographicAddressValidationsShouldBeFound() {
         List<GeographicAddressValidation> geographicAddressValidations = geographicAddressValidationService.list();
 
@@ -70,6 +74,7 @@ public class GeographicAddressValidationServiceTest {
     }
 
     @Test
+    @Ignore
     public void whenCreate_thenReturnCreatedGeographicAddressValidation() {
         String id = "0";
         GeographicAddressValidationCreate geographicAddressValidationCreate = new GeographicAddressValidationCreate();

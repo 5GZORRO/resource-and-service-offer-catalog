@@ -33,11 +33,21 @@ public class ProductOfferingController implements ProductOfferingInterface {
 
     private static final String uuidRegex = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
 
+    private final ObjectMapper objectMapper;
+
+    private final HttpServletRequest request;
+
     @Autowired
     private ProductOfferingService productOfferingService;
 
     @Autowired
     private CommunicationService communicationService;
+
+    @Autowired
+    public ProductOfferingController(ObjectMapper objectMapper, HttpServletRequest request) {
+        this.objectMapper = objectMapper;
+        this.request = request;
+    }
 
     @ApiOperation(value = "Creates a ProductOffering", nickname = "createProductOffering",
             notes = "This operation creates a ProductOffering entity.", response = ProductOffering.class,
