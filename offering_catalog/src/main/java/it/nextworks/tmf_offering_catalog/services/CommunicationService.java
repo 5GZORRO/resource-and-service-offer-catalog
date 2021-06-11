@@ -80,19 +80,24 @@ public class CommunicationService {
         @JsonProperty("serviceSpecifications")
         private final List<ServiceSpecification> serviceSpecifications;
 
+        @JsonProperty("geographicAddresses")
+        private final List<GeographicAddress> geographicAddresses;
+
         @JsonCreator
         public ClassificationWrapper(@JsonProperty("productOffering") ProductOffering productOffering,
                                      @JsonProperty("did") String did,
                                      @JsonProperty("productOfferingPrices") List<ProductOfferingPrice> productOfferingPrices,
                                      @JsonProperty("productSpecification") ProductSpecification productSpecification,
                                      @JsonProperty("resourceSpecifications") List<ResourceSpecification> resourceSpecifications,
-                                     @JsonProperty("serviceSpecifications") List<ServiceSpecification> serviceSpecifications) {
+                                     @JsonProperty("serviceSpecifications") List<ServiceSpecification> serviceSpecifications,
+                                     @JsonProperty("geographicAddresses") List<GeographicAddress> geographicAddresses) {
             this.productOffering        = productOffering;
             this.did                    = did;
             this.productOfferingPrices  = productOfferingPrices;
             this.productSpecification   = productSpecification;
             this.resourceSpecifications = resourceSpecifications;
             this.serviceSpecifications  = serviceSpecifications;
+            this.geographicAddresses    = geographicAddresses;
         }
     }
 
@@ -303,12 +308,16 @@ public class CommunicationService {
         String cwJson = null;
         if(!skipSRSDPost)
             cwJson = objectMapper.writeValueAsString(new ClassificationWrapper(po, did, productOfferingPrices,
-                    productSpecification, resourceSpecifications, serviceSpecifications));
+                    productSpecification, resourceSpecifications, serviceSpecifications, geographicAddresses));
+
+        log.info(cwJson);
 
         String pwJson = null;
         if(!skipSCLCMPost)
             pwJson = objectMapper.writeValueAsString(new PublicationWrapper(po, null, null,
                     did, productOfferingPrices, productSpecification, resourceSpecifications, serviceSpecifications, geographicAddresses));
+
+        log.info(pwJson);
 
         classifyAndPublishProductOfferingService.classifyAndPublish(catalogId, cwJson, pwJson);
     }
