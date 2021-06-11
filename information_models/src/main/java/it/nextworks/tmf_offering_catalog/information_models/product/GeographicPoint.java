@@ -42,7 +42,7 @@ public class GeographicPoint {
      *
      * @return id
      **/
-    @ApiModelProperty(value = "Unique identifier of the geographic point")
+    @ApiModelProperty(value = "Unique identifier of the geographic point", hidden = true)
     public String getId() {
         return id;
     }

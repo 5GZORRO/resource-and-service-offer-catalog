@@ -15,8 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-;
-
 @Service
 public class GeographicAddressValidationService {
 
@@ -28,6 +26,8 @@ public class GeographicAddressValidationService {
     @Value("${server.port}")
     private String port;
     private static final String path = "/tmf-api/geographicAddressManagement/v4/geographicAddressValidation/";
+    private static final String gaPath = "/tmf-api/geographicAddressManagement/v4/geographicAddress/";
+    //private static final String glPath = "/tmf-api/geographicLocation/v4/geographicLocation";
 
     @Autowired
     private GeographicAddressValidationRepository geographicAddressValidationRepository;
@@ -45,10 +45,10 @@ public class GeographicAddressValidationService {
                 createAndPopulateGeographicAddressValidation(geographicAddressValidationCreate)
         );
         geographicAddressValidation.href(protocol + hostname + ":" + port + path + geographicAddressValidation.getId())
-                .getValidGeographicAddress().href(protocol + hostname + ":" + port + path + geographicAddressValidation.getValidGeographicAddress().getId());
+                .getValidGeographicAddress().href(protocol + hostname + ":" + port + gaPath + geographicAddressValidation.getValidGeographicAddress().getId());
         if (geographicAddressValidation.getValidGeographicAddress().getGeographicLocation() != null) {
             geographicAddressValidation.getValidGeographicAddress().getGeographicLocation()
-                    .href(protocol + hostname + ":" + port + path + geographicAddressValidation.getValidGeographicAddress().getGeographicLocation().getId());
+                    .href(null);
         }
         log.info("Geographic Address Validation created with id " + geographicAddressValidation.getId() + ".");
         return geographicAddressValidation;

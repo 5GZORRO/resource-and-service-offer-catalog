@@ -1,0 +1,1089 @@
+{
+    "productOffering": {
+        "@baseType": "string",
+        "@schemaLocation": "string",
+        "@type": "string",
+        "agreement": [
+            {
+                "@baseType": "string",
+                "@referredType": "string",
+                "@schemaLocation": "string",
+                "@type": "string",
+                "href": "string",
+                "id": "string",
+                "name": "string"
+            }
+        ],
+        "attachment": [
+            {
+                "@baseType": "string",
+                "@referredType": "string",
+                "@schemaLocation": "string",
+                "@type": "string",
+                "atReferredType": "string",
+                "attachmentType": "string",
+                "content": "string",
+                "description": "string",
+                "href": "string",
+                "id": "string",
+                "lastUpdate": "string",
+                "lifecycleStatus": "string",
+                "lifecycleStatusEnum": "Active",
+                "mimeType": "string",
+                "name": "string",
+                "size": {
+                    "amount": 0.0,
+                    "units": "string"
+                },
+                "url": "string",
+                "validFor": {
+                    "endDateTime": "string",
+                    "startDateTime": "string"
+                },
+                "version": "string"
+            }
+        ],
+        "bundledProductOffering": [
+            {
+                "@baseType": "string",
+                "@schemaLocation": "string",
+                "@type": "string",
+                "bundledProductOfferingOption": {
+                    "@baseType": "string",
+                    "@schemaLocation": "string",
+                    "@type": "string",
+                    "href": "string",
+                    "numberRelOfferDefault": 0,
+                    "numberRelOfferLowerLimit": 0,
+                    "numberRelOfferUpperLimit": 0
+                },
+                "description": "string",
+                "href": "string",
+                "id": "string",
+                "lastUpdate": "string",
+                "lifecycleStatus": "string",
+                "lifecycleStatusEnum": "Active",
+                "name": "string",
+                "validFor": {
+                    "endDateTime": "string",
+                    "startDateTime": "string"
+                },
+                "version": "string"
+            }
+        ],
+        "category": [
+            {
+                "@baseType": "string",
+                "@referredType": "string",
+                "@schemaLocation": "string",
+                "@type": "string",
+                "href": "string",
+                "id": "string",
+                "name": "string",
+                "version": "string"
+            }
+        ],
+        "channel": [
+            {
+                "@baseType": "string",
+                "@referredType": "string",
+                "@schemaLocation": "string",
+                "@type": "string",
+                "description": "string",
+                "href": "string",
+                "id": "string",
+                "lastUpdate": "string",
+                "lifecycleStatus": "string",
+                "lifecycleStatusEnum": "Active",
+                "name": "string",
+                "validFor": {
+                    "endDateTime": "string",
+                    "startDateTime": "string"
+                },
+                "version": "string"
+            }
+        ],
+        "description": "string",
+        "href": "http://localhost:31080/tmf-api/productCatalogManagement/v4/productOffering/1b6d249c-8f7c-4daf-bcca-d0032a3d7ba4",
+        "id": "1b6d249c-8f7c-4daf-bcca-d0032a3d7ba4",
+        "isBundle": true,
+        "isSellable": true,
+        "lastUpdate": "2021-06-11T10:15:33.131Z",
+        "lifecycleStatus": "string",
+        "marketSegment": [
+            {
+                "@baseType": "string",
+                "@referredType": "string",
+                "@schemaLocation": "string",
+                "@type": "string",
+                "href": "string",
+                "id": "string",
+                "name": "string"
+            }
+        ],
+        "name": "string",
+        "place": [
+            {
+                "@baseType": "string",
+                "@referredType": "string",
+                "@schemaLocation": "string",
+                "@type": "string",
+                "href": "http://localhost:31080/tmf-api/geographicAddressManagement/v4/geographicAddress/0eb2942f-e26e-4fc3-9f97-d4edcd09199d",
+                "id": "0eb2942f-e26e-4fc3-9f97-d4edcd09199d",
+                "name": "string",
+                "role": "string"
+            }
+        ],
+        "prodSpecCharValueUse": [
+            {
+                "@baseType": "string",
+                "@schemaLocation": "string",
+                "@type": "string",
+                "description": "string",
+                "href": "string",
+                "lastUpdate": "string",
+                "lifecycleStatus": "string",
+                "lifecycleStatusEnum": "Active",
+                "maxCardinality": 0,
+                "minCardinality": 0,
+                "name": "string",
+                "productSpecCharacteristicValue": [
+                    {
+                        "@baseType": "string",
+                        "@schemaLocation": "string",
+                        "@type": "string",
+                        "href": "string",
+                        "isDefault": true,
+                        "rangeInterval": "string",
+                        "regex": "string",
+                        "unitOfMeasure": "string",
+                        "validFor": {
+                            "endDateTime": "string",
+                            "startDateTime": "string"
+                        },
+                        "value": {
+                            "alias": "string",
+                            "value": "string"
+                        },
+                        "valueFrom": "string",
+                        "valueTo": "string",
+                        "valueType": "string"
+                    }
+                ],
+                "productSpecification": {
+                    "@baseType": "string",
+                    "@referredType": "string",
+                    "@schemaLocation": "string",
+                    "@type": "string",
+                    "description": "string",
+                    "href": "string",
+                    "id": "string",
+                    "lastUpdate": "string",
+                    "lifecycleStatus": "string",
+                    "lifecycleStatusEnum": "Active",
+                    "name": "string",
+                    "targetProductSchema": {
+                        "@baseType": "string",
+                        "@schemaLocation": "string",
+                        "@type": "string",
+                        "href": "string"
+                    },
+                    "validFor": {
+                        "endDateTime": "string",
+                        "startDateTime": "string"
+                    },
+                    "version": "string"
+                },
+                "validFor": {
+                    "endDateTime": "string",
+                    "startDateTime": "string"
+                },
+                "valueType": "string",
+                "version": "string"
+            }
+        ],
+        "productOfferingPrice": [
+            {
+                "@baseType": "string",
+                "@referredType": "string",
+                "@schemaLocation": "string",
+                "@type": "string",
+                "description": "string",
+                "href": "http://localhost:31080/tmf-api/productCatalogManagement/v4/productOfferingPrice/d8be88b3-9c71-47f3-96f3-916041342aea",
+                "id": "d8be88b3-9c71-47f3-96f3-916041342aea",
+                "lastUpdate": "string",
+                "lifecycleStatus": "string",
+                "lifecycleStatusEnum": "Active",
+                "name": "string",
+                "validFor": {
+                    "endDateTime": "string",
+                    "startDateTime": "string"
+                },
+                "version": "string"
+            }
+        ],
+        "productOfferingTerm": [
+            {
+                "@baseType": "string",
+                "@schemaLocation": "string",
+                "@type": "string",
+                "description": "string",
+                "duration": {
+                    "amount": 0.0,
+                    "units": "string"
+                },
+                "href": "string",
+                "lastUpdate": "string",
+                "lifecycleStatus": "string",
+                "lifecycleStatusEnum": "Active",
+                "name": "string",
+                "validFor": {
+                    "endDateTime": "string",
+                    "startDateTime": "string"
+                },
+                "version": "string"
+            }
+        ],
+        "productSpecification": {
+            "@baseType": "string",
+            "@referredType": "string",
+            "@schemaLocation": "string",
+            "@type": "string",
+            "description": "string",
+            "href": "http://localhost:31080/tmf-api/productCatalogManagement/v4/productSpecification/e9d439cc-2480-4aeb-a449-0dbf46a2f53c",
+            "id": "e9d439cc-2480-4aeb-a449-0dbf46a2f53c",
+            "lastUpdate": "string",
+            "lifecycleStatus": "string",
+            "lifecycleStatusEnum": "Active",
+            "name": "string",
+            "targetProductSchema": {
+                "@baseType": "string",
+                "@schemaLocation": "string",
+                "@type": "string",
+                "href": "string"
+            },
+            "validFor": {
+                "endDateTime": "string",
+                "startDateTime": "string"
+            },
+            "version": "string"
+        },
+        "resourceCandidate": {
+            "@baseType": "string",
+            "@referredType": "string",
+            "@schemaLocation": "string",
+            "@type": "string",
+            "description": "string",
+            "href": "string",
+            "id": "string",
+            "lastUpdate": "string",
+            "lifecycleStatus": "string",
+            "lifecycleStatusEnum": "Active",
+            "name": "string",
+            "validFor": {
+                "endDateTime": "string",
+                "startDateTime": "string"
+            },
+            "version": "string"
+        },
+        "serviceCandidate": {
+            "@baseType": "string",
+            "@referredType": "string",
+            "@schemaLocation": "string",
+            "@type": "string",
+            "description": "string",
+            "href": "string",
+            "id": "string",
+            "lastUpdate": "string",
+            "lifecycleStatus": "string",
+            "lifecycleStatusEnum": "Active",
+            "name": "string",
+            "validFor": {
+                "endDateTime": "string",
+                "startDateTime": "string"
+            },
+            "version": "string"
+        },
+        "serviceLevelAgreement": {
+            "@baseType": "string",
+            "@referredType": "string",
+            "@schemaLocation": "string",
+            "@type": "string",
+            "description": "string",
+            "href": "string",
+            "id": "string",
+            "lastUpdate": "string",
+            "lifecycleStatus": "string",
+            "lifecycleStatusEnum": "Active",
+            "name": "string",
+            "validFor": {
+                "endDateTime": "string",
+                "startDateTime": "string"
+            },
+            "version": "string"
+        },
+        "statusReason": "string",
+        "validFor": {
+            "endDateTime": "string",
+            "startDateTime": "string"
+        },
+        "version": "string"
+    },
+    "did": "b5ada569-379a-4f66-be91-369164a87ba5",
+    "productOfferingPrices": [
+        {
+            "@baseType": "string",
+            "@schemaLocation": "string",
+            "@type": "string",
+            "bundledPopRelationship": [
+                {
+                    "@baseType": "string",
+                    "@schemaLocation": "string",
+                    "@type": "string",
+                    "description": "string",
+                    "href": "string",
+                    "id": "string",
+                    "lastUpdate": "string",
+                    "lifecycleStatus": "string",
+                    "lifecycleStatusEnum": "Active",
+                    "name": "string",
+                    "validFor": {
+                        "endDateTime": "string",
+                        "startDateTime": "string"
+                    },
+                    "version": "string"
+                }
+            ],
+            "constraint": [
+                {
+                    "@baseType": "string",
+                    "@referredType": "string",
+                    "@schemaLocation": "string",
+                    "@type": "string",
+                    "description": "string",
+                    "href": "string",
+                    "id": "string",
+                    "lastUpdate": "string",
+                    "lifecycleStatus": "string",
+                    "lifecycleStatusEnum": "Active",
+                    "name": "string",
+                    "validFor": {
+                        "endDateTime": "string",
+                        "startDateTime": "string"
+                    },
+                    "version": "string"
+                }
+            ],
+            "description": "string",
+            "href": "http://localhost:31080/tmf-api/productCatalogManagement/v4/productOfferingPrice/d8be88b3-9c71-47f3-96f3-916041342aea",
+            "id": "d8be88b3-9c71-47f3-96f3-916041342aea",
+            "isBundle": true,
+            "lastUpdate": "2021-06-11T10:16:02.586Z",
+            "lifecycleStatus": "string",
+            "name": "string",
+            "percentage": 0.0,
+            "place": [
+                {
+                    "@baseType": "string",
+                    "@referredType": "string",
+                    "@schemaLocation": "string",
+                    "@type": "string",
+                    "href": "string",
+                    "id": "string",
+                    "name": "string",
+                    "role": "string"
+                }
+            ],
+            "popRelationship": [
+                {
+                    "@baseType": "string",
+                    "@schemaLocation": "string",
+                    "@type": "string",
+                    "description": "string",
+                    "href": "string",
+                    "id": "string",
+                    "lastUpdate": "string",
+                    "lifecycleStatus": "string",
+                    "lifecycleStatusEnum": "Active",
+                    "name": "string",
+                    "relationshipType": "string",
+                    "validFor": {
+                        "endDateTime": "string",
+                        "startDateTime": "string"
+                    },
+                    "version": "string"
+                }
+            ],
+            "price": {
+                "unit": "string",
+                "value": 0.0
+            },
+            "priceType": "string",
+            "pricingLogicAlgorithm": [
+                {
+                    "@baseType": "string",
+                    "@schemaLocation": "string",
+                    "@type": "string",
+                    "description": "string",
+                    "href": "string",
+                    "id": "string",
+                    "lastUpdate": "string",
+                    "lifecycleStatus": "string",
+                    "lifecycleStatusEnum": "Active",
+                    "name": "string",
+                    "plaSpecId": "string",
+                    "validFor": {
+                        "endDateTime": "string",
+                        "startDateTime": "string"
+                    },
+                    "version": "string"
+                }
+            ],
+            "prodSpecCharValueUse": [
+                {
+                    "@baseType": "string",
+                    "@schemaLocation": "string",
+                    "@type": "string",
+                    "description": "string",
+                    "href": "string",
+                    "lastUpdate": "string",
+                    "lifecycleStatus": "string",
+                    "lifecycleStatusEnum": "Active",
+                    "maxCardinality": 0,
+                    "minCardinality": 0,
+                    "name": "string",
+                    "productSpecCharacteristicValue": [
+                        {
+                            "@baseType": "string",
+                            "@schemaLocation": "string",
+                            "@type": "string",
+                            "href": "string",
+                            "isDefault": true,
+                            "rangeInterval": "string",
+                            "regex": "string",
+                            "unitOfMeasure": "string",
+                            "validFor": {
+                                "endDateTime": "string",
+                                "startDateTime": "string"
+                            },
+                            "value": {
+                                "alias": "string",
+                                "value": "string"
+                            },
+                            "valueFrom": "string",
+                            "valueTo": "string",
+                            "valueType": "string"
+                        }
+                    ],
+                    "productSpecification": {
+                        "@baseType": "string",
+                        "@referredType": "string",
+                        "@schemaLocation": "string",
+                        "@type": "string",
+                        "description": "string",
+                        "href": "string",
+                        "id": "string",
+                        "lastUpdate": "string",
+                        "lifecycleStatus": "string",
+                        "lifecycleStatusEnum": "Active",
+                        "name": "string",
+                        "targetProductSchema": {
+                            "@baseType": "string",
+                            "@schemaLocation": "string",
+                            "@type": "string",
+                            "href": "string"
+                        },
+                        "validFor": {
+                            "endDateTime": "string",
+                            "startDateTime": "string"
+                        },
+                        "version": "string"
+                    },
+                    "validFor": {
+                        "endDateTime": "string",
+                        "startDateTime": "string"
+                    },
+                    "valueType": "string",
+                    "version": "string"
+                }
+            ],
+            "productOfferingTerm": [
+                {
+                    "@baseType": "string",
+                    "@schemaLocation": "string",
+                    "@type": "string",
+                    "description": "string",
+                    "duration": {
+                        "amount": 0.0,
+                        "units": "string"
+                    },
+                    "href": "string",
+                    "lastUpdate": "string",
+                    "lifecycleStatus": "string",
+                    "lifecycleStatusEnum": "Active",
+                    "name": "string",
+                    "validFor": {
+                        "endDateTime": "string",
+                        "startDateTime": "string"
+                    },
+                    "version": "string"
+                }
+            ],
+            "recurringChargePeriodLength": 0,
+            "recurringChargePeriodType": "string",
+            "tax": [
+                {
+                    "@baseType": "string",
+                    "@schemaLocation": "string",
+                    "@type": "string",
+                    "href": "string",
+                    "taxAmount": {
+                        "unit": "string",
+                        "value": 0.0
+                    },
+                    "taxCategory": "string",
+                    "taxRate": 0.0
+                }
+            ],
+            "unitOfMeasure": {
+                "amount": 0.0,
+                "units": "string"
+            },
+            "validFor": {
+                "endDateTime": "string",
+                "startDateTime": "string"
+            },
+            "version": "string"
+        }
+    ],
+    "productSpecification": {
+        "@baseType": "string",
+        "@schemaLocation": "string",
+        "@type": "string",
+        "attachment": [
+            {
+                "@baseType": "string",
+                "@referredType": "string",
+                "@schemaLocation": "string",
+                "@type": "string",
+                "atReferredType": "string",
+                "attachmentType": "string",
+                "content": "string",
+                "description": "string",
+                "href": "string",
+                "id": "string",
+                "lastUpdate": "string",
+                "lifecycleStatus": "string",
+                "lifecycleStatusEnum": "Active",
+                "mimeType": "string",
+                "name": "string",
+                "size": {
+                    "amount": 0.0,
+                    "units": "string"
+                },
+                "url": "string",
+                "validFor": {
+                    "endDateTime": "string",
+                    "startDateTime": "string"
+                },
+                "version": "string"
+            }
+        ],
+        "brand": "string",
+        "bundledProductSpecification": [
+            {
+                "@baseType": "string",
+                "@schemaLocation": "string",
+                "@type": "string",
+                "description": "string",
+                "href": "string",
+                "id": "string",
+                "lastUpdate": "string",
+                "lifecycleStatus": "string",
+                "lifecycleStatusEnum": "Active",
+                "name": "string",
+                "validFor": {
+                    "endDateTime": "string",
+                    "startDateTime": "string"
+                },
+                "version": "string"
+            }
+        ],
+        "description": "string",
+        "href": "http://localhost:31080/tmf-api/productCatalogManagement/v4/productSpecification/e9d439cc-2480-4aeb-a449-0dbf46a2f53c",
+        "id": "e9d439cc-2480-4aeb-a449-0dbf46a2f53c",
+        "isBundle": true,
+        "lastUpdate": "2021-06-11T10:16:59.351Z",
+        "lifecycleStatus": "string",
+        "name": "string",
+        "productNumber": "string",
+        "productSpecCharacteristic": [
+            {
+                "@baseType": "string",
+                "@schemaLocation": "string",
+                "@type": "string",
+                "configurable": true,
+                "description": "string",
+                "extensible": true,
+                "href": "string",
+                "isUnique": true,
+                "lastUpdate": "string",
+                "lifecycleStatus": "string",
+                "lifecycleStatusEnum": "Active",
+                "maxCardinality": 0,
+                "minCardinality": 0,
+                "name": "string",
+                "productSpecCharRelationship": [
+                    {
+                        "@baseType": "string",
+                        "@schemaLocation": "string",
+                        "@type": "string",
+                        "charSpecSeq": 0,
+                        "description": "string",
+                        "href": "string",
+                        "id": "string",
+                        "lastUpdate": "string",
+                        "lifecycleStatus": "string",
+                        "lifecycleStatusEnum": "Active",
+                        "name": "string",
+                        "relationshipType": "string",
+                        "validFor": {
+                            "endDateTime": "string",
+                            "startDateTime": "string"
+                        },
+                        "version": "string"
+                    }
+                ],
+                "productSpecCharacteristicValue": [
+                    {
+                        "@baseType": "string",
+                        "@schemaLocation": "string",
+                        "@type": "string",
+                        "href": "string",
+                        "isDefault": true,
+                        "rangeInterval": "string",
+                        "regex": "string",
+                        "unitOfMeasure": "string",
+                        "validFor": {
+                            "endDateTime": "string",
+                            "startDateTime": "string"
+                        },
+                        "value": {
+                            "alias": "string",
+                            "value": "string"
+                        },
+                        "valueFrom": "string",
+                        "valueTo": "string",
+                        "valueType": "string"
+                    }
+                ],
+                "regex": "string",
+                "validFor": {
+                    "endDateTime": "string",
+                    "startDateTime": "string"
+                },
+                "valueType": "string",
+                "version": "string"
+            }
+        ],
+        "productSpecificationRelationship": [
+            {
+                "@baseType": "string",
+                "@schemaLocation": "string",
+                "@type": "string",
+                "href": "string",
+                "id": "string",
+                "relationshipType": "string",
+                "validFor": {
+                    "endDateTime": "string",
+                    "startDateTime": "string"
+                }
+            }
+        ],
+        "relatedParty": [
+            {
+                "@baseType": "string",
+                "@referredType": "string",
+                "@schemaLocation": "string",
+                "@type": "string",
+                "extendedInfo": "string",
+                "href": "string",
+                "id": "string",
+                "name": "string",
+                "role": "string"
+            }
+        ],
+        "resourceSpecification": [
+            {
+                "@baseType": "string",
+                "@referredType": "string",
+                "@schemaLocation": "string",
+                "@type": "string",
+                "href": "http://localhost:31080/tmf-api/resourceCatalogManagement/v2/resourceSpecification/8968c209-5132-408e-9be7-01076e7e4b3f",
+                "id": "8968c209-5132-408e-9be7-01076e7e4b3f",
+                "name": "string",
+                "version": "string"
+            }
+        ],
+        "serviceSpecification": [
+            {
+                "@baseType": "string",
+                "@referredType": "string",
+                "@schemaLocation": "string",
+                "@type": "string",
+                "href": "http://localhost:31080/tmf-api/serviceCatalogManagement/v4/serviceSpecification/63459812-c169-4d6d-8359-04f690c3d7bf",
+                "id": "63459812-c169-4d6d-8359-04f690c3d7bf",
+                "name": "string",
+                "targetServiceSchema": {
+                    "@baseType": "string",
+                    "@schemaLocation": "string",
+                    "@type": "string",
+                    "href": "string"
+                },
+                "version": "string"
+            }
+        ],
+        "targetProductSchema": {
+            "@baseType": "string",
+            "@schemaLocation": "string",
+            "@type": "string",
+            "href": "string"
+        },
+        "validFor": {
+            "endDateTime": "string",
+            "startDateTime": "string"
+        },
+        "version": "string"
+    },
+    "resourceSpecifications": [
+        {
+            "@baseType": "string",
+            "@schemaLocation": "string",
+            "@type": "string",
+            "attachment": [
+                {
+                    "@baseType": "string",
+                    "@referredType": "string",
+                    "@schemaLocation": "string",
+                    "@type": "string",
+                    "description": "string",
+                    "href": "string",
+                    "id": "string",
+                    "name": "string",
+                    "url": "string"
+                }
+            ],
+            "category": "string",
+            "description": "string",
+            "feature": [
+                {
+                    "@baseType": "string",
+                    "@schemaLocation": "string",
+                    "@type": "string",
+                    "href": "string",
+                    "id": "string",
+                    "isBundle": true,
+                    "isEnabled": true,
+                    "name": "string",
+                    "validFor": {
+                        "endDateTime": "string",
+                        "startDateTime": "string"
+                    },
+                    "version": "string"
+                }
+            ],
+            "href": "http://localhost:31080/tmf-api/resourceCatalogManagement/v2/resourceSpecification/8968c209-5132-408e-9be7-01076e7e4b3f",
+            "id": "8968c209-5132-408e-9be7-01076e7e4b3f",
+            "isBundle": true,
+            "lastUpdate": "2021-06-11T10:16:38.773Z",
+            "lifecycleStatus": "string",
+            "name": "string",
+            "relatedParty": [
+                {
+                    "@baseType": "string",
+                    "@referredType": "string",
+                    "@schemaLocation": "string",
+                    "@type": "string",
+                    "extendedInfo": "string",
+                    "href": "string",
+                    "id": "string",
+                    "name": "string",
+                    "role": "string"
+                }
+            ],
+            "resourceSpecCharacteristic": [
+                {
+                    "@baseType": "string",
+                    "@schemaLocation": "string",
+                    "@type": "string",
+                    "@valueSchemaLocation": "string",
+                    "configurable": true,
+                    "description": "string",
+                    "extensible": true,
+                    "href": "string",
+                    "isUnique": true,
+                    "maxCardinality": 0,
+                    "minCardinality": 0,
+                    "name": "string",
+                    "regex": "string",
+                    "resourceSpecCharRelationship": [
+                        {
+                            "@type": "string",
+                            "href": "string",
+                            "id": "string",
+                            "name": "string",
+                            "relationshipType": "string",
+                            "validFor": {
+                                "endDateTime": "string",
+                                "startDateTime": "string"
+                            }
+                        }
+                    ],
+                    "resourceSpecCharacteristicValue": [
+                        {
+                            "@baseType": "string",
+                            "@schemaLocation": "string",
+                            "@type": "string",
+                            "href": "string",
+                            "isDefault": true,
+                            "rangeInterval": "string",
+                            "regex": "string",
+                            "unitOfMeasure": "string",
+                            "validFor": {
+                                "endDateTime": "string",
+                                "startDateTime": "string"
+                            },
+                            "value": {
+                                "alias": "string",
+                                "value": "string"
+                            },
+                            "valueFrom": 0,
+                            "valueTo": 0,
+                            "valueType": "string"
+                        }
+                    ],
+                    "validFor": {
+                        "endDateTime": "string",
+                        "startDateTime": "string"
+                    },
+                    "valueType": "string"
+                }
+            ],
+            "resourceSpecRelationship": [
+                {
+                    "@baseType": "string",
+                    "@type": "string",
+                    "href": "string",
+                    "id": "string",
+                    "name": "string",
+                    "relationshipType": "string",
+                    "role": "string",
+                    "validFor": {
+                        "endDateTime": "string",
+                        "startDateTime": "string"
+                    }
+                }
+            ],
+            "targetResourceSchema": {
+                "@baseType": "string",
+                "@schemaLocation": "string",
+                "@type": "string",
+                "href": "string"
+            },
+            "validFor": {
+                "endDateTime": "string",
+                "startDateTime": "string"
+            },
+            "version": "string"
+        }
+    ],
+    "serviceSpecifications": [
+        {
+            "@baseType": "string",
+            "@schemaLocation": "string",
+            "@type": "string",
+            "attachment": [
+                {
+                    "@baseType": "string",
+                    "@referredType": "string",
+                    "@schemaLocation": "string",
+                    "@type": "string",
+                    "description": "string",
+                    "href": "string",
+                    "id": "string",
+                    "name": "string",
+                    "url": "string"
+                }
+            ],
+            "description": "string",
+            "href": "http://localhost:31080/tmf-api/serviceCatalogManagement/v4/serviceSpecification/63459812-c169-4d6d-8359-04f690c3d7bf",
+            "id": "63459812-c169-4d6d-8359-04f690c3d7bf",
+            "isBundle": true,
+            "lastUpdate": "2021-06-11T10:17:25.544Z",
+            "lifecycleStatus": "string",
+            "name": "string",
+            "relatedParty": [
+                {
+                    "@baseType": "string",
+                    "@referredType": "string",
+                    "@schemaLocation": "string",
+                    "@type": "string",
+                    "extendedInfo": "string",
+                    "href": "string",
+                    "id": "string",
+                    "name": "string",
+                    "role": "string"
+                }
+            ],
+            "resourceSpecification": [
+                {
+                    "@baseType": "string",
+                    "@referredType": "string",
+                    "@schemaLocation": "string",
+                    "@type": "string",
+                    "href": "string",
+                    "id": "string",
+                    "name": "string",
+                    "version": "string"
+                }
+            ],
+            "serviceLevelSpecification": [
+                {
+                    "@baseType": "string",
+                    "@referredType": "string",
+                    "@schemaLocation": "string",
+                    "@type": "string",
+                    "href": "string",
+                    "id": "string",
+                    "name": "string"
+                }
+            ],
+            "serviceSpecCharacteristic": [
+                {
+                    "@baseType": "string",
+                    "@schemaLocation": "string",
+                    "@type": "string",
+                    "@valueSchemaLocation": "string",
+                    "configurable": true,
+                    "description": "string",
+                    "extensible": true,
+                    "href": "string",
+                    "id": "string",
+                    "isUnique": true,
+                    "maxCardinality": 0,
+                    "minCardinality": 0,
+                    "name": "string",
+                    "regex": "string",
+                    "serviceSpecCharRelationship": [
+                        {
+                            "@baseType": "string",
+                            "@schemaLocation": "string",
+                            "@type": "string",
+                            "id": "string",
+                            "name": "string",
+                            "relationshipType": "string",
+                            "role": "string",
+                            "validFor": {
+                                "endDateTime": "string",
+                                "startDateTime": "string"
+                            }
+                        }
+                    ],
+                    "serviceSpecCharacteristicValue": [
+                        {
+                            "@baseType": "string",
+                            "@schemaLocation": "string",
+                            "@type": "string",
+                            "href": "string",
+                            "isDefault": true,
+                            "rangeInterval": "string",
+                            "regex": "string",
+                            "unitOfMeasure": "string",
+                            "validFor": {
+                                "endDateTime": "string",
+                                "startDateTime": "string"
+                            },
+                            "value": {
+                                "alias": "string",
+                                "value": "string"
+                            },
+                            "valueFrom": 0,
+                            "valueTo": 0,
+                            "valueType": "string"
+                        }
+                    ],
+                    "validFor": {
+                        "endDateTime": "string",
+                        "startDateTime": "string"
+                    },
+                    "valueType": "string"
+                }
+            ],
+            "serviceSpecRelationship": [
+                {
+                    "@baseType": "string",
+                    "@schemaLocation": "string",
+                    "@type": "string",
+                    "href": "string",
+                    "id": "string",
+                    "name": "string",
+                    "relationshipType": "string",
+                    "role": "string",
+                    "validFor": {
+                        "endDateTime": "string",
+                        "startDateTime": "string"
+                    }
+                }
+            ],
+            "targetServiceSchema": {
+                "@baseType": "string",
+                "@schemaLocation": "string",
+                "@type": "string",
+                "href": "string"
+            },
+            "validFor": {
+                "endDateTime": "string",
+                "startDateTime": "string"
+            },
+            "version": "string"
+        }
+    ],
+    "geographicAddresses": [
+        {
+            "id": "0eb2942f-e26e-4fc3-9f97-d4edcd09199d",
+            "href": "http://localhost:31080/tmf-api/geographicAddressManagement/v4/geographicAddress/0eb2942f-e26e-4fc3-9f97-d4edcd09199d",
+            "city": "string",
+            "country": "string",
+            "locality": "string",
+            "postcode": "string",
+            "stateOrProvince": "string",
+            "streetName": "string",
+            "streetNr": "string",
+            "streetNrLast": "string",
+            "streetNrLastSuffix": "string",
+            "streetNrSuffix": "string",
+            "streetSuffix": "string",
+            "streetType": "string",
+            "geographicLocation": {
+                "id": "ab10beef-edba-4ecc-8f18-a655bda418c6",
+                "href": null,
+                "name": "string",
+                "geometryType": "string",
+                "accuracy": "string",
+                "spatialRef": "string",
+                "@type": "string",
+                "@schemaLocation": "string",
+                "geometry": [
+                    {
+                        "id": "f22c3245-90b7-4852-a54a-e5c5d305a588",
+                        "x": "string",
+                        "y": "string",
+                        "z": "string"
+                    }
+                ]
+            },
+            "@schemaLocation": null,
+            "@type": "string"
+        }
+    ]
+}
