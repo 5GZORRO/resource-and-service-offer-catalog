@@ -1,0 +1,7 @@
+package it.nextworks.tmf_offering_catalog.repo;
+
+import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrder;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ProductOrderRepository extends JpaRepository<ProductOrder, String> {
+}

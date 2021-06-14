@@ -1,16 +1,16 @@
-package it.nextworks.tmf_offering_catalog.information_models.product;
+package it.nextworks.tmf_offering_catalog.information_models.product.order;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import it.nextworks.tmf_offering_catalog.information_models.common.RelatedParty;
+import it.nextworks.tmf_offering_catalog.information_models.product.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 import org.threeten.bp.OffsetDateTime;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -24,6 +24,8 @@ import java.util.Objects;
 @ApiModel(description = "A Product Order is a type of order which  can  be used to place an order between a customer and a service provider or between a service provider and a partner and vice versa,")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-05-13T14:59:13.201Z")
+@Entity
+@Table(name = "product_orders")
 public class ProductOrder {
 
     @JsonIgnoreProperties(allowGetters = true)
@@ -36,78 +38,108 @@ public class ProductOrder {
     private String href = null;
 
     @JsonProperty("cancellationDate")
+    @Column(name = "cancellation_date")
     private OffsetDateTime cancellationDate = null;
 
     @JsonProperty("cancellationReason")
+    @Column(name = "cancellation_reason")
     private String cancellationReason = null;
 
     @JsonProperty("category")
     private String category = null;
 
     @JsonProperty("completionDate")
+    @Column(name = "completion_date")
     private OffsetDateTime completionDate = null;
 
     @JsonProperty("description")
     private String description = null;
 
     @JsonProperty("expectedCompletionDate")
+    @Column(name = "expected_completion_date")
     private OffsetDateTime expectedCompletionDate = null;
 
     @JsonProperty("externalId")
+    @Column(name = "external_id")
     private String externalId = null;
 
     @JsonProperty("notificationContact")
+    @Column(name = "notification_contact")
     private String notificationContact = null;
 
     @JsonProperty("orderDate")
+    @Column(name = "order_date")
     private OffsetDateTime orderDate = null;
 
     @JsonProperty("priority")
     private String priority = null;
 
     @JsonProperty("requestedCompletionDate")
+    @Column(name = "requested_completion_date")
     private OffsetDateTime requestedCompletionDate = null;
 
     @JsonProperty("requestedStartDate")
+    @Column(name = "requested_start_date")
     private OffsetDateTime requestedStartDate = null;
 
     @JsonProperty("agreement")
     @Valid
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "product_order_fk", referencedColumnName = "id")
     private List<AgreementRef> agreement = null;
 
     @JsonProperty("billingAccount")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "billing_account_ref_id", referencedColumnName = "id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private BillingAccountRef billingAccount = null;
 
     @JsonProperty("channel")
     @Valid
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "product_order_fk", referencedColumnName = "id")
     private List<RelatedChannel> channel = null;
 
     @JsonProperty("note")
     @Valid
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "product_order_fk", referencedColumnName = "id")
     private List<Note> note = null;
 
     @JsonProperty("orderTotalPrice")
     @Valid
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "product_order_fk", referencedColumnName = "id")
     private List<OrderPrice> orderTotalPrice = null;
 
     @JsonProperty("payment")
     @Valid
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "product_order_fk", referencedColumnName = "id")
     private List<PaymentRef> payment = null;
 
     @JsonProperty("productOfferingQualification")
     @Valid
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "product_order_fk", referencedColumnName = "id")
     private List<ProductOfferingQualificationRef> productOfferingQualification = null;
 
     @JsonProperty("productOrderItem")
     @Valid
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "product_order_fk", referencedColumnName = "id")
     private List<ProductOrderItem> productOrderItem = new ArrayList<ProductOrderItem>();
 
     @JsonProperty("quote")
     @Valid
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "product_order_fk", referencedColumnName = "id")
     private List<QuoteRef> quote = null;
 
     @JsonProperty("relatedParty")
     @Valid
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "product_order_fk", referencedColumnName = "id")
     private List<RelatedParty> relatedParty = null;
 
     @JsonProperty("state")
@@ -121,6 +153,34 @@ public class ProductOrder {
 
     @JsonProperty("@type")
     private String type = null;
+
+    public ProductOrder() {
+    }
+
+    public ProductOrder(ProductOrderCreate productOrderCreate) {
+        this.cancellationDate = productOrderCreate.getCancellationDate();
+        this.cancellationReason = productOrderCreate.getCancellationReason();
+        this.category = productOrderCreate.getCategory();
+        this.description = productOrderCreate.getDescription();
+        this.externalId = productOrderCreate.getExternalId();
+        this.notificationContact = productOrderCreate.getNotificationContact();
+        this.priority = productOrderCreate.getPriority();
+        this.requestedCompletionDate = productOrderCreate.getRequestedCompletionDate();
+        this.requestedStartDate = productOrderCreate.getRequestedStartDate();
+        this.agreement = productOrderCreate.getAgreement();
+        this.billingAccount = productOrderCreate.getBillingAccount();
+        this.channel = productOrderCreate.getChannel();
+        this.note = productOrderCreate.getNote();
+        this.orderTotalPrice = productOrderCreate.getOrderTotalPrice();
+        this.payment = productOrderCreate.getPayment();
+        this.productOfferingQualification = productOrderCreate.getProductOfferingQualification();
+        this.productOrderItem = productOrderCreate.getProductOrderItem();
+        this.quote = productOrderCreate.getQuote();
+        this.relatedParty = productOrderCreate.getRelatedParty();
+        this.baseType = productOrderCreate.getBaseType();
+        this.schemaLocation = productOrderCreate.getSchemaLocation();
+        this.type = productOrderCreate.getType();
+    }
 
     public ProductOrder id(String id) {
         this.id = id;

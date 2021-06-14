@@ -1,25 +1,24 @@
 package it.nextworks.tmf_offering_catalog.information_models.product;
 
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.model.Price;
-import io.swagger.model.PriceAlteration;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 /**
- * An amount, usually of money, that represents the actual price paid by the Customer for this item or this order
+ * Is an amount, usually of money, that modifies the price charged for an order item.
  */
-@ApiModel(description = "An amount, usually of money, that represents the actual price paid by the Customer for this item or this order")
+@ApiModel(description = "Is an amount, usually of money, that modifies the price charged for an order item.")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-05-13T14:59:13.201Z")
-public class OrderPrice   {
+public class PriceAlteration {
+
+    @JsonProperty("applicationDuration")
+    private Integer applicationDuration = null;
 
     @JsonProperty("description")
     private String description = null;
@@ -30,21 +29,17 @@ public class OrderPrice   {
     @JsonProperty("priceType")
     private String priceType = null;
 
+    @JsonProperty("priority")
+    private Integer priority = null;
+
     @JsonProperty("recurringChargePeriod")
     private String recurringChargePeriod = null;
 
     @JsonProperty("unitOfMeasure")
     private String unitOfMeasure = null;
 
-    @JsonProperty("billingAccount")
-    private BillingAccountRef billingAccount = null;
-
     @JsonProperty("price")
     private Price price = null;
-
-    @JsonProperty("priceAlteration")
-    @Valid
-    private List<PriceAlteration> priceAlteration = null;
 
     @JsonProperty("productOfferingPrice")
     private ProductOfferingPriceRef productOfferingPrice = null;
@@ -58,16 +53,38 @@ public class OrderPrice   {
     @JsonProperty("@type")
     private String type = null;
 
-    public OrderPrice description(String description) {
+    public PriceAlteration applicationDuration(Integer applicationDuration) {
+        this.applicationDuration = applicationDuration;
+        return this;
+    }
+
+    /**
+     * Duration during which the alteration applies on the order item price (for instance 2 months free of charge for the recurring charge)
+     *
+     * @return applicationDuration
+     **/
+    @ApiModelProperty(value = "Duration during which the alteration applies on the order item price (for instance 2 months free of charge for the recurring charge)")
+
+
+    public Integer getApplicationDuration() {
+        return applicationDuration;
+    }
+
+    public void setApplicationDuration(Integer applicationDuration) {
+        this.applicationDuration = applicationDuration;
+    }
+
+    public PriceAlteration description(String description) {
         this.description = description;
         return this;
     }
 
     /**
-     * A narrative that explains in detail the semantics of this order item price.
+     * A narrative that explains in detail the semantics of this order item price alteration
+     *
      * @return description
      **/
-    @ApiModelProperty(value = "A narrative that explains in detail the semantics of this order item price.")
+    @ApiModelProperty(value = "A narrative that explains in detail the semantics of this order item price alteration")
 
 
     public String getDescription() {
@@ -78,16 +95,17 @@ public class OrderPrice   {
         this.description = description;
     }
 
-    public OrderPrice name(String name) {
+    public PriceAlteration name(String name) {
         this.name = name;
         return this;
     }
 
     /**
-     * A short descriptive name such as \"Subscription price\".
+     * Name of the order item price alteration
+     *
      * @return name
      **/
-    @ApiModelProperty(value = "A short descriptive name such as \"Subscription price\".")
+    @ApiModelProperty(value = "Name of the order item price alteration")
 
 
     public String getName() {
@@ -98,16 +116,18 @@ public class OrderPrice   {
         this.name = name;
     }
 
-    public OrderPrice priceType(String priceType) {
+    public PriceAlteration priceType(String priceType) {
         this.priceType = priceType;
         return this;
     }
 
     /**
-     * A category that describes the price, such as recurring, discount, allowance, penalty, and so forth
+     * A category that describes the price such as recurring, one time and usage.
+     *
      * @return priceType
      **/
-    @ApiModelProperty(value = "A category that describes the price, such as recurring, discount, allowance, penalty, and so forth")
+    @ApiModelProperty(required = true, value = "A category that describes the price such as recurring, one time and usage.")
+    @NotNull
 
 
     public String getPriceType() {
@@ -118,13 +138,35 @@ public class OrderPrice   {
         this.priceType = priceType;
     }
 
-    public OrderPrice recurringChargePeriod(String recurringChargePeriod) {
+    public PriceAlteration priority(Integer priority) {
+        this.priority = priority;
+        return this;
+    }
+
+    /**
+     * Priority level for applying this alteration among all the defined alterations on the order item price
+     *
+     * @return priority
+     **/
+    @ApiModelProperty(value = "Priority level for applying this alteration among all the defined alterations on the order item price")
+
+
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
+
+    public PriceAlteration recurringChargePeriod(String recurringChargePeriod) {
         this.recurringChargePeriod = recurringChargePeriod;
         return this;
     }
 
     /**
      * Could be month, week...
+     *
      * @return recurringChargePeriod
      **/
     @ApiModelProperty(value = "Could be month, week...")
@@ -138,13 +180,14 @@ public class OrderPrice   {
         this.recurringChargePeriod = recurringChargePeriod;
     }
 
-    public OrderPrice unitOfMeasure(String unitOfMeasure) {
+    public PriceAlteration unitOfMeasure(String unitOfMeasure) {
         this.unitOfMeasure = unitOfMeasure;
         return this;
     }
 
     /**
      * Could be minutes, GB...
+     *
      * @return unitOfMeasure
      **/
     @ApiModelProperty(value = "Could be minutes, GB...")
@@ -158,37 +201,18 @@ public class OrderPrice   {
         this.unitOfMeasure = unitOfMeasure;
     }
 
-    public OrderPrice billingAccount(BillingAccountRef billingAccount) {
-        this.billingAccount = billingAccount;
-        return this;
-    }
-
-    /**
-     * A reference to a billing account used for paid the order price charge
-     * @return billingAccount
-     **/
-    @ApiModelProperty(value = "A reference to a billing account used for paid the order price charge")
-
-    @Valid
-
-    public BillingAccountRef getBillingAccount() {
-        return billingAccount;
-    }
-
-    public void setBillingAccount(BillingAccountRef billingAccount) {
-        this.billingAccount = billingAccount;
-    }
-
-    public OrderPrice price(Price price) {
+    public PriceAlteration price(Price price) {
         this.price = price;
         return this;
     }
 
     /**
-     * a structure used to define price amount
+     * Get price
+     *
      * @return price
      **/
-    @ApiModelProperty(value = "a structure used to define price amount")
+    @ApiModelProperty(required = true, value = "")
+    @NotNull
 
     @Valid
 
@@ -200,45 +224,17 @@ public class OrderPrice   {
         this.price = price;
     }
 
-    public OrderPrice priceAlteration(List<PriceAlteration> priceAlteration) {
-        this.priceAlteration = priceAlteration;
-        return this;
-    }
-
-    public OrderPrice addPriceAlterationItem(PriceAlteration priceAlterationItem) {
-        if (this.priceAlteration == null) {
-            this.priceAlteration = new ArrayList<PriceAlteration>();
-        }
-        this.priceAlteration.add(priceAlterationItem);
-        return this;
-    }
-
-    /**
-     * a strucuture used to describe a price alteration
-     * @return priceAlteration
-     **/
-    @ApiModelProperty(value = "a strucuture used to describe a price alteration")
-
-    @Valid
-
-    public List<PriceAlteration> getPriceAlteration() {
-        return priceAlteration;
-    }
-
-    public void setPriceAlteration(List<PriceAlteration> priceAlteration) {
-        this.priceAlteration = priceAlteration;
-    }
-
-    public OrderPrice productOfferingPrice(ProductOfferingPriceRef productOfferingPrice) {
+    public PriceAlteration productOfferingPrice(ProductOfferingPriceRef productOfferingPrice) {
         this.productOfferingPrice = productOfferingPrice;
         return this;
     }
 
     /**
-     * An amount, usually of money, that is asked for or allowed when a ProductOffering is bought, rented, or leased. The price is valid for a defined period of time.
+     * Get productOfferingPrice
+     *
      * @return productOfferingPrice
      **/
-    @ApiModelProperty(value = "An amount, usually of money, that is asked for or allowed when a ProductOffering is bought, rented, or leased. The price is valid for a defined period of time.")
+    @ApiModelProperty(value = "")
 
     @Valid
 
@@ -250,13 +246,14 @@ public class OrderPrice   {
         this.productOfferingPrice = productOfferingPrice;
     }
 
-    public OrderPrice baseType(String baseType) {
+    public PriceAlteration baseType(String baseType) {
         this.baseType = baseType;
         return this;
     }
 
     /**
      * When sub-classing, this defines the super-class
+     *
      * @return baseType
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the super-class")
@@ -270,13 +267,14 @@ public class OrderPrice   {
         this.baseType = baseType;
     }
 
-    public OrderPrice schemaLocation(String schemaLocation) {
+    public PriceAlteration schemaLocation(String schemaLocation) {
         this.schemaLocation = schemaLocation;
         return this;
     }
 
     /**
      * A URI to a JSON-Schema file that defines additional attributes and relationships
+     *
      * @return schemaLocation
      **/
     @ApiModelProperty(value = "A URI to a JSON-Schema file that defines additional attributes and relationships")
@@ -290,13 +288,14 @@ public class OrderPrice   {
         this.schemaLocation = schemaLocation;
     }
 
-    public OrderPrice type(String type) {
+    public PriceAlteration type(String type) {
         this.type = type;
         return this;
     }
 
     /**
      * When sub-classing, this defines the sub-class entity name
+     *
      * @return type
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the sub-class entity name")
@@ -312,46 +311,46 @@ public class OrderPrice   {
 
 
     @Override
-    public boolean equals(java.lang.Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        OrderPrice orderPrice = (OrderPrice) o;
-        return Objects.equals(this.description, orderPrice.description) &&
-                Objects.equals(this.name, orderPrice.name) &&
-                Objects.equals(this.priceType, orderPrice.priceType) &&
-                Objects.equals(this.recurringChargePeriod, orderPrice.recurringChargePeriod) &&
-                Objects.equals(this.unitOfMeasure, orderPrice.unitOfMeasure) &&
-                Objects.equals(this.billingAccount, orderPrice.billingAccount) &&
-                Objects.equals(this.price, orderPrice.price) &&
-                Objects.equals(this.priceAlteration, orderPrice.priceAlteration) &&
-                Objects.equals(this.productOfferingPrice, orderPrice.productOfferingPrice) &&
-                Objects.equals(this.baseType, orderPrice.baseType) &&
-                Objects.equals(this.schemaLocation, orderPrice.schemaLocation) &&
-                Objects.equals(this.type, orderPrice.type);
+        PriceAlteration priceAlteration = (PriceAlteration) o;
+        return Objects.equals(this.applicationDuration, priceAlteration.applicationDuration) &&
+                Objects.equals(this.description, priceAlteration.description) &&
+                Objects.equals(this.name, priceAlteration.name) &&
+                Objects.equals(this.priceType, priceAlteration.priceType) &&
+                Objects.equals(this.priority, priceAlteration.priority) &&
+                Objects.equals(this.recurringChargePeriod, priceAlteration.recurringChargePeriod) &&
+                Objects.equals(this.unitOfMeasure, priceAlteration.unitOfMeasure) &&
+                Objects.equals(this.price, priceAlteration.price) &&
+                Objects.equals(this.productOfferingPrice, priceAlteration.productOfferingPrice) &&
+                Objects.equals(this.baseType, priceAlteration.baseType) &&
+                Objects.equals(this.schemaLocation, priceAlteration.schemaLocation) &&
+                Objects.equals(this.type, priceAlteration.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(description, name, priceType, recurringChargePeriod, unitOfMeasure, billingAccount, price, priceAlteration, productOfferingPrice, baseType, schemaLocation, type);
+        return Objects.hash(applicationDuration, description, name, priceType, priority, recurringChargePeriod, unitOfMeasure, price, productOfferingPrice, baseType, schemaLocation, type);
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("class OrderPrice {\n");
+        sb.append("class PriceAlteration {\n");
 
+        sb.append("    applicationDuration: ").append(toIndentedString(applicationDuration)).append("\n");
         sb.append("    description: ").append(toIndentedString(description)).append("\n");
         sb.append("    name: ").append(toIndentedString(name)).append("\n");
         sb.append("    priceType: ").append(toIndentedString(priceType)).append("\n");
+        sb.append("    priority: ").append(toIndentedString(priority)).append("\n");
         sb.append("    recurringChargePeriod: ").append(toIndentedString(recurringChargePeriod)).append("\n");
         sb.append("    unitOfMeasure: ").append(toIndentedString(unitOfMeasure)).append("\n");
-        sb.append("    billingAccount: ").append(toIndentedString(billingAccount)).append("\n");
         sb.append("    price: ").append(toIndentedString(price)).append("\n");
-        sb.append("    priceAlteration: ").append(toIndentedString(priceAlteration)).append("\n");
         sb.append("    productOfferingPrice: ").append(toIndentedString(productOfferingPrice)).append("\n");
         sb.append("    baseType: ").append(toIndentedString(baseType)).append("\n");
         sb.append("    schemaLocation: ").append(toIndentedString(schemaLocation)).append("\n");
@@ -364,7 +363,7 @@ public class OrderPrice   {
      * Convert the given object to string with each line indented by 4 spaces
      * (except the first line).
      */
-    private String toIndentedString(java.lang.Object o) {
+    private String toIndentedString(Object o) {
         if (o == null) {
             return "null";
         }

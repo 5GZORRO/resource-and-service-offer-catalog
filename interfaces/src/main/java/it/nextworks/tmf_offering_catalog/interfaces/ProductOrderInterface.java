@@ -1,8 +1,7 @@
 package it.nextworks.tmf_offering_catalog.interfaces;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import it.nextworks.tmf_offering_catalog.information_models.product.ProductOrderCreate;
-import it.nextworks.tmf_offering_catalog.information_models.product.ProductOrderUpdate;
+import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderCreate;
+import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderUpdate;
 import org.springframework.http.ResponseEntity;
 
 public interface ProductOrderInterface {

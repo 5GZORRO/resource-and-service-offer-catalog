@@ -1,14 +1,14 @@
-package it.nextworks.tmf_offering_catalog.information_models.product;
+package it.nextworks.tmf_offering_catalog.information_models.product.order;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import it.nextworks.tmf_offering_catalog.information_models.product.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -21,6 +21,8 @@ import java.util.Objects;
 @ApiModel(description = "An identified part of the order. A product order is decomposed into one or more order items.")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-05-13T14:59:13.201Z")
+@Entity
+@Table(name = "product_order_items")
 public class ProductOrderItem {
 
     @JsonIgnoreProperties(allowGetters = true)
@@ -36,6 +38,9 @@ public class ProductOrderItem {
     private OrderItemActionType action = null;
 
     @JsonProperty("appointment")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "appointment_ref_id", referencedColumnName = "id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private AppointmentRef appointment = null;
 
     @JsonProperty("billingAccount")

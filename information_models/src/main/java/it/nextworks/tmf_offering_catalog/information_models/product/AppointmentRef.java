@@ -1,31 +1,28 @@
 package it.nextworks.tmf_offering_catalog.information_models.product;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
-import org.threeten.bp.OffsetDateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 /**
- * Extra information about a given entity
+ * Refers an appointment, such as a Customer presentation or internal meeting or site visit
  */
-@ApiModel(description = "Extra information about a given entity")
+@ApiModel(description = "Refers an appointment, such as a Customer presentation or internal meeting or site visit")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-05-13T14:59:13.201Z")
 @Entity
-@Table(name = "notes")
-public class Note {
+@Table(name = "appointment_refs")
+public class AppointmentRef {
 
     @JsonIgnoreProperties(allowGetters = true)
     @Id
@@ -33,14 +30,11 @@ public class Note {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id = null;
 
-    @JsonProperty("author")
-    private String author = null;
+    @JsonProperty("href")
+    private String href = null;
 
-    @JsonProperty("date")
-    private OffsetDateTime date = null;
-
-    @JsonProperty("text")
-    private String text = null;
+    @JsonProperty("description")
+    private String description = null;
 
     @JsonProperty("@baseType")
     private String baseType = null;
@@ -51,17 +45,21 @@ public class Note {
     @JsonProperty("@type")
     private String type = null;
 
-    public Note id(String id) {
+    @JsonProperty("@referredType")
+    private String referredType = null;
+
+    public AppointmentRef id(String id) {
         this.id = id;
         return this;
     }
 
     /**
-     * Identifier of the note within its containing entity (may or may not be globally unique, depending on provider implementation)
+     * The identifier of the referred appointment
      *
      * @return id
      **/
-    @ApiModelProperty(value = "Identifier of the note within its containing entity (may or may not be globally unique, depending on provider implementation)")
+    @ApiModelProperty(required = true, value = "The identifier of the referred appointment")
+    @NotNull
 
 
     public String getId() {
@@ -72,72 +70,49 @@ public class Note {
         this.id = id;
     }
 
-    public Note author(String author) {
-        this.author = author;
+    public AppointmentRef href(String href) {
+        this.href = href;
         return this;
     }
 
     /**
-     * Author of the note
+     * The reference of the appointment
      *
-     * @return author
+     * @return href
      **/
-    @ApiModelProperty(value = "Author of the note")
+    @ApiModelProperty(value = "The reference of the appointment")
 
 
-    public String getAuthor() {
-        return author;
+    public String getHref() {
+        return href;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setHref(String href) {
+        this.href = href;
     }
 
-    public Note date(OffsetDateTime date) {
-        this.date = date;
+    public AppointmentRef description(String description) {
+        this.description = description;
         return this;
     }
 
     /**
-     * Date of the note
+     * An explanatory text regarding the appointment made with a party
      *
-     * @return date
+     * @return description
      **/
-    @ApiModelProperty(value = "Date of the note")
+    @ApiModelProperty(value = "An explanatory text regarding the appointment made with a party")
 
-    @Valid
 
-    public OffsetDateTime getDate() {
-        return date;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDate(OffsetDateTime date) {
-        this.date = date;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public Note text(String text) {
-        this.text = text;
-        return this;
-    }
-
-    /**
-     * Text of the note
-     *
-     * @return text
-     **/
-    @ApiModelProperty(required = true, value = "Text of the note")
-    @NotNull
-
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public Note baseType(String baseType) {
+    public AppointmentRef baseType(String baseType) {
         this.baseType = baseType;
         return this;
     }
@@ -158,7 +133,7 @@ public class Note {
         this.baseType = baseType;
     }
 
-    public Note schemaLocation(String schemaLocation) {
+    public AppointmentRef schemaLocation(String schemaLocation) {
         this.schemaLocation = schemaLocation;
         return this;
     }
@@ -179,7 +154,7 @@ public class Note {
         this.schemaLocation = schemaLocation;
     }
 
-    public Note type(String type) {
+    public AppointmentRef type(String type) {
         this.type = type;
         return this;
     }
@@ -200,42 +175,63 @@ public class Note {
         this.type = type;
     }
 
+    public AppointmentRef referredType(String referredType) {
+        this.referredType = referredType;
+        return this;
+    }
+
+    /**
+     * The actual type of the target instance when needed for disambiguation
+     *
+     * @return referredType
+     **/
+    @ApiModelProperty(value = "The actual type of the target instance when needed for disambiguation")
+
+
+    public String getReferredType() {
+        return referredType;
+    }
+
+    public void setReferredType(String referredType) {
+        this.referredType = referredType;
+    }
+
 
     @Override
-    public boolean equals(java.lang.Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Note note = (Note) o;
-        return Objects.equals(this.id, note.id) &&
-                Objects.equals(this.author, note.author) &&
-                Objects.equals(this.date, note.date) &&
-                Objects.equals(this.text, note.text) &&
-                Objects.equals(this.baseType, note.baseType) &&
-                Objects.equals(this.schemaLocation, note.schemaLocation) &&
-                Objects.equals(this.type, note.type);
+        AppointmentRef appointmentRef = (AppointmentRef) o;
+        return Objects.equals(this.id, appointmentRef.id) &&
+                Objects.equals(this.href, appointmentRef.href) &&
+                Objects.equals(this.description, appointmentRef.description) &&
+                Objects.equals(this.baseType, appointmentRef.baseType) &&
+                Objects.equals(this.schemaLocation, appointmentRef.schemaLocation) &&
+                Objects.equals(this.type, appointmentRef.type) &&
+                Objects.equals(this.referredType, appointmentRef.referredType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, author, date, text, baseType, schemaLocation, type);
+        return Objects.hash(id, href, description, baseType, schemaLocation, type, referredType);
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("class Note {\n");
+        sb.append("class AppointmentRef {\n");
 
         sb.append("    id: ").append(toIndentedString(id)).append("\n");
-        sb.append("    author: ").append(toIndentedString(author)).append("\n");
-        sb.append("    date: ").append(toIndentedString(date)).append("\n");
-        sb.append("    text: ").append(toIndentedString(text)).append("\n");
+        sb.append("    href: ").append(toIndentedString(href)).append("\n");
+        sb.append("    description: ").append(toIndentedString(description)).append("\n");
         sb.append("    baseType: ").append(toIndentedString(baseType)).append("\n");
         sb.append("    schemaLocation: ").append(toIndentedString(schemaLocation)).append("\n");
         sb.append("    type: ").append(toIndentedString(type)).append("\n");
+        sb.append("    referredType: ").append(toIndentedString(referredType)).append("\n");
         sb.append("}");
         return sb.toString();
     }
@@ -244,7 +240,7 @@ public class Note {
      * Convert the given object to string with each line indented by 4 spaces
      * (except the first line).
      */
-    private String toIndentedString(java.lang.Object o) {
+    private String toIndentedString(Object o) {
         if (o == null) {
             return "null";
         }

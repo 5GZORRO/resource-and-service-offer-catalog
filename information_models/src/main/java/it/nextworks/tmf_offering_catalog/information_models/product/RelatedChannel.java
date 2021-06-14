@@ -8,8 +8,10 @@ import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
@@ -19,6 +21,8 @@ import java.util.Objects;
 @ApiModel(description = "Related channel to another entity. May be online web, mobile app, social ,etc.")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-05-13T14:59:13.201Z")
+@Entity
+@Table(name = "related_channels")
 public class RelatedChannel {
 
     @JsonIgnoreProperties(allowGetters = true)

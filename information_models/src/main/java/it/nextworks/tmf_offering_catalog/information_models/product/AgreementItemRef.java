@@ -14,15 +14,12 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
-/**
- * If an immediate payment has been done at the product order submission, the payment information are captured and stored (as a reference) in the order.
- */
-@ApiModel(description = "If an immediate payment has been done at the product order submission, the payment information are captured and stored (as a reference) in the order.")
+@ApiModel(description = "Agreement reference. An agreement represents a contract or arrangement, either written or verbal and sometimes enforceable by law, such as a service level agreement or a customer price agreement. An agreement involves a number of other business entities, such as products, services, and resources and/or their specifications.")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-05-13T14:59:13.201Z")
 @Entity
-@Table(name = "payment_refs")
-public class PaymentRef {
+@Table(name = "agreement_item_refs")
+public class AgreementItemRef {
 
     @JsonIgnoreProperties(allowGetters = true)
     @Id
@@ -32,6 +29,9 @@ public class PaymentRef {
 
     @JsonProperty("href")
     private String href = null;
+
+    @JsonProperty("agreementItemId")
+    private String agreementItemId = null;
 
     @JsonProperty("name")
     private String name = null;
@@ -48,7 +48,7 @@ public class PaymentRef {
     @JsonProperty("@referredType")
     private String referredType = null;
 
-    public PaymentRef id(String id) {
+    public AgreementItemRef id(String id) {
         this.id = id;
         return this;
     }
@@ -70,7 +70,7 @@ public class PaymentRef {
         this.id = id;
     }
 
-    public PaymentRef href(String href) {
+    public AgreementItemRef href(String href) {
         this.href = href;
         return this;
     }
@@ -91,17 +91,38 @@ public class PaymentRef {
         this.href = href;
     }
 
-    public PaymentRef name(String name) {
+    public AgreementItemRef agreementItemId(String agreementItemId) {
+        this.agreementItemId = agreementItemId;
+        return this;
+    }
+
+    /**
+     * Identifier of the agreement
+     *
+     * @return agreementItemId
+     **/
+    @ApiModelProperty(value = "Identifier of the agreement")
+
+
+    public String getAgreementItemId() {
+        return agreementItemId;
+    }
+
+    public void setAgreementItemId(String agreementItemId) {
+        this.agreementItemId = agreementItemId;
+    }
+
+    public AgreementItemRef name(String name) {
         this.name = name;
         return this;
     }
 
     /**
-     * A name for the payment
+     * Name of the related entity.
      *
      * @return name
      **/
-    @ApiModelProperty(value = "A name for the payment")
+    @ApiModelProperty(value = "Name of the related entity.")
 
 
     public String getName() {
@@ -112,7 +133,7 @@ public class PaymentRef {
         this.name = name;
     }
 
-    public PaymentRef baseType(String baseType) {
+    public AgreementItemRef baseType(String baseType) {
         this.baseType = baseType;
         return this;
     }
@@ -133,7 +154,7 @@ public class PaymentRef {
         this.baseType = baseType;
     }
 
-    public PaymentRef schemaLocation(String schemaLocation) {
+    public AgreementItemRef schemaLocation(String schemaLocation) {
         this.schemaLocation = schemaLocation;
         return this;
     }
@@ -154,7 +175,7 @@ public class PaymentRef {
         this.schemaLocation = schemaLocation;
     }
 
-    public PaymentRef type(String type) {
+    public AgreementItemRef type(String type) {
         this.type = type;
         return this;
     }
@@ -175,7 +196,7 @@ public class PaymentRef {
         this.type = type;
     }
 
-    public PaymentRef referredType(String referredType) {
+    public AgreementItemRef referredType(String referredType) {
         this.referredType = referredType;
         return this;
     }
@@ -205,35 +226,35 @@ public class PaymentRef {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        PaymentRef paymentRef = (PaymentRef) o;
-        return Objects.equals(this.id, paymentRef.id) &&
-                Objects.equals(this.href, paymentRef.href) &&
-                Objects.equals(this.name, paymentRef.name) &&
-                Objects.equals(this.baseType, paymentRef.baseType) &&
-                Objects.equals(this.schemaLocation, paymentRef.schemaLocation) &&
-                Objects.equals(this.type, paymentRef.type) &&
-                Objects.equals(this.referredType, paymentRef.referredType);
+        AgreementItemRef agreementItemRef = (AgreementItemRef) o;
+        return Objects.equals(this.id, agreementItemRef.id) &&
+                Objects.equals(this.href, agreementItemRef.href) &&
+                Objects.equals(this.agreementItemId, agreementItemRef.agreementItemId) &&
+                Objects.equals(this.name, agreementItemRef.name) &&
+                Objects.equals(this.baseType, agreementItemRef.baseType) &&
+                Objects.equals(this.schemaLocation, agreementItemRef.schemaLocation) &&
+                Objects.equals(this.type, agreementItemRef.type) &&
+                Objects.equals(this.referredType, agreementItemRef.referredType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, href, name, baseType, schemaLocation, type, referredType);
+        return Objects.hash(id, href, agreementItemId, name, baseType, schemaLocation, type, referredType);
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class PaymentRef {\n");
 
-        sb.append("    id: ").append(toIndentedString(id)).append("\n");
-        sb.append("    href: ").append(toIndentedString(href)).append("\n");
-        sb.append("    name: ").append(toIndentedString(name)).append("\n");
-        sb.append("    baseType: ").append(toIndentedString(baseType)).append("\n");
-        sb.append("    schemaLocation: ").append(toIndentedString(schemaLocation)).append("\n");
-        sb.append("    type: ").append(toIndentedString(type)).append("\n");
-        sb.append("    referredType: ").append(toIndentedString(referredType)).append("\n");
-        sb.append("}");
-        return sb.toString();
+        return "class AgreementItemRef {\n" +
+                "    id: " + toIndentedString(id) + "\n" +
+                "    href: " + toIndentedString(href) + "\n" +
+                "    agreementItemId: " + toIndentedString(agreementItemId) + "\n" +
+                "    name: " + toIndentedString(name) + "\n" +
+                "    baseType: " + toIndentedString(baseType) + "\n" +
+                "    schemaLocation: " + toIndentedString(schemaLocation) + "\n" +
+                "    type: " + toIndentedString(type) + "\n" +
+                "    referredType: " + toIndentedString(referredType) + "\n" +
+                "}";
     }
 
     /**
