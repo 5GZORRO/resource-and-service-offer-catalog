@@ -1,10 +1,16 @@
 package it.nextworks.tmf_offering_catalog.information_models.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Objects;
 
 /**
@@ -13,13 +19,29 @@ import java.util.Objects;
 @ApiModel(description = "An amount in a given unit")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-05-13T14:59:13.201Z")
+@Entity
+@Table(name = "quantities")
 public class Quantity {
+
+    @JsonIgnoreProperties(allowGetters = true)
+    @Id
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String id = null;
 
     @JsonProperty("amount")
     private Float amount = 1.0f;
 
     @JsonProperty("units")
     private String units = null;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public Quantity amount(Float amount) {
         this.amount = amount;

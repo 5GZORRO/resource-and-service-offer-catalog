@@ -61,7 +61,7 @@ public class Note {
      *
      * @return id
      **/
-    @ApiModelProperty(value = "Identifier of the note within its containing entity (may or may not be globally unique, depending on provider implementation)")
+    @ApiModelProperty(value = "Identifier of the note within its containing entity (may or may not be globally unique, depending on provider implementation)", hidden = true)
 
 
     public String getId() {

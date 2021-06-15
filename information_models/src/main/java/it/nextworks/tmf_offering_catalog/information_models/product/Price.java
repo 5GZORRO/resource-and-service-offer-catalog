@@ -1,10 +1,13 @@
 package it.nextworks.tmf_offering_catalog.information_models.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 
+import javax.persistence.*;
 import javax.validation.Valid;
 import java.util.Objects;
 
@@ -14,7 +17,15 @@ import java.util.Objects;
 @ApiModel(description = "Provides all amounts (tax included, duty free, tax rate), used currency and percentage to apply for Price Alteration.")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-05-13T14:59:13.201Z")
+@Entity
+@Table(name = "prices")
 public class Price {
+
+    @JsonIgnoreProperties(allowGetters = true)
+    @Id
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String id = null;
 
     @JsonProperty("percentage")
     private Float percentage = null;
@@ -23,9 +34,19 @@ public class Price {
     private Float taxRate = null;
 
     @JsonProperty("dutyFreeAmount")
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "value", column = @Column(name = "dutyFreeAmountValue")),
+            @AttributeOverride(name = "unit", column = @Column(name = "dutyFreeAmountUnit"))
+    })
     private Money dutyFreeAmount = null;
 
     @JsonProperty("taxIncludedAmount")
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "value", column = @Column(name = "taxIncludedAmountValue")),
+            @AttributeOverride(name = "unit", column = @Column(name = "taxIncludedAmountUnit"))
+    })
     private Money taxIncludedAmount = null;
 
     @JsonProperty("@baseType")
@@ -36,6 +57,15 @@ public class Price {
 
     @JsonProperty("@type")
     private String type = null;
+
+    @ApiModelProperty(hidden = true)
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public Price percentage(Float percentage) {
         this.percentage = percentage;

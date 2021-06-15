@@ -1,10 +1,13 @@
 package it.nextworks.tmf_offering_catalog.information_models.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
@@ -15,13 +18,24 @@ import java.util.Objects;
 @ApiModel(description = "Linked products to the one instantiate, such as [bundled] if the product is a bundle and you want to describe the bundled products inside this bundle; [reliesOn] if the product needs another already owned product to rely on (e.g. an option on an already owned mobile access product) [targets] or [isTargeted] (depending on the way of expressing the link) for any other kind of links that may be useful")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-05-13T14:59:13.201Z")
-
+@Entity
+@Table(name = "product_relationships")
 
 public class ProductRelationship {
+
+    @JsonIgnoreProperties(allowGetters = true)
+    @Id
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String id = null;
+
     @JsonProperty("relationshipType")
     private String relationshipType = null;
 
     @JsonProperty("product")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "product_ref_or_value_id", referencedColumnName = "id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ProductRefOrValue product = null;
 
     @JsonProperty("@baseType")
@@ -32,6 +46,14 @@ public class ProductRelationship {
 
     @JsonProperty("@type")
     private String type = null;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public ProductRelationship relationshipType(String relationshipType) {
         this.relationshipType = relationshipType;
@@ -187,5 +209,5 @@ public class ProductRelationship {
         }
         return o.toString().replace("\n", "\n    ");
     }
-}
 
+}

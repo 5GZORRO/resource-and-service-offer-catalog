@@ -1,11 +1,14 @@
 package it.nextworks.tmf_offering_catalog.information_models.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import it.nextworks.tmf_offering_catalog.information_models.common.TimePeriod;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 
+import javax.persistence.*;
 import javax.validation.Valid;
 import java.util.Objects;
 
@@ -15,9 +18,16 @@ import java.util.Objects;
 @ApiModel(description = "Description of a productTerm linked to this product. This represent a commitment with a duration")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-05-13T14:59:13.201Z")
-
-
+@Entity
+@Table(name = "product_terms")
 public class ProductTerm {
+
+    @JsonIgnoreProperties(allowGetters = true)
+    @Id
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String id = null;
+
     @JsonProperty("description")
     private String description = null;
 
@@ -25,6 +35,9 @@ public class ProductTerm {
     private String name = null;
 
     @JsonProperty("duration")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "quantity_id", referencedColumnName = "id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Quantity duration = null;
 
     @JsonProperty("validFor")
@@ -38,6 +51,14 @@ public class ProductTerm {
 
     @JsonProperty("@type")
     private String type = null;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public ProductTerm description(String description) {
         this.description = description;
@@ -238,5 +259,5 @@ public class ProductTerm {
         }
         return o.toString().replace("\n", "\n    ");
     }
-}
 
+}

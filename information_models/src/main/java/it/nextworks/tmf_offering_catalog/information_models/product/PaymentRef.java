@@ -58,7 +58,7 @@ public class PaymentRef {
      *
      * @return id
      **/
-    @ApiModelProperty(required = true, value = "Unique identifier of a related entity.")
+    @ApiModelProperty(required = true, value = "Unique identifier of a related entity.", hidden = true)
     @NotNull
 
 

@@ -58,7 +58,7 @@ public class BillingAccountRef {
      *
      * @return id
      **/
-    @ApiModelProperty(required = true, value = "Unique identifier of the billing account")
+    @ApiModelProperty(required = true, value = "Unique identifier of the billing account", hidden = true)
     @NotNull
 
 

@@ -12,10 +12,7 @@ import it.nextworks.tmf_offering_catalog.information_models.product.ProductOffer
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +25,7 @@ import java.util.Objects;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-05-13T14:59:13.201Z")
 @Entity
-@Table(name = "order_price")
+@Table(name = "order_prices")
 public class OrderPrice {
 
     @JsonIgnoreProperties(allowGetters = true)
@@ -53,16 +50,27 @@ public class OrderPrice {
     private String unitOfMeasure = null;
 
     @JsonProperty("billingAccount")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "billing_account_ref_id", referencedColumnName = "id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private BillingAccountRef billingAccount = null;
 
     @JsonProperty("price")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "price_id", referencedColumnName = "id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Price price = null;
 
     @JsonProperty("priceAlteration")
     @Valid
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "order_price_fk", referencedColumnName = "id")
     private List<PriceAlteration> priceAlteration = null;
 
     @JsonProperty("productOfferingPrice")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "product_offering_price_ref_id", referencedColumnName = "id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ProductOfferingPriceRef productOfferingPrice = null;
 
     @JsonProperty("@baseType")
@@ -79,6 +87,7 @@ public class OrderPrice {
         return this;
     }
 
+    @ApiModelProperty(hidden = true)
     public String getId() {
         return id;
     }

@@ -1,10 +1,16 @@
 package it.nextworks.tmf_offering_catalog.information_models.product.order;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
@@ -14,9 +20,16 @@ import java.util.Objects;
 @ApiModel(description = "RelatedProductOrderItem (ProductOrder item) .The product order item which triggered product creation/change/termination.")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-05-13T14:59:13.201Z")
-
-
+@Entity
+@Table(name = "related_product_order_items")
 public class RelatedProductOrderItem {
+
+    @JsonIgnoreProperties(allowGetters = true)
+    @Id
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String id = null;
+
     @JsonProperty("orderItemAction")
     private String orderItemAction = null;
 
@@ -43,6 +56,15 @@ public class RelatedProductOrderItem {
 
     @JsonProperty("@referredType")
     private String referredType = null;
+
+    @ApiModelProperty(hidden = true)
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public RelatedProductOrderItem orderItemAction(String orderItemAction) {
         this.orderItemAction = orderItemAction;
@@ -289,5 +311,5 @@ public class RelatedProductOrderItem {
         }
         return o.toString().replace("\n", "\n    ");
     }
-}
 
+}

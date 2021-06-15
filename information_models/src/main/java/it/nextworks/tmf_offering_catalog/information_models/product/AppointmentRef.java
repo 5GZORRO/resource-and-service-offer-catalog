@@ -58,7 +58,7 @@ public class AppointmentRef {
      *
      * @return id
      **/
-    @ApiModelProperty(required = true, value = "The identifier of the referred appointment")
+    @ApiModelProperty(required = true, value = "The identifier of the referred appointment", hidden = true)
     @NotNull
 
 

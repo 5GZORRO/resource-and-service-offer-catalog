@@ -44,46 +44,75 @@ public class ProductOrderItem {
     private AppointmentRef appointment = null;
 
     @JsonProperty("billingAccount")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "billing_account_ref_id", referencedColumnName = "id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private BillingAccountRef billingAccount = null;
 
     @JsonProperty("itemPrice")
     @Valid
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "product_order_item_fk", referencedColumnName = "id")
     private List<OrderPrice> itemPrice = null;
 
     @JsonProperty("itemTerm")
     @Valid
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "product_order_item_fk", referencedColumnName = "id")
     private List<OrderTerm> itemTerm = null;
 
     @JsonProperty("itemTotalPrice")
     @Valid
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "product_order_item_fk", referencedColumnName = "id")
     private List<OrderPrice> itemTotalPrice = null;
 
     @JsonProperty("payment")
     @Valid
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "product_order_item_fk", referencedColumnName = "id")
     private List<PaymentRef> payment = null;
 
     @JsonProperty("product")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "product_ref_or_value_id", referencedColumnName = "id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ProductRefOrValue product = null;
 
     @JsonProperty("productOffering")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "product_offering_ref_id", referencedColumnName = "id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ProductOfferingRef productOffering = null;
 
     @JsonProperty("productOfferingQualificationItem")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "product_offering_qualification_item_ref_id", referencedColumnName = "id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ProductOfferingQualificationItemRef productOfferingQualificationItem = null;
 
     @JsonProperty("productOrderItem")
     @Valid
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "product_order_item_fk", referencedColumnName = "id")
     private List<ProductOrderItem> productOrderItem = null;
 
     @JsonProperty("productOrderItemRelationship")
     @Valid
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "product_order_item_fk", referencedColumnName = "id")
     private List<OrderItemRelationship> productOrderItemRelationship = null;
 
     @JsonProperty("qualification")
     @Valid
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "product_order_item_fk", referencedColumnName = "id")
     private List<ProductOfferingQualificationRef> qualification = null;
 
     @JsonProperty("quoteItem")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "quote_item_id", referencedColumnName = "id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private QuoteItemRef quoteItem = null;
 
     @JsonProperty("state")
@@ -108,7 +137,7 @@ public class ProductOrderItem {
      *
      * @return id
      **/
-    @ApiModelProperty(required = true, value = "Identifier of the line item (generally it is a sequence number 01, 02, 03, ...)")
+    @ApiModelProperty(required = true, value = "Identifier of the line item (generally it is a sequence number 01, 02, 03, ...)", hidden = true)
     @NotNull
 
 

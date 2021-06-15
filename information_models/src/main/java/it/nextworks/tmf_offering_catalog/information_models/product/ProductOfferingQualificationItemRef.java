@@ -67,7 +67,7 @@ public class ProductOfferingQualificationItemRef {
      *
      * @return id
      **/
-    @ApiModelProperty(required = true, value = "Id of an item of a product offering qualification")
+    @ApiModelProperty(required = true, value = "Id of an item of a product offering qualification", hidden = true)
     @NotNull
 
 

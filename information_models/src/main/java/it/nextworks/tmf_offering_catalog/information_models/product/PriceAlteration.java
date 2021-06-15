@@ -1,10 +1,13 @@
 package it.nextworks.tmf_offering_catalog.information_models.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
@@ -15,7 +18,15 @@ import java.util.Objects;
 @ApiModel(description = "Is an amount, usually of money, that modifies the price charged for an order item.")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-05-13T14:59:13.201Z")
+@Entity
+@Table(name = "price_alterations")
 public class PriceAlteration {
+
+    @JsonIgnoreProperties(allowGetters = true)
+    @Id
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String id = null;
 
     @JsonProperty("applicationDuration")
     private Integer applicationDuration = null;
@@ -39,9 +50,15 @@ public class PriceAlteration {
     private String unitOfMeasure = null;
 
     @JsonProperty("price")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "price_id", referencedColumnName = "id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Price price = null;
 
     @JsonProperty("productOfferingPrice")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "product_offering_price_ref_id", referencedColumnName = "id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ProductOfferingPriceRef productOfferingPrice = null;
 
     @JsonProperty("@baseType")
@@ -52,6 +69,15 @@ public class PriceAlteration {
 
     @JsonProperty("@type")
     private String type = null;
+
+    @ApiModelProperty(hidden = true)
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public PriceAlteration applicationDuration(Integer applicationDuration) {
         this.applicationDuration = applicationDuration;

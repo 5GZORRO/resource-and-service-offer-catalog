@@ -522,10 +522,7 @@ public class ProductOrder {
      *
      * @return billingAccount
      **/
-    @ApiModelProperty(value = "")
-
-    @Valid
-
+    @ApiModelProperty(value = "Get billingAccount")
     public BillingAccountRef getBillingAccount() {
         return billingAccount;
     }

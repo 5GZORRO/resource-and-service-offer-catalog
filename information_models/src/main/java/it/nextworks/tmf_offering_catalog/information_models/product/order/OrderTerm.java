@@ -1,11 +1,14 @@
 package it.nextworks.tmf_offering_catalog.information_models.product.order;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import it.nextworks.tmf_offering_catalog.information_models.product.Quantity;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.validation.annotation.Validated;
 
+import javax.persistence.*;
 import javax.validation.Valid;
 import java.util.Objects;
 
@@ -15,7 +18,15 @@ import java.util.Objects;
 @ApiModel(description = "Description of a productTerm linked to this orderItem. This represent a commitment with a duration")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-05-13T14:59:13.201Z")
+@Entity
+@Table(name = "order_terms")
 public class OrderTerm {
+
+    @JsonIgnoreProperties(allowGetters = true)
+    @Id
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String id = null;
 
     @JsonProperty("description")
     private String description = null;
@@ -24,6 +35,9 @@ public class OrderTerm {
     private String name = null;
 
     @JsonProperty("duration")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "duration_id", referencedColumnName = "id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Quantity duration = null;
 
     @JsonProperty("@baseType")
@@ -34,6 +48,15 @@ public class OrderTerm {
 
     @JsonProperty("@type")
     private String type = null;
+
+    @ApiModelProperty(hidden = true)
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public OrderTerm description(String description) {
         this.description = description;
