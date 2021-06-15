@@ -8,6 +8,8 @@ public class StatusEnumConverter implements AttributeConverter<StatusEnum, Strin
 
     @Override
     public String convertToDatabaseColumn(StatusEnum statusEnum) {
+        if(statusEnum == null)
+            return null;
         return statusEnum.toString();
     }
 

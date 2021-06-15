@@ -8,6 +8,8 @@ public class PartyStatusEnumConverter implements AttributeConverter<PartyStatusE
 
     @Override
     public String convertToDatabaseColumn(PartyStatusEnum partyStatusEnum) {
+        if(partyStatusEnum == null)
+            return null;
         return partyStatusEnum.toString();
     }
 

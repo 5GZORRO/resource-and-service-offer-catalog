@@ -8,6 +8,8 @@ public class ProductOfferingStatesEnumConverter implements AttributeConverter<Pr
 
     @Override
     public String convertToDatabaseColumn(ProductOfferingStatesEnum productOfferingStatesEnum) {
+        if(productOfferingStatesEnum == null)
+            return null;
         return productOfferingStatesEnum.toString();
     }
 
