@@ -1,7 +1,10 @@
 package it.nextworks.tmf_offering_catalog.services;
 
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
+import it.nextworks.tmf_offering_catalog.common.exception.StakeholderNotRegisteredException;
 import it.nextworks.tmf_offering_catalog.information_models.common.*;
+import it.nextworks.tmf_offering_catalog.information_models.party.Organization;
+import it.nextworks.tmf_offering_catalog.information_models.party.OrganizationWrapper;
 import it.nextworks.tmf_offering_catalog.information_models.product.*;
 import it.nextworks.tmf_offering_catalog.repo.ProductSpecificationRepository;
 import org.hibernate.Hibernate;
@@ -15,6 +18,7 @@ import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
 import org.threeten.bp.ZoneId;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -34,9 +38,20 @@ public class ProductSpecificationService {
     @Autowired
     private ProductSpecificationRepository productSpecificationRepository;
 
-    public ProductSpecification create(ProductSpecificationCreate productSpecificationCreate) {
+    @Autowired
+    private OrganizationService organizationService;
+
+    public ProductSpecification create(ProductSpecificationCreate productSpecificationCreate) throws StakeholderNotRegisteredException {
 
         log.info("Received request to create a Product Specification.");
+
+        OrganizationWrapper ow;
+        try {
+            ow = organizationService.get();
+        } catch (NotExistingEntityException e) {
+            throw new StakeholderNotRegisteredException(e.getMessage());
+        }
+        Organization org = ow.getOrganization();
 
         final String id = UUID.randomUUID().toString();
         ProductSpecification productSpecification = new ProductSpecification()
@@ -55,7 +70,6 @@ public class ProductSpecificationService {
                 .productNumber(productSpecificationCreate.getProductNumber())
                 .productSpecCharacteristic(productSpecificationCreate.getProductSpecCharacteristic())
                 .productSpecificationRelationship(productSpecificationCreate.getProductSpecificationRelationship())
-                .relatedParty(productSpecificationCreate.getRelatedParty())
                 .resourceSpecification(productSpecificationCreate.getResourceSpecification())
                 .serviceSpecification(productSpecificationCreate.getServiceSpecification())
                 .targetProductSchema(productSpecificationCreate.getTargetProductSchema())
@@ -67,6 +81,19 @@ public class ProductSpecificationService {
             productSpecification.setLastUpdate(lastUpdate.toString());
         else
             productSpecification.setLastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
+
+        List<RelatedParty> relatedParties = productSpecificationCreate.getRelatedParty();
+        if(relatedParties != null)
+            productSpecification.setRelatedParty(relatedParties);
+        else {
+            RelatedParty relatedParty = new RelatedParty()
+                    .href(org.getHref())
+                    .id(org.getId())
+                    .role(org.getTradingName())
+                    .name(org.getName())
+                    .extendedInfo(ow.getStakeholderDID());
+            productSpecification.setRelatedParty(Collections.singletonList(relatedParty));
+        }
 
         productSpecificationRepository.save(productSpecification);
 

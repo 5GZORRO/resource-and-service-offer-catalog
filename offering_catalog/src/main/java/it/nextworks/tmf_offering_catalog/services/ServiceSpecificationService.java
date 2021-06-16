@@ -1,7 +1,10 @@
 package it.nextworks.tmf_offering_catalog.services;
 
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
+import it.nextworks.tmf_offering_catalog.common.exception.StakeholderNotRegisteredException;
 import it.nextworks.tmf_offering_catalog.information_models.common.*;
+import it.nextworks.tmf_offering_catalog.information_models.party.Organization;
+import it.nextworks.tmf_offering_catalog.information_models.party.OrganizationWrapper;
 import it.nextworks.tmf_offering_catalog.information_models.service.*;
 import it.nextworks.tmf_offering_catalog.repo.ServiceSpecificationRepository;
 import org.hibernate.Hibernate;
@@ -15,6 +18,7 @@ import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
 import org.threeten.bp.ZoneId;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -34,9 +38,20 @@ public class ServiceSpecificationService {
     @Autowired
     private ServiceSpecificationRepository serviceSpecificationRepository;
 
-    public ServiceSpecification create(ServiceSpecificationCreate serviceSpecificationCreate) {
+    @Autowired
+    private OrganizationService organizationService;
+
+    public ServiceSpecification create(ServiceSpecificationCreate serviceSpecificationCreate) throws StakeholderNotRegisteredException {
 
         log.info("Received request to create a Service Specification.");
+
+        OrganizationWrapper ow;
+        try {
+            ow = organizationService.get();
+        } catch (NotExistingEntityException e) {
+            throw new StakeholderNotRegisteredException(e.getMessage());
+        }
+        Organization org = ow.getOrganization();
 
         final String id = UUID.randomUUID().toString();
         ServiceSpecification serviceSpecification = new ServiceSpecification()
@@ -50,7 +65,6 @@ public class ServiceSpecificationService {
                 .isBundle(serviceSpecificationCreate.isIsBundle())
                 .lifecycleStatus(serviceSpecificationCreate.getLifecycleStatus())
                 .name(serviceSpecificationCreate.getName())
-                .relatedParty(serviceSpecificationCreate.getRelatedParty())
                 .resourceSpecification(serviceSpecificationCreate.getResourceSpecification())
                 .serviceLevelSpecification(serviceSpecificationCreate.getServiceLevelSpecification())
                 .serviceSpecCharacteristic(serviceSpecificationCreate.getServiceSpecCharacteristic())
@@ -75,6 +89,19 @@ public class ServiceSpecificationService {
             serviceSpecification.setLastUpdate(lastUpdate.toString());
         else
             serviceSpecification.setLastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
+
+        List<RelatedParty> relatedParties = serviceSpecificationCreate.getRelatedParty();
+        if(relatedParties != null)
+            serviceSpecification.setRelatedParty(relatedParties);
+        else {
+            RelatedParty relatedParty = new RelatedParty()
+                    .href(org.getHref())
+                    .id(org.getId())
+                    .role(org.getTradingName())
+                    .name(org.getName())
+                    .extendedInfo(ow.getStakeholderDID());
+            serviceSpecification.setRelatedParty(Collections.singletonList(relatedParty));
+        }
 
         serviceSpecificationRepository.save(serviceSpecification);
 
