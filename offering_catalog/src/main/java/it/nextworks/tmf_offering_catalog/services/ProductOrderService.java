@@ -8,6 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class ProductOrderService {
@@ -24,6 +27,7 @@ public class ProductOrderService {
     @Autowired
     private ProductOrderRepository productOrderRepository;
 
+    @Transactional
     public ProductOrder create(ProductOrderCreate productOrderCreate) {
         log.info("Received request to create a Product Order.");
         ProductOrder productOrder = productOrderRepository.save(new ProductOrder(productOrderCreate));
@@ -33,4 +37,9 @@ public class ProductOrderService {
         return productOrder;
     }
 
+    @Transactional
+    public List<ProductOrder> list() {
+        log.info("Received request to retrieve all Product Orders");
+        return productOrderRepository.findAll();
+    }
 }
