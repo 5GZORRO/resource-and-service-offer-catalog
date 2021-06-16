@@ -1,6 +1,6 @@
 package it.nextworks.tmf_offering_catalog.information_models.product;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -24,11 +24,14 @@ import java.util.Objects;
 @Table(name = "billing_account_refs")
 public class BillingAccountRef {
 
-    @JsonIgnoreProperties(allowGetters = true)
+    @JsonProperty("id")
+    private String id = null;
+
+    @JsonIgnore
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
-    private String id = null;
+    private String uuid = null;
 
     @JsonProperty("href")
     private String href = null;
@@ -58,16 +61,22 @@ public class BillingAccountRef {
      *
      * @return id
      **/
-    @ApiModelProperty(required = true, value = "Unique identifier of the billing account", hidden = true)
+    @ApiModelProperty(required = true, value = "Unique identifier of the billing account")
     @NotNull
-
-
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public BillingAccountRef href(String href) {
@@ -81,8 +90,6 @@ public class BillingAccountRef {
      * @return href
      **/
     @ApiModelProperty(value = "Reference of the billing account")
-
-
     public String getHref() {
         return href;
     }
@@ -102,8 +109,6 @@ public class BillingAccountRef {
      * @return name
      **/
     @ApiModelProperty(value = "Name of the billing account")
-
-
     public String getName() {
         return name;
     }
@@ -123,8 +128,6 @@ public class BillingAccountRef {
      * @return baseType
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the super-class")
-
-
     public String getBaseType() {
         return baseType;
     }
@@ -144,8 +147,6 @@ public class BillingAccountRef {
      * @return schemaLocation
      **/
     @ApiModelProperty(value = "A URI to a JSON-Schema file that defines additional attributes and relationships")
-
-
     public String getSchemaLocation() {
         return schemaLocation;
     }
@@ -165,8 +166,6 @@ public class BillingAccountRef {
      * @return type
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the sub-class entity name")
-
-
     public String getType() {
         return type;
     }
@@ -186,8 +185,6 @@ public class BillingAccountRef {
      * @return referredType
      **/
     @ApiModelProperty(value = "The actual type of the target instance when needed for disambiguation.")
-
-
     public String getReferredType() {
         return referredType;
     }
@@ -207,6 +204,7 @@ public class BillingAccountRef {
         }
         BillingAccountRef billingAccountRef = (BillingAccountRef) o;
         return Objects.equals(this.id, billingAccountRef.id) &&
+                Objects.equals(this.uuid, billingAccountRef.uuid) &&
                 Objects.equals(this.href, billingAccountRef.href) &&
                 Objects.equals(this.name, billingAccountRef.name) &&
                 Objects.equals(this.baseType, billingAccountRef.baseType) &&
@@ -217,7 +215,7 @@ public class BillingAccountRef {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, href, name, baseType, schemaLocation, type, referredType);
+        return Objects.hash(id, uuid, href, name, baseType, schemaLocation, type, referredType);
     }
 
     @Override
@@ -226,6 +224,7 @@ public class BillingAccountRef {
         sb.append("class BillingAccountRef {\n");
 
         sb.append("    id: ").append(toIndentedString(id)).append("\n");
+        sb.append("    uuid: ").append(toIndentedString(uuid)).append("\n");
         sb.append("    href: ").append(toIndentedString(href)).append("\n");
         sb.append("    name: ").append(toIndentedString(name)).append("\n");
         sb.append("    baseType: ").append(toIndentedString(baseType)).append("\n");

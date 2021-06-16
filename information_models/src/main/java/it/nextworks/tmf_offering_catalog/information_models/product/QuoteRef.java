@@ -1,6 +1,6 @@
 package it.nextworks.tmf_offering_catalog.information_models.product;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -24,11 +24,14 @@ import java.util.Objects;
 @Table(name = "quote_refs")
 public class QuoteRef {
 
-    @JsonIgnoreProperties(allowGetters = true)
+    @JsonProperty("id")
+    private String id = null;
+
+    @JsonIgnore
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
-    private String id = null;
+    private String uuid = null;
 
     @JsonProperty("href")
     private String href = null;
@@ -60,14 +63,20 @@ public class QuoteRef {
      **/
     @ApiModelProperty(required = true, value = "Unique identifier of a related entity.")
     @NotNull
-
-
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public QuoteRef href(String href) {
@@ -81,8 +90,6 @@ public class QuoteRef {
      * @return href
      **/
     @ApiModelProperty(value = "Reference of the related entity.")
-
-
     public String getHref() {
         return href;
     }
@@ -102,8 +109,6 @@ public class QuoteRef {
      * @return name
      **/
     @ApiModelProperty(value = "Name of the related entity.")
-
-
     public String getName() {
         return name;
     }
@@ -123,8 +128,6 @@ public class QuoteRef {
      * @return baseType
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the super-class")
-
-
     public String getBaseType() {
         return baseType;
     }
@@ -144,8 +147,6 @@ public class QuoteRef {
      * @return schemaLocation
      **/
     @ApiModelProperty(value = "A URI to a JSON-Schema file that defines additional attributes and relationships")
-
-
     public String getSchemaLocation() {
         return schemaLocation;
     }
@@ -165,8 +166,6 @@ public class QuoteRef {
      * @return type
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the sub-class entity name")
-
-
     public String getType() {
         return type;
     }
@@ -186,8 +185,6 @@ public class QuoteRef {
      * @return referredType
      **/
     @ApiModelProperty(value = "The actual type of the target instance when needed for disambiguation.")
-
-
     public String getReferredType() {
         return referredType;
     }

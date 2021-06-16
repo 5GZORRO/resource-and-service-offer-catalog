@@ -28,7 +28,6 @@ import java.util.Objects;
 @Table(name = "product_orders")
 public class ProductOrder {
 
-    @JsonIgnoreProperties(allowGetters = true)
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -90,7 +89,7 @@ public class ProductOrder {
 
     @JsonProperty("billingAccount")
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "billing_account_ref_id", referencedColumnName = "id")
+    @JoinColumn(name = "billing_account_ref_id", referencedColumnName = "uuid")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private BillingAccountRef billingAccount = null;
 
@@ -192,9 +191,7 @@ public class ProductOrder {
      *
      * @return id
      **/
-    @ApiModelProperty(value = "ID created on repository side (OM system)")
-
-
+    @ApiModelProperty(value = "ID created on repository side (OM system)", hidden = true)
     public String getId() {
         return id;
     }
@@ -214,8 +211,6 @@ public class ProductOrder {
      * @return href
      **/
     @ApiModelProperty(value = "Hyperlink to access the order")
-
-
     public String getHref() {
         return href;
     }
@@ -235,9 +230,7 @@ public class ProductOrder {
      * @return cancellationDate
      **/
     @ApiModelProperty(value = "Date when the order is cancelled. This is used when order is cancelled. ")
-
     @Valid
-
     public OffsetDateTime getCancellationDate() {
         return cancellationDate;
     }
@@ -257,8 +250,6 @@ public class ProductOrder {
      * @return cancellationReason
      **/
     @ApiModelProperty(value = "Reason why the order is cancelled. This is used when order is cancelled. ")
-
-
     public String getCancellationReason() {
         return cancellationReason;
     }
@@ -278,8 +269,6 @@ public class ProductOrder {
      * @return category
      **/
     @ApiModelProperty(value = "Used to categorize the order from a business perspective that can be useful for the OM system (e.g. \"enterprise\", \"residential\", ...)")
-
-
     public String getCategory() {
         return category;
     }
@@ -299,9 +288,7 @@ public class ProductOrder {
      * @return completionDate
      **/
     @ApiModelProperty(value = "Date when the order was completed")
-
     @Valid
-
     public OffsetDateTime getCompletionDate() {
         return completionDate;
     }
@@ -321,8 +308,6 @@ public class ProductOrder {
      * @return description
      **/
     @ApiModelProperty(value = "Description of the product order")
-
-
     public String getDescription() {
         return description;
     }
@@ -342,9 +327,7 @@ public class ProductOrder {
      * @return expectedCompletionDate
      **/
     @ApiModelProperty(value = "Expected delivery date amended by the provider")
-
     @Valid
-
     public OffsetDateTime getExpectedCompletionDate() {
         return expectedCompletionDate;
     }
@@ -364,8 +347,6 @@ public class ProductOrder {
      * @return externalId
      **/
     @ApiModelProperty(value = "ID given by the consumer and only understandable by him (to facilitate his searches afterwards)")
-
-
     public String getExternalId() {
         return externalId;
     }
@@ -385,8 +366,6 @@ public class ProductOrder {
      * @return notificationContact
      **/
     @ApiModelProperty(value = "Contact attached to the order to send back information regarding this order")
-
-
     public String getNotificationContact() {
         return notificationContact;
     }
@@ -406,9 +385,7 @@ public class ProductOrder {
      * @return orderDate
      **/
     @ApiModelProperty(value = "Date when the order was created")
-
     @Valid
-
     public OffsetDateTime getOrderDate() {
         return orderDate;
     }
@@ -428,8 +405,6 @@ public class ProductOrder {
      * @return priority
      **/
     @ApiModelProperty(value = "A way that can be used by consumers to prioritize orders in OM system (from 0 to 4 : 0 is the highest priority, and 4 the lowest)")
-
-
     public String getPriority() {
         return priority;
     }
@@ -449,9 +424,7 @@ public class ProductOrder {
      * @return requestedCompletionDate
      **/
     @ApiModelProperty(value = "Requested delivery date from the requestor perspective")
-
     @Valid
-
     public OffsetDateTime getRequestedCompletionDate() {
         return requestedCompletionDate;
     }
@@ -471,9 +444,7 @@ public class ProductOrder {
      * @return requestedStartDate
      **/
     @ApiModelProperty(value = "Order fulfillment start date wished by the requestor. This is used when, for any reason, requestor cannot allow seller to begin to operationally begin the fulfillment before a date. ")
-
     @Valid
-
     public OffsetDateTime getRequestedStartDate() {
         return requestedStartDate;
     }
@@ -501,9 +472,7 @@ public class ProductOrder {
      * @return agreement
      **/
     @ApiModelProperty(value = "A reference to an agreement defined in the context of the product order")
-
     @Valid
-
     public List<AgreementRef> getAgreement() {
         return agreement;
     }
@@ -550,9 +519,7 @@ public class ProductOrder {
      * @return channel
      **/
     @ApiModelProperty(value = "")
-
     @Valid
-
     public List<RelatedChannel> getChannel() {
         return channel;
     }
@@ -580,9 +547,7 @@ public class ProductOrder {
      * @return note
      **/
     @ApiModelProperty(value = "")
-
     @Valid
-
     public List<Note> getNote() {
         return note;
     }
@@ -610,9 +575,7 @@ public class ProductOrder {
      * @return orderTotalPrice
      **/
     @ApiModelProperty(value = "")
-
     @Valid
-
     public List<OrderPrice> getOrderTotalPrice() {
         return orderTotalPrice;
     }
@@ -640,9 +603,7 @@ public class ProductOrder {
      * @return payment
      **/
     @ApiModelProperty(value = "")
-
     @Valid
-
     public List<PaymentRef> getPayment() {
         return payment;
     }
@@ -670,9 +631,7 @@ public class ProductOrder {
      * @return productOfferingQualification
      **/
     @ApiModelProperty(value = "")
-
     @Valid
-
     public List<ProductOfferingQualificationRef> getProductOfferingQualification() {
         return productOfferingQualification;
     }
@@ -698,7 +657,6 @@ public class ProductOrder {
      **/
     @ApiModelProperty(required = true, value = "")
     @NotNull
-
     @Valid
     @Size(min = 1)
     public List<ProductOrderItem> getProductOrderItem() {
@@ -728,9 +686,7 @@ public class ProductOrder {
      * @return quote
      **/
     @ApiModelProperty(value = "")
-
     @Valid
-
     public List<QuoteRef> getQuote() {
         return quote;
     }
@@ -758,9 +714,7 @@ public class ProductOrder {
      * @return relatedParty
      **/
     @ApiModelProperty(value = "")
-
     @Valid
-
     public List<RelatedParty> getRelatedParty() {
         return relatedParty;
     }
@@ -780,9 +734,7 @@ public class ProductOrder {
      * @return state
      **/
     @ApiModelProperty(value = "Tracks the lifecycle status of the product order, such as Acknowledged, Rejected, InProgress, Pending and so on.")
-
     @Valid
-
     public ProductOrderStateType getState() {
         return state;
     }
@@ -823,8 +775,6 @@ public class ProductOrder {
      * @return schemaLocation
      **/
     @ApiModelProperty(value = "A URI to a JSON-Schema file that defines additional attributes and relationships")
-
-
     public String getSchemaLocation() {
         return schemaLocation;
     }
@@ -844,8 +794,6 @@ public class ProductOrder {
      * @return type
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the sub-class entity name")
-
-
     public String getType() {
         return type;
     }

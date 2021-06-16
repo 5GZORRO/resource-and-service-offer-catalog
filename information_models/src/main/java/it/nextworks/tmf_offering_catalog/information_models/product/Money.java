@@ -14,7 +14,6 @@ import java.util.Objects;
 @ApiModel(description = "A base / value business entity used to represent money")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-02-09T15:56:41.618Z")
-
 @Embeddable
 public class Money {
 
@@ -35,8 +34,6 @@ public class Money {
      * @return unit
      **/
     @ApiModelProperty(value = "Currency (ISO4217 norm uses 3 letters to define the currency)")
-
-
     public String getUnit() {
         return unit;
     }
@@ -56,8 +53,6 @@ public class Money {
      * @return value
      **/
     @ApiModelProperty(value = "A positive floating point number")
-
-
     public Float getValue() {
         return value;
     }

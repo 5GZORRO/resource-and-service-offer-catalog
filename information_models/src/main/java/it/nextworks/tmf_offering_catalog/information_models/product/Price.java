@@ -21,7 +21,6 @@ import java.util.Objects;
 @Table(name = "prices")
 public class Price {
 
-    @JsonIgnoreProperties(allowGetters = true)
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -212,7 +211,8 @@ public class Price {
             return false;
         }
         Price price = (Price) o;
-        return Objects.equals(this.percentage, price.percentage) &&
+        return Objects.equals(this.id, price.id) &&
+                Objects.equals(this.percentage, price.percentage) &&
                 Objects.equals(this.taxRate, price.taxRate) &&
                 Objects.equals(this.dutyFreeAmount, price.dutyFreeAmount) &&
                 Objects.equals(this.taxIncludedAmount, price.taxIncludedAmount) &&
@@ -223,7 +223,7 @@ public class Price {
 
     @Override
     public int hashCode() {
-        return Objects.hash(percentage, taxRate, dutyFreeAmount, taxIncludedAmount, baseType, schemaLocation, type);
+        return Objects.hash(id, percentage, taxRate, dutyFreeAmount, taxIncludedAmount, baseType, schemaLocation, type);
     }
 
     @Override
@@ -231,6 +231,7 @@ public class Price {
         StringBuilder sb = new StringBuilder();
         sb.append("class Price {\n");
 
+        sb.append("    id: ").append(toIndentedString(id)).append("\n");
         sb.append("    percentage: ").append(toIndentedString(percentage)).append("\n");
         sb.append("    taxRate: ").append(toIndentedString(taxRate)).append("\n");
         sb.append("    dutyFreeAmount: ").append(toIndentedString(dutyFreeAmount)).append("\n");

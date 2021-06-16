@@ -1,5 +1,6 @@
 package it.nextworks.tmf_offering_catalog.information_models.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
@@ -24,11 +25,14 @@ import java.util.Objects;
 @Table(name = "appointment_refs")
 public class AppointmentRef {
 
-    @JsonIgnoreProperties(allowGetters = true)
+    @JsonProperty("id")
+    private String id = null;
+
+    @JsonIgnore
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
-    private String id = null;
+    private String uuid = null;
 
     @JsonProperty("href")
     private String href = null;
@@ -58,16 +62,22 @@ public class AppointmentRef {
      *
      * @return id
      **/
-    @ApiModelProperty(required = true, value = "The identifier of the referred appointment", hidden = true)
+    @ApiModelProperty(required = true, value = "The identifier of the referred appointment")
     @NotNull
-
-
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public AppointmentRef href(String href) {
@@ -81,8 +91,6 @@ public class AppointmentRef {
      * @return href
      **/
     @ApiModelProperty(value = "The reference of the appointment")
-
-
     public String getHref() {
         return href;
     }
@@ -102,8 +110,6 @@ public class AppointmentRef {
      * @return description
      **/
     @ApiModelProperty(value = "An explanatory text regarding the appointment made with a party")
-
-
     public String getDescription() {
         return description;
     }
@@ -123,8 +129,6 @@ public class AppointmentRef {
      * @return baseType
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the super-class")
-
-
     public String getBaseType() {
         return baseType;
     }
@@ -144,8 +148,6 @@ public class AppointmentRef {
      * @return schemaLocation
      **/
     @ApiModelProperty(value = "A URI to a JSON-Schema file that defines additional attributes and relationships")
-
-
     public String getSchemaLocation() {
         return schemaLocation;
     }
@@ -165,8 +167,6 @@ public class AppointmentRef {
      * @return type
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the sub-class entity name")
-
-
     public String getType() {
         return type;
     }
@@ -186,8 +186,6 @@ public class AppointmentRef {
      * @return referredType
      **/
     @ApiModelProperty(value = "The actual type of the target instance when needed for disambiguation")
-
-
     public String getReferredType() {
         return referredType;
     }

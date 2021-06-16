@@ -1,6 +1,6 @@
 package it.nextworks.tmf_offering_catalog.information_models.product;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -21,14 +21,17 @@ import java.util.Objects;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-05-13T14:59:13.201Z")
 @Entity
-@Table(name = "related_place_refs_or_values")
-public class RelatedPlaceRefOrValue {
+@Table(name = "related_places")
+public class RelatedPlace {
 
-    @JsonIgnoreProperties(allowGetters = true)
+    @JsonProperty("id")
+    private String id = null;
+
+    @JsonIgnore
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
-    private String id = null;
+    private String uuid = null;
 
     @JsonProperty("href")
     private String href = null;
@@ -51,7 +54,7 @@ public class RelatedPlaceRefOrValue {
     @JsonProperty("@referredType")
     private String referredType = null;
 
-    public RelatedPlaceRefOrValue id(String id) {
+    public RelatedPlace id(String id) {
         this.id = id;
         return this;
     }
@@ -62,8 +65,6 @@ public class RelatedPlaceRefOrValue {
      * @return id
      **/
     @ApiModelProperty(value = "Unique identifier of the place")
-
-
     public String getId() {
         return id;
     }
@@ -72,7 +73,15 @@ public class RelatedPlaceRefOrValue {
         this.id = id;
     }
 
-    public RelatedPlaceRefOrValue href(String href) {
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public RelatedPlace href(String href) {
         this.href = href;
         return this;
     }
@@ -83,8 +92,6 @@ public class RelatedPlaceRefOrValue {
      * @return href
      **/
     @ApiModelProperty(value = "Unique reference of the place")
-
-
     public String getHref() {
         return href;
     }
@@ -93,7 +100,7 @@ public class RelatedPlaceRefOrValue {
         this.href = href;
     }
 
-    public RelatedPlaceRefOrValue name(String name) {
+    public RelatedPlace name(String name) {
         this.name = name;
         return this;
     }
@@ -104,8 +111,6 @@ public class RelatedPlaceRefOrValue {
      * @return name
      **/
     @ApiModelProperty(value = "A user-friendly name for the place, such as [Paris Store], [London Store], [Main Home]")
-
-
     public String getName() {
         return name;
     }
@@ -114,7 +119,7 @@ public class RelatedPlaceRefOrValue {
         this.name = name;
     }
 
-    public RelatedPlaceRefOrValue role(String role) {
+    public RelatedPlace role(String role) {
         this.role = role;
         return this;
     }
@@ -126,8 +131,6 @@ public class RelatedPlaceRefOrValue {
      **/
     @ApiModelProperty(required = true, value = "")
     @NotNull
-
-
     public String getRole() {
         return role;
     }
@@ -136,7 +139,7 @@ public class RelatedPlaceRefOrValue {
         this.role = role;
     }
 
-    public RelatedPlaceRefOrValue baseType(String baseType) {
+    public RelatedPlace baseType(String baseType) {
         this.baseType = baseType;
         return this;
     }
@@ -147,8 +150,6 @@ public class RelatedPlaceRefOrValue {
      * @return baseType
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the super-class")
-
-
     public String getBaseType() {
         return baseType;
     }
@@ -157,7 +158,7 @@ public class RelatedPlaceRefOrValue {
         this.baseType = baseType;
     }
 
-    public RelatedPlaceRefOrValue schemaLocation(String schemaLocation) {
+    public RelatedPlace schemaLocation(String schemaLocation) {
         this.schemaLocation = schemaLocation;
         return this;
     }
@@ -168,8 +169,6 @@ public class RelatedPlaceRefOrValue {
      * @return schemaLocation
      **/
     @ApiModelProperty(value = "A URI to a JSON-Schema file that defines additional attributes and relationships")
-
-
     public String getSchemaLocation() {
         return schemaLocation;
     }
@@ -178,7 +177,7 @@ public class RelatedPlaceRefOrValue {
         this.schemaLocation = schemaLocation;
     }
 
-    public RelatedPlaceRefOrValue type(String type) {
+    public RelatedPlace type(String type) {
         this.type = type;
         return this;
     }
@@ -189,8 +188,6 @@ public class RelatedPlaceRefOrValue {
      * @return type
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the sub-class entity name")
-
-
     public String getType() {
         return type;
     }
@@ -199,7 +196,7 @@ public class RelatedPlaceRefOrValue {
         this.type = type;
     }
 
-    public RelatedPlaceRefOrValue referredType(String referredType) {
+    public RelatedPlace referredType(String referredType) {
         this.referredType = referredType;
         return this;
     }
@@ -210,8 +207,6 @@ public class RelatedPlaceRefOrValue {
      * @return referredType
      **/
     @ApiModelProperty(value = "The actual type of the target instance when needed for disambiguation.")
-
-
     public String getReferredType() {
         return referredType;
     }
@@ -229,7 +224,7 @@ public class RelatedPlaceRefOrValue {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        RelatedPlaceRefOrValue relatedPlaceRefOrValue = (RelatedPlaceRefOrValue) o;
+        RelatedPlace relatedPlaceRefOrValue = (RelatedPlace) o;
         return Objects.equals(this.id, relatedPlaceRefOrValue.id) &&
                 Objects.equals(this.href, relatedPlaceRefOrValue.href) &&
                 Objects.equals(this.name, relatedPlaceRefOrValue.name) &&

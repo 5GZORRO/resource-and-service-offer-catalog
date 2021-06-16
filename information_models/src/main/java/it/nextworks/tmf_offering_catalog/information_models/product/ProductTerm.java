@@ -52,6 +52,7 @@ public class ProductTerm {
     @JsonProperty("@type")
     private String type = null;
 
+    @ApiModelProperty(hidden = true)
     public String getId() {
         return id;
     }
@@ -92,8 +93,6 @@ public class ProductTerm {
      * @return name
      **/
     @ApiModelProperty(value = "Name of the productTerm")
-
-
     public String getName() {
         return name;
     }
@@ -113,9 +112,7 @@ public class ProductTerm {
      * @return duration
      **/
     @ApiModelProperty(value = "Duration of the productTerm")
-
     @Valid
-
     public Quantity getDuration() {
         return duration;
     }
@@ -135,9 +132,7 @@ public class ProductTerm {
      * @return validFor
      **/
     @ApiModelProperty(value = "productTerm validity period")
-
     @Valid
-
     public TimePeriod getValidFor() {
         return validFor;
     }
@@ -157,8 +152,6 @@ public class ProductTerm {
      * @return baseType
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the super-class")
-
-
     public String getBaseType() {
         return baseType;
     }
@@ -178,8 +171,6 @@ public class ProductTerm {
      * @return schemaLocation
      **/
     @ApiModelProperty(value = "A URI to a JSON-Schema file that defines additional attributes and relationships")
-
-
     public String getSchemaLocation() {
         return schemaLocation;
     }
@@ -199,8 +190,6 @@ public class ProductTerm {
      * @return type
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the sub-class entity name")
-
-
     public String getType() {
         return type;
     }

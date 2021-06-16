@@ -1,6 +1,6 @@
 package it.nextworks.tmf_offering_catalog.information_models.product;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
@@ -22,11 +22,14 @@ import java.util.Objects;
 @Table(name = "resource_refs")
 public class ResourceRef {
 
-    @JsonIgnoreProperties(allowGetters = true)
+    @JsonProperty("id")
+    private String id = null;
+
+    @JsonIgnore
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
-    private String id = null;
+    private String uuid = null;
 
     @JsonProperty("href")
     private String href = null;
@@ -61,14 +64,20 @@ public class ResourceRef {
      **/
     @ApiModelProperty(required = true, value = "Unique identifier of a related entity.")
     @NotNull
-
-
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public ResourceRef href(String href) {
@@ -82,8 +91,6 @@ public class ResourceRef {
      * @return href
      **/
     @ApiModelProperty(value = "Reference of the related entity.")
-
-
     public String getHref() {
         return href;
     }
@@ -103,8 +110,6 @@ public class ResourceRef {
      * @return name
      **/
     @ApiModelProperty(value = "Name of the resource")
-
-
     public String getName() {
         return name;
     }
@@ -124,8 +129,6 @@ public class ResourceRef {
      * @return value
      **/
     @ApiModelProperty(value = "The resource value that can be used to identify a resource with a public key (e.g.: a tel nr, an msisdn)")
-
-
     public String getValue() {
         return value;
     }
@@ -145,8 +148,6 @@ public class ResourceRef {
      * @return baseType
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the super-class")
-
-
     public String getBaseType() {
         return baseType;
     }
@@ -166,8 +167,6 @@ public class ResourceRef {
      * @return schemaLocation
      **/
     @ApiModelProperty(value = "A URI to a JSON-Schema file that defines additional attributes and relationships")
-
-
     public String getSchemaLocation() {
         return schemaLocation;
     }
@@ -187,8 +186,6 @@ public class ResourceRef {
      * @return type
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the sub-class entity name")
-
-
     public String getType() {
         return type;
     }
@@ -208,8 +205,6 @@ public class ResourceRef {
      * @return referredType
      **/
     @ApiModelProperty(value = "The actual type of the target instance when needed for disambiguation.")
-
-
     public String getReferredType() {
         return referredType;
     }

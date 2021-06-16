@@ -1,6 +1,6 @@
 package it.nextworks.tmf_offering_catalog.information_models.product;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -24,11 +24,14 @@ import java.util.Objects;
 @Table(name = "product_offering_qualification_item_refs")
 public class ProductOfferingQualificationItemRef {
 
-    @JsonIgnoreProperties(allowGetters = true)
+    @JsonProperty("id")
+    private String id = null;
+
+    @JsonIgnore
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
-    private String id = null;
+    private String uuid = null;
 
     @JsonProperty("href")
     private String href = null;
@@ -67,16 +70,22 @@ public class ProductOfferingQualificationItemRef {
      *
      * @return id
      **/
-    @ApiModelProperty(required = true, value = "Id of an item of a product offering qualification", hidden = true)
+    @ApiModelProperty(required = true, value = "Id of an item of a product offering qualification")
     @NotNull
-
-
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public ProductOfferingQualificationItemRef href(String href) {
@@ -90,8 +99,6 @@ public class ProductOfferingQualificationItemRef {
      * @return href
      **/
     @ApiModelProperty(value = "Reference of the related entity.")
-
-
     public String getHref() {
         return href;
     }
@@ -111,8 +118,6 @@ public class ProductOfferingQualificationItemRef {
      * @return name
      **/
     @ApiModelProperty(value = "Name of the related entity.")
-
-
     public String getName() {
         return name;
     }
@@ -132,8 +137,6 @@ public class ProductOfferingQualificationItemRef {
      * @return productOfferingQualificationHref
      **/
     @ApiModelProperty(value = "Reference of the related entity.")
-
-
     public String getProductOfferingQualificationHref() {
         return productOfferingQualificationHref;
     }
@@ -154,8 +157,6 @@ public class ProductOfferingQualificationItemRef {
      **/
     @ApiModelProperty(required = true, value = "Unique identifier of a related entity.")
     @NotNull
-
-
     public String getProductOfferingQualificationId() {
         return productOfferingQualificationId;
     }
@@ -175,8 +176,6 @@ public class ProductOfferingQualificationItemRef {
      * @return productOfferingQualificationName
      **/
     @ApiModelProperty(value = "Name of the related entity.")
-
-
     public String getProductOfferingQualificationName() {
         return productOfferingQualificationName;
     }
@@ -196,8 +195,6 @@ public class ProductOfferingQualificationItemRef {
      * @return baseType
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the super-class")
-
-
     public String getBaseType() {
         return baseType;
     }
@@ -217,8 +214,6 @@ public class ProductOfferingQualificationItemRef {
      * @return schemaLocation
      **/
     @ApiModelProperty(value = "A URI to a JSON-Schema file that defines additional attributes and relationships")
-
-
     public String getSchemaLocation() {
         return schemaLocation;
     }
@@ -238,8 +233,6 @@ public class ProductOfferingQualificationItemRef {
      * @return type
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the sub-class entity name")
-
-
     public String getType() {
         return type;
     }
@@ -259,8 +252,6 @@ public class ProductOfferingQualificationItemRef {
      * @return referredType
      **/
     @ApiModelProperty(value = "The actual type of the target instance when needed for disambiguation.")
-
-
     public String getReferredType() {
         return referredType;
     }

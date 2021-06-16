@@ -20,10 +20,8 @@ import java.util.Objects;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-05-13T14:59:13.201Z")
 @Entity
 @Table(name = "product_relationships")
-
 public class ProductRelationship {
 
-    @JsonIgnoreProperties(allowGetters = true)
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -36,7 +34,7 @@ public class ProductRelationship {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "product_ref_or_value_id", referencedColumnName = "id")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private ProductRefOrValue product = null;
+    private Product product = null;
 
     @JsonProperty("@baseType")
     private String baseType = null;
@@ -47,6 +45,7 @@ public class ProductRelationship {
     @JsonProperty("@type")
     private String type = null;
 
+    @ApiModelProperty(hidden = true)
     public String getId() {
         return id;
     }
@@ -77,7 +76,7 @@ public class ProductRelationship {
         this.relationshipType = relationshipType;
     }
 
-    public ProductRelationship product(ProductRefOrValue product) {
+    public ProductRelationship product(Product product) {
         this.product = product;
         return this;
     }
@@ -92,11 +91,11 @@ public class ProductRelationship {
 
     @Valid
 
-    public ProductRefOrValue getProduct() {
+    public Product getProduct() {
         return product;
     }
 
-    public void setProduct(ProductRefOrValue product) {
+    public void setProduct(Product product) {
         this.product = product;
     }
 

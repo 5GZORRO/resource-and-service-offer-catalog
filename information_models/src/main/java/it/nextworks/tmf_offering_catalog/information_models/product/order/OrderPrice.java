@@ -28,7 +28,6 @@ import java.util.Objects;
 @Table(name = "order_prices")
 public class OrderPrice {
 
-    @JsonIgnoreProperties(allowGetters = true)
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -51,7 +50,7 @@ public class OrderPrice {
 
     @JsonProperty("billingAccount")
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "billing_account_ref_id", referencedColumnName = "id")
+    @JoinColumn(name = "billing_account_ref_id", referencedColumnName = "uuid")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private BillingAccountRef billingAccount = null;
 
@@ -69,7 +68,7 @@ public class OrderPrice {
 
     @JsonProperty("productOfferingPrice")
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "product_offering_price_ref_id", referencedColumnName = "id")
+    @JoinColumn(name = "product_offering_price_ref_id", referencedColumnName = "uuid")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ProductOfferingPriceRef productOfferingPrice = null;
 
@@ -107,8 +106,6 @@ public class OrderPrice {
      * @return description
      **/
     @ApiModelProperty(value = "A narrative that explains in detail the semantics of this order item price.")
-
-
     public String getDescription() {
         return description;
     }
@@ -128,8 +125,6 @@ public class OrderPrice {
      * @return name
      **/
     @ApiModelProperty(value = "A short descriptive name such as \"Subscription price\".")
-
-
     public String getName() {
         return name;
     }
@@ -149,8 +144,6 @@ public class OrderPrice {
      * @return priceType
      **/
     @ApiModelProperty(value = "A category that describes the price, such as recurring, discount, allowance, penalty, and so forth")
-
-
     public String getPriceType() {
         return priceType;
     }
@@ -170,8 +163,6 @@ public class OrderPrice {
      * @return recurringChargePeriod
      **/
     @ApiModelProperty(value = "Could be month, week...")
-
-
     public String getRecurringChargePeriod() {
         return recurringChargePeriod;
     }
@@ -191,8 +182,6 @@ public class OrderPrice {
      * @return unitOfMeasure
      **/
     @ApiModelProperty(value = "Could be minutes, GB...")
-
-
     public String getUnitOfMeasure() {
         return unitOfMeasure;
     }
@@ -212,9 +201,7 @@ public class OrderPrice {
      * @return billingAccount
      **/
     @ApiModelProperty(value = "A reference to a billing account used for paid the order price charge")
-
     @Valid
-
     public BillingAccountRef getBillingAccount() {
         return billingAccount;
     }
@@ -234,9 +221,7 @@ public class OrderPrice {
      * @return price
      **/
     @ApiModelProperty(value = "a structure used to define price amount")
-
     @Valid
-
     public Price getPrice() {
         return price;
     }
@@ -264,9 +249,7 @@ public class OrderPrice {
      * @return priceAlteration
      **/
     @ApiModelProperty(value = "a strucuture used to describe a price alteration")
-
     @Valid
-
     public List<PriceAlteration> getPriceAlteration() {
         return priceAlteration;
     }
@@ -286,9 +269,7 @@ public class OrderPrice {
      * @return productOfferingPrice
      **/
     @ApiModelProperty(value = "An amount, usually of money, that is asked for or allowed when a ProductOffering is bought, rented, or leased. The price is valid for a defined period of time.")
-
     @Valid
-
     public ProductOfferingPriceRef getProductOfferingPrice() {
         return productOfferingPrice;
     }
@@ -308,8 +289,6 @@ public class OrderPrice {
      * @return baseType
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the super-class")
-
-
     public String getBaseType() {
         return baseType;
     }
@@ -329,8 +308,6 @@ public class OrderPrice {
      * @return schemaLocation
      **/
     @ApiModelProperty(value = "A URI to a JSON-Schema file that defines additional attributes and relationships")
-
-
     public String getSchemaLocation() {
         return schemaLocation;
     }
@@ -350,8 +327,6 @@ public class OrderPrice {
      * @return type
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the sub-class entity name")
-
-
     public String getType() {
         return type;
     }
@@ -370,7 +345,8 @@ public class OrderPrice {
             return false;
         }
         OrderPrice orderPrice = (OrderPrice) o;
-        return Objects.equals(this.description, orderPrice.description) &&
+        return Objects.equals(this.id, orderPrice.id) &&
+                Objects.equals(this.description, orderPrice.description) &&
                 Objects.equals(this.name, orderPrice.name) &&
                 Objects.equals(this.priceType, orderPrice.priceType) &&
                 Objects.equals(this.recurringChargePeriod, orderPrice.recurringChargePeriod) &&
@@ -386,7 +362,7 @@ public class OrderPrice {
 
     @Override
     public int hashCode() {
-        return Objects.hash(description, name, priceType, recurringChargePeriod, unitOfMeasure, billingAccount, price, priceAlteration, productOfferingPrice, baseType, schemaLocation, type);
+        return Objects.hash(id, description, name, priceType, recurringChargePeriod, unitOfMeasure, billingAccount, price, priceAlteration, productOfferingPrice, baseType, schemaLocation, type);
     }
 
     @Override
@@ -394,6 +370,7 @@ public class OrderPrice {
         StringBuilder sb = new StringBuilder();
         sb.append("class OrderPrice {\n");
 
+        sb.append("    id: ").append(toIndentedString(id)).append("\n");
         sb.append("    description: ").append(toIndentedString(description)).append("\n");
         sb.append("    name: ").append(toIndentedString(name)).append("\n");
         sb.append("    priceType: ").append(toIndentedString(priceType)).append("\n");

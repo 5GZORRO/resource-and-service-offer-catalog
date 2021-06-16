@@ -21,7 +21,6 @@ import java.util.Objects;
 @Table(name = "order_item_relationships")
 public class OrderItemRelationship {
 
-    @JsonIgnoreProperties(allowGetters = true)
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -49,9 +48,7 @@ public class OrderItemRelationship {
      *
      * @return id
      **/
-    @ApiModelProperty(value = "")
-
-
+    @ApiModelProperty(value = "", hidden = true)
     public String getId() {
         return id;
     }
@@ -71,8 +68,6 @@ public class OrderItemRelationship {
      * @return relationshipType
      **/
     @ApiModelProperty(value = "The type of order item relationship")
-
-
     public String getRelationshipType() {
         return relationshipType;
     }
@@ -92,8 +87,6 @@ public class OrderItemRelationship {
      * @return baseType
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the super-class")
-
-
     public String getBaseType() {
         return baseType;
     }
@@ -113,8 +106,6 @@ public class OrderItemRelationship {
      * @return schemaLocation
      **/
     @ApiModelProperty(value = "A URI to a JSON-Schema file that defines additional attributes and relationships")
-
-
     public String getSchemaLocation() {
         return schemaLocation;
     }
@@ -134,8 +125,6 @@ public class OrderItemRelationship {
      * @return type
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the sub-class entity name")
-
-
     public String getType() {
         return type;
     }

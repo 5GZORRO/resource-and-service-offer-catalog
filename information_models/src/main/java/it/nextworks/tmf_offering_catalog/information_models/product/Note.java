@@ -1,7 +1,6 @@
 package it.nextworks.tmf_offering_catalog.information_models.product;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -27,7 +26,6 @@ import java.util.Objects;
 @Table(name = "notes")
 public class Note {
 
-    @JsonIgnoreProperties(allowGetters = true)
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -62,8 +60,6 @@ public class Note {
      * @return id
      **/
     @ApiModelProperty(value = "Identifier of the note within its containing entity (may or may not be globally unique, depending on provider implementation)", hidden = true)
-
-
     public String getId() {
         return id;
     }
@@ -83,8 +79,6 @@ public class Note {
      * @return author
      **/
     @ApiModelProperty(value = "Author of the note")
-
-
     public String getAuthor() {
         return author;
     }
@@ -104,9 +98,7 @@ public class Note {
      * @return date
      **/
     @ApiModelProperty(value = "Date of the note")
-
     @Valid
-
     public OffsetDateTime getDate() {
         return date;
     }
@@ -127,8 +119,6 @@ public class Note {
      **/
     @ApiModelProperty(required = true, value = "Text of the note")
     @NotNull
-
-
     public String getText() {
         return text;
     }
@@ -148,8 +138,6 @@ public class Note {
      * @return baseType
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the super-class")
-
-
     public String getBaseType() {
         return baseType;
     }
@@ -169,8 +157,6 @@ public class Note {
      * @return schemaLocation
      **/
     @ApiModelProperty(value = "A URI to a JSON-Schema file that defines additional attributes and relationships")
-
-
     public String getSchemaLocation() {
         return schemaLocation;
     }
@@ -190,8 +176,6 @@ public class Note {
      * @return type
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the sub-class entity name")
-
-
     public String getType() {
         return type;
     }

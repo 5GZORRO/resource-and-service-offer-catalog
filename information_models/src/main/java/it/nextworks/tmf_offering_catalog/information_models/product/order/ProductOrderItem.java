@@ -25,7 +25,6 @@ import java.util.Objects;
 @Table(name = "product_order_items")
 public class ProductOrderItem {
 
-    @JsonIgnoreProperties(allowGetters = true)
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -39,13 +38,13 @@ public class ProductOrderItem {
 
     @JsonProperty("appointment")
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "appointment_ref_id", referencedColumnName = "id")
+    @JoinColumn(name = "appointment_ref_id", referencedColumnName = "uuid")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private AppointmentRef appointment = null;
 
     @JsonProperty("billingAccount")
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "billing_account_ref_id", referencedColumnName = "id")
+    @JoinColumn(name = "billing_account_ref_id", referencedColumnName = "uuid")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private BillingAccountRef billingAccount = null;
 
@@ -77,17 +76,17 @@ public class ProductOrderItem {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "product_ref_or_value_id", referencedColumnName = "id")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private ProductRefOrValue product = null;
+    private Product product = null;
 
     @JsonProperty("productOffering")
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "product_offering_ref_id", referencedColumnName = "id")
+    @JoinColumn(name = "product_offering_ref_id", referencedColumnName = "uuid")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ProductOfferingRef productOffering = null;
 
     @JsonProperty("productOfferingQualificationItem")
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "product_offering_qualification_item_ref_id", referencedColumnName = "id")
+    @JoinColumn(name = "product_offering_qualification_item_ref_id", referencedColumnName = "uuid")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ProductOfferingQualificationItemRef productOfferingQualificationItem = null;
 
@@ -111,7 +110,7 @@ public class ProductOrderItem {
 
     @JsonProperty("quoteItem")
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "quote_item_id", referencedColumnName = "id")
+    @JoinColumn(name = "quote_item_id", referencedColumnName = "uuid")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private QuoteItemRef quoteItem = null;
 
@@ -139,8 +138,6 @@ public class ProductOrderItem {
      **/
     @ApiModelProperty(required = true, value = "Identifier of the line item (generally it is a sequence number 01, 02, 03, ...)", hidden = true)
     @NotNull
-
-
     public String getId() {
         return id;
     }
@@ -160,8 +157,6 @@ public class ProductOrderItem {
      * @return quantity
      **/
     @ApiModelProperty(value = "Quantity ordered")
-
-
     public Integer getQuantity() {
         return quantity;
     }
@@ -182,9 +177,7 @@ public class ProductOrderItem {
      **/
     @ApiModelProperty(required = true, value = "The action to be carried out on the Product. Can be: add, modify, delete, noChange")
     @NotNull
-
     @Valid
-
     public OrderItemActionType getAction() {
         return action;
     }
@@ -204,9 +197,7 @@ public class ProductOrderItem {
      * @return appointment
      **/
     @ApiModelProperty(value = "")
-
     @Valid
-
     public AppointmentRef getAppointment() {
         return appointment;
     }
@@ -226,9 +217,7 @@ public class ProductOrderItem {
      * @return billingAccount
      **/
     @ApiModelProperty(value = "")
-
     @Valid
-
     public BillingAccountRef getBillingAccount() {
         return billingAccount;
     }
@@ -256,9 +245,7 @@ public class ProductOrderItem {
      * @return itemPrice
      **/
     @ApiModelProperty(value = "")
-
     @Valid
-
     public List<OrderPrice> getItemPrice() {
         return itemPrice;
     }
@@ -286,9 +273,7 @@ public class ProductOrderItem {
      * @return itemTerm
      **/
     @ApiModelProperty(value = "")
-
     @Valid
-
     public List<OrderTerm> getItemTerm() {
         return itemTerm;
     }
@@ -316,9 +301,7 @@ public class ProductOrderItem {
      * @return itemTotalPrice
      **/
     @ApiModelProperty(value = "")
-
     @Valid
-
     public List<OrderPrice> getItemTotalPrice() {
         return itemTotalPrice;
     }
@@ -346,9 +329,7 @@ public class ProductOrderItem {
      * @return payment
      **/
     @ApiModelProperty(value = "")
-
     @Valid
-
     public List<PaymentRef> getPayment() {
         return payment;
     }
@@ -357,7 +338,7 @@ public class ProductOrderItem {
         this.payment = payment;
     }
 
-    public ProductOrderItem product(ProductRefOrValue product) {
+    public ProductOrderItem product(Product product) {
         this.product = product;
         return this;
     }
@@ -368,14 +349,12 @@ public class ProductOrderItem {
      * @return product
      **/
     @ApiModelProperty(value = "")
-
     @Valid
-
-    public ProductRefOrValue getProduct() {
+    public Product getProduct() {
         return product;
     }
 
-    public void setProduct(ProductRefOrValue product) {
+    public void setProduct(Product product) {
         this.product = product;
     }
 
@@ -390,9 +369,7 @@ public class ProductOrderItem {
      * @return productOffering
      **/
     @ApiModelProperty(value = "")
-
     @Valid
-
     public ProductOfferingRef getProductOffering() {
         return productOffering;
     }
@@ -412,9 +389,7 @@ public class ProductOrderItem {
      * @return productOfferingQualificationItem
      **/
     @ApiModelProperty(value = "")
-
     @Valid
-
     public ProductOfferingQualificationItemRef getProductOfferingQualificationItem() {
         return productOfferingQualificationItem;
     }
@@ -442,9 +417,7 @@ public class ProductOrderItem {
      * @return productOrderItem
      **/
     @ApiModelProperty(value = "")
-
     @Valid
-
     public List<ProductOrderItem> getProductOrderItem() {
         return productOrderItem;
     }
@@ -472,9 +445,7 @@ public class ProductOrderItem {
      * @return productOrderItemRelationship
      **/
     @ApiModelProperty(value = "")
-
     @Valid
-
     public List<OrderItemRelationship> getProductOrderItemRelationship() {
         return productOrderItemRelationship;
     }
@@ -502,9 +473,7 @@ public class ProductOrderItem {
      * @return qualification
      **/
     @ApiModelProperty(value = "")
-
     @Valid
-
     public List<ProductOfferingQualificationRef> getQualification() {
         return qualification;
     }
@@ -524,9 +493,7 @@ public class ProductOrderItem {
      * @return quoteItem
      **/
     @ApiModelProperty(value = "")
-
     @Valid
-
     public QuoteItemRef getQuoteItem() {
         return quoteItem;
     }
@@ -546,9 +513,7 @@ public class ProductOrderItem {
      * @return state
      **/
     @ApiModelProperty(value = "State of the order item : described in the state machine diagram")
-
     @Valid
-
     public ProductOrderItemStateType getState() {
         return state;
     }
@@ -568,8 +533,6 @@ public class ProductOrderItem {
      * @return baseType
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the super-class")
-
-
     public String getBaseType() {
         return baseType;
     }
@@ -589,8 +552,6 @@ public class ProductOrderItem {
      * @return schemaLocation
      **/
     @ApiModelProperty(value = "A URI to a JSON-Schema file that defines additional attributes and relationships")
-
-
     public String getSchemaLocation() {
         return schemaLocation;
     }
@@ -610,8 +571,6 @@ public class ProductOrderItem {
      * @return type
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the sub-class entity name")
-
-
     public String getType() {
         return type;
     }

@@ -1,7 +1,6 @@
 package it.nextworks.tmf_offering_catalog.information_models.product;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -25,7 +24,6 @@ import java.util.Objects;
 @Table(name = "related_channels")
 public class RelatedChannel {
 
-    @JsonIgnoreProperties(allowGetters = true)
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -62,10 +60,8 @@ public class RelatedChannel {
      *
      * @return id
      **/
-    @ApiModelProperty(required = true, value = "Unique identifier of a related entity.")
+    @ApiModelProperty(required = true, value = "Unique identifier of a related entity.", hidden = true)
     @NotNull
-
-
     public String getId() {
         return id;
     }
@@ -85,8 +81,6 @@ public class RelatedChannel {
      * @return href
      **/
     @ApiModelProperty(value = "Reference of the related entity.")
-
-
     public String getHref() {
         return href;
     }
@@ -106,8 +100,6 @@ public class RelatedChannel {
      * @return name
      **/
     @ApiModelProperty(value = "Name of the channel.")
-
-
     public String getName() {
         return name;
     }
@@ -127,8 +119,6 @@ public class RelatedChannel {
      * @return role
      **/
     @ApiModelProperty(value = "Role playing by the channel.")
-
-
     public String getRole() {
         return role;
     }
@@ -148,8 +138,6 @@ public class RelatedChannel {
      * @return baseType
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the super-class")
-
-
     public String getBaseType() {
         return baseType;
     }
@@ -169,8 +157,6 @@ public class RelatedChannel {
      * @return schemaLocation
      **/
     @ApiModelProperty(value = "A URI to a JSON-Schema file that defines additional attributes and relationships")
-
-
     public String getSchemaLocation() {
         return schemaLocation;
     }
@@ -190,8 +176,6 @@ public class RelatedChannel {
      * @return type
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the sub-class entity name")
-
-
     public String getType() {
         return type;
     }
@@ -211,8 +195,6 @@ public class RelatedChannel {
      * @return referredType
      **/
     @ApiModelProperty(value = "The actual type of the target instance when needed for disambiguation.")
-
-
     public String getReferredType() {
         return referredType;
     }

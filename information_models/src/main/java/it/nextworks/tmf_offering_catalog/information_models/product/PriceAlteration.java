@@ -22,7 +22,6 @@ import java.util.Objects;
 @Table(name = "price_alterations")
 public class PriceAlteration {
 
-    @JsonIgnoreProperties(allowGetters = true)
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -90,8 +89,6 @@ public class PriceAlteration {
      * @return applicationDuration
      **/
     @ApiModelProperty(value = "Duration during which the alteration applies on the order item price (for instance 2 months free of charge for the recurring charge)")
-
-
     public Integer getApplicationDuration() {
         return applicationDuration;
     }
@@ -111,8 +108,6 @@ public class PriceAlteration {
      * @return description
      **/
     @ApiModelProperty(value = "A narrative that explains in detail the semantics of this order item price alteration")
-
-
     public String getDescription() {
         return description;
     }
@@ -132,8 +127,6 @@ public class PriceAlteration {
      * @return name
      **/
     @ApiModelProperty(value = "Name of the order item price alteration")
-
-
     public String getName() {
         return name;
     }
@@ -154,8 +147,6 @@ public class PriceAlteration {
      **/
     @ApiModelProperty(required = true, value = "A category that describes the price such as recurring, one time and usage.")
     @NotNull
-
-
     public String getPriceType() {
         return priceType;
     }
@@ -175,8 +166,6 @@ public class PriceAlteration {
      * @return priority
      **/
     @ApiModelProperty(value = "Priority level for applying this alteration among all the defined alterations on the order item price")
-
-
     public Integer getPriority() {
         return priority;
     }
@@ -196,8 +185,6 @@ public class PriceAlteration {
      * @return recurringChargePeriod
      **/
     @ApiModelProperty(value = "Could be month, week...")
-
-
     public String getRecurringChargePeriod() {
         return recurringChargePeriod;
     }
@@ -217,8 +204,6 @@ public class PriceAlteration {
      * @return unitOfMeasure
      **/
     @ApiModelProperty(value = "Could be minutes, GB...")
-
-
     public String getUnitOfMeasure() {
         return unitOfMeasure;
     }
@@ -239,9 +224,7 @@ public class PriceAlteration {
      **/
     @ApiModelProperty(required = true, value = "")
     @NotNull
-
     @Valid
-
     public Price getPrice() {
         return price;
     }
@@ -261,9 +244,7 @@ public class PriceAlteration {
      * @return productOfferingPrice
      **/
     @ApiModelProperty(value = "")
-
     @Valid
-
     public ProductOfferingPriceRef getProductOfferingPrice() {
         return productOfferingPrice;
     }
@@ -283,8 +264,6 @@ public class PriceAlteration {
      * @return baseType
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the super-class")
-
-
     public String getBaseType() {
         return baseType;
     }
@@ -304,8 +283,6 @@ public class PriceAlteration {
      * @return schemaLocation
      **/
     @ApiModelProperty(value = "A URI to a JSON-Schema file that defines additional attributes and relationships")
-
-
     public String getSchemaLocation() {
         return schemaLocation;
     }
@@ -325,8 +302,6 @@ public class PriceAlteration {
      * @return type
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the sub-class entity name")
-
-
     public String getType() {
         return type;
     }
@@ -345,7 +320,8 @@ public class PriceAlteration {
             return false;
         }
         PriceAlteration priceAlteration = (PriceAlteration) o;
-        return Objects.equals(this.applicationDuration, priceAlteration.applicationDuration) &&
+        return Objects.equals(this.id, priceAlteration.id) &&
+                Objects.equals(this.applicationDuration, priceAlteration.applicationDuration) &&
                 Objects.equals(this.description, priceAlteration.description) &&
                 Objects.equals(this.name, priceAlteration.name) &&
                 Objects.equals(this.priceType, priceAlteration.priceType) &&
@@ -361,7 +337,7 @@ public class PriceAlteration {
 
     @Override
     public int hashCode() {
-        return Objects.hash(applicationDuration, description, name, priceType, priority, recurringChargePeriod, unitOfMeasure, price, productOfferingPrice, baseType, schemaLocation, type);
+        return Objects.hash(id, applicationDuration, description, name, priceType, priority, recurringChargePeriod, unitOfMeasure, price, productOfferingPrice, baseType, schemaLocation, type);
     }
 
     @Override
@@ -369,6 +345,7 @@ public class PriceAlteration {
         StringBuilder sb = new StringBuilder();
         sb.append("class PriceAlteration {\n");
 
+        sb.append("    id: ").append(toIndentedString(id)).append("\n");
         sb.append("    applicationDuration: ").append(toIndentedString(applicationDuration)).append("\n");
         sb.append("    description: ").append(toIndentedString(description)).append("\n");
         sb.append("    name: ").append(toIndentedString(name)).append("\n");
