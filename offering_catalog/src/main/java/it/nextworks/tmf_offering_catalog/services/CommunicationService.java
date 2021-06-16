@@ -311,8 +311,6 @@ public class CommunicationService {
             cwJson = objectMapper.writeValueAsString(new ClassificationWrapper(po, did, productOfferingPrices,
                     productSpecification, resourceSpecifications, serviceSpecifications, geographicAddresses));
 
-        log.info(cwJson);
-
         String pwJson = null;
         if(!skipSCLCMPost)
             pwJson = objectMapper.writeValueAsString(new PublicationWrapper(po, null, null,
