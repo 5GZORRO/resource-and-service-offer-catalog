@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
+import org.threeten.bp.ZoneId;
 
 import java.io.IOException;
 import java.util.List;
@@ -68,7 +70,6 @@ public class ProductOfferingService {
                 .id(id)
                 .isBundle(productOfferingCreate.isIsBundle())
                 .isSellable(productOfferingCreate.isIsSellable())
-                .lifecycleStatus(productOfferingCreate.getLifecycleStatus())
                 .marketSegment(productOfferingCreate.getMarketSegment())
                 .name(productOfferingCreate.getName())
                 .place(productOfferingCreate.getPlace())
@@ -83,9 +84,24 @@ public class ProductOfferingService {
                 .validFor(productOfferingCreate.getValidFor())
                 .version(productOfferingCreate.getVersion());
 
+        final String lifecycleStatus = productOfferingCreate.getLifecycleStatus();
+        if(lifecycleStatus == null)
+            productOffering.setLifecycleStatus(LifecycleStatusEnumEnum.ACTIVE.toString());
+        else {
+            LifecycleStatusEnumEnum poLifecycleStatus = LifecycleStatusEnumEnum.fromValue(lifecycleStatus);
+            if(poLifecycleStatus == null)
+                productOffering.setLifecycleStatus(LifecycleStatusEnumEnum.ACTIVE.toString());
+            else
+                productOffering.setLifecycleStatus(poLifecycleStatus.toString());
+        }
+
         final OffsetDateTime lastUpdate = productOfferingCreate.getLastUpdate();
         if(lastUpdate != null)
             productOffering.setLastUpdate(lastUpdate.toString());
+        else
+            productOffering.setLastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
+
+        // TODO: add PO Ref to the referred categories
 
         productOfferingRepository.save(productOffering);
 
