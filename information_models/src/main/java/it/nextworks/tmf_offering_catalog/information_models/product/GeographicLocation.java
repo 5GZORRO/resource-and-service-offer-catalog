@@ -69,7 +69,7 @@ public class GeographicLocation {
      *
      * @return id
      **/
-    @ApiModelProperty(value = "Unique identifier of the geographic location")
+    @ApiModelProperty(value = "Unique identifier of the geographic location", hidden = true)
     public String getId() {
         return id;
     }

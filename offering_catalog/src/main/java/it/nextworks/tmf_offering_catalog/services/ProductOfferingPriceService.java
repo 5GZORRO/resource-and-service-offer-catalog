@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
+import org.threeten.bp.ZoneId;
 
 import java.util.List;
 import java.util.Optional;
@@ -67,6 +69,8 @@ public class ProductOfferingPriceService {
         final OffsetDateTime lastUpdate = productOfferingPriceCreate.getLastUpdate();
         if(lastUpdate != null)
             productOfferingPrice.setLastUpdate(lastUpdate.toString());
+        else
+            productOfferingPrice.setLastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
 
         productOfferingPriceRepository.save(productOfferingPrice);
 

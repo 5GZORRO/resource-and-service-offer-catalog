@@ -96,6 +96,8 @@ public class ResourceCandidateService {
         final OffsetDateTime lastUpdate = resourceCandidateCreate.getLastUpdate();
         if(lastUpdate != null)
             resourceCandidate.setLastUpdate(lastUpdate.toString());
+        else
+            resourceCandidate.setLastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
 
         updateResourceCategory(resourceCandidate.getCategory(), resourceCandidate.getHref(),
                 id, resourceCandidate.getName());

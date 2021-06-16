@@ -1,8 +1,12 @@
 package it.nextworks.tmf_offering_catalog.services;
 
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
+import it.nextworks.tmf_offering_catalog.common.exception.StakeholderNotRegisteredException;
 import it.nextworks.tmf_offering_catalog.information_models.common.AttachmentRef;
+import it.nextworks.tmf_offering_catalog.information_models.common.LifecycleStatusEnumEnum;
 import it.nextworks.tmf_offering_catalog.information_models.common.RelatedParty;
+import it.nextworks.tmf_offering_catalog.information_models.party.Organization;
+import it.nextworks.tmf_offering_catalog.information_models.party.OrganizationWrapper;
 import it.nextworks.tmf_offering_catalog.information_models.resource.*;
 import it.nextworks.tmf_offering_catalog.repo.ResourceSpecificationRepository;
 import org.hibernate.Hibernate;
@@ -12,8 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
+import org.threeten.bp.ZoneId;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -33,9 +40,20 @@ public class ResourceSpecificationService {
     @Autowired
     private ResourceSpecificationRepository resourceSpecificationRepository;
 
-    public ResourceSpecification create(ResourceSpecificationCreate resourceSpecificationCreate) {
+    @Autowired
+    private OrganizationService organizationService;
+
+    public ResourceSpecification create(ResourceSpecificationCreate resourceSpecificationCreate) throws StakeholderNotRegisteredException {
 
         log.info("Received request to create a Resource Specification.");
+
+        OrganizationWrapper ow;
+        try {
+            ow = organizationService.get();
+        } catch (NotExistingEntityException e) {
+            throw new StakeholderNotRegisteredException(e.getMessage());
+        }
+        Organization org = ow.getOrganization();
 
         final String id = UUID.randomUUID().toString();
         ResourceSpecification resourceSpecification = new ResourceSpecification()
@@ -51,16 +69,41 @@ public class ResourceSpecificationService {
                 .isBundle(resourceSpecificationCreate.isIsBundle())
                 .lifecycleStatus(resourceSpecificationCreate.getLifecycleStatus())
                 .name(resourceSpecificationCreate.getName())
-                .relatedParty(resourceSpecificationCreate.getRelatedParty())
                 .resourceSpecCharacteristic(resourceSpecificationCreate.getResourceSpecCharacteristic())
                 .resourceSpecRelationship(resourceSpecificationCreate.getResourceSpecRelationship())
                 .targetResourceSchema(resourceSpecificationCreate.getTargetResourceSchema())
                 .validFor(resourceSpecificationCreate.getValidFor())
                 .version(resourceSpecificationCreate.getVersion());
 
+        final String lifecycleStatus = resourceSpecificationCreate.getLifecycleStatus();
+        if(lifecycleStatus == null)
+            resourceSpecification.setLifecycleStatus(LifecycleStatusEnumEnum.ACTIVE.toString());
+        else {
+            LifecycleStatusEnumEnum rsLifecycleStatus = LifecycleStatusEnumEnum.fromValue(lifecycleStatus);
+            if(rsLifecycleStatus == null)
+                resourceSpecification.setLifecycleStatus(LifecycleStatusEnumEnum.ACTIVE.toString());
+            else
+                resourceSpecification.setLifecycleStatus(rsLifecycleStatus.toString());
+        }
+
         final OffsetDateTime lastUpdate = resourceSpecificationCreate.getLastUpdate();
         if(lastUpdate != null)
             resourceSpecification.setLastUpdate(lastUpdate.toString());
+        else
+            resourceSpecification.setLastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
+
+        List<RelatedParty> relatedParties = resourceSpecificationCreate.getRelatedParty();
+        if(relatedParties != null)
+            resourceSpecification.setRelatedParty(relatedParties);
+        else {
+            RelatedParty relatedParty = new RelatedParty()
+                    .href(org.getHref())
+                    .id(org.getId())
+                    .role(org.getTradingName())
+                    .name(org.getName())
+                    .extendedInfo(ow.getStakeholderDID());
+            resourceSpecification.setRelatedParty(Collections.singletonList(relatedParty));
+        }
 
         resourceSpecificationRepository.save(resourceSpecification);
 
