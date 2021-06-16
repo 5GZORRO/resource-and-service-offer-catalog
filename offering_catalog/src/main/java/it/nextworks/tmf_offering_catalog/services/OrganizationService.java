@@ -57,7 +57,7 @@ public class OrganizationService {
                 .creditRating(organizationCreate.getCreditRating())
                 .existsDuring(organizationCreate.getExistsDuring())
                 .externalReference(organizationCreate.getExternalReference())
-                .href(protocol + hostname + ":" + port + path + id)
+                .href(protocol + hostname + ":" + port + path)
                 .id(id)
                 .isHeadOffice(organizationCreate.isIsHeadOffice())
                 .isLegalEntity(organizationCreate.isIsLegalEntity())

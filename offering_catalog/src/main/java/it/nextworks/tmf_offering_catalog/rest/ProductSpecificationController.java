@@ -3,6 +3,7 @@ package it.nextworks.tmf_offering_catalog.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
+import it.nextworks.tmf_offering_catalog.common.exception.StakeholderNotRegisteredException;
 import it.nextworks.tmf_offering_catalog.information_models.product.ProductSpecification;
 import it.nextworks.tmf_offering_catalog.information_models.product.ProductSpecificationCreate;
 import it.nextworks.tmf_offering_catalog.information_models.product.ProductSpecificationUpdate;
@@ -78,7 +79,14 @@ public class ProductSpecificationController implements ProductSpecificationInter
                     .body(new ErrMsg("Invalid request body (productSpecification) received."));
         }
 
-        ProductSpecification ps = productSpecificationService.create(productSpecification);
+        ProductSpecification ps;
+        try {
+            ps = productSpecificationService.create(productSpecification);
+        } catch (StakeholderNotRegisteredException e) {
+            String msg = e.getMessage();
+            log.error(msg);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg(msg));
+        }
 
         log.info("Web-Server: Product Specification created with id " + ps.getId() + ".");
 
