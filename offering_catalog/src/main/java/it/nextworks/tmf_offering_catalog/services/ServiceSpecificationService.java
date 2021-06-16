@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
+import org.threeten.bp.ZoneId;
 
 import java.util.List;
 import java.util.Optional;
@@ -57,9 +59,22 @@ public class ServiceSpecificationService {
                 .validFor(serviceSpecificationCreate.getValidFor())
                 .version(serviceSpecificationCreate.getVersion());
 
+        final String lifecycleStatus = serviceSpecificationCreate.getLifecycleStatus();
+        if(lifecycleStatus == null)
+            serviceSpecification.setLifecycleStatus(LifecycleStatusEnumEnum.ACTIVE.toString());
+        else {
+            LifecycleStatusEnumEnum ssLifecycleStatus = LifecycleStatusEnumEnum.fromValue(lifecycleStatus);
+            if(ssLifecycleStatus == null)
+                serviceSpecification.setLifecycleStatus(LifecycleStatusEnumEnum.ACTIVE.toString());
+            else
+                serviceSpecification.setLifecycleStatus(ssLifecycleStatus.toString());
+        }
+
         final OffsetDateTime lastUpdate = serviceSpecificationCreate.getLastUpdate();
         if(lastUpdate != null)
             serviceSpecification.setLastUpdate(lastUpdate.toString());
+        else
+            serviceSpecification.setLastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
 
         serviceSpecificationRepository.save(serviceSpecification);
 

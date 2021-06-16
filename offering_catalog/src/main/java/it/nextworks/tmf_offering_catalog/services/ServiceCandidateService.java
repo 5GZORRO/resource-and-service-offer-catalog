@@ -97,6 +97,8 @@ public class ServiceCandidateService {
         final OffsetDateTime lastUpdate = serviceCandidateCreate.getLastUpdate();
         if(lastUpdate != null)
             serviceCandidate.setLastUpdate(lastUpdate.toString());
+        else
+            serviceCandidate.setLastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
 
         updateServiceCategory(serviceCandidate.getCategory(), serviceCandidate.getHref(),
                 id, serviceCandidate.getName());
