@@ -62,85 +62,85 @@ public class Product {
     @JsonProperty("agreement")
     @Valid
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "product_ref_or_value_fk", referencedColumnName = "id")
+    @JoinColumn(name = "product_fk", referencedColumnName = "id")
     private List<AgreementItemRef> agreement = null;
 
     @JsonProperty("billingAccount")
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "billing_account_ref_id", referencedColumnName = "id")
+    @JoinColumn(name = "billing_account_ref_id", referencedColumnName = "uuid")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private BillingAccountRef billingAccount = null;
 
     @JsonProperty("place")
     @Valid
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "product_ref_or_value_fk", referencedColumnName = "id")
+    @JoinColumn(name = "product_fk", referencedColumnName = "id")
     private List<RelatedPlace> place = null;
 
     @JsonProperty("product")
     @Valid
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "product_ref_or_value_fk", referencedColumnName = "id")
+    @JoinColumn(name = "product_fk", referencedColumnName = "id")
     private List<Product> product = null;
 
     @JsonProperty("productCharacteristic")
     @Valid
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "product_ref_or_value_fk", referencedColumnName = "id")
+    @JoinColumn(name = "product_fk", referencedColumnName = "id")
     private List<Characteristic> productCharacteristic = null;
 
     @JsonProperty("productOffering")
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "product_offering_ref_id", referencedColumnName = "id")
+    @JoinColumn(name = "product_offering_ref_id", referencedColumnName = "uuid")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ProductOfferingRef productOffering = null;
 
     @JsonProperty("productOrderItem")
     @Valid
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "product_ref_or_value_fk", referencedColumnName = "id")
+    @JoinColumn(name = "product_fk", referencedColumnName = "id")
     private List<RelatedProductOrderItem> productOrderItem = null;
 
     @JsonProperty("productPrice")
     @Valid
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "product_ref_or_value_fk", referencedColumnName = "id")
+    @JoinColumn(name = "product_fk", referencedColumnName = "id")
     private List<ProductPrice> productPrice = null;
 
     @JsonProperty("productRelationship")
     @Valid
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "product_ref_or_value_fk", referencedColumnName = "id")
+    @JoinColumn(name = "product_fk", referencedColumnName = "id")
     private List<ProductRelationship> productRelationship = null;
 
     @JsonProperty("productSpecification")
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "product_specification_ref_id", referencedColumnName = "id")
+    @JoinColumn(name = "product_specification_ref_id", referencedColumnName = "uuid")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ProductSpecificationRef productSpecification = null;
 
     @JsonProperty("productTerm")
     @Valid
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "product_ref_or_value_fk", referencedColumnName = "id")
+    @JoinColumn(name = "product_fk", referencedColumnName = "id")
     private List<ProductTerm> productTerm = null;
 
     @JsonProperty("realizingResource")
     @Valid
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "product_ref_or_value_fk", referencedColumnName = "id")
+    @JoinColumn(name = "product_fk", referencedColumnName = "id")
     private List<ResourceRef> realizingResource = null;
 
     @JsonProperty("realizingService")
     @Valid
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "product_ref_or_value_fk", referencedColumnName = "id")
+    @JoinColumn(name = "product_fk", referencedColumnName = "id")
     private List<ServiceRef> realizingService = null;
 
     @JsonProperty("relatedParty")
     @Valid
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "product_ref_or_value_fk", referencedColumnName = "id")
+    @JoinColumn(name = "product_fk", referencedColumnName = "id")
     private List<RelatedParty> relatedParty = null;
 
     @JsonProperty("status")

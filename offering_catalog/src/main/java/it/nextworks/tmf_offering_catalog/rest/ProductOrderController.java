@@ -71,7 +71,7 @@ public class ProductOrderController {
             method = RequestMethod.GET)
     ResponseEntity<?> listProductOrder(@ApiParam(value = "Comma-separated properties to be provided in response")
                                        @Valid @RequestParam(value = "fields", required = false) String fields) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(productOrderService.list());
+        return ResponseEntity.status(HttpStatus.OK).body(productOrderService.list());
     }
 
 }

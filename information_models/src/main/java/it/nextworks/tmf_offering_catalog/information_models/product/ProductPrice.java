@@ -47,7 +47,7 @@ public class ProductPrice {
 
     @JsonProperty("billingAccount")
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "billing_account_ref_id", referencedColumnName = "id")
+    @JoinColumn(name = "billing_account_ref_id", referencedColumnName = "uuid")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private BillingAccountRef billingAccount = null;
 
@@ -59,7 +59,7 @@ public class ProductPrice {
 
     @JsonProperty("productOfferingPrice")
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "product_offering_price_ref_id", referencedColumnName = "id")
+    @JoinColumn(name = "product_offering_price_ref_id", referencedColumnName = "uuid")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ProductOfferingPriceRef productOfferingPrice = null;
 

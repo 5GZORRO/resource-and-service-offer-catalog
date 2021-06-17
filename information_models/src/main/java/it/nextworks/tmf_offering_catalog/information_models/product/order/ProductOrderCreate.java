@@ -50,17 +50,17 @@ public class ProductOrderCreate {
     @JsonProperty("billingAccount")
     private BillingAccountRef billingAccount = null;
 
-//    @JsonProperty("channel")
-//    @Valid
-//    private List<RelatedChannel> channel = null;
+    @JsonProperty("channel")
+    @Valid
+    private List<RelatedChannel> channel = null;
 
-//    @JsonProperty("note")
-//    @Valid
-//    private List<Note> note = null;
+    @JsonProperty("note")
+    @Valid
+    private List<Note> note = null;
 
-//    @JsonProperty("orderTotalPrice")
-//    @Valid
-//    private List<OrderPrice> orderTotalPrice = null;
+    @JsonProperty("orderTotalPrice")
+    @Valid
+    private List<OrderPrice> orderTotalPrice = null;
 
     @JsonProperty("payment")
     @Valid
@@ -70,17 +70,17 @@ public class ProductOrderCreate {
     @Valid
     private List<ProductOfferingQualificationRef> productOfferingQualification = null;
 
-//    @JsonProperty("productOrderItem")
-//    @Valid
-//    private List<ProductOrderItem> productOrderItem = new ArrayList<>();
+    @JsonProperty("productOrderItem")
+    @Valid
+    private List<ProductOrderItem> productOrderItem = new ArrayList<>();
 
     @JsonProperty("quote")
     @Valid
     private List<QuoteRef> quote = null;
 
-//    @JsonProperty("relatedParty")
-//    @Valid
-//    private List<RelatedParty> relatedParty = null;
+    @JsonProperty("relatedParty")
+    @Valid
+    private List<RelatedParty> relatedParty = null;
 
     @JsonProperty("@baseType")
     private String baseType = null;
@@ -313,102 +313,102 @@ public class ProductOrderCreate {
         this.billingAccount = billingAccount;
     }
 
-//    public ProductOrderCreate channel(List<RelatedChannel> channel) {
-//        this.channel = channel;
-//        return this;
-//    }
-//
-//    public ProductOrderCreate addChannelItem(RelatedChannel channelItem) {
-//        if (this.channel == null) {
-//            this.channel = new ArrayList<>();
-//        }
-//        this.channel.add(channelItem);
-//        return this;
-//    }
-//
-//    /**
-//     * Get channel
-//     *
-//     * @return channel
-//     **/
-//    @ApiModelProperty(value = "")
-//    @Valid
-//    public List<RelatedChannel> getChannel() {
-//        return channel;
-//    }
-//
-//    public void setChannel(List<RelatedChannel> channel) {
-//        this.channel = channel;
-//    }
-//
-//    public ProductOrderCreate note(List<Note> note) {
-//        this.note = note;
-//        return this;
-//    }
-//
-//    public ProductOrderCreate addNoteItem(Note noteItem) {
-//        if (this.note == null) {
-//            this.note = new ArrayList<>();
-//        }
-//        this.note.add(noteItem);
-//        return this;
-//    }
-//
-//    /**
-//     * Get note
-//     *
-//     * @return note
-//     **/
-//    @ApiModelProperty(value = "")
-//    @Valid
-//    public List<Note> getNote() {
-//        return note;
-//    }
-//
-//    public void setNote(List<Note> note) {
-//        this.note = note;
-//    }
-//
-//    public ProductOrderCreate orderTotalPrice(List<OrderPrice> orderTotalPrice) {
-//        this.orderTotalPrice = orderTotalPrice;
-//        return this;
-//    }
-//
-//    public ProductOrderCreate addOrderTotalPriceItem(OrderPrice orderTotalPriceItem) {
-//        if (this.orderTotalPrice == null) {
-//            this.orderTotalPrice = new ArrayList<>();
-//        }
-//        this.orderTotalPrice.add(orderTotalPriceItem);
-//        return this;
-//    }
-//
-//    /**
-//     * Get orderTotalPrice
-//     *
-//     * @return orderTotalPrice
-//     **/
-//    @ApiModelProperty(value = "")
-//    @Valid
-//    public List<OrderPrice> getOrderTotalPrice() {
-//        return orderTotalPrice;
-//    }
-//
-//    public void setOrderTotalPrice(List<OrderPrice> orderTotalPrice) {
-//        this.orderTotalPrice = orderTotalPrice;
-//    }
-//
-//    public ProductOrderCreate payment(List<PaymentRef> payment) {
-//        this.payment = payment;
-//        return this;
-//    }
-//
-//    public ProductOrderCreate addPaymentItem(PaymentRef paymentItem) {
-//        if (this.payment == null) {
-//            this.payment = new ArrayList<>();
-//        }
-//        this.payment.add(paymentItem);
-//        return this;
-//    }
+    public ProductOrderCreate channel(List<RelatedChannel> channel) {
+        this.channel = channel;
+        return this;
+    }
+
+    public ProductOrderCreate addChannelItem(RelatedChannel channelItem) {
+        if (this.channel == null) {
+            this.channel = new ArrayList<>();
+        }
+        this.channel.add(channelItem);
+        return this;
+    }
+
+    /**
+     * Get channel
+     *
+     * @return channel
+     **/
+    @ApiModelProperty(value = "")
+    @Valid
+    public List<RelatedChannel> getChannel() {
+        return channel;
+    }
+
+    public void setChannel(List<RelatedChannel> channel) {
+        this.channel = channel;
+    }
+
+    public ProductOrderCreate note(List<Note> note) {
+        this.note = note;
+        return this;
+    }
+
+    public ProductOrderCreate addNoteItem(Note noteItem) {
+        if (this.note == null) {
+            this.note = new ArrayList<>();
+        }
+        this.note.add(noteItem);
+        return this;
+    }
+
+    /**
+     * Get note
+     *
+     * @return note
+     **/
+    @ApiModelProperty(value = "")
+    @Valid
+    public List<Note> getNote() {
+        return note;
+    }
+
+    public void setNote(List<Note> note) {
+        this.note = note;
+    }
+
+    public ProductOrderCreate orderTotalPrice(List<OrderPrice> orderTotalPrice) {
+        this.orderTotalPrice = orderTotalPrice;
+        return this;
+    }
+
+    public ProductOrderCreate addOrderTotalPriceItem(OrderPrice orderTotalPriceItem) {
+        if (this.orderTotalPrice == null) {
+            this.orderTotalPrice = new ArrayList<>();
+        }
+        this.orderTotalPrice.add(orderTotalPriceItem);
+        return this;
+    }
+
+    /**
+     * Get orderTotalPrice
+     *
+     * @return orderTotalPrice
+     **/
+    @ApiModelProperty(value = "")
+    @Valid
+    public List<OrderPrice> getOrderTotalPrice() {
+        return orderTotalPrice;
+    }
+
+    public void setOrderTotalPrice(List<OrderPrice> orderTotalPrice) {
+        this.orderTotalPrice = orderTotalPrice;
+    }
+
+    public ProductOrderCreate payment(List<PaymentRef> payment) {
+        this.payment = payment;
+        return this;
+    }
+
+    public ProductOrderCreate addPaymentItem(PaymentRef paymentItem) {
+        if (this.payment == null) {
+            this.payment = new ArrayList<>();
+        }
+        this.payment.add(paymentItem);
+        return this;
+    }
 
     /**
      * Get payment
@@ -438,56 +438,56 @@ public class ProductOrderCreate {
         return this;
     }
 
-//    /**
-//     * Get productOfferingQualification
-//     *
-//     * @return productOfferingQualification
-//     **/
-//    @ApiModelProperty(value = "")
-//    @Valid
-//    public List<ProductOfferingQualificationRef> getProductOfferingQualification() {
-//        return productOfferingQualification;
-//    }
-//
-//    public void setProductOfferingQualification(List<ProductOfferingQualificationRef> productOfferingQualification) {
-//        this.productOfferingQualification = productOfferingQualification;
-//    }
-//
-//    public ProductOrderCreate productOrderItem(List<ProductOrderItem> productOrderItem) {
-//        this.productOrderItem = productOrderItem;
-//        return this;
-//    }
-//
-//    public ProductOrderCreate addProductOrderItemItem(ProductOrderItem productOrderItemItem) {
-//        this.productOrderItem.add(productOrderItemItem);
-//        return this;
-//    }
-//
-//    /**
-//     * Get productOrderItem
-//     *
-//     * @return productOrderItem
-//     **/
-//    @ApiModelProperty(required = true, value = "")
-//    @NotNull
-//    @Valid
-//    @Size(min = 1)
-//    public List<ProductOrderItem> getProductOrderItem() {
-//        return productOrderItem;
-//    }
-//
-//    public void setProductOrderItem(List<ProductOrderItem> productOrderItem) {
-//        this.productOrderItem = productOrderItem;
-//    }
-//
-//    public ProductOrderCreate quote(List<QuoteRef> quote) {
-//        this.quote = quote;
-//        return this;
-//    }
+    /**
+     * Get productOfferingQualification
+     *
+     * @return productOfferingQualification
+     **/
+    @ApiModelProperty(value = "")
+    @Valid
+    public List<ProductOfferingQualificationRef> getProductOfferingQualification() {
+        return productOfferingQualification;
+    }
+
+    public void setProductOfferingQualification(List<ProductOfferingQualificationRef> productOfferingQualification) {
+        this.productOfferingQualification = productOfferingQualification;
+    }
+
+    public ProductOrderCreate productOrderItem(List<ProductOrderItem> productOrderItem) {
+        this.productOrderItem = productOrderItem;
+        return this;
+    }
+
+    public ProductOrderCreate addProductOrderItemItem(ProductOrderItem productOrderItemItem) {
+        this.productOrderItem.add(productOrderItemItem);
+        return this;
+    }
+
+    /**
+     * Get productOrderItem
+     *
+     * @return productOrderItem
+     **/
+    @ApiModelProperty(required = true, value = "")
+    @NotNull
+    @Valid
+    @Size(min = 1)
+    public List<ProductOrderItem> getProductOrderItem() {
+        return productOrderItem;
+    }
+
+    public void setProductOrderItem(List<ProductOrderItem> productOrderItem) {
+        this.productOrderItem = productOrderItem;
+    }
+
+    public ProductOrderCreate quote(List<QuoteRef> quote) {
+        this.quote = quote;
+        return this;
+    }
 
     public ProductOrderCreate addQuoteItem(QuoteRef quoteItem) {
         if (this.quote == null) {
-            this.quote = new ArrayList<QuoteRef>();
+            this.quote = new ArrayList<>();
         }
         this.quote.add(quoteItem);
         return this;
@@ -508,33 +508,33 @@ public class ProductOrderCreate {
         this.quote = quote;
     }
 
-//    public ProductOrderCreate relatedParty(List<RelatedParty> relatedParty) {
-//        this.relatedParty = relatedParty;
-//        return this;
-//    }
-//
-//    public ProductOrderCreate addRelatedPartyItem(RelatedParty relatedPartyItem) {
-//        if (this.relatedParty == null) {
-//            this.relatedParty = new ArrayList<RelatedParty>();
-//        }
-//        this.relatedParty.add(relatedPartyItem);
-//        return this;
-//    }
-//
-//    /**
-//     * Get relatedParty
-//     *
-//     * @return relatedParty
-//     **/
-//    @ApiModelProperty(value = "")
-//    @Valid
-//    public List<RelatedParty> getRelatedParty() {
-//        return relatedParty;
-//    }
-//
-//    public void setRelatedParty(List<RelatedParty> relatedParty) {
-//        this.relatedParty = relatedParty;
-//    }
+    public ProductOrderCreate relatedParty(List<RelatedParty> relatedParty) {
+        this.relatedParty = relatedParty;
+        return this;
+    }
+
+    public ProductOrderCreate addRelatedPartyItem(RelatedParty relatedPartyItem) {
+        if (this.relatedParty == null) {
+            this.relatedParty = new ArrayList<>();
+        }
+        this.relatedParty.add(relatedPartyItem);
+        return this;
+    }
+
+    /**
+     * Get relatedParty
+     *
+     * @return relatedParty
+     **/
+    @ApiModelProperty(value = "")
+    @Valid
+    public List<RelatedParty> getRelatedParty() {
+        return relatedParty;
+    }
+
+    public void setRelatedParty(List<RelatedParty> relatedParty) {
+        this.relatedParty = relatedParty;
+    }
 
     public ProductOrderCreate baseType(String baseType) {
         this.baseType = baseType;
@@ -614,14 +614,14 @@ public class ProductOrderCreate {
                 Objects.equals(this.requestedStartDate, productOrderCreate.requestedStartDate) &&
                 Objects.equals(this.agreement, productOrderCreate.agreement) &&
                 Objects.equals(this.billingAccount, productOrderCreate.billingAccount) &&
-//                Objects.equals(this.channel, productOrderCreate.channel) &&
-//                Objects.equals(this.note, productOrderCreate.note) &&
-//                Objects.equals(this.orderTotalPrice, productOrderCreate.orderTotalPrice) &&
+                Objects.equals(this.channel, productOrderCreate.channel) &&
+                Objects.equals(this.note, productOrderCreate.note) &&
+                Objects.equals(this.orderTotalPrice, productOrderCreate.orderTotalPrice) &&
                 Objects.equals(this.payment, productOrderCreate.payment) &&
                 Objects.equals(this.productOfferingQualification, productOrderCreate.productOfferingQualification) &&
-//                Objects.equals(this.productOrderItem, productOrderCreate.productOrderItem) &&
+                Objects.equals(this.productOrderItem, productOrderCreate.productOrderItem) &&
                 Objects.equals(this.quote, productOrderCreate.quote) &&
-//                Objects.equals(this.relatedParty, productOrderCreate.relatedParty) &&
+                Objects.equals(this.relatedParty, productOrderCreate.relatedParty) &&
                 Objects.equals(this.baseType, productOrderCreate.baseType) &&
                 Objects.equals(this.schemaLocation, productOrderCreate.schemaLocation) &&
                 Objects.equals(this.type, productOrderCreate.type);
@@ -629,7 +629,7 @@ public class ProductOrderCreate {
 
     @Override
     public int hashCode() {
-        return Objects.hash(cancellationDate, cancellationReason, category, description, externalId, notificationContact, priority, requestedCompletionDate, requestedStartDate, agreement, billingAccount,/* channel, note, orderTotalPrice,*/ payment, productOfferingQualification, /*productOrderItem,*/ quote, /*relatedParty,*/ baseType, schemaLocation, type);
+        return Objects.hash(cancellationDate, cancellationReason, category, description, externalId, notificationContact, priority, requestedCompletionDate, requestedStartDate, agreement, billingAccount, channel, note, orderTotalPrice, payment, productOfferingQualification, productOrderItem, quote, relatedParty, baseType, schemaLocation, type);
     }
 
     @Override
@@ -647,14 +647,14 @@ public class ProductOrderCreate {
                 "    requestedStartDate: " + toIndentedString(requestedStartDate) + "\n" +
                 "    agreement: " + toIndentedString(agreement) + "\n" +
                 "    billingAccount: " + toIndentedString(billingAccount) + "\n" +
-//                "    channel: " + toIndentedString(channel) + "\n" +
-//                "    note: " + toIndentedString(note) + "\n" +
-//                "    orderTotalPrice: " + toIndentedString(orderTotalPrice) + "\n" +
+                "    channel: " + toIndentedString(channel) + "\n" +
+                "    note: " + toIndentedString(note) + "\n" +
+                "    orderTotalPrice: " + toIndentedString(orderTotalPrice) + "\n" +
                 "    payment: " + toIndentedString(payment) + "\n" +
                 "    productOfferingQualification: " + toIndentedString(productOfferingQualification) + "\n" +
-//                "    productOrderItem: " + toIndentedString(productOrderItem) + "\n" +
+                "    productOrderItem: " + toIndentedString(productOrderItem) + "\n" +
                 "    quote: " + toIndentedString(quote) + "\n" +
-//                "    relatedParty: " + toIndentedString(relatedParty) + "\n" +
+                "    relatedParty: " + toIndentedString(relatedParty) + "\n" +
                 "    baseType: " + toIndentedString(baseType) + "\n" +
                 "    schemaLocation: " + toIndentedString(schemaLocation) + "\n" +
                 "    type: " + toIndentedString(type) + "\n" +

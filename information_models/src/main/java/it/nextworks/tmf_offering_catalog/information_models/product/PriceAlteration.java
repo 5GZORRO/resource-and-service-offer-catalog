@@ -56,7 +56,7 @@ public class PriceAlteration {
 
     @JsonProperty("productOfferingPrice")
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "product_offering_price_ref_id", referencedColumnName = "id")
+    @JoinColumn(name = "product_offering_price_ref_id", referencedColumnName = "uuid")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ProductOfferingPriceRef productOfferingPrice = null;
 
