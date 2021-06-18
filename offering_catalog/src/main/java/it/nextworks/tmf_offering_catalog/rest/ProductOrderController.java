@@ -1,6 +1,7 @@
 package it.nextworks.tmf_offering_catalog.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -34,6 +35,7 @@ public class ProductOrderController {
     @Autowired
     public ProductOrderController(ObjectMapper objectMapper, HttpServletRequest request) {
         this.objectMapper = objectMapper;
+        this.objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         this.request = request;
     }
 
