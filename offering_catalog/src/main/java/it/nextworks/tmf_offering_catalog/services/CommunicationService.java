@@ -303,6 +303,7 @@ public class CommunicationService {
         ProductSpecification productSpecification = getProductSpecification(po);
         List<ResourceSpecification> resourceSpecifications = getResourceSpecifications(productSpecification);
         List<ServiceSpecification> serviceSpecifications = getServiceSpecifications(productSpecification);
+        getResourceSpecificationFromServices(serviceSpecifications, resourceSpecifications);
         List<GeographicAddress> geographicAddresses = getGeographicAddresses(po);
 
         String cwJson = null;
@@ -369,6 +370,28 @@ public class CommunicationService {
         }
 
         return resourceSpecifications;
+    }
+
+    private void getResourceSpecificationFromServices(List<ServiceSpecification> serviceSpecifications,
+                                                      List<ResourceSpecification> resourceSpecifications) {
+        if(serviceSpecifications == null)
+            return;
+        if(resourceSpecifications == null)
+            resourceSpecifications = new ArrayList<>();
+
+        for (ServiceSpecification serviceSpecification : serviceSpecifications) {
+            List<ResourceSpecificationRef> resourceSpecificationRefs = serviceSpecification.getResourceSpecification();
+            if(resourceSpecificationRefs == null)
+                continue;
+            for (ResourceSpecificationRef resourceSpecificationRef : resourceSpecificationRefs) {
+                String id = resourceSpecificationRef.getId();
+                try {
+                    resourceSpecifications.add(resourceSpecificationService.get(id));
+                } catch (NotExistingEntityException e) {
+                    log.warn("ResourceSpecification with id " + id + " not found in DB.");
+                }
+            }
+        }
     }
 
     private List<ServiceSpecification> getServiceSpecifications(ProductSpecification ps) {
