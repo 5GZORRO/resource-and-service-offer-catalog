@@ -16,11 +16,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 
+@Service
 public class ClassifyAndPublishProductOrderService {
 
     private static final Logger log = LoggerFactory.getLogger(ClassifyAndPublishProductOrderService.class);
