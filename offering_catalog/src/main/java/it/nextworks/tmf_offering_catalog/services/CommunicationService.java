@@ -176,7 +176,7 @@ public class CommunicationService {
     private String scLcmHostname;
     @Value("${sc_lcm.port}")
     private String scLcmPort;
-    @Value("${sc_lcm.sc_lcm_request_path}")
+    @Value("${sc_lcm.product_offer.sc_lcm_request_path}")
     private String scLcmRequestPath;
 
     @Value("${skip_sc_lcm_post}")

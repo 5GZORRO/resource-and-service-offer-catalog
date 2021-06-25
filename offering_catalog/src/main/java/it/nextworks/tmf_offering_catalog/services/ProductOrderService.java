@@ -1,5 +1,6 @@
 package it.nextworks.tmf_offering_catalog.services;
 
+import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrder;
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderCreate;
 import it.nextworks.tmf_offering_catalog.repo.ProductOrderRepository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductOrderService {
@@ -42,4 +44,21 @@ public class ProductOrderService {
         log.info("Received request to retrieve all Product Orders");
         return productOrderRepository.findAll();
     }
+
+    @Transactional
+    public ProductOrder get(String id) throws NotExistingEntityException {
+        log.info("Received request to retrieve Product Order with id " + id + ".");
+        Optional<ProductOrder> productOrderOptional = productOrderRepository.findById(id);
+        if (!productOrderOptional.isPresent()) {
+            throw new NotExistingEntityException("Product Order with id " + id + " not found in DB.");
+        }
+        log.info("Product Order " + id + " retrieved.");
+        return productOrderOptional.get();
+    }
+
+    @Transactional
+    public void delete(String id) {
+        productOrderRepository.deleteById(id);
+    }
+
 }
