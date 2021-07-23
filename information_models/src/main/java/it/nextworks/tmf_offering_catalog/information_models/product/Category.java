@@ -68,6 +68,7 @@ public class Category {
   private LifecycleStatusEnumEnum lifecycleStatusEnum = null;
 
   @JsonProperty("name")
+  @Column(unique = true)
   private String name = null;
 
   @JsonProperty("parentId")

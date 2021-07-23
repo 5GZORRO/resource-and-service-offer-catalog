@@ -1,5 +1,6 @@
 package it.nextworks.tmf_offering_catalog.services;
 
+import it.nextworks.tmf_offering_catalog.common.exception.CategoryAlreadyExistingException;
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
 import it.nextworks.tmf_offering_catalog.information_models.common.LifecycleStatusEnumEnum;
 import it.nextworks.tmf_offering_catalog.information_models.product.*;
@@ -34,9 +35,13 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public Category create(CategoryCreate categoryCreate) {
+    public Category create(CategoryCreate categoryCreate) throws CategoryAlreadyExistingException {
 
         log.info("Received request to create a Category.");
+
+        String name = categoryCreate.getName();
+        if(categoryRepository.findByName(name).isPresent())
+            throw new CategoryAlreadyExistingException("Category with name " + name + " already exists.");
 
         final String id = UUID.randomUUID().toString();
         Category category = new Category()
@@ -174,4 +179,6 @@ public class CategoryService {
 
         return c;
     }
+
+    public Category save(Category c) { return categoryRepository.save(c); }
 }
