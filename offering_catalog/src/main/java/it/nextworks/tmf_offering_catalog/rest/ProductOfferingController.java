@@ -417,4 +417,45 @@ public class ProductOfferingController implements ProductOfferingInterface {
 
         return ResponseEntity.status(HttpStatus.OK).body(po);
     }
+
+    @ApiOperation(value = "Retrieves a ProductOffering by DID", nickname = "retrieveProductOfferingByDID",
+            notes = "This operation retrieves a ProductOffering entity using the DID.",
+            response = ProductOffering.class, authorizations = {
+            @Authorization(value = "spring_oauth", scopes = {
+                    @AuthorizationScope(scope = "read", description = "for read operations"),
+                    @AuthorizationScope(scope = "openapi", description = "Access openapi API"),
+                    @AuthorizationScope(scope = "admin", description = "Access admin API"),
+                    @AuthorizationScope(scope = "write", description = "for write operations")
+            })
+    })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = ProductOffering.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = ErrMsg.class),
+            //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+            //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
+            @ApiResponse(code = 404, message = "Not Found", response = ErrMsg.class),
+            //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
+            //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
+            @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
+    @RequestMapping(value = "/productCatalogManagement/v4/productOffering/did/{did}",
+            produces = { "application/json;charset=utf-8" },
+            method = RequestMethod.GET)
+    public ResponseEntity<?>
+    retrieveProductOfferingByDID(@ApiParam(value = "Distributed Identifier of the ProductOffering", required = true)
+                                 @PathVariable("did") String did) {
+
+        log.info("Web-Server: Received request to retrieve Product Offering with DID " + did + ".");
+
+        ProductOffering po;
+        try {
+            po = productOfferingService.getByDID(did);
+        } catch (NotExistingEntityException e) {
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrMsg(e.getMessage()));
+        }
+
+        log.info("Web-Server: Product Offering with DID " + did + " retrieved.");
+
+        return ResponseEntity.status(HttpStatus.OK).body(po);
+    }
 }

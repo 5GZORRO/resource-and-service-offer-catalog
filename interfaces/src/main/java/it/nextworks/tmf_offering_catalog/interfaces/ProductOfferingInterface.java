@@ -18,4 +18,6 @@ public interface ProductOfferingInterface {
     ResponseEntity<?> patchProductOffering(String id, ProductOfferingUpdate productOffering);
 
     ResponseEntity<?> retrieveProductOffering(String id, String fields);
+
+    ResponseEntity<?> retrieveProductOfferingByDID(String did);
 }
