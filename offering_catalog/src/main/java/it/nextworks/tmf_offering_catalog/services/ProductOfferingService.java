@@ -19,6 +19,7 @@ import org.threeten.bp.OffsetDateTime;
 import org.threeten.bp.ZoneId;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -47,8 +48,42 @@ public class ProductOfferingService {
     @Autowired
     private ProductOfferingStatusRepository productOfferingStatusRepository;
 
+    @Autowired
+    private CategoryService categoryService;
+
+    private void updateCategory(List<CategoryRef> categoryRefs, String href, String id, String name)
+            throws NullIdentifierException, NotExistingEntityException {
+
+        if(categoryRefs != null) {
+            List<Category> categories = new ArrayList<>();
+            for(CategoryRef categoryRef : categoryRefs) {
+                String crId = categoryRef.getId();
+                if(crId == null)
+                    throw new NullIdentifierException("Referenced Category with null identifier not allowed.");
+
+                categories.add(categoryService.get(crId));
+            }
+
+            for(Category category : categories) {
+
+                String cId = category.getId();
+                log.info("Updating Category " + cId + ".");
+
+                category.getProductOffering().add(new ProductOfferingRef()
+                        .href(href)
+                        .id(id)
+                        .name(name));
+
+                categoryService.save(category);
+
+                log.info("Category " + cId + " updated.");
+            }
+        }
+    }
+
     public ProductOffering create(ProductOfferingCreate productOfferingCreate)
-            throws IOException, DIDGenerationRequestException, StakeholderNotRegisteredException {
+            throws IOException, DIDGenerationRequestException, StakeholderNotRegisteredException,
+            NotExistingEntityException, NullIdentifierException {
 
         log.info("Received request to create a Product Offering.");
 
@@ -105,7 +140,7 @@ public class ProductOfferingService {
         else
             productOffering.setLastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
 
-        // TODO: add PO Ref to the referred categories
+        updateCategory(productOffering.getCategory(), productOffering.getHref(), id, productOffering.getName());
 
         productOfferingRepository.save(productOffering);
 
@@ -124,8 +159,37 @@ public class ProductOfferingService {
         return productOffering;
     }
 
+    private void updateCategoryDelete(List<CategoryRef> categoryRefs, String id)
+            throws NullIdentifierException, NotExistingEntityException {
+
+        if(categoryRefs != null) {
+            List<Category> categories = new ArrayList<>();
+            for(CategoryRef categoryRef : categoryRefs) {
+                String crId = categoryRef.getId();
+                if(crId == null)
+                    throw new NullIdentifierException("Referenced Category with null identifier not allowed.");
+
+                categories.add(categoryService.get(crId));
+            }
+
+            for(Category category : categories) {
+
+                String cId = category.getId();
+                log.info("Updating Category " + cId + ".");
+
+                List<ProductOfferingRef> productOfferingRefs = category.getProductOffering();
+                if(productOfferingRefs != null)
+                    productOfferingRefs.removeIf(por -> por.getId().equals(id));
+
+                categoryService.save(category);
+
+                log.info("Category " + cId + " updated.");
+            }
+        }
+    }
+
     public void delete(String id) throws NotExistingEntityException, ProductOfferingDeleteScLCMException,
-            ProductOfferingInPublicationException, IOException {
+            ProductOfferingInPublicationException, IOException, NullIdentifierException {
 
         log.info("Received request to delete Product Offering with id " + id + ".");
 
@@ -133,9 +197,13 @@ public class ProductOfferingService {
         if(!toDelete.isPresent())
             throw new NotExistingEntityException("Product Offering with id " + id + " not found in DB.");
 
+        ProductOffering po = toDelete.get();
+
+        updateCategoryDelete(po.getCategory(), id);
+
         communicationService.deleteProductOffering(id);
 
-        productOfferingRepository.delete(toDelete.get());
+        productOfferingRepository.delete(po);
 
         log.info("Product Offering " + id + " deleted.");
     }
@@ -252,8 +320,66 @@ public class ProductOfferingService {
         return productOfferings;
     }
 
+    private void updateCategoryPatch(List<CategoryRef> oldCategoryRefs,
+                                     List<CategoryRef> newCategoryRefs,
+                                     String href,
+                                     String id,
+                                     String name) throws NullIdentifierException, NotExistingEntityException {
+
+        List<Category> oldCategories = new ArrayList<>();
+        if(oldCategoryRefs != null) {
+            for(CategoryRef categoryRef : oldCategoryRefs) {
+                String crId = categoryRef.getId();
+                if(crId == null)
+                    throw new NullIdentifierException("Referenced Category with null identifier not allowed.");
+
+                oldCategories.add(categoryService.get(crId));
+            }
+        }
+
+        List<Category> newCategories = new ArrayList<>();
+        if(newCategoryRefs != null) {
+            for(CategoryRef categoryRef : newCategoryRefs) {
+                String crId = categoryRef.getId();
+                if(crId == null)
+                    throw new NullIdentifierException("Referenced Category with null identifier not allowed.");
+
+                newCategories.add(categoryService.get(crId));
+            }
+        }
+
+        for(Category category : oldCategories) {
+
+            String cId = category.getId();
+            log.info("Updating Category " + cId + ".");
+
+            List<ProductOfferingRef> productOfferingRefs = category.getProductOffering();
+            if(productOfferingRefs != null)
+                productOfferingRefs.removeIf(por -> por.getId().equals(id));
+
+            categoryService.save(category);
+
+            log.info("Category " + cId + " updated.");
+        }
+
+        for(Category category : newCategories) {
+
+            String cId = category.getId();
+            log.info("Updating Category " + cId + ".");
+
+            category.getProductOffering().add(new ProductOfferingRef()
+                    .href(href)
+                    .id(id)
+                    .name(name));
+
+            categoryService.save(category);
+
+            log.info("Category " + cId + " updated.");
+        }
+    }
+
     public ProductOffering patch(String id, ProductOfferingUpdate productOfferingUpdate, String lastUpdate)
-            throws NotExistingEntityException {
+            throws NotExistingEntityException, NullIdentifierException {
 
         log.info("Received request to patch Product Offering with id " + id + ".");
 
@@ -298,14 +424,21 @@ public class ProductOfferingService {
             productOffering.getBundledProductOffering().clear();
 
         final List<CategoryRef> category = productOfferingUpdate.getCategory();
-        if(productOffering.getCategory() == null)
+        if(productOffering.getCategory() == null) {
+            updateCategory(category, productOffering.getHref(), productOffering.getId(), productOffering.getName());
             productOffering.setCategory(category);
+        }
         else if(category != null) {
+            updateCategoryPatch(productOffering.getCategory(), category, productOffering.getHref(),
+                    productOffering.getId(), productOffering.getName());
+
             productOffering.getCategory().clear();
             productOffering.getCategory().addAll(category);
         }
-        else
+        else {
+            updateCategoryDelete(productOffering.getCategory(), productOffering.getId());
             productOffering.getCategory().clear();
+        }
 
         final List<ChannelRef> channel = productOfferingUpdate.getChannel();
         if(productOffering.getChannel() == null)

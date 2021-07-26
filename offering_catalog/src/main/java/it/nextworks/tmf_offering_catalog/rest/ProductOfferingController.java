@@ -97,7 +97,7 @@ public class ProductOfferingController implements ProductOfferingInterface {
         } catch (DIDGenerationRequestException e) {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new ErrMsg(e.getMessage()));
-        } catch (StakeholderNotRegisteredException e) {
+        } catch (StakeholderNotRegisteredException | NotExistingEntityException | NullIdentifierException e) {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg(e.getMessage()));
         }
@@ -222,10 +222,7 @@ public class ProductOfferingController implements ProductOfferingInterface {
         } catch (ProductOfferingInPublicationException e) {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrMsg(e.getMessage()));
-        } catch (IOException e) {
-            log.error("Web-Server: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrMsg(e.getMessage()));
-        } catch (ProductOfferingDeleteScLCMException e) {
+        } catch (IOException | NullIdentifierException | ProductOfferingDeleteScLCMException e) {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrMsg(e.getMessage()));
         }
@@ -330,7 +327,7 @@ public class ProductOfferingController implements ProductOfferingInterface {
             @ApiResponse(code = 404, message = "Not Found", response = ErrMsg.class),
             //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
             //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
-            @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
+            @ApiResponse(code = 500, message = "Internal Server Error", response = ErrMsg.class) })
     @RequestMapping(value = "/productCatalogManagement/v4/productOffering/{id}",
             produces = { "application/json;charset=utf-8" },
             consumes = { "application/json;charset=utf-8" },
@@ -362,6 +359,9 @@ public class ProductOfferingController implements ProductOfferingInterface {
         } catch (NotExistingEntityException e) {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrMsg(e.getMessage()));
+        } catch (NullIdentifierException e) {
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrMsg(e.getMessage()));
         }
 
         log.info("Web-Server: Product Offering " + id + " patched.");
