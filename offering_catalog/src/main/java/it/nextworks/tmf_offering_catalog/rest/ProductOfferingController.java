@@ -293,17 +293,13 @@ public class ProductOfferingController implements ProductOfferingInterface {
         if(filter == null)
             return ResponseEntity.status(HttpStatus.OK).body(productOfferingService.list());
 
-        Float minPrice = filter.getMinPrice();
-        Float maxPrice = filter.getMaxPrice();
-        String currency = filter.getCurrency();
-        if(minPrice != null && maxPrice != null) {
-            if(minPrice.compareTo(maxPrice) > 0)
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(new ErrMsg("The minimum price specified is greater then the maximum one."));
-
-            if(currency == null || currency.isEmpty())
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg("Currency not specified."));
-        }
+        if(filter.getMinPrice() == null)
+            filter.setMinPrice((float) 0);
+        if(filter.getMaxPrice() == null)
+            filter.setMaxPrice((float) Integer.MAX_VALUE);
+        if(filter.getMinPrice().compareTo(filter.getMaxPrice()) > 0)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrMsg("The minimum price specified is greater then the maximum one."));
 
         return ResponseEntity.status(HttpStatus.OK).body(productOfferingService.filteredList(filter));
     }
