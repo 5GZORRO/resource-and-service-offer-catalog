@@ -1,8 +1,9 @@
 package it.nextworks.tmf_offering_catalog.services;
 
-import it.nextworks.tmf_offering_catalog.information_models.product.ProductOfferingStatesEnum;
-import it.nextworks.tmf_offering_catalog.information_models.product.ProductOfferingStatus;
-import it.nextworks.tmf_offering_catalog.repo.ProductOfferingStatusRepository;
+
+import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderStatesEnum;
+import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderStatus;
+import it.nextworks.tmf_offering_catalog.repo.ProductOrderStatusRepository;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -22,9 +23,9 @@ import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 
 @Service
-public class ClassifyAndPublishProductOfferingService {
+public class ClassifyAndPublishProductOrderService {
 
-    private static final Logger log = LoggerFactory.getLogger(ClassifyAndPublishProductOfferingService.class);
+    private static final Logger log = LoggerFactory.getLogger(ClassifyAndPublishProductOrderService.class);
 
     private static final String protocol = "http://";
 
@@ -32,7 +33,7 @@ public class ClassifyAndPublishProductOfferingService {
     private String scLcmHostname;
     @Value("${sc_lcm.port}")
     private String scLcmPort;
-    @Value("${sc_lcm.product_offer.sc_lcm_request_path}")
+    @Value("${sc_lcm.product_order.sc_lcm_request_path}")
     private String scLcmRequestPath;
     @Value("${skip_sc_lcm_post}")
     private boolean skipSCLCMPost;
@@ -41,54 +42,54 @@ public class ClassifyAndPublishProductOfferingService {
     private String srsdHostname;
     @Value("${srsd.port}")
     private String srsdPort;
-    @Value("${srsd.product_offer.srsd_request_path}")
+    @Value("${srsd.product_order.srsd_request_path}")
     private String srsdRequestPath;
     @Value("${skip_srsd_post}")
     private boolean skipSRSDPost;
 
     @Autowired
-    private ProductOfferingStatusRepository productOfferingStatusRepository;
+    private ProductOrderStatusRepository productOrderStatusRepository;
 
     @Async
     public void classifyAndPublish(String catalogId, String cwJson, String pwJson) {
-        Optional<ProductOfferingStatus> toClassify = productOfferingStatusRepository.findById(catalogId);
-        if(!toClassify.isPresent()) {
-            log.error("Product Offering Status for id " + catalogId + " not found in DB.");
+        Optional<ProductOrderStatus> toClassify = productOrderStatusRepository.findById(catalogId);
+        if (!toClassify.isPresent()) {
+            log.error("Product Order Status for id " + catalogId + " not found in DB.");
             return;
         }
 
-        ProductOfferingStatus productOfferingStatus = toClassify.get();
+        ProductOrderStatus productOrderStatus = toClassify.get();
 
-        if(skipSRSDPost)
+        if (skipSRSDPost)
             log.info("Skipping POST request to Smart Resource & Service Discovery.");
         else {
-            if (!classifyProductOffering(catalogId, cwJson)) {
-                productOfferingStatus.setStatus(ProductOfferingStatesEnum.CLASSIFICATION_FAILED);
-                productOfferingStatusRepository.save(productOfferingStatus);
+            if (!classifyProductOrder(catalogId, cwJson)) {
+                productOrderStatus.setStatus(ProductOrderStatesEnum.CLASSIFICATION_FAILED);
+                productOrderStatusRepository.save(productOrderStatus);
                 return;
             }
 
-            productOfferingStatus.setStatus(ProductOfferingStatesEnum.CLASSIFIED);
-            productOfferingStatusRepository.save(productOfferingStatus);
+            productOrderStatus.setStatus(ProductOrderStatesEnum.CLASSIFIED);
+            productOrderStatusRepository.save(productOrderStatus);
         }
 
-        if(skipSCLCMPost)
+        if (skipSCLCMPost)
             log.info("Skipping POST request to Smart Contract Lifecycle Manager.");
         else {
-            if (!publicProductOffering(catalogId, pwJson)) {
-                productOfferingStatus.setStatus(ProductOfferingStatesEnum.PUBLISHING_FAILED);
-                productOfferingStatusRepository.save(productOfferingStatus);
+            if (!publishProductOrder(catalogId, pwJson)) {
+                productOrderStatus.setStatus(ProductOrderStatesEnum.PUBLISHING_FAILED);
+                productOrderStatusRepository.save(productOrderStatus);
                 return;
             }
 
-            productOfferingStatus.setStatus(ProductOfferingStatesEnum.PUBLISHED);
-            productOfferingStatusRepository.save(productOfferingStatus);
+            productOrderStatus.setStatus(ProductOrderStatesEnum.PUBLISHED);
+            productOrderStatusRepository.save(productOrderStatus);
         }
     }
 
-    private boolean classifyProductOffering(String catalogId, String cwJson) {
+    private boolean classifyProductOrder(String catalogId, String cwJson) {
 
-        log.info("Classifying Product Offering with id " + catalogId + ".");
+        log.info("Classifying Product Order with id " + catalogId + ".");
 
         String request = protocol + srsdHostname + ":" + srsdPort + srsdRequestPath;
         CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -114,34 +115,33 @@ public class ClassifyAndPublishProductOfferingService {
             return false;
         }
 
-        if(response.getStatusLine().getStatusCode() != 200) {
+        if (response.getStatusLine().getStatusCode() != 200) {
             HttpEntity httpEntity = response.getEntity();
             String responseString;
 
-            if(httpEntity != null) {
+            if (httpEntity != null) {
                 try {
                     responseString = EntityUtils.toString(httpEntity, "UTF-8");
                 } catch (IOException e) {
-                    log.error("Product Offering with id " + catalogId + " not classified; Error description unavailable:"
+                    log.error("Product Order with id " + catalogId + " not classified; Error description unavailable:"
                             + e.getMessage());
                     return false;
                 }
-            }
-            else
+            } else
                 responseString = "Error description unavailable.";
 
-            log.error("Product Offering with id " + catalogId + " not classified; " + responseString);
+            log.error("Product Order with id " + catalogId + " not classified; " + responseString);
             return false;
         }
 
-        log.info("Product Offering with id " + catalogId + " classified.");
+        log.info("Product Order with id " + catalogId + " classified.");
 
         return true;
     }
 
-    private boolean publicProductOffering(String catalogId, String pwJson) {
+    private boolean publishProductOrder(String catalogId, String pwJson) {
 
-        log.info("Publishing Product Offering with id " + catalogId + ".");
+        log.info("Publishing Product Order with id " + catalogId + ".");
 
         String request = protocol + scLcmHostname + ":" + scLcmPort + scLcmRequestPath;
         CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -167,28 +167,28 @@ public class ClassifyAndPublishProductOfferingService {
             return false;
         }
 
-        if(response.getStatusLine().getStatusCode() != 200) {
+        if (response.getStatusLine().getStatusCode() != 200) {
             HttpEntity httpEntity = response.getEntity();
             String responseString;
 
-            if(httpEntity != null) {
+            if (httpEntity != null) {
                 try {
                     responseString = EntityUtils.toString(httpEntity, "UTF-8");
                 } catch (IOException e) {
-                    log.error("Product Offering with id " + catalogId + " not published; Error description unavailable:"
+                    log.error("Product Order with id " + catalogId + " not published; Error description unavailable:"
                             + e.getMessage());
                     return false;
                 }
-            }
-            else
+            } else
                 responseString = "Error description unavailable.";
 
-            log.error("Product Offering with id " + catalogId + " not published; " + responseString);
+            log.error("Product Order with id " + catalogId + " not published; " + responseString);
             return false;
         }
 
-        log.info("Product Offering with id " + catalogId + " published.");
+        log.info("Product Order with id " + catalogId + " published.");
 
         return true;
     }
+
 }
