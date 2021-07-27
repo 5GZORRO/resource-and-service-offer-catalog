@@ -1,5 +1,7 @@
 package it.nextworks.tmf_offering_catalog.repo.impl;
 
+import it.nextworks.tmf_offering_catalog.information_models.common.PlaceRef;
+import it.nextworks.tmf_offering_catalog.information_models.common.PlaceRef_;
 import it.nextworks.tmf_offering_catalog.information_models.common.RelatedParty;
 import it.nextworks.tmf_offering_catalog.information_models.common.RelatedParty_;
 import it.nextworks.tmf_offering_catalog.information_models.product.*;
@@ -42,24 +44,22 @@ public class ProductOfferingRepositoryImpl implements ProductOfferingRepositoryC
         Float minPrice = filter.getMinPrice();
         Float maxPrice = filter.getMaxPrice();
         String currency = filter.getCurrency();
-        if(minPrice != null && maxPrice != null && currency != null && !currency.isEmpty()) {
-            Join<ProductOffering, ProductOfferingPriceRef> productOfferingPriceRefJoin =
-                    productOfferingRoot.join(ProductOffering_.productOfferingPrice);
-            Root<ProductOfferingPrice> productOfferingPriceRoot = cq.from(ProductOfferingPrice.class);
+        Join<ProductOffering, ProductOfferingPriceRef> productOfferingPriceRefJoin =
+                productOfferingRoot.join(ProductOffering_.productOfferingPrice);
+        Root<ProductOfferingPrice> productOfferingPriceRoot = cq.from(ProductOfferingPrice.class);
 
-            if(!predicates.isEmpty())
-                predicates.add(cb.and(cb.equal(productOfferingPriceRefJoin.get(ProductOfferingPriceRef_.id),
-                        productOfferingPriceRoot.get(ProductOfferingPrice_.id))));
-            else
-                predicates.add(cb.equal(productOfferingPriceRefJoin.get(ProductOfferingPriceRef_.id),
-                        productOfferingPriceRoot.get(ProductOfferingPrice_.id)));
+        if(!predicates.isEmpty())
+            predicates.add(cb.and(cb.equal(productOfferingPriceRefJoin.get(ProductOfferingPriceRef_.id),
+                    productOfferingPriceRoot.get(ProductOfferingPrice_.id))));
+        else
+            predicates.add(cb.equal(productOfferingPriceRefJoin.get(ProductOfferingPriceRef_.id),
+                    productOfferingPriceRoot.get(ProductOfferingPrice_.id)));
 
-            predicates.add(cb.and(cb.between(productOfferingPriceRoot.get(ProductOfferingPrice_.price).get(Money_.value),
-                    minPrice, maxPrice)));
+        predicates.add(cb.and(cb.between(productOfferingPriceRoot.get(ProductOfferingPrice_.price).get(Money_.value),
+                minPrice, maxPrice)));
+        if(currency != null && !currency.isEmpty())
             predicates.add(cb.and(cb.equal(productOfferingPriceRoot.get(ProductOfferingPrice_.price).get(Money_.unit),
                     currency)));
-
-        }
 
         String stakeholder = filter.getStakeholder();
         if(stakeholder != null && !stakeholder.isEmpty()) {
@@ -77,6 +77,22 @@ public class ProductOfferingRepositoryImpl implements ProductOfferingRepositoryC
                         productSpecificationRoot.get(ProductSpecification_.id)));
 
             predicates.add(cb.and(cb.equal(relatedPartyJoin.get(RelatedParty_.name), stakeholder)));
+        }
+
+        String location = filter.getLocation();
+        if(location != null && !location.isEmpty()) {
+            Join<ProductOffering, PlaceRef> placeRefJoin = productOfferingRoot.join(ProductOffering_.place);
+            Root<GeographicAddress> geographicAddressRoot = cq.from(GeographicAddress.class);
+
+            if(!predicates.isEmpty())
+                predicates.add(cb.and(cb.equal(placeRefJoin.get(PlaceRef_.id),
+                        geographicAddressRoot.get(GeographicAddress_.id))));
+            else
+                predicates.add(cb.equal(placeRefJoin.get(PlaceRef_.id),
+                        geographicAddressRoot.get(GeographicAddress_.id)));
+
+            predicates.add(cb.and(cb.like(geographicAddressRoot.get(GeographicAddress_.geographicLocation)
+                    .get(GeographicLocation_.name), "%" + location + "%")));
         }
 
         cq.where(predicates.toArray(new Predicate[0]));

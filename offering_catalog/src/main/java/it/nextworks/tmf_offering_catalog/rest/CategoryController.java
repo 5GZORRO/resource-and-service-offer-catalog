@@ -2,6 +2,7 @@ package it.nextworks.tmf_offering_catalog.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
+import it.nextworks.tmf_offering_catalog.common.exception.CategoryAlreadyExistingException;
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
 import it.nextworks.tmf_offering_catalog.information_models.product.Category;
 import it.nextworks.tmf_offering_catalog.information_models.product.CategoryCreate;
@@ -77,7 +78,13 @@ public class CategoryController implements CategoryInterface {
                     .body(new ErrMsg("Invalid request body (category) received."));
         }
 
-        Category c = categoryService.create(category);
+        Category c;
+        try {
+            c = categoryService.create(category);
+        } catch (CategoryAlreadyExistingException e) {
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg(e.getMessage()));
+        }
 
         log.info("Web-Server: Category created with id " + c.getId() + ".");
 

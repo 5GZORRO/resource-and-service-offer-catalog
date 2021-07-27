@@ -97,7 +97,7 @@ public class ProductOfferingController implements ProductOfferingInterface {
         } catch (DIDGenerationRequestException e) {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new ErrMsg(e.getMessage()));
-        } catch (StakeholderNotRegisteredException e) {
+        } catch (StakeholderNotRegisteredException | NotExistingEntityException | NullIdentifierException e) {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg(e.getMessage()));
         }
@@ -222,10 +222,7 @@ public class ProductOfferingController implements ProductOfferingInterface {
         } catch (ProductOfferingInPublicationException e) {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrMsg(e.getMessage()));
-        } catch (IOException e) {
-            log.error("Web-Server: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrMsg(e.getMessage()));
-        } catch (ProductOfferingDeleteScLCMException e) {
+        } catch (IOException | NullIdentifierException | ProductOfferingDeleteScLCMException e) {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrMsg(e.getMessage()));
         }
@@ -296,17 +293,13 @@ public class ProductOfferingController implements ProductOfferingInterface {
         if(filter == null)
             return ResponseEntity.status(HttpStatus.OK).body(productOfferingService.list());
 
-        Float minPrice = filter.getMinPrice();
-        Float maxPrice = filter.getMaxPrice();
-        String currency = filter.getCurrency();
-        if(minPrice != null && maxPrice != null) {
-            if(minPrice.compareTo(maxPrice) > 0)
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(new ErrMsg("The minimum price specified is greater then the maximum one."));
-
-            if(currency == null || currency.isEmpty())
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg("Currency not specified."));
-        }
+        if(filter.getMinPrice() == null)
+            filter.setMinPrice((float) 0);
+        if(filter.getMaxPrice() == null)
+            filter.setMaxPrice((float) Integer.MAX_VALUE);
+        if(filter.getMinPrice().compareTo(filter.getMaxPrice()) > 0)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrMsg("The minimum price specified is greater then the maximum one."));
 
         return ResponseEntity.status(HttpStatus.OK).body(productOfferingService.filteredList(filter));
     }
@@ -330,7 +323,7 @@ public class ProductOfferingController implements ProductOfferingInterface {
             @ApiResponse(code = 404, message = "Not Found", response = ErrMsg.class),
             //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
             //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
-            @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
+            @ApiResponse(code = 500, message = "Internal Server Error", response = ErrMsg.class) })
     @RequestMapping(value = "/productCatalogManagement/v4/productOffering/{id}",
             produces = { "application/json;charset=utf-8" },
             consumes = { "application/json;charset=utf-8" },
@@ -362,6 +355,9 @@ public class ProductOfferingController implements ProductOfferingInterface {
         } catch (NotExistingEntityException e) {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrMsg(e.getMessage()));
+        } catch (NullIdentifierException e) {
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrMsg(e.getMessage()));
         }
 
         log.info("Web-Server: Product Offering " + id + " patched.");
@@ -414,6 +410,47 @@ public class ProductOfferingController implements ProductOfferingInterface {
         }
 
         log.info("Web-Server: Product Offering " + id + " retrieved.");
+
+        return ResponseEntity.status(HttpStatus.OK).body(po);
+    }
+
+    @ApiOperation(value = "Retrieves a ProductOffering by DID", nickname = "retrieveProductOfferingByDID",
+            notes = "This operation retrieves a ProductOffering entity using the DID.",
+            response = ProductOffering.class, authorizations = {
+            @Authorization(value = "spring_oauth", scopes = {
+                    @AuthorizationScope(scope = "read", description = "for read operations"),
+                    @AuthorizationScope(scope = "openapi", description = "Access openapi API"),
+                    @AuthorizationScope(scope = "admin", description = "Access admin API"),
+                    @AuthorizationScope(scope = "write", description = "for write operations")
+            })
+    })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = ProductOffering.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = ErrMsg.class),
+            //@ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+            //@ApiResponse(code = 403, message = "Forbidden", response = Error.class),
+            @ApiResponse(code = 404, message = "Not Found", response = ErrMsg.class),
+            //@ApiResponse(code = 405, message = "Method Not allowed", response = Error.class),
+            //@ApiResponse(code = 409, message = "Conflict", response = Error.class),
+            @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class) })
+    @RequestMapping(value = "/productCatalogManagement/v4/productOffering/did/{did}",
+            produces = { "application/json;charset=utf-8" },
+            method = RequestMethod.GET)
+    public ResponseEntity<?>
+    retrieveProductOfferingByDID(@ApiParam(value = "Distributed Identifier of the ProductOffering", required = true)
+                                 @PathVariable("did") String did) {
+
+        log.info("Web-Server: Received request to retrieve Product Offering with DID " + did + ".");
+
+        ProductOffering po;
+        try {
+            po = productOfferingService.getByDID(did);
+        } catch (NotExistingEntityException e) {
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrMsg(e.getMessage()));
+        }
+
+        log.info("Web-Server: Product Offering with DID " + did + " retrieved.");
 
         return ResponseEntity.status(HttpStatus.OK).body(po);
     }

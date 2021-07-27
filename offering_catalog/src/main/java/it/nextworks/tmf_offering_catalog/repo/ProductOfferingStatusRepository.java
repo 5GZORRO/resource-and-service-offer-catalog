@@ -12,4 +12,6 @@ public interface ProductOfferingStatusRepository extends JpaRepository<ProductOf
 
     List<ProductOfferingStatus> findAll();
 
+    Optional<ProductOfferingStatus> findByDid(String did);
+
 }

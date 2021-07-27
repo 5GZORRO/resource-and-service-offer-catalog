@@ -1,6 +1,7 @@
 package it.nextworks.tmf_offering_catalog.components;
 
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
+import it.nextworks.tmf_offering_catalog.common.exception.NullIdentifierException;
 import it.nextworks.tmf_offering_catalog.information_models.kafka.*;
 import it.nextworks.tmf_offering_catalog.information_models.product.*;
 import it.nextworks.tmf_offering_catalog.information_models.resource.ResourceSpecification;
@@ -455,7 +456,7 @@ public class ExternalProductOfferingConsumer {
                 .version(po.getVersion());
         try {
             productOfferingService.patch(id, poUpdate, poLastUpdate);
-        } catch (NotExistingEntityException e) {
+        } catch (NotExistingEntityException | NullIdentifierException e) {
             log.error("External " + e.getMessage());
         }
 
