@@ -1,6 +1,6 @@
 package it.nextworks.tmf_offering_catalog.information_models.product;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -21,11 +21,14 @@ import java.util.Objects;
 @Table(name = "agreement_item_refs")
 public class AgreementItemRef {
 
-    @JsonIgnoreProperties(allowGetters = true)
+    @JsonProperty("id")
+    private String id = null;
+
+    @JsonIgnore
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
-    private String id = null;
+    private String uuid = null;
 
     @JsonProperty("href")
     private String href = null;
@@ -54,14 +57,12 @@ public class AgreementItemRef {
     }
 
     /**
-     * Unique identifier of a related entity.
+     * Id of an item of an agreement
      *
      * @return id
      **/
-    @ApiModelProperty(required = true, value = "Unique identifier of a related entity.", hidden = true)
+    @ApiModelProperty(required = true, value = "Id of an item of an agreement")
     @NotNull
-
-
     public String getId() {
         return id;
     }
@@ -69,6 +70,15 @@ public class AgreementItemRef {
     public void setId(String id) {
         this.id = id;
     }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
 
     public AgreementItemRef href(String href) {
         this.href = href;
