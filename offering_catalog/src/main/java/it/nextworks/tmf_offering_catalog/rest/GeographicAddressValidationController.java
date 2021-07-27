@@ -118,10 +118,9 @@ public class GeographicAddressValidationController implements GeographicAddressV
             for (GeographicAddressValidation geographicAddressValidation : geographicAddressValidations) {
                 JSONObject responseJson = new JSONObject();
                 for (String field : fields.split(",")) {
-                    Class<?> geographicAddressValidationClass = geographicAddressValidation.getClass();
                     Field geographicAddressValidationField;
                     try {
-                        geographicAddressValidationField = geographicAddressValidationClass.getDeclaredField(field);
+                        geographicAddressValidationField = geographicAddressValidation.getClass().getDeclaredField(field);
                         geographicAddressValidationField.setAccessible(true);
                         responseJson.put(field, geographicAddressValidationField.get(geographicAddressValidation));
                     } catch (NoSuchFieldException | IllegalAccessException e) {
@@ -209,10 +208,9 @@ public class GeographicAddressValidationController implements GeographicAddressV
         if (fields != null) {
             JSONObject responseJson = new JSONObject();
             for (String field : fields.split(",")) {
-                Class<?> geographicAddressValidationClass = geographicAddressValidation.getClass();
                 Field geographicAddressValidationField;
                 try {
-                    geographicAddressValidationField = geographicAddressValidationClass.getDeclaredField(field);
+                    geographicAddressValidationField = geographicAddressValidation.getClass().getDeclaredField(field);
                     geographicAddressValidationField.setAccessible(true);
                     responseJson.put(field, geographicAddressValidationField.get(geographicAddressValidation));
                 } catch (NoSuchFieldException | IllegalAccessException e) {
@@ -231,11 +229,17 @@ public class GeographicAddressValidationController implements GeographicAddressV
     @ApiOperation(value = "Deletes a GeographicAddressValidation", nickname = "deleteGeographicAddressValidation",
             notes = "This operation deletes a GeographicAddressValidation entity.")
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Deleted", response = GeographicAddressValidation.class)})
+            @ApiResponse(code = 204, message = "Deleted"),
+            @ApiResponse(code = 400, message = "Bad Request", response = Error.class)})
     @RequestMapping(value = "/geographicAddressManagement/v4/geographicAddressValidation/{id}",
             method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteGeographicAddressValidation(@ApiParam(value = "Identifier of the GeographicAddressValidation", required = true)
                                                                @PathVariable("id") String id) {
+        if (!id.matches(uuidRegex)) {
+            log.error("Web-Server: Invalid path variable (id) request received.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg("Invalid path variable (id) request received."));
+        }
+
         geographicAddressValidationService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

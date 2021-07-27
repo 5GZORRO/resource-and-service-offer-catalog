@@ -27,7 +27,6 @@ public class GeographicAddressValidationService {
     private String port;
     private static final String path = "/tmf-api/geographicAddressManagement/v4/geographicAddressValidation/";
     private static final String gaPath = "/tmf-api/geographicAddressManagement/v4/geographicAddress/";
-    //private static final String glPath = "/tmf-api/geographicLocation/v4/geographicLocation";
 
     @Autowired
     private GeographicAddressValidationRepository geographicAddressValidationRepository;
@@ -47,8 +46,7 @@ public class GeographicAddressValidationService {
         geographicAddressValidation.href(protocol + hostname + ":" + port + path + geographicAddressValidation.getId())
                 .getValidGeographicAddress().href(protocol + hostname + ":" + port + gaPath + geographicAddressValidation.getValidGeographicAddress().getId());
         if (geographicAddressValidation.getValidGeographicAddress().getGeographicLocation() != null) {
-            geographicAddressValidation.getValidGeographicAddress().getGeographicLocation()
-                    .href(null);
+            geographicAddressValidation.getValidGeographicAddress().getGeographicLocation().href(null);
         }
         log.info("Geographic Address Validation created with id " + geographicAddressValidation.getId() + ".");
         return geographicAddressValidation;
@@ -76,7 +74,7 @@ public class GeographicAddressValidationService {
         log.info("Received request to patch Product Offering with id " + id + ".");
         Optional<GeographicAddressValidation> toUpdate = geographicAddressValidationRepository.findById(id);
         if (!toUpdate.isPresent()) {
-            throw new NotExistingEntityException("Product Offering with id " + id + " not found in DB.");
+            throw new NotExistingEntityException("Geographic Address Validation with id " + id + " not found in DB.");
         }
         GeographicAddressValidation geographicAddressValidation = updateGeographicAddressValidation(toUpdate.get(), geographicAddressValidationUpdate);
         geographicAddressValidationRepository.save(geographicAddressValidation);
