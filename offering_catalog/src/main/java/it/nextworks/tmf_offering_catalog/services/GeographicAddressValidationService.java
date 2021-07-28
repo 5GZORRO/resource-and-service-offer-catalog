@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class GeographicAddressValidationService {
@@ -43,8 +44,7 @@ public class GeographicAddressValidationService {
         GeographicAddressValidation geographicAddressValidation = geographicAddressValidationRepository.save(
                 createAndPopulateGeographicAddressValidation(geographicAddressValidationCreate)
         );
-        geographicAddressValidation.href(protocol + hostname + ":" + port + path + geographicAddressValidation.getId())
-                .getValidGeographicAddress().href(protocol + hostname + ":" + port + gaPath + geographicAddressValidation.getValidGeographicAddress().getId());
+        geographicAddressValidation.href(protocol + hostname + ":" + port + path + geographicAddressValidation.getId());
         if (geographicAddressValidation.getValidGeographicAddress().getGeographicLocation() != null) {
             geographicAddressValidation.getValidGeographicAddress().getGeographicLocation().href(null);
         }
@@ -100,10 +100,13 @@ public class GeographicAddressValidationService {
             });
         }
 
+        String id = UUID.randomUUID().toString();
         return new GeographicAddressValidation()
                 .schemaLocation(geographicAddressValidationCreate.getSchemaLocation())
                 .type(geographicAddressValidationCreate.getType())
                 .validGeographicAddress(new GeographicAddress()
+                        .id(id)
+                        .href(protocol + hostname + ":" + port + gaPath + id)
                         .geographicLocation(submittedGeographicAddress.getGeographicLocation())
                         .city(submittedGeographicAddress.getCity())
                         .country(submittedGeographicAddress.getCountry())

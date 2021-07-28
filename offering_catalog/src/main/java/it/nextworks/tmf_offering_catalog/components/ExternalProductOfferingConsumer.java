@@ -369,7 +369,8 @@ public class ExternalProductOfferingConsumer {
 
             log.info("Syncing Geographic Address " + id + ".");
 
-            Optional<GeographicAddress> optionalGeographicAddress = geographicAddressRepository.findById(id);
+            Optional<GeographicAddress> optionalGeographicAddress =
+                    geographicAddressRepository.findByGeographicAddressId(id);
             if (!optionalGeographicAddress.isPresent()) {
                 geographicAddressRepository.save(geographicAddress);
                 externalGeographicAddressRepository.save(new ExternalGeographicAddress(id));

@@ -44,7 +44,7 @@ public class GeographicAddressServiceTest {
         List<GeographicAddress> sameCityGeographicAddresses = Arrays.asList(geographicAddressOne, geographicAddressThree);
         GeographicAddressFilter sameCityGeographicAddressesFilter = new GeographicAddressFilter().city(geographicAddressOne.getCity());
 
-        when(geographicAddressRepository.findById(geographicAddressZero.getId())).thenReturn(Optional.of(geographicAddressZero));
+        when(geographicAddressRepository.findByGeographicAddressId(geographicAddressZero.getId())).thenReturn(Optional.of(geographicAddressZero));
         when(geographicAddressRepository.findAll()).thenReturn(allGeographicAddresses);
         when(geographicAddressRepository.filteredFindAll(sameCityGeographicAddressesFilter)).thenReturn((sameCityGeographicAddresses));
     }
