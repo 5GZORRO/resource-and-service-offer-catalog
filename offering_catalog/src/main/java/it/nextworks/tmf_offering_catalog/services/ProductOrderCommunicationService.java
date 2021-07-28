@@ -149,7 +149,7 @@ public class ProductOrderCommunicationService {
     private ProductOfferingPriceService productOfferingPriceService;
 
     @Autowired
-    private ClassifyAndPublishProductOrderService classifyAndPublishProductOrderService;
+    private PublishProductOrderService publishProductOrderService;
 
     @Autowired
     public ProductOrderCommunicationService(ObjectMapper objectMapper) {
@@ -251,7 +251,7 @@ public class ProductOrderCommunicationService {
             pwJson = objectMapper.writeValueAsString(new PublicationWrapper(po, null, null,
                     did, productOfferingPrices));
 
-        classifyAndPublishProductOrderService.classifyAndPublish(catalogId, cwJson, pwJson);
+        publishProductOrderService.publish(catalogId, cwJson, pwJson);
     }
 
     private List<ProductOfferingPrice> getProductOfferingPrices(ProductOrder po) {

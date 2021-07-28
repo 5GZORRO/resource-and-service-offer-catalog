@@ -23,9 +23,9 @@ import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 
 @Service
-public class ClassifyAndPublishProductOrderService {
+public class PublishProductOrderService {
 
-    private static final Logger log = LoggerFactory.getLogger(ClassifyAndPublishProductOrderService.class);
+    private static final Logger log = LoggerFactory.getLogger(PublishProductOrderService.class);
 
     private static final String protocol = "http://";
 
@@ -42,36 +42,18 @@ public class ClassifyAndPublishProductOrderService {
     private String srsdHostname;
     @Value("${srsd.port}")
     private String srsdPort;
-    @Value("${srsd.product_order.srsd_request_path}")
-    private String srsdRequestPath;
-    @Value("${skip_srsd_post}")
-    private boolean skipSRSDPost;
 
     @Autowired
     private ProductOrderStatusRepository productOrderStatusRepository;
 
     @Async
-    public void classifyAndPublish(String catalogId, String cwJson, String pwJson) {
-        Optional<ProductOrderStatus> toClassify = productOrderStatusRepository.findById(catalogId);
-        if (!toClassify.isPresent()) {
+    public void publish(String catalogId, String cwJson, String pwJson) {
+        Optional<ProductOrderStatus> toPublish = productOrderStatusRepository.findById(catalogId);
+        if (!toPublish.isPresent()) {
             log.error("Product Order Status for id " + catalogId + " not found in DB.");
             return;
         }
-
-        ProductOrderStatus productOrderStatus = toClassify.get();
-
-        if (skipSRSDPost)
-            log.info("Skipping POST request to Smart Resource & Service Discovery.");
-        else {
-            if (!classifyProductOrder(catalogId, cwJson)) {
-                productOrderStatus.setStatus(ProductOrderStatesEnum.CLASSIFICATION_FAILED);
-                productOrderStatusRepository.save(productOrderStatus);
-                return;
-            }
-
-            productOrderStatus.setStatus(ProductOrderStatesEnum.CLASSIFIED);
-            productOrderStatusRepository.save(productOrderStatus);
-        }
+        ProductOrderStatus productOrderStatus = toPublish.get();
 
         if (skipSCLCMPost)
             log.info("Skipping POST request to Smart Contract Lifecycle Manager.");
@@ -85,58 +67,6 @@ public class ClassifyAndPublishProductOrderService {
             productOrderStatus.setStatus(ProductOrderStatesEnum.PUBLISHED);
             productOrderStatusRepository.save(productOrderStatus);
         }
-    }
-
-    private boolean classifyProductOrder(String catalogId, String cwJson) {
-
-        log.info("Classifying Product Order with id " + catalogId + ".");
-
-        String request = protocol + srsdHostname + ":" + srsdPort + srsdRequestPath;
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost(request);
-
-        StringEntity stringEntity;
-        try {
-            stringEntity = new StringEntity(cwJson);
-        } catch (UnsupportedEncodingException e) {
-            log.error("Cannot encode json body in String Entity: " + e.getMessage());
-            return false;
-        }
-
-        httpPost.setEntity(stringEntity);
-        httpPost.setHeader("Accept", "application/json");
-        httpPost.setHeader("Content-type", "application/json");
-
-        CloseableHttpResponse response;
-        try {
-            response = httpClient.execute(httpPost);
-        } catch (IOException e) {
-            log.error("Cannot send POST request: " + e.getMessage());
-            return false;
-        }
-
-        if (response.getStatusLine().getStatusCode() != 200) {
-            HttpEntity httpEntity = response.getEntity();
-            String responseString;
-
-            if (httpEntity != null) {
-                try {
-                    responseString = EntityUtils.toString(httpEntity, "UTF-8");
-                } catch (IOException e) {
-                    log.error("Product Order with id " + catalogId + " not classified; Error description unavailable:"
-                            + e.getMessage());
-                    return false;
-                }
-            } else
-                responseString = "Error description unavailable.";
-
-            log.error("Product Order with id " + catalogId + " not classified; " + responseString);
-            return false;
-        }
-
-        log.info("Product Order with id " + catalogId + " classified.");
-
-        return true;
     }
 
     private boolean publishProductOrder(String catalogId, String pwJson) {
