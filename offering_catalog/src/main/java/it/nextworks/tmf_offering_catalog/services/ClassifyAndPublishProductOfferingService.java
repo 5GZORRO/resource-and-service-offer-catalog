@@ -41,7 +41,7 @@ public class ClassifyAndPublishProductOfferingService {
     private String srsdHostname;
     @Value("${srsd.port}")
     private String srsdPort;
-    @Value("${srsd.product_offer.srsd_request_path}")
+    @Value("${srsd.srsd_request_path}")
     private String srsdRequestPath;
     @Value("${skip_srsd_post}")
     private boolean skipSRSDPost;
