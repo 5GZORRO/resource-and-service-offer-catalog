@@ -1,6 +1,6 @@
 package it.nextworks.tmf_offering_catalog.information_models.product;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -22,10 +22,7 @@ import java.util.Objects;
 @Table(name = "geographic_points")
 public class GeographicPoint {
 
-    @JsonIgnoreProperties(allowGetters = true)
-    @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @JsonProperty("id")
     private String id = null;
 
     @JsonProperty("x")
@@ -36,6 +33,12 @@ public class GeographicPoint {
 
     @JsonProperty("z")
     private String z;
+
+    @JsonIgnore
+    @Id
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String uuid = null;
 
     /**
      * Unique identifier of the geographic point

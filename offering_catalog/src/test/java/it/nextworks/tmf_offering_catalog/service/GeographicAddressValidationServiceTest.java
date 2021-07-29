@@ -41,7 +41,7 @@ public class GeographicAddressValidationServiceTest {
         GeographicAddressValidation geographicAddressValidationThree = new GeographicAddressValidation().id("3");
         List<GeographicAddressValidation> allGeographicAddressValidations = Arrays.asList(geographicAddressValidationOne, geographicAddressValidationTwo, geographicAddressValidationThree);
 
-        when(geographicAddressValidationRepository.findById(geographicAddressValidationZero.getId())).thenReturn(Optional.of(geographicAddressValidationZero));
+        when(geographicAddressValidationRepository.findByGeographicAddressValidationId(geographicAddressValidationZero.getId())).thenReturn(Optional.of(geographicAddressValidationZero));
         when(geographicAddressValidationRepository.findAll()).thenReturn(allGeographicAddressValidations);
         when(geographicAddressValidationRepository.save(any(GeographicAddressValidation.class))).thenReturn(geographicAddressValidationZero);
     }

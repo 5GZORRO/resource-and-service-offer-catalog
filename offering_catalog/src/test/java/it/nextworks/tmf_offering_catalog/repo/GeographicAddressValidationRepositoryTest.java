@@ -32,7 +32,7 @@ public class GeographicAddressValidationRepositoryTest {
     public void whenFindById_thenReturnGeographicAddressValidation() {
         GeographicAddressValidation geographicAddressValidation = testEntityManager.persistAndFlush(new GeographicAddressValidation());
 
-        Optional<GeographicAddressValidation> foundGeographicAddressValidation = geographicAddressValidationRepository.findById(geographicAddressValidation.getId());
+        Optional<GeographicAddressValidation> foundGeographicAddressValidation = geographicAddressValidationRepository.findByGeographicAddressValidationId(geographicAddressValidation.getId());
 
         assertThat(foundGeographicAddressValidation.isPresent()).isTrue();
         assertThat(foundGeographicAddressValidation.get().getId()).isEqualTo(geographicAddressValidation.getId());
@@ -41,7 +41,7 @@ public class GeographicAddressValidationRepositoryTest {
     @Test
     @Ignore
     public void whenFindByInvalidId_thenReturnVoid() {
-        assertThat(geographicAddressValidationRepository.findById("invalidId").isPresent()).isFalse();
+        assertThat(geographicAddressValidationRepository.findByGeographicAddressValidationId("invalidId").isPresent()).isFalse();
     }
 
     @Test
