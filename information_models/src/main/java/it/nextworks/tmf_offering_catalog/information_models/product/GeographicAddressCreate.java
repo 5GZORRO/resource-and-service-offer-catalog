@@ -1,6 +1,5 @@
 package it.nextworks.tmf_offering_catalog.information_models.product;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -62,9 +61,8 @@ public class GeographicAddressCreate {
     private String streetType = null;
 
     @JsonProperty("geographicLocation")
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "geographic_location_id", referencedColumnName = "id")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "geographic_location_id", referencedColumnName = "uuid")
     private GeographicLocation geographicLocation = null;
 
     @JsonProperty("@schemaLocation")
