@@ -1,6 +1,6 @@
 package it.nextworks.tmf_offering_catalog.information_models.product;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -22,10 +22,7 @@ import java.util.Objects;
 @Table(name = "geographic_address_validations")
 public class GeographicAddressValidation {
 
-    @JsonIgnoreProperties(allowGetters = true)
-    @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @JsonProperty("id")
     private String id = null;
 
     @JsonProperty("href")
@@ -50,10 +47,15 @@ public class GeographicAddressValidation {
     private String schemaLocation = null;
 
     @JsonProperty("validGeographicAddress")
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "valid_geographic_address_id", referencedColumnName = "id")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "valid_geographic_address_id", referencedColumnName = "uuid")
     private GeographicAddress validGeographicAddress = null;
+
+    @JsonIgnore
+    @Id
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String uuid = null;
 
     public GeographicAddressValidation id(String id) {
         this.id = id;

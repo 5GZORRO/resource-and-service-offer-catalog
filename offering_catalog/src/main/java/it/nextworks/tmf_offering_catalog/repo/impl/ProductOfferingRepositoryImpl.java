@@ -35,10 +35,8 @@ public class ProductOfferingRepositoryImpl implements ProductOfferingRepositoryC
         String category = filter.getCategory();
         if(category != null && !category.isEmpty()) {
             Join<ProductOffering, CategoryRef> categoryRefJoin = productOfferingRoot.join(ProductOffering_.category);
-            Root<Category> categoryRoot = cq.from(Category.class);
 
-            predicates.add(cb.equal(categoryRefJoin.get(CategoryRef_.id), categoryRoot.get(Category_.id)));
-            predicates.add(cb.and(cb.equal(categoryRoot.get(Category_.name), category)));
+            predicates.add(cb.equal(categoryRefJoin.get(CategoryRef_.name), category));
         }
 
         Float minPrice = filter.getMinPrice();

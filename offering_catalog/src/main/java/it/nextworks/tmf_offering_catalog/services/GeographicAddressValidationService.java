@@ -12,8 +12,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class GeographicAddressValidationService {
@@ -40,14 +42,8 @@ public class GeographicAddressValidationService {
     @Transactional
     public GeographicAddressValidation create(GeographicAddressValidationCreate geographicAddressValidationCreate) {
         log.info("Received request to create a Geographic Address.");
-        GeographicAddressValidation geographicAddressValidation = geographicAddressValidationRepository.save(
-                createAndPopulateGeographicAddressValidation(geographicAddressValidationCreate)
-        );
-        geographicAddressValidation.href(protocol + hostname + ":" + port + path + geographicAddressValidation.getId())
-                .getValidGeographicAddress().href(protocol + hostname + ":" + port + gaPath + geographicAddressValidation.getValidGeographicAddress().getId());
-        if (geographicAddressValidation.getValidGeographicAddress().getGeographicLocation() != null) {
-            geographicAddressValidation.getValidGeographicAddress().getGeographicLocation().href(null);
-        }
+        GeographicAddressValidation geographicAddressValidation = geographicAddressValidationRepository
+                .save(createAndPopulateGeographicAddressValidation(geographicAddressValidationCreate));
         log.info("Geographic Address Validation created with id " + geographicAddressValidation.getId() + ".");
         return geographicAddressValidation;
     }
@@ -61,7 +57,7 @@ public class GeographicAddressValidationService {
     @Transactional
     public GeographicAddressValidation get(String id) throws NotExistingEntityException {
         log.info("Received request to retrieve Geographic Address Validation with id " + id + ".");
-        Optional<GeographicAddressValidation> retrieved = geographicAddressValidationRepository.findById(id);
+        Optional<GeographicAddressValidation> retrieved = geographicAddressValidationRepository.findByGeographicAddressValidationId(id);
         if (!retrieved.isPresent()) {
             throw new NotExistingEntityException("Geographic Address Validation with id " + id + " not found in DB.");
         }
@@ -72,7 +68,7 @@ public class GeographicAddressValidationService {
     @Transactional
     public GeographicAddressValidation patch(String id, GeographicAddressValidationUpdate geographicAddressValidationUpdate, String lastUpdate) throws NotExistingEntityException {
         log.info("Received request to patch Product Offering with id " + id + ".");
-        Optional<GeographicAddressValidation> toUpdate = geographicAddressValidationRepository.findById(id);
+        Optional<GeographicAddressValidation> toUpdate = geographicAddressValidationRepository.findByGeographicAddressValidationId(id);
         if (!toUpdate.isPresent()) {
             throw new NotExistingEntityException("Geographic Address Validation with id " + id + " not found in DB.");
         }
@@ -84,26 +80,55 @@ public class GeographicAddressValidationService {
 
     @Transactional
     public void delete(String id) {
-        geographicAddressValidationRepository.deleteById(id);
+        Optional<GeographicAddressValidation> toDelete = geographicAddressValidationRepository.findByGeographicAddressValidationId(id);
+        if(toDelete.isPresent())
+            geographicAddressValidationRepository.delete(toDelete.get());
     }
 
     private GeographicAddressValidation createAndPopulateGeographicAddressValidation(GeographicAddressValidationCreate geographicAddressValidationCreate) {
+
         GeographicAddressCreate submittedGeographicAddress = geographicAddressValidationCreate.getSubmittedGeographicAddress();
         GeographicLocation geographicLocation = submittedGeographicAddress.getGeographicLocation();
-        if (geographicLocation != null && geographicLocation.getId() != null) {
-            submittedGeographicAddress.setGeographicLocation(geographicLocationRepository.findById(geographicLocation.getId()).get());
-        } else if (geographicLocation != null && geographicLocation.getGeometry() == null && !geographicLocation.getGeometry().isEmpty()) {
-            geographicLocation.getGeometry().forEach((point) -> {
-                if (point.getId() != null) {
-                    point = geographicPointRepository.findById(point.getId()).get();
+
+        if(geographicLocation != null) {
+            if(geographicLocation.getId() != null) {
+                Optional<GeographicLocation> opt =
+                        geographicLocationRepository.findByGeographicLocationId(geographicLocation.getId());
+                opt.ifPresent(submittedGeographicAddress::setGeographicLocation);
+            } else {
+                geographicLocation.setId(UUID.randomUUID().toString());
+
+                List<GeographicPoint> geographicPoints = geographicLocation.getGeometry();
+                List<GeographicPoint> newGeographicPoints = new ArrayList<>();
+                if(geographicPoints != null) {
+                    for(GeographicPoint geographicPoint : geographicPoints) {
+                       String id = geographicPoint.getId();
+                       if(id != null) {
+                           Optional<GeographicPoint> opt = geographicPointRepository.findByGeographicPointId(id);
+                           if(!opt.isPresent())
+                               continue;
+                           newGeographicPoints.add(opt.get());
+                       } else {
+                           geographicPoint.setId(UUID.randomUUID().toString());
+                           newGeographicPoints.add(geographicPoint);
+                       }
+                    }
+
+                    geographicLocation.setGeometry(newGeographicPoints);
                 }
-            });
+            }
         }
 
+        String id = UUID.randomUUID().toString();
+        String geographicAddressId = UUID.randomUUID().toString();
         return new GeographicAddressValidation()
+                .id(id)
+                .href(protocol + hostname + ":" + port + path + id)
                 .schemaLocation(geographicAddressValidationCreate.getSchemaLocation())
                 .type(geographicAddressValidationCreate.getType())
                 .validGeographicAddress(new GeographicAddress()
+                        .id(geographicAddressId)
+                        .href(protocol + hostname + ":" + port + gaPath + geographicAddressId)
                         .geographicLocation(submittedGeographicAddress.getGeographicLocation())
                         .city(submittedGeographicAddress.getCity())
                         .country(submittedGeographicAddress.getCountry())
