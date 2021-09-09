@@ -38,7 +38,6 @@ public class PublishProductOrderService {
     @Autowired
     private ProductOrderStatusRepository productOrderStatusRepository;
 
-    @Async
     public void publish(String catalogId, String pwJson) throws IOException {
 //        Optional<ProductOrderStatus> toPublish = productOrderStatusRepository.findById(catalogId);
 //        if (!toPublish.isPresent()) {
