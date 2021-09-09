@@ -5,19 +5,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum ProductOrderStatesEnum {
 
-    DID_REQUESTED("Product Order DID requested"),
-
-    STORED_WITH_DID("Product Order stored with DID"),
-
-    CLASSIFIED("Product Order classified"),
-
-    CLASSIFICATION_FAILED("Product Order classification failed"),
-
     PUBLISHED("Product Order published"),
 
-    PUBLISHING_FAILED("Product Order publishing failed"),
-
-    EXTERNAL("External Product Order");
+    PUBLISHING_FAILED("Product Order publishing failed");
 
     private String value;
 

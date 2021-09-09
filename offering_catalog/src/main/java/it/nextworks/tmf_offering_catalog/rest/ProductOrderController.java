@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
 
 @RestController
 public class ProductOrderController {
@@ -45,7 +46,8 @@ public class ProductOrderController {
             notes = "This operation creates a ProductOrder entity.", response = ProductOrder.class)
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created", response = ProductOrder.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class)})
+            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
+            @ApiResponse(code = 409, message = "Conflict", response = Error.class),})
     @RequestMapping(value = "/productOrderingManagement/v4/productOrder",
             produces = {"application/json;charset=utf-8"},
             consumes = {"application/json;charset=utf-8"},
@@ -59,7 +61,12 @@ public class ProductOrderController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg("Invalid request body (productOrder) received"));
         }
 
-        ProductOrder productOrder = productOrderService.create(productOrderCreate);
+        ProductOrder productOrder = null;
+        try {
+            productOrder = productOrderService.create(productOrderCreate);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrMsg("Exception occurred during publication to SCLCM: " + e.getMessage()));
+        }
 
         log.info("Web-Server: Product Order created with id " + productOrder.getId() + ".");
         return ResponseEntity.status(HttpStatus.CREATED).body(productOrder);
