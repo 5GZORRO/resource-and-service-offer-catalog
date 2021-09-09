@@ -19,9 +19,6 @@ public class ProductOrderStatus {
     @Column(name = "catalog_id")
     private String catalogId;
 
-    @JsonProperty("did")
-    private String did;
-
     @JsonProperty("status")
     @Convert(converter = ProductOrderStatesEnumConverter.class)
     private ProductOrderStatesEnum status;
@@ -37,19 +34,6 @@ public class ProductOrderStatus {
 
     public String getCatalogId() {
         return catalogId;
-    }
-
-    public ProductOrderStatus did(String did) {
-        this.did = did;
-        return this;
-    }
-
-    public void setDid(String did) {
-        this.did = did;
-    }
-
-    public String getDid() {
-        return did;
     }
 
     public ProductOrderStatus status(ProductOrderStatesEnum status) {
@@ -76,13 +60,12 @@ public class ProductOrderStatus {
 
         ProductOrderStatus productOfferingStatus = (ProductOrderStatus) o;
         return Objects.equals(this.catalogId, productOfferingStatus.catalogId) &&
-                Objects.equals(this.did, productOfferingStatus.did) &&
                 Objects.equals(this.status, productOfferingStatus.status);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(catalogId, did, status);
+        return Objects.hash(catalogId, status);
     }
 
     @Override
@@ -90,7 +73,6 @@ public class ProductOrderStatus {
 
         return "class ProductOfferingStatus {\n" +
                 "    catalogId: " + toIndentedString(catalogId) + "\n" +
-                "    did: " + toIndentedString(did) + "\n" +
                 "    status: " + toIndentedString(status) + "\n" +
                 "}";
     }

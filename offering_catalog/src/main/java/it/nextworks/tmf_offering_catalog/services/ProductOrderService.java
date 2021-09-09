@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,11 +30,21 @@ public class ProductOrderService {
     @Autowired
     private ProductOrderRepository productOrderRepository;
 
+    @Autowired
+    private ProductOrderCommunicationService productOrderCommunicationService;
+
     @Transactional
-    public ProductOrder create(ProductOrderCreate productOrderCreate) {
+    public ProductOrder create(ProductOrderCreate productOrderCreate) throws IOException {
         log.info("Received request to create a Product Order.");
         ProductOrder productOrder = productOrderRepository.save(new ProductOrder(productOrderCreate));
         productOrder.href(protocol + hostname + ":" + port + path + productOrder.getId());
+
+        try {
+            productOrderCommunicationService.publish(productOrder);
+        } catch (IOException e) {
+            productOrderRepository.delete(productOrder);
+            throw e;
+        }
 
         log.info("Product Order created with id " + productOrder.getId() + ".");
         return productOrder;
