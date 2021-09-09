@@ -47,7 +47,7 @@ public class ProductOrderController {
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created", response = ProductOrder.class),
             @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 409, message = "Conflict", response = Error.class),})
+            @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class),})
     @RequestMapping(value = "/productOrderingManagement/v4/productOrder",
             produces = {"application/json;charset=utf-8"},
             consumes = {"application/json;charset=utf-8"},
@@ -65,7 +65,7 @@ public class ProductOrderController {
         try {
             productOrder = productOrderService.create(productOrderCreate);
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrMsg("Exception occurred during publication to SCLCM: " + e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrMsg("Exception occurred during publication to SCLCM: " + e.getMessage()));
         }
 
         log.info("Web-Server: Product Order created with id " + productOrder.getId() + ".");
