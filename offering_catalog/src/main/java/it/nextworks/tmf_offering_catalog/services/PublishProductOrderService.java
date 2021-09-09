@@ -106,6 +106,7 @@ public class PublishProductOrderService {
             }
 
             log.error("Product Order with id " + catalogId + " not published; " + responseString);
+            throw new IOException(responseString);
         }
         log.info("Product Order with id " + catalogId + " published.");
     }
