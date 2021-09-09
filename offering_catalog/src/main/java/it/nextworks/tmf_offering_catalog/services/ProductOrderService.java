@@ -1,6 +1,7 @@
 package it.nextworks.tmf_offering_catalog.services;
 
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
+import it.nextworks.tmf_offering_catalog.common.exception.ProductOrderDeleteScLCMException;
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrder;
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderCreate;
 import it.nextworks.tmf_offering_catalog.repo.ProductOrderRepository;
@@ -68,7 +69,8 @@ public class ProductOrderService {
     }
 
     @Transactional
-    public void delete(String id) {
+    public void delete(String id) throws NotExistingEntityException, ProductOrderDeleteScLCMException, IOException {
+        productOrderCommunicationService.deleteProductOrder(id);
         productOrderRepository.deleteById(id);
     }
 

@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
+import it.nextworks.tmf_offering_catalog.common.exception.ProductOrderDeleteScLCMException;
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrder;
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderCreate;
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderUpdate;
@@ -155,7 +156,11 @@ public class ProductOrderController {
             log.error("Web-Server: Invalid path variable (id) request received.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg("Invalid path variable (id) request received."));
         }
-        productOrderService.delete(id);
+        try {
+            productOrderService.delete(id);
+        } catch (NotExistingEntityException | IOException | ProductOrderDeleteScLCMException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrMsg("Exception occurred during publication to SCLCM: " + e.getMessage()));
+        }
         log.info("Web-Server: Product Order " + id + " deleted.");
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

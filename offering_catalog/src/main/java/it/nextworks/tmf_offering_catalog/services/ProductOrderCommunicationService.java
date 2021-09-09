@@ -162,18 +162,18 @@ public class ProductOrderCommunicationService {
 
         log.info("Sending delete Product Order request.");
 
-        Optional<ProductOrderStatus> toDelete = productOrderStatusRepository.findById(catalogId);
-        if (!toDelete.isPresent())
-            throw new NotExistingEntityException("Product Order Status for id " + catalogId + " not found in DB.");
-
-        ProductOrderStatus productOrderStatus = toDelete.get();
-        ProductOrderStatesEnum productOrderStatesEnum = productOrderStatus.getStatus();
-        if (productOrderStatesEnum == ProductOrderStatesEnum.PUBLISHING_FAILED) {
-            productOrderStatusRepository.delete(productOrderStatus);
-
-            log.info("Delete Product Order request accepted.");
-            return;
-        }
+//        Optional<ProductOrderStatus> toDelete = productOrderStatusRepository.findById(catalogId);
+//        if (!toDelete.isPresent())
+//            throw new NotExistingEntityException("Product Order Status for id " + catalogId + " not found in DB.");
+//
+//        ProductOrderStatus productOrderStatus = toDelete.get();
+//        ProductOrderStatesEnum productOrderStatesEnum = productOrderStatus.getStatus();
+//        if (productOrderStatesEnum == ProductOrderStatesEnum.PUBLISHING_FAILED) {
+//            productOrderStatusRepository.delete(productOrderStatus);
+//
+//            log.info("Delete Product Order request accepted.");
+//            return;
+//        }
 
         String request = protocol + scLcmHostname + ":" + scLcmPort + scLcmRequestPath + catalogId;
         CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -187,7 +187,7 @@ public class ProductOrderCommunicationService {
             throw new ProductOrderDeleteScLCMException("The Smart Contract LCM entity did not accept the delete request.");
         }
 
-        productOrderStatusRepository.delete(productOrderStatus);
+//        productOrderStatusRepository.delete(productOrderStatus);
 
         log.info("Delete Product Order request accepted.");
     }
