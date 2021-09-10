@@ -5,12 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
 import it.nextworks.tmf_offering_catalog.common.exception.ProductOrderDeleteScLCMException;
-import it.nextworks.tmf_offering_catalog.information_models.product.ProductOfferingPrice;
-import it.nextworks.tmf_offering_catalog.information_models.product.ProductOfferingPriceRef;
-import it.nextworks.tmf_offering_catalog.information_models.product.order.OrderPrice;
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrder;
-import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderStatesEnum;
-import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderStatus;
 import it.nextworks.tmf_offering_catalog.repo.ProductOrderStatusRepository;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
@@ -23,7 +18,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class ProductOrderCommunicationService {
@@ -65,18 +62,13 @@ public class ProductOrderCommunicationService {
         @JsonProperty("verifiableCredentials")
         private final Collection<?> verifiableCredentials;
 
-        @JsonProperty("productOfferingPrices")
-        private final List<ProductOfferingPrice> productOfferingPrices;
-
         @JsonCreator
         public PublicationWrapper(@JsonProperty("productOrder") ProductOrder productOrder,
                                   @JsonProperty("invitations") Map<String, ?> invitations,
-                                  @JsonProperty("verifiableCredentials") Collection<?> verifiableCredentials,
-                                  @JsonProperty("productOfferingPrices") List<ProductOfferingPrice> productOfferingPrices) {
+                                  @JsonProperty("verifiableCredentials") Collection<?> verifiableCredentials) {
             this.productOrder = productOrder;
             this.invitations = invitations;
             this.verifiableCredentials = verifiableCredentials;
-            this.productOfferingPrices = productOfferingPrices;
         }
     }
 
@@ -120,43 +112,42 @@ public class ProductOrderCommunicationService {
 
     public void publish(ProductOrder productOrder) throws IOException {
 
-        List<ProductOfferingPrice> productOfferingPrices = getProductOfferingPrices(productOrder);
+//        List<ProductOfferingPrice> productOfferingPrices = getProductOfferingPrices(productOrder);
 
         String pwJson = null;
         if (!skipSCLCMPost) {
             pwJson = objectMapper.writeValueAsString(new ProductOrderCommunicationService.PublicationWrapper(
                     productOrder,
                     null,
-                    null,
-                    productOfferingPrices
+                    null
             ));
         }
 
         publishProductOrderService.publish(productOrder.getId(), pwJson);
     }
 
-    private List<ProductOfferingPrice> getProductOfferingPrices(ProductOrder po) {
-        if (po.getOrderTotalPrice() == null)
-            return null;
-
-        List<OrderPrice> orderPrices = po.getOrderTotalPrice();
-
-        List<ProductOfferingPriceRef> productOfferingPriceRefs = new ArrayList<>();
-        List<ProductOfferingPrice> productOfferingPrices = new ArrayList<>();
-
-        orderPrices.forEach((orderPrice) -> productOfferingPriceRefs.add(orderPrice.getProductOfferingPrice()));
-
-        for (ProductOfferingPriceRef priceRef : productOfferingPriceRefs) {
-            String id = priceRef.getId();
-            try {
-                productOfferingPrices.add(productOfferingPriceService.get(id));
-            } catch (NotExistingEntityException e) {
-                log.warn("ProductOrderPrice with id " + id + " not found in DB.");
-            }
-        }
-
-        return productOfferingPrices;
-    }
+//    private List<ProductOfferingPrice> getProductOfferingPrices(ProductOrder po) {
+//        if (po.getOrderTotalPrice() == null)
+//            return null;
+//
+//        List<OrderPrice> orderPrices = po.getOrderTotalPrice();
+//
+//        List<ProductOfferingPriceRef> productOfferingPriceRefs = new ArrayList<>();
+//        List<ProductOfferingPrice> productOfferingPrices = new ArrayList<>();
+//
+//        orderPrices.forEach((orderPrice) -> productOfferingPriceRefs.add(orderPrice.getProductOfferingPrice()));
+//
+//        for (ProductOfferingPriceRef priceRef : productOfferingPriceRefs) {
+//            String id = priceRef.getId();
+//            try {
+//                productOfferingPrices.add(productOfferingPriceService.get(id));
+//            } catch (NotExistingEntityException e) {
+//                log.warn("ProductOrderPrice with id " + id + " not found in DB.");
+//            }
+//        }
+//
+//        return productOfferingPrices;
+//    }
 
     public void deleteProductOrder(String catalogId) throws NotExistingEntityException, IOException, ProductOrderDeleteScLCMException {
 
