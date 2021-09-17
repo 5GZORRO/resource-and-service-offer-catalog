@@ -14,6 +14,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Repository
 public class ProductOfferingRepositoryImpl implements ProductOfferingRepositoryCustom {
@@ -36,7 +37,7 @@ public class ProductOfferingRepositoryImpl implements ProductOfferingRepositoryC
         if(category != null && !category.isEmpty()) {
             Join<ProductOffering, CategoryRef> categoryRefJoin = productOfferingRoot.join(ProductOffering_.category);
 
-            predicates.add(cb.equal(categoryRefJoin.get(CategoryRef_.name), category));
+            predicates.add(cb.like(cb.upper(categoryRefJoin.get(CategoryRef_.name)), category.toUpperCase(Locale.ROOT)));
         }
 
         Float minPrice = filter.getMinPrice();
@@ -55,9 +56,11 @@ public class ProductOfferingRepositoryImpl implements ProductOfferingRepositoryC
 
         predicates.add(cb.and(cb.between(productOfferingPriceRoot.get(ProductOfferingPrice_.price).get(Money_.value),
                 minPrice, maxPrice)));
-        if(currency != null && !currency.isEmpty())
-            predicates.add(cb.and(cb.equal(productOfferingPriceRoot.get(ProductOfferingPrice_.price).get(Money_.unit),
-                    currency)));
+        if(currency != null && !currency.isEmpty()) {
+            predicates.add(cb.and(cb.like(cb.upper(productOfferingPriceRoot
+                    .get(ProductOfferingPrice_.price)
+                    .get(Money_.unit)), currency.toUpperCase(Locale.ROOT))));
+        }
 
         String stakeholder = filter.getStakeholder();
         if(stakeholder != null && !stakeholder.isEmpty()) {
@@ -74,7 +77,8 @@ public class ProductOfferingRepositoryImpl implements ProductOfferingRepositoryC
                 predicates.add(cb.equal(productSpecificationRefJoin.get(ProductSpecificationRef_.id),
                         productSpecificationRoot.get(ProductSpecification_.id)));
 
-            predicates.add(cb.and(cb.equal(relatedPartyJoin.get(RelatedParty_.name), stakeholder)));
+            predicates.add(cb.and(cb.like(cb.upper(relatedPartyJoin.get(RelatedParty_.name)),
+                    stakeholder.toUpperCase(Locale.ROOT))));
         }
 
         String location = filter.getLocation();
@@ -89,8 +93,8 @@ public class ProductOfferingRepositoryImpl implements ProductOfferingRepositoryC
                 predicates.add(cb.equal(placeRefJoin.get(PlaceRef_.id),
                         geographicAddressRoot.get(GeographicAddress_.id)));
 
-            predicates.add(cb.and(cb.like(geographicAddressRoot.get(GeographicAddress_.geographicLocation)
-                    .get(GeographicLocation_.name), "%" + location + "%")));
+            predicates.add(cb.and(cb.like(cb.upper(geographicAddressRoot.get(GeographicAddress_.geographicLocation)
+                    .get(GeographicLocation_.name)), "%" + location.toUpperCase(Locale.ROOT) + "%")));
         }
 
         cq.where(predicates.toArray(new Predicate[0]));
