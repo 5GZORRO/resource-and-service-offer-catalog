@@ -37,7 +37,7 @@ public class ProductOfferingRepositoryImpl implements ProductOfferingRepositoryC
         if(category != null && !category.isEmpty()) {
             Join<ProductOffering, CategoryRef> categoryRefJoin = productOfferingRoot.join(ProductOffering_.category);
 
-            predicates.add(cb.like(cb.upper(categoryRefJoin.get(CategoryRef_.name)), category.toUpperCase(Locale.ROOT)));
+            predicates.add(cb.like(cb.upper(categoryRefJoin.get(CategoryRef_.name)), "%" + category.toUpperCase(Locale.ROOT) + "%"));
         }
 
         Float minPrice = filter.getMinPrice();
@@ -59,7 +59,7 @@ public class ProductOfferingRepositoryImpl implements ProductOfferingRepositoryC
         if(currency != null && !currency.isEmpty()) {
             predicates.add(cb.and(cb.like(cb.upper(productOfferingPriceRoot
                     .get(ProductOfferingPrice_.price)
-                    .get(Money_.unit)), currency.toUpperCase(Locale.ROOT))));
+                    .get(Money_.unit)), "%" + currency.toUpperCase(Locale.ROOT) + "%")));
         }
 
         String stakeholder = filter.getStakeholder();
@@ -78,7 +78,7 @@ public class ProductOfferingRepositoryImpl implements ProductOfferingRepositoryC
                         productSpecificationRoot.get(ProductSpecification_.id)));
 
             predicates.add(cb.and(cb.like(cb.upper(relatedPartyJoin.get(RelatedParty_.name)),
-                    stakeholder.toUpperCase(Locale.ROOT))));
+                    "%" + stakeholder.toUpperCase(Locale.ROOT) + "%s")));
         }
 
         String location = filter.getLocation();
