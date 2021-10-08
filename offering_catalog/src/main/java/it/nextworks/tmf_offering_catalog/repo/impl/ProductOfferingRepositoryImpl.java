@@ -78,7 +78,7 @@ public class ProductOfferingRepositoryImpl implements ProductOfferingRepositoryC
                         productSpecificationRoot.get(ProductSpecification_.id)));
 
             predicates.add(cb.and(cb.like(cb.upper(relatedPartyJoin.get(RelatedParty_.name)),
-                    "%" + stakeholder.toUpperCase(Locale.ROOT) + "%s")));
+                    "%" + stakeholder.toUpperCase(Locale.ROOT) + "%")));
         }
 
         String location = filter.getLocation();
