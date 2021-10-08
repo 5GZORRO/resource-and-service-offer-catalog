@@ -112,8 +112,6 @@ public class ProductOrderCommunicationService {
 
     public void publish(ProductOrder productOrder) throws IOException {
 
-//        List<ProductOfferingPrice> productOfferingPrices = getProductOfferingPrices(productOrder);
-
         String pwJson = null;
         if (!skipSCLCMPost) {
             pwJson = objectMapper.writeValueAsString(new ProductOrderCommunicationService.PublicationWrapper(
@@ -125,29 +123,6 @@ public class ProductOrderCommunicationService {
 
         publishProductOrderService.publish(productOrder.getId(), pwJson);
     }
-
-//    private List<ProductOfferingPrice> getProductOfferingPrices(ProductOrder po) {
-//        if (po.getOrderTotalPrice() == null)
-//            return null;
-//
-//        List<OrderPrice> orderPrices = po.getOrderTotalPrice();
-//
-//        List<ProductOfferingPriceRef> productOfferingPriceRefs = new ArrayList<>();
-//        List<ProductOfferingPrice> productOfferingPrices = new ArrayList<>();
-//
-//        orderPrices.forEach((orderPrice) -> productOfferingPriceRefs.add(orderPrice.getProductOfferingPrice()));
-//
-//        for (ProductOfferingPriceRef priceRef : productOfferingPriceRefs) {
-//            String id = priceRef.getId();
-//            try {
-//                productOfferingPrices.add(productOfferingPriceService.get(id));
-//            } catch (NotExistingEntityException e) {
-//                log.warn("ProductOrderPrice with id " + id + " not found in DB.");
-//            }
-//        }
-//
-//        return productOfferingPrices;
-//    }
 
     public void deleteProductOrder(String catalogId) throws NotExistingEntityException, IOException, ProductOrderDeleteScLCMException {
 
