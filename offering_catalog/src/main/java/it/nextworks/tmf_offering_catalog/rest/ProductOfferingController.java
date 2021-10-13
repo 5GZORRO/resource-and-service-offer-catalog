@@ -169,7 +169,7 @@ public class ProductOfferingController implements ProductOfferingInterface {
         } catch (DIDAlreadyRequestedForProductException e) {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg(e.getMessage()));
-        } catch (JsonProcessingException e) {
+        } catch (ScLcmRequestException | IOException e) {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrMsg(e.getMessage()));
         }
