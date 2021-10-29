@@ -39,7 +39,8 @@ data:
   DID_SERVICE_REQUEST_PATH: /holder/create_did
   SC_LCM_HOSTNAME: 172.28.3.111/operatora/smart-contract-lifecycle-manager
   SC_LCM_PORT: "8082"
-  SC_LCM_REQUEST_PATH: /product-offer/
+  SC_LCM_PRODUCT_OFFER_REQUEST_PATH: /product-offer/
+  SC_LCM_PRODUCT_ORDER_REQUEST_PATH: /product_order/
   SKIP_SC_LCM_POST: "false"
   SRSD_HOSTNAME: smart-resource-discovery.default.svc.cluster.local
   SRSD_PORT: "8083"
