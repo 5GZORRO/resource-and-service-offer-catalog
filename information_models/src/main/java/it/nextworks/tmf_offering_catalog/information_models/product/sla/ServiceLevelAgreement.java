@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.nextworks.tmf_offering_catalog.information_models.common.RelatedParty;
 import it.nextworks.tmf_offering_catalog.information_models.common.TimePeriod;
-import org.threeten.bp.OffsetDateTime;
 
 import java.util.List;
 import java.util.Objects;
@@ -39,7 +38,7 @@ public class ServiceLevelAgreement {
     private Boolean approved;
 
     @JsonProperty("approvalDate")
-    private OffsetDateTime approvalDate;
+    private String approvalDate;
 
     @JsonProperty("rule")
     private List<Rule> rule;
@@ -57,7 +56,7 @@ public class ServiceLevelAgreement {
                                  @JsonProperty("template") TemplateRef template,
                                  @JsonProperty("state") String state,
                                  @JsonProperty("approved") Boolean approved,
-                                 @JsonProperty("approvalDate") OffsetDateTime approvalDate,
+                                 @JsonProperty("approvalDate") String approvalDate,
                                  @JsonProperty("rule") List<Rule> rule,
                                  @JsonProperty("relatedParty") List<RelatedParty> relatedParty) {
         this.id           = id;
@@ -156,14 +155,14 @@ public class ServiceLevelAgreement {
 
     public Boolean getApproved() { return approved; }
 
-    public ServiceLevelAgreement approvalDate(OffsetDateTime approvalDate) {
+    public ServiceLevelAgreement approvalDate(String approvalDate) {
         this.approvalDate = approvalDate;
         return this;
     }
 
-    public void setApprovalDate(OffsetDateTime approvalDate) { this.approvalDate = approvalDate; }
+    public void setApprovalDate(String approvalDate) { this.approvalDate = approvalDate; }
 
-    public OffsetDateTime getApprovalDate() { return approvalDate; }
+    public String getApprovalDate() { return approvalDate; }
 
     public ServiceLevelAgreement rule(List<Rule> rule) {
         this.rule = rule;
