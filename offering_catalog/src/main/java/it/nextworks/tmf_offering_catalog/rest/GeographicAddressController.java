@@ -137,7 +137,7 @@ public class GeographicAddressController implements GeographicAddressInterface {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success", response = GeographicAddress.class, responseContainer = "List"),
             @ApiResponse(code = 400, message = "Bad Request", response = Error.class)})
-    @RequestMapping(value = "/geographicAddressManagement/v4/geographicAddress/",
+    @RequestMapping(value = "/geographicAddressManagement/v4/geographicAddress/coordinates",
             produces = {"application/json;charset=utf-8"},
             method = RequestMethod.GET)
     public ResponseEntity<?>
