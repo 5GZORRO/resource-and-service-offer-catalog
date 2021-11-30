@@ -41,4 +41,9 @@ public class GeographicAddressService {
         return retrieved.get();
     }
 
+    @Transactional
+    public List<GeographicAddress> getByCoordinates(String x, String y) {
+        log.info("Received request to retrieve Geographic Address with coordinates <{}, {}>.", x, y);
+        return geographicAddressRepository.findGeographicAddressByCoordinates(x, y);
+    }
 }
