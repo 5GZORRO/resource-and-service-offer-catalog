@@ -3,14 +3,23 @@ package it.nextworks.tmf_offering_catalog.services;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.nextworks.tmf_offering_catalog.common.exception.DIDAlreadyRequestedForProductException;
+import it.nextworks.tmf_offering_catalog.common.exception.DIDGenerationRequestException;
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
 import it.nextworks.tmf_offering_catalog.common.exception.ProductOrderDeleteScLCMException;
+import it.nextworks.tmf_offering_catalog.information_models.party.Organization;
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrder;
+import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderStatesEnum;
+import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderStatus;
 import it.nextworks.tmf_offering_catalog.repo.ProductOrderStatusRepository;
+import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +27,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ProductOrderCommunicationService {
@@ -62,19 +69,36 @@ public class ProductOrderCommunicationService {
         @JsonProperty("verifiableCredentials")
         private final Collection<?> verifiableCredentials;
 
+        @JsonProperty("did")
+        private final String did;
+
+        @JsonProperty("supplierDid")
+        private final String supplierDid;
+
         @JsonCreator
         public PublicationWrapper(@JsonProperty("productOrder") ProductOrder productOrder,
                                   @JsonProperty("invitations") Map<String, ?> invitations,
-                                  @JsonProperty("verifiableCredentials") Collection<?> verifiableCredentials) {
+                                  @JsonProperty("verifiableCredentials") Collection<?> verifiableCredentials,
+                                  @JsonProperty("did") String did,
+                                  @JsonProperty("supplierDid") String supplierDid) {
             this.productOrder = productOrder;
             this.invitations = invitations;
             this.verifiableCredentials = verifiableCredentials;
+            this.did = did;
+            this.supplierDid = supplierDid;
         }
     }
 
     private static final Logger log = LoggerFactory.getLogger(ProductOrderCommunicationService.class);
 
     private static final String protocol = "http://";
+
+    @Value("${did_service.hostname}")
+    private String didServiceHostname;
+    @Value("${did_service.port}")
+    private String didServicePort;
+    @Value("${did_service.request_path}")
+    private String requestPath;
 
     @Value("${server.hostname}")
     private String hostname;
@@ -100,6 +124,9 @@ public class ProductOrderCommunicationService {
     private ProductOrderService productOrderService;
 
     @Autowired
+    private OrganizationService organizationService;
+
+    @Autowired
     private ProductOfferingPriceService productOfferingPriceService;
 
     @Autowired
@@ -110,14 +137,89 @@ public class ProductOrderCommunicationService {
         this.objectMapper = objectMapper;
     }
 
-    public void publish(ProductOrder productOrder) throws IOException {
+    public void requestDID(String catalogId, String token) throws IOException, DIDGenerationRequestException {
+
+        log.info("Sending create DID request to ID&P.");
+
+        String request = protocol + didServiceHostname + ":" + didServicePort + requestPath;
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(request);
+
+        ProductOrderCommunicationService.Order requestOrder = new ProductOrderCommunicationService.Order(
+                token, "ProductOffer", new ArrayList<>(), protocol + hostname + ":" + port + "/tmf-api/productOrderingManagement/v4/productOrder/did/" + catalogId
+        );
+        String roJson = objectMapper.writeValueAsString(requestOrder);
+
+        StringEntity stringEntity = new StringEntity(roJson);
+
+        httpPost.setEntity(stringEntity);
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("Content-type", "application/json");
+
+        /* Persist productOfferingStatus before sending DID request in order to avoid locking and waiting on condition
+         * for productOfferingStatus itself being available for updates.
+         */
+        ProductOrderStatus productOrderStatus = new ProductOrderStatus()
+                .catalogId(catalogId)
+                .did(null)
+                .status(ProductOrderStatesEnum.DID_REQUESTED);
+        productOrderStatusRepository.save(productOrderStatus);
+
+        CloseableHttpResponse response;
+        try {
+            response = httpClient.execute(httpPost);
+        } catch(IOException e) {
+            productOrderStatusRepository.delete(productOrderStatus);
+            throw new DIDGenerationRequestException("ID&P Unreachable");
+        }
+
+        if(response.getStatusLine().getStatusCode() != 201) {
+            HttpEntity httpEntity = response.getEntity();
+            String responseString;
+
+            if(httpEntity != null) {
+                responseString = EntityUtils.toString(httpEntity, "UTF-8");
+                log.error("Create DID request not accepted by ID&P; " + responseString);
+            }
+
+            // Delete persisted productOfferingStatus if ID&P didn't accept the DID creation request.
+            productOrderStatusRepository.delete(productOrderStatus);
+            throw new DIDGenerationRequestException("Create DID request via CommunicationService not accepted by ID&P");
+        }
+
+        log.info("Create DID request accepted by ID&P.");
+    }
+
+    public void handleDIDReceiving(String catalogId, String did) throws IOException, NotExistingEntityException, DIDAlreadyRequestedForProductException {
+
+        log.info("Updating status of Product Order " + catalogId + " with the received DID " + did + ".");
+
+        ProductOrder productOrder = productOrderService.get(catalogId);
+
+        Optional<ProductOrderStatus> toUpdate = productOrderStatusRepository.findById(catalogId);
+        if(!toUpdate.isPresent())
+            throw new NotExistingEntityException("Product Order Status for id " + catalogId + " not found in DB.");
+
+        ProductOrderStatus productOrderStatus = toUpdate.get();
+
+        if(productOrderStatus.getDid() != null)
+            throw new DIDAlreadyRequestedForProductException("Product Offering with id " + catalogId + " already has a DID.");
+
+        productOrderStatus.setDid(did);
+        productOrderStatus.setStatus(ProductOrderStatesEnum.STORED_WITH_DID);
+
+        productOrderStatusRepository.save(productOrderStatus);
+
+        log.info("Status of Product Offering " + catalogId + " updated with DID " + did + ".");
 
         String pwJson = null;
         if (!skipSCLCMPost) {
-            pwJson = objectMapper.writeValueAsString(new ProductOrderCommunicationService.PublicationWrapper(
+            pwJson = objectMapper.writeValueAsString(new PublicationWrapper(
                     productOrder,
                     null,
-                    null
+                    null,
+                    did,
+                    organizationService.get().getStakeholderDID()
             ));
         }
 
@@ -128,18 +230,18 @@ public class ProductOrderCommunicationService {
 
         log.info("Sending delete Product Order request.");
 
-//        Optional<ProductOrderStatus> toDelete = productOrderStatusRepository.findById(catalogId);
-//        if (!toDelete.isPresent())
-//            throw new NotExistingEntityException("Product Order Status for id " + catalogId + " not found in DB.");
-//
-//        ProductOrderStatus productOrderStatus = toDelete.get();
-//        ProductOrderStatesEnum productOrderStatesEnum = productOrderStatus.getStatus();
-//        if (productOrderStatesEnum == ProductOrderStatesEnum.PUBLISHING_FAILED) {
-//            productOrderStatusRepository.delete(productOrderStatus);
-//
-//            log.info("Delete Product Order request accepted.");
-//            return;
-//        }
+        Optional<ProductOrderStatus> toDelete = productOrderStatusRepository.findById(catalogId);
+        if (!toDelete.isPresent())
+            throw new NotExistingEntityException("Product Order Status for id " + catalogId + " not found in DB.");
+
+        ProductOrderStatus productOrderStatus = toDelete.get();
+        ProductOrderStatesEnum productOrderStatesEnum = productOrderStatus.getStatus();
+        if (productOrderStatesEnum == ProductOrderStatesEnum.PUBLISHING_FAILED) {
+            productOrderStatusRepository.delete(productOrderStatus);
+
+            log.info("Delete Product Order request accepted.");
+            return;
+        }
 
         String request = protocol + scLcmHostname + ":" + scLcmPort + scLcmRequestPath + catalogId;
         CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -153,7 +255,7 @@ public class ProductOrderCommunicationService {
             throw new ProductOrderDeleteScLCMException("The Smart Contract LCM entity did not accept the delete request.");
         }
 
-//        productOrderStatusRepository.delete(productOrderStatus);
+        productOrderStatusRepository.delete(productOrderStatus);
 
         log.info("Delete Product Order request accepted.");
     }

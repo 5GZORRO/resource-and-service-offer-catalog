@@ -1,16 +1,14 @@
 package it.nextworks.tmf_offering_catalog.rest;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
-import it.nextworks.tmf_offering_catalog.common.exception.ProductOrderDeleteScLCMException;
+import io.swagger.annotations.*;
+import it.nextworks.tmf_offering_catalog.common.exception.*;
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrder;
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderCreate;
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderUpdate;
+import it.nextworks.tmf_offering_catalog.services.ProductOrderCommunicationService;
 import it.nextworks.tmf_offering_catalog.services.ProductOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +33,9 @@ public class ProductOrderController {
 
     @Autowired
     private ProductOrderService productOrderService;
+
+    @Autowired
+    private ProductOrderCommunicationService productOrderCommunicationService;
 
     @Autowired
     public ProductOrderController(ObjectMapper objectMapper, HttpServletRequest request) {
@@ -62,15 +63,95 @@ public class ProductOrderController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg("Invalid request body (productOrder) received"));
         }
 
-        ProductOrder productOrder = null;
+        ProductOrder productOrder;
         try {
             productOrder = productOrderService.create(productOrderCreate);
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrMsg("Exception occurred during publication to SCLCM: " + e.getMessage()));
+            log.error("Web-Server: DID request via CommunicationService failed; " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrMsg("DID request via CommunicationService failed; " + e.getMessage()));
+        } catch (DIDGenerationRequestException e) {
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new ErrMsg(e.getMessage()));
+        } catch (StakeholderNotRegisteredException e) {
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg(e.getMessage()));
         }
 
         log.info("Web-Server: Product Order created with id " + productOrder.getId() + ".");
         return ResponseEntity.status(HttpStatus.CREATED).body(productOrder);
+    }
+
+    @ApiOperation(value = "DID creation web-hook", nickname = "handleDIDReceiving",
+            notes = "Handle the ID&P callback in order to receive the DID; then," +
+                    "starts a thread to publish and classify the ProductOrdering with the requested DID.",
+            authorizations = {
+                    @Authorization(value = "spring_oauth", scopes = {
+                            @AuthorizationScope(scope = "read", description = "for read operations"),
+                            @AuthorizationScope(scope = "openapi", description = "Access openapi API"),
+                            @AuthorizationScope(scope = "admin", description = "Access admin API"),
+                            @AuthorizationScope(scope = "write", description = "for write operations")})
+            })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 400, message = "Bad Request", response = ErrMsg.class),
+            @ApiResponse(code = 404, message = "Not Found", response = ErrMsg.class),
+            @ApiResponse(code = 500, message = "Internal Server Error", response = ErrMsg.class)})
+    @RequestMapping(value = "/productOrderingManagement/v4/productOrder/did/{id}",
+            produces = { "application/json;charset=utf-8" },
+            consumes = { "application/json;charset=utf-8" },
+            method = RequestMethod.POST)
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<?>
+    handleDIDReceiving(@ApiParam(value = "Identifier of the ProductOrdering", required = true)
+                       @PathVariable("id") String id,
+                       @ApiParam(value = "The request body containing the DID sent by the ID&P", required = true)
+                       @Valid @RequestBody JsonNode jsonNode) {
+
+        log.info("Web-Server: Received request to handle ID&P DID retrieval.");
+
+        if(!id.matches(uuidRegex)) {
+            log.error("Web-Server: Invalid path variable (id) request received.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrMsg("Invalid path variable (id) request received."));
+        }
+
+        if(jsonNode == null) {
+            log.error("Web-Server: Invalid request body (jsonNode) received.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrMsg("Invalid request body (jsonNode) received."));
+        }
+
+        JsonNode credentialSubject = jsonNode.get("credentialSubject");
+        if(credentialSubject == null) {
+            log.error("Web-Server: Invalid request body (jsonNode) content received.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrMsg("Invalid request body (jsonNode) content received."));
+        }
+
+        JsonNode did = credentialSubject.get("id");
+        if(did == null || !did.isTextual()) {
+            log.error("Web-Server: Invalid request body (jsonNode) content received.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrMsg("Invalid request body (jsonNode) content received."));
+        }
+
+        try {
+            productOrderCommunicationService.handleDIDReceiving(id, did.asText());
+        } catch (NotExistingEntityException e) {
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrMsg(e.getMessage()));
+        } catch (DIDAlreadyRequestedForProductException e) {
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg(e.getMessage()));
+        } catch (IOException e) {
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrMsg(e.getMessage()));
+        }
+
+        log.info("Web-Server: DID received successfully from ID&P.");
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @ApiOperation(value = "List or find ProductOrder objects", nickname = "listProductOrder",

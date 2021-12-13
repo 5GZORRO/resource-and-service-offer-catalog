@@ -1,7 +1,10 @@
 package it.nextworks.tmf_offering_catalog.services;
 
+import it.nextworks.tmf_offering_catalog.common.exception.DIDGenerationRequestException;
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
 import it.nextworks.tmf_offering_catalog.common.exception.ProductOrderDeleteScLCMException;
+import it.nextworks.tmf_offering_catalog.common.exception.StakeholderNotRegisteredException;
+import it.nextworks.tmf_offering_catalog.information_models.party.OrganizationWrapper;
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrder;
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderCreate;
 import it.nextworks.tmf_offering_catalog.repo.ProductOrderRepository;
@@ -32,17 +35,27 @@ public class ProductOrderService {
     private ProductOrderRepository productOrderRepository;
 
     @Autowired
+    private OrganizationService organizationService;
+
+    @Autowired
     private ProductOrderCommunicationService productOrderCommunicationService;
 
     @Transactional
-    public ProductOrder create(ProductOrderCreate productOrderCreate) throws IOException {
+    public ProductOrder create(ProductOrderCreate productOrderCreate) throws IOException, StakeholderNotRegisteredException, DIDGenerationRequestException {
         log.info("Received request to create a Product Order.");
         ProductOrder productOrder = productOrderRepository.save(new ProductOrder(productOrderCreate));
         productOrder.href(protocol + hostname + ":" + port + path + productOrder.getId());
 
+        OrganizationWrapper ow;
         try {
-            productOrderCommunicationService.publish(productOrder);
-        } catch (IOException e) {
+            ow = organizationService.get();
+        } catch (NotExistingEntityException e) {
+            throw new StakeholderNotRegisteredException(e.getMessage());
+        }
+
+        try {
+            productOrderCommunicationService.requestDID(productOrder.getId(), ow.getToken());
+        } catch (DIDGenerationRequestException e) {
             productOrderRepository.delete(productOrder);
             throw e;
         }

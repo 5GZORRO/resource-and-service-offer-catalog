@@ -5,6 +5,10 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum ProductOrderStatesEnum {
 
+    DID_REQUESTED("Product Order DID requested"),
+
+    STORED_WITH_DID("Product Order stored with DID"),
+
     PUBLISHED("Product Order published"),
 
     PUBLISHING_FAILED("Product Order publishing failed");
