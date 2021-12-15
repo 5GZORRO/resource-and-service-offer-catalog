@@ -8,5 +8,5 @@ import java.util.List;
 public interface GeographicAddressRepositoryCustom {
 
     List<GeographicAddress> filteredFindAll(GeographicAddressFilter geographicAddressFilter);
-
+    List<GeographicAddress> findGeographicAddressByCoordinates(String x, String y);
 }

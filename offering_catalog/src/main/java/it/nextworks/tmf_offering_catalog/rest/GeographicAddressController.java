@@ -46,7 +46,8 @@ public class GeographicAddressController implements GeographicAddressInterface {
             responseContainer = "List")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success", response = GeographicAddress.class, responseContainer = "List"),
-            @ApiResponse(code = 400, message = "Bad Request", response = Error.class)})
+            @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
+            @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class)})
     @RequestMapping(value = "/geographicAddressManagement/v4/geographicAddress",
             produces = {"application/json;charset=utf-8"},
             method = RequestMethod.GET)
@@ -86,7 +87,8 @@ public class GeographicAddressController implements GeographicAddressInterface {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success", response = GeographicAddress.class),
             @ApiResponse(code = 400, message = "Bad Request", response = Error.class),
-            @ApiResponse(code = 404, message = "Not Found", response = Error.class)})
+            @ApiResponse(code = 404, message = "Not Found", response = Error.class),
+            @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class)})
     @RequestMapping(value = "/geographicAddressManagement/v4/geographicAddress/{id}",
             produces = {"application/json;charset=utf-8"},
             method = RequestMethod.GET)
@@ -132,4 +134,21 @@ public class GeographicAddressController implements GeographicAddressInterface {
         return responseEntity;
     }
 
+    @ApiOperation(value = "Retrieves a GeographicAddresses by coordinates.", nickname = "retrieveGeographicAddressByCoo",
+            notes = "This operation retrieves a GeographicAddress entities. Attribute selection is enabled for all first level attributes.", response = GeographicAddress.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = GeographicAddress.class, responseContainer = "List"),
+            @ApiResponse(code = 500, message = "Internal Server Error", response = Error.class)})
+    @RequestMapping(value = "/geographicAddressManagement/v4/geographicAddress/coordinates",
+            produces = {"application/json;charset=utf-8"},
+            method = RequestMethod.GET)
+    public ResponseEntity<?>
+    retrieveGeographicAddressByCoo(@ApiParam(value = "X coordinate", required = true)
+                                   @RequestParam String x,
+                                   @ApiParam(value = "Y coordinate", required = true)
+                                   @RequestParam String y) {
+
+        log.info("Web-Server: Received request to retrieve Geographic Address with coordinates <{}, {}>.", x, y);
+        return ResponseEntity.status(HttpStatus.OK).body(geographicAddressService.getByCoordinates(x, y));
+    }
 }
