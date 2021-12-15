@@ -2,19 +2,20 @@ package it.nextworks.tmf_offering_catalog.services;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.nextworks.tmf_offering_catalog.common.exception.*;
 import it.nextworks.tmf_offering_catalog.information_models.common.PlaceRef;
 import it.nextworks.tmf_offering_catalog.information_models.common.ResourceSpecificationRef;
 import it.nextworks.tmf_offering_catalog.information_models.common.ServiceSpecificationRef;
 import it.nextworks.tmf_offering_catalog.information_models.product.*;
+import it.nextworks.tmf_offering_catalog.information_models.product.sla.ServiceLevelAgreement;
 import it.nextworks.tmf_offering_catalog.information_models.resource.ResourceSpecification;
 import it.nextworks.tmf_offering_catalog.information_models.service.ServiceSpecification;
 import it.nextworks.tmf_offering_catalog.repo.ProductOfferingStatusRepository;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -83,6 +84,9 @@ public class CommunicationService {
         @JsonProperty("geographicAddresses")
         private final List<GeographicAddress> geographicAddresses;
 
+        @JsonProperty("serviceLevelAgreement")
+        private final ServiceLevelAgreement serviceLevelAgreement;
+
         @JsonCreator
         public ClassificationWrapper(@JsonProperty("productOffering") ProductOffering productOffering,
                                      @JsonProperty("did") String did,
@@ -90,7 +94,8 @@ public class CommunicationService {
                                      @JsonProperty("productSpecification") ProductSpecification productSpecification,
                                      @JsonProperty("resourceSpecifications") List<ResourceSpecification> resourceSpecifications,
                                      @JsonProperty("serviceSpecifications") List<ServiceSpecification> serviceSpecifications,
-                                     @JsonProperty("geographicAddresses") List<GeographicAddress> geographicAddresses) {
+                                     @JsonProperty("geographicAddresses") List<GeographicAddress> geographicAddresses,
+                                     @JsonProperty("serviceLevelAgreement") ServiceLevelAgreement serviceLevelAgreement) {
             this.productOffering        = productOffering;
             this.did                    = did;
             this.productOfferingPrices  = productOfferingPrices;
@@ -98,6 +103,7 @@ public class CommunicationService {
             this.resourceSpecifications = resourceSpecifications;
             this.serviceSpecifications  = serviceSpecifications;
             this.geographicAddresses    = geographicAddresses;
+            this.serviceLevelAgreement  = serviceLevelAgreement;
         }
     }
 
@@ -178,6 +184,8 @@ public class CommunicationService {
     private String scLcmPort;
     @Value("${sc_lcm.product_offer.sc_lcm_request_path}")
     private String scLcmRequestPath;
+    @Value("${sc_lcm.sla.sc_lcm_request_path}")
+    private String scLcmSLARequestPath;
 
     @Value("${skip_sc_lcm_post}")
     private boolean skipSCLCMPost;
@@ -268,7 +276,8 @@ public class CommunicationService {
     }
 
     public void handleDIDReceiving(String catalogId, String did)
-            throws NotExistingEntityException, DIDAlreadyRequestedForProductException, JsonProcessingException {
+            throws NotExistingEntityException, DIDAlreadyRequestedForProductException,
+            IOException, ScLcmRequestException {
 
         log.info("Updating status of Product Offering " + catalogId + " with the received DID " + did + ".");
 
@@ -305,11 +314,12 @@ public class CommunicationService {
         List<ServiceSpecification> serviceSpecifications = getServiceSpecifications(productSpecification);
         getResourceSpecificationFromServices(serviceSpecifications, resourceSpecifications);
         List<GeographicAddress> geographicAddresses = getGeographicAddresses(po);
+        ServiceLevelAgreement sla = getServiceLevelAgreement(po);
 
         String cwJson = null;
         if(!skipSRSDPost)
             cwJson = objectMapper.writeValueAsString(new ClassificationWrapper(po, did, productOfferingPrices,
-                    productSpecification, resourceSpecifications, serviceSpecifications, geographicAddresses));
+                    productSpecification, resourceSpecifications, serviceSpecifications, geographicAddresses, sla));
 
         String pwJson = null;
         if(!skipSCLCMPost)
@@ -425,6 +435,39 @@ public class CommunicationService {
             }
         });
         return geographicAddresses;
+    }
+
+    private ServiceLevelAgreement getServiceLevelAgreement(ProductOffering productOffering)
+            throws IOException, NotExistingEntityException, ScLcmRequestException {
+
+        SLARef slaRef = productOffering.getServiceLevelAgreement();
+
+        if(slaRef == null)
+            return null;
+
+        String slaId = slaRef.getId();
+        log.info("Retrieving SLA " + slaId + " from SC-LCM.");
+
+        String request = protocol + scLcmHostname + ":" + scLcmPort + scLcmSLARequestPath + slaId;
+
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+
+        HttpGet httpGet = new HttpGet(request);
+        httpGet.setHeader("Accept", "application/json");
+        httpGet.setHeader("Content-type", "application/json");
+
+        CloseableHttpResponse response = httpClient.execute(httpGet);
+
+        int statusCode = response.getStatusLine().getStatusCode();
+        if(statusCode == 404)
+            throw new NotExistingEntityException("SLA " + slaId + " not found in SC-LCM.");
+        else if(statusCode != 200)
+            throw new ScLcmRequestException("SLA " + slaId + " GET failed: status code " + statusCode + ", " +
+                    EntityUtils.toString(response.getEntity()));
+
+        log.info("SLA " + slaId + " retrieved from SC-LCM.");
+
+        return objectMapper.readValue(EntityUtils.toString(response.getEntity()), ServiceLevelAgreement.class);
     }
 
     public void deleteProductOffering(String catalogId)

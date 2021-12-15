@@ -41,6 +41,7 @@ data:
   SC_LCM_PORT: "8082"
   SC_LCM_PRODUCT_OFFER_REQUEST_PATH: /product-offer/
   SC_LCM_PRODUCT_ORDER_REQUEST_PATH: /product_order/
+  SC_LCM_SLA_REQUEST_PATH: /api/v1/service-level-agreement/
   SKIP_SC_LCM_POST: "false"
   SRSD_HOSTNAME: smart-resource-discovery.default.svc.cluster.local
   SRSD_PORT: "8083"
