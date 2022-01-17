@@ -85,7 +85,8 @@ public class ProductOfferingService {
             throws IOException, DIDGenerationRequestException, StakeholderNotRegisteredException,
             NotExistingEntityException, NullIdentifierException {
 
-        log.info("Received request to create a Product Offering.");
+        final String id = UUID.randomUUID().toString();
+        log.info("Storing Product Offering " + id + ".");
 
         OrganizationWrapper ow;
         try {
@@ -94,7 +95,6 @@ public class ProductOfferingService {
             throw new StakeholderNotRegisteredException(e.getMessage());
         }
 
-        final String id = UUID.randomUUID().toString();
         ProductOffering productOffering = new ProductOffering()
                 .baseType(productOfferingCreate.getBaseType())
                 .schemaLocation(productOfferingCreate.getSchemaLocation())
@@ -143,8 +143,8 @@ public class ProductOfferingService {
         updateCategory(productOffering.getCategory(), productOffering.getHref(), id, productOffering.getName());
 
         productOfferingRepository.save(productOffering);
-
         log.info("Product Offering " + id + " stored in Catalog.");
+
         log.info("Requesting DID via CommunicationService to ID&P for Product Offering " + id + ".");
 
         try {
