@@ -144,7 +144,8 @@ public class ProductOfferingService {
 
         productOfferingRepository.save(productOffering);
 
-        log.info("Requesting DID via CommunicationService to ID&P.");
+        log.info("Product Offering " + id + " stored in Catalog.");
+        log.info("Requesting DID via CommunicationService to ID&P for Product Offering " + id + ".");
 
         try {
             communicationService.requestDID(id, ow.getToken());
