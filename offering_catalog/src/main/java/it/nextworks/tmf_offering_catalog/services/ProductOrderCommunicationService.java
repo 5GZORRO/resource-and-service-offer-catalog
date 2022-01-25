@@ -8,13 +8,18 @@ import it.nextworks.tmf_offering_catalog.common.exception.DIDGenerationRequestEx
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
 import it.nextworks.tmf_offering_catalog.common.exception.ProductOrderDeleteScLCMException;
 import it.nextworks.tmf_offering_catalog.information_models.party.Organization;
+import it.nextworks.tmf_offering_catalog.information_models.party.OrganizationWrapper;
+import it.nextworks.tmf_offering_catalog.information_models.product.ProductOffering;
+import it.nextworks.tmf_offering_catalog.information_models.product.ProductSpecification;
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrder;
+import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderItem;
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderStatesEnum;
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderStatus;
 import it.nextworks.tmf_offering_catalog.repo.ProductOrderStatusRepository;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -130,7 +135,13 @@ public class ProductOrderCommunicationService {
     private ProductOfferingPriceService productOfferingPriceService;
 
     @Autowired
+    private ProductOfferingService productOfferingService;
+
+    @Autowired
     private PublishProductOrderService publishProductOrderService;
+
+    @Autowired
+    private ProductSpecificationService productSpecificationService;
 
     @Autowired
     public ProductOrderCommunicationService(ObjectMapper objectMapper) {
@@ -211,6 +222,10 @@ public class ProductOrderCommunicationService {
         productOrderStatusRepository.save(productOrderStatus);
 
         log.info("Status of Product Offering " + catalogId + " updated with DID " + did + ".");
+        ProductOrderItem productOrderItem = productOrder.getProductOrderItem().get(0);
+        ProductOffering productOffering = productOfferingService.get(productOrderItem.getProductOffering().getId());
+        ProductSpecification productSpecification = productSpecificationService.get(productOffering.getProductSpecification().getId());
+        String stakeholderDid = productSpecification.getRelatedParty().get(0).getExtendedInfo();
 
         String pwJson = null;
         if (!skipSCLCMPost) {
@@ -219,7 +234,7 @@ public class ProductOrderCommunicationService {
                     null,
                     null,
                     did,
-                    organizationService.get().getStakeholderDID()
+                    stakeholderDid
             ));
         }
 
