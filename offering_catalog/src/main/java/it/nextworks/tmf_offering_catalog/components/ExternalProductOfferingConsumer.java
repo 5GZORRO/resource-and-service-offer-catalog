@@ -102,11 +102,13 @@ public class ExternalProductOfferingConsumer {
 
         // TODO check RETIRE enum type
 
-        syncProductOfferingPrices(externalProductOffering.getProductOfferingPrices());
+        //syncProductOfferingPrices(externalProductOffering.getProductOfferingPrices());
         syncProductSpecification(externalProductOffering.getProductSpecification());
-        syncResourceSpecifications(externalProductOffering.getResourceSpecifications());
-        syncServiceSpecifications(externalProductOffering.getServiceSpecifications());
-        syncGeographicAddresses(externalProductOffering.getGeographicAddresses());
+        /*
+         syncResourceSpecifications(externalProductOffering.getResourceSpecifications());
+         syncServiceSpecifications(externalProductOffering.getServiceSpecifications());
+         syncGeographicAddresses(externalProductOffering.getGeographicAddresses());
+        */
         syncProductOffering(po, did);
     }
 
