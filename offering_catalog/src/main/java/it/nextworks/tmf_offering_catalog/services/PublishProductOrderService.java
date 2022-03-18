@@ -1,6 +1,8 @@
 package it.nextworks.tmf_offering_catalog.services;
 
 
+import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderStatesEnum;
+import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderStatus;
 import it.nextworks.tmf_offering_catalog.repo.ProductOrderStatusRepository;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -13,11 +15,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Optional;
 
 @Service
 public class PublishProductOrderService {
@@ -38,30 +40,30 @@ public class PublishProductOrderService {
     @Autowired
     private ProductOrderStatusRepository productOrderStatusRepository;
 
-    public void publish(String catalogId, String pwJson) throws IOException {
-//        Optional<ProductOrderStatus> toPublish = productOrderStatusRepository.findById(catalogId);
-//        if (!toPublish.isPresent()) {
-//            log.error("Product Order Status for id " + catalogId + " not found in DB.");
-//            return;
-//        }
-//        ProductOrderStatus productOrderStatus = toPublish.get();
+    public void publish(String catalogId, String pwJson) {
+        Optional<ProductOrderStatus> toPublish = productOrderStatusRepository.findById(catalogId);
+        if (!toPublish.isPresent()) {
+            log.error("Product Order Status for id " + catalogId + " not found in DB.");
+            return;
+        }
+        ProductOrderStatus productOrderStatus = toPublish.get();
 
         if (skipSCLCMPost)
             log.info("Skipping POST request to Smart Contract Lifecycle Manager.");
         else {
             publishProductOrder(catalogId, pwJson);
-//            if (!publishProductOrder(catalogId, pwJson)) {
-//                productOrderStatus.setStatus(ProductOrderStatesEnum.PUBLISHING_FAILED);
-//                productOrderStatusRepository.save(productOrderStatus);
-//                return;
-//            }
-//
-//            productOrderStatus.setStatus(ProductOrderStatesEnum.PUBLISHED);
-//            productOrderStatusRepository.save(productOrderStatus);
+            if (!publishProductOrder(catalogId, pwJson)) {
+                productOrderStatus.setStatus(ProductOrderStatesEnum.PUBLISHING_FAILED);
+                productOrderStatusRepository.save(productOrderStatus);
+                return;
+            }
+
+            productOrderStatus.setStatus(ProductOrderStatesEnum.PUBLISHED);
+            productOrderStatusRepository.save(productOrderStatus);
         }
     }
 
-    private synchronized void publishProductOrder(String catalogId, String pwJson) throws IOException {
+    private boolean publishProductOrder(String catalogId, String pwJson) {
 
         log.info("Publishing Product Order with id " + catalogId + ".");
 
@@ -74,7 +76,7 @@ public class PublishProductOrderService {
             stringEntity = new StringEntity(pwJson);
         } catch (UnsupportedEncodingException e) {
             log.error("Cannot encode json body in String Entity: " + e.getMessage());
-            throw e;
+            return false;
         }
 
         httpPost.setEntity(stringEntity);
@@ -86,7 +88,7 @@ public class PublishProductOrderService {
             response = httpClient.execute(httpPost);
         } catch (IOException e) {
             log.error("Cannot send POST request: " + e.getMessage());
-            throw e;
+            return false;
         }
 
         if (response.getStatusLine().getStatusCode() != 200) {
@@ -99,16 +101,17 @@ public class PublishProductOrderService {
                 } catch (IOException e) {
                     log.error("Product Order with id " + catalogId + " not published; Error description unavailable:"
                             + e.getMessage());
-                    throw e;
+                    return false;
                 }
             } else {
                 responseString = "Error description unavailable.";
             }
 
             log.error("Product Order with id " + catalogId + " not published; " + responseString);
-            throw new IOException(responseString);
+            return false;
         }
         log.info("Product Order with id " + catalogId + " published.");
+        return true;
     }
 
 }
