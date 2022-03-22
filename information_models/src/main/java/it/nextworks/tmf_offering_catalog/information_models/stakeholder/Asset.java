@@ -11,13 +11,13 @@ public enum Asset {
 
     Spectrum("Spectrum"),
 
-    RadioAccessNetwork("RadioAccessNetwork"),
+    RadioAccessNetwork("RAN"),
 
-    VirtualNetworkFunction("VirtualNetworkFunction"),
+    VirtualNetworkFunction("VNF"),
 
-    NetworkSlice("NetworkSlice"),
+    NetworkSlice("Slice"),
 
-    NetworkService("NetworkService");
+    NetworkService("Network Service");
 
     private String value;
 
