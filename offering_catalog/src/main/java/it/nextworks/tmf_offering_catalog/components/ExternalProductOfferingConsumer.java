@@ -385,7 +385,25 @@ public class ExternalProductOfferingConsumer {
                 return;
             }
 
-            geographicAddressRepository.save(geographicAddress);
+            GeographicAddress toUpdate = optionalGeographicAddress.get();
+
+            toUpdate.setCity(geographicAddress.getCity());
+            toUpdate.setCountry(geographicAddress.getCountry());
+            toUpdate.setLocality(geographicAddress.getLocality());
+            toUpdate.setPostcode(geographicAddress.getPostcode());
+            toUpdate.setStateOrProvince(geographicAddress.getStateOrProvince());
+            toUpdate.setStreetName(geographicAddress.getStreetName());
+            toUpdate.setStreetNr(geographicAddress.getStreetNr());
+            toUpdate.setStreetNrLast(geographicAddress.getStreetNrLast());
+            toUpdate.setStreetNrLastSuffix(geographicAddress.getStreetNrLastSuffix());
+            toUpdate.setStreetNrSuffix(geographicAddress.getStreetNrSuffix());
+            toUpdate.setStreetSuffix(geographicAddress.getStreetSuffix());
+            toUpdate.setStreetType(geographicAddress.getStreetType());
+            toUpdate.setGeographicLocation(geographicAddress.getGeographicLocation());
+            toUpdate.setSchemaLocation(geographicAddress.getSchemaLocation());
+            toUpdate.setType(geographicAddress.getType());
+
+            geographicAddressRepository.save(toUpdate);
 
             log.info("Synced Geographic Address " + id + " (update).");
         });

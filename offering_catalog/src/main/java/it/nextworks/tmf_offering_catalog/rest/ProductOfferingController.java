@@ -77,7 +77,9 @@ public class ProductOfferingController implements ProductOfferingInterface {
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<?>
     createProductOffering(@ApiParam(value = "The ProductOffering to be created", required = true )
-                          @Valid @RequestBody ProductOfferingCreate productOffering) {
+                          @Valid @RequestBody ProductOfferingCreate productOffering,
+                          @ApiParam(value = "Boolean flag that indicate if the DID should be requested to the ID&P")
+                          @RequestParam(value = "skipIDP", required = false) Boolean skipIDP) {
 
         log.info("Web-Server: Received request to create a Product Offering.");
 
@@ -89,7 +91,7 @@ public class ProductOfferingController implements ProductOfferingInterface {
 
         ProductOffering po;
         try {
-            po = productOfferingService.create(productOffering);
+            po = productOfferingService.create(productOffering, skipIDP);
         } catch (IOException e) {
             log.error("Web-Server: DID request via CommunicationService failed; " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -97,9 +99,12 @@ public class ProductOfferingController implements ProductOfferingInterface {
         } catch (DIDGenerationRequestException e) {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new ErrMsg(e.getMessage()));
-        } catch (StakeholderNotRegisteredException | NotExistingEntityException | NullIdentifierException e) {
+        } catch (StakeholderNotRegisteredException | NotExistingEntityException | NullIdentifierException | DIDAlreadyRequestedForProductException e) {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg(e.getMessage()));
+        } catch (ScLcmRequestException e) {
+            log.error("Web-Server: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrMsg(e.getMessage()));
         }
 
         log.info("Web-Server: Product Offering created with id " + po.getId() + ".");
@@ -169,7 +174,7 @@ public class ProductOfferingController implements ProductOfferingInterface {
         } catch (DIDAlreadyRequestedForProductException e) {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg(e.getMessage()));
-        } catch (JsonProcessingException e) {
+        } catch (ScLcmRequestException | IOException e) {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrMsg(e.getMessage()));
         }

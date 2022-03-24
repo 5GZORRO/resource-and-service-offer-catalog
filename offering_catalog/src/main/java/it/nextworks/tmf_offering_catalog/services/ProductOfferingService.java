@@ -81,11 +81,12 @@ public class ProductOfferingService {
         }
     }
 
-    public ProductOffering create(ProductOfferingCreate productOfferingCreate)
+    public ProductOffering create(ProductOfferingCreate productOfferingCreate, Boolean skipIDP)
             throws IOException, DIDGenerationRequestException, StakeholderNotRegisteredException,
-            NotExistingEntityException, NullIdentifierException {
+            NotExistingEntityException, NullIdentifierException, DIDAlreadyRequestedForProductException, ScLcmRequestException {
 
-        log.info("Received request to create a Product Offering.");
+        final String id = UUID.randomUUID().toString();
+        log.info("Storing Product Offering " + id + ".");
 
         OrganizationWrapper ow;
         try {
@@ -94,7 +95,6 @@ public class ProductOfferingService {
             throw new StakeholderNotRegisteredException(e.getMessage());
         }
 
-        final String id = UUID.randomUUID().toString();
         ProductOffering productOffering = new ProductOffering()
                 .baseType(productOfferingCreate.getBaseType())
                 .schemaLocation(productOfferingCreate.getSchemaLocation())
@@ -143,17 +143,42 @@ public class ProductOfferingService {
         updateCategory(productOffering.getCategory(), productOffering.getHref(), id, productOffering.getName());
 
         productOfferingRepository.save(productOffering);
+        log.info("Product Offering " + id + " stored in Catalog.");
 
-        log.info("Requesting DID via CommunicationService to ID&P.");
+        if(skipIDP != null) {
+            if(skipIDP) {
+                ProductOfferingStatus productOfferingStatus = new ProductOfferingStatus()
+                        .catalogId(id)
+                        .did(null)
+                        .status(ProductOfferingStatesEnum.DID_REQUESTED);
+                productOfferingStatusRepository.save(productOfferingStatus);
 
-        try {
-            communicationService.requestDID(id, ow.getToken());
-        } catch (DIDGenerationRequestException e) {
-            productOfferingRepository.delete(productOffering);
-            throw e;
+                communicationService.handleDIDReceiving(id, UUID.randomUUID().toString());
+            } else {
+                log.info("Requesting DID via CommunicationService to ID&P for Product Offering " + id + ".");
+
+                try {
+                    communicationService.requestDID(id, ow.getToken());
+                } catch (DIDGenerationRequestException e) {
+                    productOfferingRepository.delete(productOffering);
+                    throw e;
+                }
+
+                log.info("DID successfully requested via CommunicationService to ID&P.");
+            }
+        } else {
+            log.info("Requesting DID via CommunicationService to ID&P for Product Offering " + id + ".");
+
+            try {
+                communicationService.requestDID(id, ow.getToken());
+            } catch (DIDGenerationRequestException e) {
+                productOfferingRepository.delete(productOffering);
+                throw e;
+            }
+
+            log.info("DID successfully requested via CommunicationService to ID&P.");
         }
 
-        log.info("DID successfully requested via CommunicationService to ID&P.");
         log.info("Product Offering created with id " + id + ".");
 
         return productOffering;

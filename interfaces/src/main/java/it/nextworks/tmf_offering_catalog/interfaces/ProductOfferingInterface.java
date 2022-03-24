@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 
 public interface ProductOfferingInterface {
 
-    ResponseEntity<?> createProductOffering(ProductOfferingCreate productOffering);
+    ResponseEntity<?> createProductOffering(ProductOfferingCreate productOffering, Boolean skipIDP);
 
     ResponseEntity<?> handleDIDReceiving(String id, JsonNode jsonNode);
 
