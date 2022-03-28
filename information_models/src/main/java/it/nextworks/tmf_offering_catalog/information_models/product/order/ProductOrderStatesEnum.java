@@ -11,7 +11,9 @@ public enum ProductOrderStatesEnum {
 
     PUBLISHED("Product Order published"),
 
-    PUBLISHING_FAILED("Product Order publishing failed");
+    PUBLISHING_FAILED("Product Order publishing failed"),
+
+    EXTERNAL("External Product Order");
 
     private String value;
 
