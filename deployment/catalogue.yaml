@@ -32,6 +32,7 @@ data:
   POSTGRES_MODE: create
   POSTGRES_USER: postgres
   POSTGRES_PSW: mysecretpassword
+  KAFKA_ENABLED: "false"
   KAFKA_BOOTSTRAP_ADDRESS: 172.28.3.196:9092
   KAFKA_TOPIC: operatora-dlt-product-offerings
   DID_SERVICE_HOSTNAME: 172.28.3.153
