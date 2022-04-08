@@ -13,6 +13,7 @@ import it.nextworks.tmf_offering_catalog.services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import org.threeten.bp.OffsetDateTime;
@@ -20,6 +21,7 @@ import org.threeten.bp.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
+@ConditionalOnProperty("${kafka.enabled}")
 @Component
 public class ExternalProductOfferingConsumer {
 
