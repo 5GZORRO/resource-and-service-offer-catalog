@@ -1,11 +1,18 @@
 package it.nextworks.tmf_offering_catalog.services;
 
 import it.nextworks.tmf_offering_catalog.common.exception.*;
+import it.nextworks.tmf_offering_catalog.information_models.common.Any;
+import it.nextworks.tmf_offering_catalog.information_models.common.ServiceSpecificationRef;
 import it.nextworks.tmf_offering_catalog.information_models.party.OrganizationWrapper;
+import it.nextworks.tmf_offering_catalog.information_models.product.ProductOffering;
 import it.nextworks.tmf_offering_catalog.information_models.product.ProductOfferingRef;
+import it.nextworks.tmf_offering_catalog.information_models.product.ProductSpecification;
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrder;
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderCreate;
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderItem;
+import it.nextworks.tmf_offering_catalog.information_models.service.ServiceSpecCharacteristic;
+import it.nextworks.tmf_offering_catalog.information_models.service.ServiceSpecCharacteristicValue;
+import it.nextworks.tmf_offering_catalog.information_models.service.ServiceSpecification;
 import it.nextworks.tmf_offering_catalog.repo.ProductOrderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductOrderService {
@@ -40,11 +48,21 @@ public class ProductOrderService {
     private ProductOfferingService productOfferingService;
 
     @Autowired
+    private ProductSpecificationService productSpecificationService;
+
+    @Autowired
+    private ServiceSpecificationService serviceSpecificationService;
+
+    @Autowired
     private ProductOrderCommunicationService productOrderCommunicationService;
 
-    public ProductOrder create(ProductOrderCreate productOrderCreate, Boolean skipIDP)
+    @Autowired
+    private NSSOCommunicationService nssoCommunicationService;
+
+    public ProductOrder create(ProductOrderCreate productOrderCreate, Boolean skipIDP,
+                               String usr, String psw, String tenantId)
             throws IOException, StakeholderNotRegisteredException, DIDGenerationRequestException,
-            NotExistingEntityException, MalformedProductOrderException {
+            NotExistingEntityException, MalformedProductOrderException, NSSORequestException, MalformedProductOfferingException {
         log.info("Received request to create a Product Order.");
 
         OrganizationWrapper ow;
@@ -68,15 +86,16 @@ public class ProductOrderService {
         }
 
         ProductOrder productOrder = productOrderRepository.save(new ProductOrder(productOrderCreate));
-        productOrder.href(protocol + hostname + ":" + port + path + productOrder.getId());
+        String productOrderId = productOrder.getId();
+        productOrder.href(protocol + hostname + ":" + port + path + productOrderId);
         productOrder = productOrderRepository.save(productOrder);
 
-        log.info("Product Order " + productOrder.getId() + " stored in Catalog.");
+        log.info("Product Order " + productOrderId + " stored in Catalog.");
 
         if(skipIDP != null) {
             if(!skipIDP) {
                 try {
-                    productOrderCommunicationService.requestDID(productOrder.getId(), ow.getToken());
+                    productOrderCommunicationService.requestDID(productOrderId, ow.getToken());
                 } catch (DIDGenerationRequestException e) {
                     productOrderRepository.delete(productOrder);
                     throw e;
@@ -84,14 +103,47 @@ public class ProductOrderService {
             }
         } else {
             try {
-                productOrderCommunicationService.requestDID(productOrder.getId(), ow.getToken());
+                productOrderCommunicationService.requestDID(productOrderId, ow.getToken());
             } catch (DIDGenerationRequestException e) {
                 productOrderRepository.delete(productOrder);
                 throw e;
             }
         }
 
-        log.info("Product Order created with id " + productOrder.getId() + ".");
+        log.info("Product Order created with id " + productOrderId + ".");
+
+        // Consider only one product offering
+        String productOfferingId = productOrder.getProductOrderItem().get(0).getProductOffering().getId();
+        ProductOffering productOffering = productOfferingService.get(productOfferingId);
+        ProductSpecification productSpecification =
+                productSpecificationService.get(productOffering.getProductSpecification().getId());
+        // Consider one service specification
+        List<ServiceSpecificationRef> serviceSpecificationRefs = productSpecification.getServiceSpecification();
+        ServiceSpecification ss = serviceSpecificationService.get(serviceSpecificationRefs.get(0).getId());
+        List<ServiceSpecCharacteristic> serviceSpecCharacteristics =
+                ss.getServiceSpecCharacteristic().stream().filter(serviceSpecCharacteristic ->
+                        serviceSpecCharacteristic.getName().equals("vsdId")).collect(Collectors.toList());
+        if(serviceSpecCharacteristics.isEmpty())
+            throw new MalformedProductOfferingException("Missing vsdId, abort.");
+        if(serviceSpecCharacteristics.size() > 1)
+            throw new MalformedProductOfferingException("Multiple vsdId, abort.");
+        ServiceSpecCharacteristic vsdIdCharacteristic = serviceSpecCharacteristics.get(0);
+        List<ServiceSpecCharacteristicValue> vsdIdCharacteristicValues =
+                vsdIdCharacteristic.getServiceSpecCharacteristicValue();
+        if(vsdIdCharacteristicValues.isEmpty())
+            throw new MalformedProductOfferingException("Missing vsdId, abort.");
+        if(vsdIdCharacteristicValues.size() > 1)
+            throw new MalformedProductOfferingException("Multiple vsdId, abort.");
+        Any vsdIdValue = vsdIdCharacteristicValues.get(0).getValue();
+        if(vsdIdValue == null)
+            throw new MalformedProductOfferingException("Missing vsdId, abort.");
+        String vsdId = vsdIdValue.getValue();
+        if(vsdId == null)
+            throw new MalformedProductOfferingException("Missing vsdId, abort.");
+
+        String jSessionId = nssoCommunicationService.login(usr, psw);
+
+        nssoCommunicationService.instantiateVS(vsdId, tenantId, productOrderId, productOfferingId, jSessionId);
 
         return productOrder;
     }

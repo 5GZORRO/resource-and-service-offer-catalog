@@ -57,7 +57,13 @@ public class ProductOrderController {
     ResponseEntity<?> createProductOrder(@ApiParam(value = "The ProductOrder to be created", required = true)
                                          @Valid @RequestBody ProductOrderCreate productOrderCreate,
                                          @ApiParam(value = "Boolean flag that indicate if the DID should be requested to the ID&P")
-                                         @RequestParam(value = "skipIDP", required = false) Boolean skipIDP) {
+                                         @RequestParam(value = "skipIDP", required = false) Boolean skipIDP,
+                                         @ApiParam(value = "Username to authenticate to NSSO")
+                                         @RequestParam(value = "usr") String usr,
+                                         @ApiParam(value = "Password to authenticate to NSSO")
+                                         @RequestParam(value = "psw") String psw,
+                                         @ApiParam(value = "Tenant ID to instantiate VS")
+                                         @RequestParam(value = "tenantId") String tenantId) {
         log.info("Web-Server: Received request to create a Product Order.");
 
         if (productOrderCreate == null) {
@@ -67,7 +73,7 @@ public class ProductOrderController {
 
         ProductOrder productOrder;
         try {
-            productOrder = productOrderService.create(productOrderCreate, skipIDP);
+            productOrder = productOrderService.create(productOrderCreate, skipIDP, usr, psw, tenantId);
         } catch (IOException e) {
             log.error("Web-Server: DID request via CommunicationService failed; " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -75,9 +81,12 @@ public class ProductOrderController {
         } catch (DIDGenerationRequestException e) {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new ErrMsg(e.getMessage()));
-        } catch (StakeholderNotRegisteredException | NotExistingEntityException | MalformedProductOrderException e) {
+        } catch (StakeholderNotRegisteredException | NotExistingEntityException | MalformedProductOrderException |
+                MalformedProductOfferingException e) {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg(e.getMessage()));
+        } catch (NSSORequestException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrMsg(e.getMessage()));
         }
 
         log.info("Web-Server: Product Order created with id " + productOrder.getId() + ".");
