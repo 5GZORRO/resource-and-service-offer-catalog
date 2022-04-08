@@ -43,6 +43,7 @@ services:
       SRSD_PORT: ${SRSD_PORT}
       SRSD_REQUEST_PATH: ${SRSD_REQUEST_PATH}
       SKIP_SRSD_POST: ${SKIP_SRSD_POST}
+      NSSO_URL: ${NSSO_URL}
     ports:
       - ${SERVER_PORT}:${SERVER_PORT}
     depends_on:

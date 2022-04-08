@@ -48,6 +48,7 @@ data:
   SRSD_PORT: "8083"
   SRSD_REQUEST_PATH: /classifyOffer
   SKIP_SRSD_POST: "false"
+  NSSO_URL: 172.28.3.126:31082
 ---
 apiVersion: apps/v1
 kind: Deployment
