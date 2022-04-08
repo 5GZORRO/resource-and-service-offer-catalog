@@ -55,7 +55,9 @@ public class ProductOrderController {
             consumes = {"application/json;charset=utf-8"},
             method = RequestMethod.POST)
     ResponseEntity<?> createProductOrder(@ApiParam(value = "The ProductOrder to be created", required = true)
-                                         @Valid @RequestBody ProductOrderCreate productOrderCreate) {
+                                         @Valid @RequestBody ProductOrderCreate productOrderCreate,
+                                         @ApiParam(value = "Boolean flag that indicate if the DID should be requested to the ID&P")
+                                         @RequestParam(value = "skipIDP", required = false) Boolean skipIDP) {
         log.info("Web-Server: Received request to create a Product Order.");
 
         if (productOrderCreate == null) {
@@ -65,7 +67,7 @@ public class ProductOrderController {
 
         ProductOrder productOrder;
         try {
-            productOrder = productOrderService.create(productOrderCreate);
+            productOrder = productOrderService.create(productOrderCreate, skipIDP);
         } catch (IOException e) {
             log.error("Web-Server: DID request via CommunicationService failed; " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

@@ -146,15 +146,7 @@ public class ProductOfferingService {
         log.info("Product Offering " + id + " stored in Catalog.");
 
         if(skipIDP != null) {
-            if(skipIDP) {
-                ProductOfferingStatus productOfferingStatus = new ProductOfferingStatus()
-                        .catalogId(id)
-                        .did(null)
-                        .status(ProductOfferingStatesEnum.DID_REQUESTED);
-                productOfferingStatusRepository.save(productOfferingStatus);
-
-                communicationService.handleDIDReceiving(id, UUID.randomUUID().toString());
-            } else {
+            if(!skipIDP) {
                 log.info("Requesting DID via CommunicationService to ID&P for Product Offering " + id + ".");
 
                 try {

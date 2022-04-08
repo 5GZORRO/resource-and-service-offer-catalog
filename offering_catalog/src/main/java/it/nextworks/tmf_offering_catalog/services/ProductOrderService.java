@@ -40,11 +40,8 @@ public class ProductOrderService {
     @Autowired
     private ProductOrderCommunicationService productOrderCommunicationService;
 
-    @Transactional
-    public ProductOrder create(ProductOrderCreate productOrderCreate) throws IOException, StakeholderNotRegisteredException, DIDGenerationRequestException {
+    public ProductOrder create(ProductOrderCreate productOrderCreate, Boolean skipIDP) throws IOException, StakeholderNotRegisteredException, DIDGenerationRequestException {
         log.info("Received request to create a Product Order.");
-        ProductOrder productOrder = productOrderRepository.save(new ProductOrder(productOrderCreate));
-        productOrder.href(protocol + hostname + ":" + port + path + productOrder.getId());
 
         OrganizationWrapper ow;
         try {
@@ -53,14 +50,32 @@ public class ProductOrderService {
             throw new StakeholderNotRegisteredException(e.getMessage());
         }
 
-        try {
-            productOrderCommunicationService.requestDID(productOrder.getId(), ow.getToken());
-        } catch (DIDGenerationRequestException e) {
-            productOrderRepository.delete(productOrder);
-            throw e;
+        ProductOrder productOrder = productOrderRepository.save(new ProductOrder(productOrderCreate));
+        productOrder.href(protocol + hostname + ":" + port + path + productOrder.getId());
+        productOrder = productOrderRepository.save(productOrder);
+
+        log.info("Product Order " + productOrder.getId() + " stored in Catalog.");
+
+        if(skipIDP != null) {
+            if(!skipIDP) {
+                try {
+                    productOrderCommunicationService.requestDID(productOrder.getId(), ow.getToken());
+                } catch (DIDGenerationRequestException e) {
+                    productOrderRepository.delete(productOrder);
+                    throw e;
+                }
+            }
+        } else {
+            try {
+                productOrderCommunicationService.requestDID(productOrder.getId(), ow.getToken());
+            } catch (DIDGenerationRequestException e) {
+                productOrderRepository.delete(productOrder);
+                throw e;
+            }
         }
 
         log.info("Product Order created with id " + productOrder.getId() + ".");
+
         return productOrder;
     }
 
