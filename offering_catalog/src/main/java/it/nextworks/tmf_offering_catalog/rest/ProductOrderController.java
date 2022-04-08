@@ -75,7 +75,7 @@ public class ProductOrderController {
         } catch (DIDGenerationRequestException e) {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new ErrMsg(e.getMessage()));
-        } catch (StakeholderNotRegisteredException e) {
+        } catch (StakeholderNotRegisteredException | NotExistingEntityException | MalformedProductOrderException e) {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg(e.getMessage()));
         }

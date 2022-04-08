@@ -1,12 +1,11 @@
 package it.nextworks.tmf_offering_catalog.services;
 
-import it.nextworks.tmf_offering_catalog.common.exception.DIDGenerationRequestException;
-import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
-import it.nextworks.tmf_offering_catalog.common.exception.ProductOrderDeleteScLCMException;
-import it.nextworks.tmf_offering_catalog.common.exception.StakeholderNotRegisteredException;
+import it.nextworks.tmf_offering_catalog.common.exception.*;
 import it.nextworks.tmf_offering_catalog.information_models.party.OrganizationWrapper;
+import it.nextworks.tmf_offering_catalog.information_models.product.ProductOfferingRef;
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrder;
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderCreate;
+import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderItem;
 import it.nextworks.tmf_offering_catalog.repo.ProductOrderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,9 +37,14 @@ public class ProductOrderService {
     private OrganizationService organizationService;
 
     @Autowired
+    private ProductOfferingService productOfferingService;
+
+    @Autowired
     private ProductOrderCommunicationService productOrderCommunicationService;
 
-    public ProductOrder create(ProductOrderCreate productOrderCreate, Boolean skipIDP) throws IOException, StakeholderNotRegisteredException, DIDGenerationRequestException {
+    public ProductOrder create(ProductOrderCreate productOrderCreate, Boolean skipIDP)
+            throws IOException, StakeholderNotRegisteredException, DIDGenerationRequestException,
+            NotExistingEntityException, MalformedProductOrderException {
         log.info("Received request to create a Product Order.");
 
         OrganizationWrapper ow;
@@ -48,6 +52,19 @@ public class ProductOrderService {
             ow = organizationService.get();
         } catch (NotExistingEntityException e) {
             throw new StakeholderNotRegisteredException(e.getMessage());
+        }
+
+        List<ProductOrderItem> productOrderItems = productOrderCreate.getProductOrderItem();
+        if(productOrderItems == null)
+            throw new MalformedProductOrderException("NULL ProductOrderItem List, abort.");
+        if(productOrderItems.isEmpty())
+            throw new MalformedProductOrderException("Empty ProductOrderItem List, abort.");
+        for(ProductOrderItem productOrderItem : productOrderItems) {
+            ProductOfferingRef poRef = productOrderItem.getProductOffering();
+            if(poRef == null)
+                throw new MalformedProductOrderException("NULL Product Offering reference, abort.");
+
+                productOfferingService.get(poRef.getId());
         }
 
         ProductOrder productOrder = productOrderRepository.save(new ProductOrder(productOrderCreate));
