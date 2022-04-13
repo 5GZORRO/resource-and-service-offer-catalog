@@ -151,8 +151,8 @@ public class NSSOCommunicationService {
         VSInstantiationRequest vsInstantiationRequest = new VSInstantiationRequest(
                 "Order " + productOrderId,
                 "Order " + productOrderId + ", Offer " + productOfferId + ", VS " + vsdId,
+                vsdId,
                 tenantId,
-                null,
                 new UserData(productOrderId, productOfferId));
         String vsInstantiationRequestJson = objectMapper.writeValueAsString(vsInstantiationRequest);
         StringEntity stringEntity = new StringEntity(vsInstantiationRequestJson);
@@ -171,7 +171,7 @@ public class NSSOCommunicationService {
         }
 
         int statusCode = response.getStatusLine().getStatusCode();
-        if(statusCode != 200) {
+        if(statusCode != 201) {
             HttpEntity httpEntity = response.getEntity();
             String msg = "Instantiation failed [status:" + statusCode + "]: " +
                     EntityUtils.toString(httpEntity, "UTF-8");
