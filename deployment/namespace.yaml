@@ -1,6 +1,4 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: domain-operator-a
-  labels:
-    domain: operator-a
+  name: etsi-poc-5gclarity-5gzorro

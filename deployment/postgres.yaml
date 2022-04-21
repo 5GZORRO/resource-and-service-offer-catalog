@@ -3,9 +3,8 @@ kind: Service
 metadata:
   labels:
     db: postgres
-    domain: operator-a
   name: postgresql
-  namespace: domain-operator-a
+  namespace: etsi-poc-5gclarity-5gzorro
 spec:
   ports:
   - name: http
@@ -20,7 +19,7 @@ metadata:
   name: postgres-storage
 spec:
   capacity:
-    storage: 5Gi
+    storage: 1Gi
   accessModes:
     - ReadWriteOnce
   hostPath:
@@ -30,22 +29,21 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: postgres-storage-claim
-  namespace: domain-operator-a
+  namespace: etsi-poc-5gclarity-5gzorro
 spec:
   accessModes:
   - ReadWriteOnce
   resources:
     requests:
-      storage: 5Gi
+      storage: 1Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgresql
-  namespace: domain-operator-a
+  namespace: etsi-poc-5gclarity-5gzorro
   labels:
     db: postgres
-    domain: operator-a
 spec:
   replicas: 1
   selector:
@@ -59,7 +57,7 @@ spec:
       containers:
       - env:
         - name: POSTGRES_PASSWORD
-          value: mysecretpassword
+          value: postgres
         - name: POSTGRES_USER
           value: postgres
         image: postgres

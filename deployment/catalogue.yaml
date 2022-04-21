@@ -2,10 +2,9 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: catalogue
-    domain: operator-a
-  name: catalogue-svc
-  namespace: domain-operator-a
+    app: rsoc
+  name: rsoc-svc
+  namespace: etsi-poc-5gclarity-5gzorro
 spec:
   type: NodePort
   ports:
@@ -15,23 +14,21 @@ spec:
     targetPort: 8080
     nodePort: 31080
   selector:
-    app: catalogue
+    app: rsoc
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: catalogue-config
-  namespace: domain-operator-a
-  labels:
-    domain: operator-a
+  name: rsoc-config
+  namespace: etsi-poc-5gclarity-5gzorro
 data:
-  OFFER_CATALOG_HOSTNAME: localhost
+  OFFER_CATALOG_HOSTNAME: 172.28.3.15
   SERVER_PORT: "8080"
-  POSTGRES_HOSTNAME: postgresql.domain-operator-a.svc.cluster.local
+  POSTGRES_HOSTNAME: postgresql.etsi-poc-5gclarity-5gzorro.svc.cluster.local
   POSTGRES_PORT: "5432"
   POSTGRES_MODE: create
   POSTGRES_USER: postgres
-  POSTGRES_PSW: mysecretpassword
+  POSTGRES_PSW: postgres
   KAFKA_ENABLED: "false"
   KAFKA_BOOTSTRAP_ADDRESS: 172.28.3.196:9092
   KAFKA_TOPIC: operatora-dlt-product-offerings
@@ -43,48 +40,46 @@ data:
   SC_LCM_PRODUCT_OFFER_REQUEST_PATH: /product-offer/
   SC_LCM_PRODUCT_ORDER_REQUEST_PATH: /product_order/
   SC_LCM_SLA_REQUEST_PATH: /api/v1/service-level-agreement/
-  SKIP_SC_LCM_POST: "false"
+  SKIP_SC_LCM_POST: "true"
   SRSD_HOSTNAME: smart-resource-discovery.default.svc.cluster.local
   SRSD_PORT: "8083"
   SRSD_REQUEST_PATH: /classifyOffer
-  SKIP_SRSD_POST: "false"
+  SKIP_SRSD_POST: "true"
   NSSO_URL: 172.28.3.126:31082
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: catalogue
-    domain: operator-a
-  name: catalogue-app
-  namespace: domain-operator-a
+    app: rsoc
+  name: rsoc-app
+  namespace: etsi-poc-5gclarity-5gzorro
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: catalogue
+      app: rsoc
   template:
     metadata:
       labels:
-        app: catalogue
-        domain: operator-a
+        app: rsoc
     spec:
       containers:
-      - name: resource-and-service-offer-catalog
-        image: docker.pkg.github.com/5gzorro/resource-and-service-offer-catalog/resource-and-service-offer-catalog:latest
+      - name: rsoc-zsm-poc
+        image: docker.pkg.github.com/5gzorro/resource-and-service-offer-catalog/rsoc-zsm-poc:latest
         imagePullPolicy: Always
         envFrom:
         - configMapRef:
-            name: catalogue-config
+            name: rsoc-config
         ports:
         - containerPort: 8080
           protocol: TCP
         resources:
           requests:
             cpu: "1"
-            memory: "2Gi"
+            memory: "1Gi"
           limits:
             cpu: "2"
-            memory: "4Gi"
+            memory: "2Gi"
       imagePullSecrets:
-      - name: operator-a-regcred
+      - name: regcred
