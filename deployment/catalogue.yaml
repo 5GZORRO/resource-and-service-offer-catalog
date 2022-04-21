@@ -11,8 +11,8 @@ spec:
   - name: http
     port: 8080
     protocol: TCP
-    targetPort: 8080
-    nodePort: 31080
+    targetPort: 31280
+    nodePort: 31280
   selector:
     app: rsoc
 ---
@@ -23,7 +23,7 @@ metadata:
   namespace: etsi-poc-5gclarity-5gzorro
 data:
   OFFER_CATALOG_HOSTNAME: 172.28.3.15
-  SERVER_PORT: "8080"
+  SERVER_PORT: "31280"
   POSTGRES_HOSTNAME: postgresql.etsi-poc-5gclarity-5gzorro.svc.cluster.local
   POSTGRES_PORT: "5432"
   POSTGRES_MODE: create
@@ -66,7 +66,7 @@ spec:
     spec:
       containers:
       - name: rsoc-zsm-poc
-        image: docker.pkg.github.com/5gzorro/resource-and-service-offer-catalog/rsoc-zsm-poc:latest
+        image: ghcr.io/5gzorro/resource-and-service-offer-catalog/rsoc-zsm-poc:latest
         imagePullPolicy: Always
         envFrom:
         - configMapRef:
