@@ -2,9 +2,9 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ zsm-poc ]
   pull_request:
-    branches: [ main ]
+    branches: [ zsm-poc ]
 
 jobs:
   build-and-push-latest:
@@ -27,4 +27,4 @@ jobs:
           context: .
           file: deployment/catalog_dockerfile/Dockerfile
           push: true
-          tags: docker.pkg.github.com/5gzorro/resource-and-service-offer-catalog/resource-and-service-offer-catalog:latest
+          tags: docker.pkg.github.com/5gzorro/resource-and-service-offer-catalog/rsoc-zsm-poc:latest
