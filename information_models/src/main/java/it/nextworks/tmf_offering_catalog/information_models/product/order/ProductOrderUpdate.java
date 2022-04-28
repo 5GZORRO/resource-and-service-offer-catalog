@@ -3,10 +3,14 @@ package it.nextworks.tmf_offering_catalog.information_models.product.order;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import it.nextworks.tmf_offering_catalog.information_models.product.AgreementRef;
 import it.nextworks.tmf_offering_catalog.information_models.product.ProductOfferingUpdate;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class ProductOrderUpdate {
@@ -27,6 +31,19 @@ public class ProductOrderUpdate {
 
     @JsonProperty("notificationContact")
     private String notificationContact = null;
+
+    @JsonProperty("priority")
+    private String priority = null;
+
+    @JsonProperty("requestedCompletionDate")
+    private LocalDateTime requestedCompletionDate = null;
+
+    @JsonProperty("requestedStartDate")
+    private LocalDateTime requestedStartDate = null;
+
+    @JsonProperty("agreement")
+    @Valid
+    private List<AgreementRef> agreement = null;
 
     @JsonProperty("@baseType")
     private String baseType = null;
@@ -151,6 +168,94 @@ public class ProductOrderUpdate {
         this.notificationContact = notificationContact;
     }
 
+    public ProductOrderUpdate priority(String priority) {
+        this.priority = priority;
+        return this;
+    }
+
+    /**
+     * When sub-classing, this defines the super-class
+     * @return priority
+     **/
+    @ApiModelProperty(value = "When sub-classing, this defines the super-class")
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
+
+    public ProductOrderUpdate requestedCompletionDate(LocalDateTime requestedCompletionDate) {
+        this.requestedCompletionDate = requestedCompletionDate;
+        return this;
+    }
+
+    /**
+     * When sub-classing, this defines the super-class
+     * @return requestedCompletionDate
+     **/
+    @ApiModelProperty(value = "When sub-classing, this defines the super-class")
+
+    public LocalDateTime getRequestedCompletionDate() {
+        return requestedCompletionDate;
+    }
+
+    public void setRequestedCompletionDate(LocalDateTime requestedCompletionDate) {
+        this.requestedCompletionDate = requestedCompletionDate;
+    }
+
+    public ProductOrderUpdate requestedStartDate(LocalDateTime requestedStartDate) {
+        this.requestedStartDate = requestedStartDate;
+        return this;
+    }
+
+    /**
+     * When sub-classing, this defines the super-class
+     * @return requestedStartDate
+     **/
+    @ApiModelProperty(value = "When sub-classing, this defines the super-class")
+
+    public LocalDateTime getRequestedStartDate() {
+        return requestedStartDate;
+    }
+
+    public void setRequestedStartDate(LocalDateTime requestedStartDate) {
+        this.requestedStartDate = requestedStartDate;
+    }
+
+    public ProductOrderUpdate agreement(List<AgreementRef> agreement) {
+        this.agreement = agreement;
+        return this;
+    }
+
+    public ProductOrderUpdate addAgreementItem(AgreementRef agreementItem) {
+        if (this.agreement == null) {
+            this.agreement = new ArrayList<AgreementRef>();
+        }
+        this.agreement.add(agreementItem);
+        return this;
+    }
+
+    /**
+     * An agreement represents a contract or arrangement, either written or verbal and sometimes enforceable by law, such as a service level agreement or a customer price agreement. An agreement involves a number of other business entities, such as products, services, and resources and/or their specifications.
+     * @return agreement
+     **/
+    @ApiModelProperty(value = "An agreement represents a contract or arrangement, either written or verbal and sometimes enforceable by law, such as a service level agreement or a customer price agreement. An agreement involves a number of other business entities, such as products, services, and resources and/or their specifications.")
+
+    @Valid
+
+    public List<AgreementRef> getAgreement() {
+        return agreement;
+    }
+
+    public void setAgreement(List<AgreementRef> agreement) {
+        this.agreement = agreement;
+    }
+
+
+
 
 
 
@@ -229,6 +334,10 @@ public class ProductOrderUpdate {
                 Objects.equals(this.description, productOrderUpdate.description)&&
                 Objects.equals(this.externalId, productOrderUpdate.externalId)&&
                 Objects.equals(this.notificationContact, productOrderUpdate.notificationContact)&&
+                Objects.equals(this.priority, productOrderUpdate.priority)&&
+                Objects.equals(this.requestedCompletionDate, productOrderUpdate.requestedCompletionDate)&&
+                Objects.equals(this.requestedStartDate, productOrderUpdate.requestedStartDate)&&
+                Objects.equals(this.agreement, productOrderUpdate.agreement) &&
                 Objects.equals(this.baseType, productOrderUpdate.baseType)&&
                 Objects.equals(this.schemaLocation, productOrderUpdate.schemaLocation)&&
                 Objects.equals(this.type, productOrderUpdate.type);
@@ -236,7 +345,7 @@ public class ProductOrderUpdate {
 
     @Override
     public int hashCode() {
-        return Objects.hash(cancellationDate, cancellationReason, category, description, externalId, notificationContact, baseType, schemaLocation, type);
+        return Objects.hash(cancellationDate, cancellationReason, category, description, externalId, notificationContact, priority, requestedCompletionDate, requestedStartDate, agreement, baseType, schemaLocation, type);
     }
 
     @Override
@@ -250,6 +359,10 @@ public class ProductOrderUpdate {
         sb.append("    description: ").append(toIndentedString(description)).append("\n");
         sb.append("    externalId: ").append(toIndentedString(externalId)).append("\n");
         sb.append("    notificationContact: ").append(toIndentedString(notificationContact)).append("\n");
+        sb.append("    priority: ").append(toIndentedString(priority)).append("\n");
+        sb.append("    requestedCompletionDate: ").append(toIndentedString(requestedCompletionDate)).append("\n");
+        sb.append("    requestedStartDate: ").append(toIndentedString(requestedStartDate)).append("\n");
+        sb.append("    agreement: ").append(toIndentedString(agreement)).append("\n");
         sb.append("    baseType: ").append(toIndentedString(baseType)).append("\n");
         sb.append("    schemaLocation: ").append(toIndentedString(schemaLocation)).append("\n");
         sb.append("    type: ").append(toIndentedString(type)).append("\n");
