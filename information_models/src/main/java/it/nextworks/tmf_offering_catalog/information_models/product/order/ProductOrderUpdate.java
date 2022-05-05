@@ -7,6 +7,7 @@ import it.nextworks.tmf_offering_catalog.information_models.product.*;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import org.threeten.bp.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -27,10 +28,10 @@ public class ProductOrderUpdate {
 
     @JsonProperty("billingAccount")
     @Valid
-    private List<BillingAccountRef> billingAccount = null;
+    private BillingAccountRef billingAccount = null;
 
     @JsonProperty("cancellationDate")
-    private LocalDateTime cancellationDate = null;
+    private OffsetDateTime cancellationDate = null;
 
     @JsonProperty("cancellationReason")
     private String cancellationReason = null;
@@ -40,7 +41,7 @@ public class ProductOrderUpdate {
 
     @JsonProperty("channel")
     @Valid
-    private List<ChannelRef> channel = null;
+    private List<RelatedChannel> channel = null;
 
     @JsonProperty("description")
     private String description = null;
@@ -83,12 +84,12 @@ public class ProductOrderUpdate {
     private List<RelatedParty> relatedParty = null;
 
     @JsonProperty("requestedCompletionDate")
-    private LocalDateTime requestedCompletionDate = null;
+    private OffsetDateTime requestedCompletionDate = null;
 
     @JsonProperty("requestedStartDate")
-    private LocalDateTime requestedStartDate = null;
+    private OffsetDateTime requestedStartDate = null;
 
-    public ProductOrderUpdate cancellationDate(LocalDateTime cancellationDate) {
+    public ProductOrderUpdate cancellationDate(OffsetDateTime cancellationDate) {
         this.cancellationDate = cancellationDate;
         return this;
     }
@@ -100,11 +101,11 @@ public class ProductOrderUpdate {
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the super-class")
 
-    public LocalDateTime getCancellationDate() {
+    public OffsetDateTime getCancellationDate() {
         return cancellationDate;
     }
 
-    public void setCancellationDate(LocalDateTime cancellationDate) {
+    public void setCancellationDate(OffsetDateTime cancellationDate) {
         this.cancellationDate = cancellationDate;
     }
 
@@ -228,7 +229,7 @@ public class ProductOrderUpdate {
         this.priority = priority;
     }
 
-    public ProductOrderUpdate requestedCompletionDate(LocalDateTime requestedCompletionDate) {
+    public ProductOrderUpdate requestedCompletionDate(OffsetDateTime requestedCompletionDate) {
         this.requestedCompletionDate = requestedCompletionDate;
         return this;
     }
@@ -240,15 +241,15 @@ public class ProductOrderUpdate {
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the super-class")
 
-    public LocalDateTime getRequestedCompletionDate() {
+    public OffsetDateTime getRequestedCompletionDate() {
         return requestedCompletionDate;
     }
 
-    public void setRequestedCompletionDate(LocalDateTime requestedCompletionDate) {
+    public void setRequestedCompletionDate(OffsetDateTime requestedCompletionDate) {
         this.requestedCompletionDate = requestedCompletionDate;
     }
 
-    public ProductOrderUpdate requestedStartDate(LocalDateTime requestedStartDate) {
+    public ProductOrderUpdate requestedStartDate(OffsetDateTime requestedStartDate) {
         this.requestedStartDate = requestedStartDate;
         return this;
     }
@@ -260,11 +261,11 @@ public class ProductOrderUpdate {
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the super-class")
 
-    public LocalDateTime getRequestedStartDate() {
+    public OffsetDateTime getRequestedStartDate() {
         return requestedStartDate;
     }
 
-    public void setRequestedStartDate(LocalDateTime requestedStartDate) {
+    public void setRequestedStartDate(OffsetDateTime requestedStartDate) {
         this.requestedStartDate = requestedStartDate;
     }
 
@@ -298,16 +299,8 @@ public class ProductOrderUpdate {
         this.agreement = agreement;
     }
 
-    public ProductOrderUpdate billingAccount(List<BillingAccountRef> billingAccount) {
+    public ProductOrderUpdate billingAccount(BillingAccountRef billingAccount) {
         this.billingAccount = billingAccount;
-        return this;
-    }
-
-    public ProductOrderUpdate addBillingAccount(BillingAccountRef billingAccountItem) {
-        if (this.billingAccount == null) {
-            this.billingAccount = new ArrayList<BillingAccountRef>();
-        }
-        this.billingAccount.add(billingAccountItem);
         return this;
     }
 
@@ -316,25 +309,23 @@ public class ProductOrderUpdate {
      */
     @ApiModelProperty(value = "BillingAccount reference. A BillingAccount is a detailed description of a bill structure.")
 
-    @Valid
-
-    public List<BillingAccountRef> getBillingAccount() {
+    public BillingAccountRef getBillingAccount() {
         return billingAccount;
     }
 
-    public void setBillingAccount(List<BillingAccountRef> billingAccount) {
+    public void setBillingAccount(BillingAccountRef billingAccount) {
         this.billingAccount = billingAccount;
     }
 
 
-    public ProductOrderUpdate channel(List<ChannelRef> channel) {
+    public ProductOrderUpdate channel(List<RelatedChannel> channel) {
         this.channel = channel;
         return this;
     }
 
-    public ProductOrderUpdate addChannel(ChannelRef channelItem) {
+    public ProductOrderUpdate addChannel(RelatedChannel channelItem) {
         if (this.channel == null) {
-            this.channel = new ArrayList<ChannelRef>();
+            this.channel = new ArrayList<RelatedChannel>();
         }
         this.channel.add(channelItem);
         return this;
@@ -347,11 +338,11 @@ public class ProductOrderUpdate {
 
     @Valid
 
-    public List<ChannelRef> getChannel() {
+    public List<RelatedChannel> getChannel() {
         return channel;
     }
 
-    public void setChannel(List<ChannelRef> channel) {
+    public void setChannel(List<RelatedChannel> channel) {
         this.channel = channel;
     }
 
@@ -623,12 +614,33 @@ public class ProductOrderUpdate {
             return false;
         }
         ProductOrderUpdate productOrderUpdate = (ProductOrderUpdate) o;
-        return Objects.equals(this.cancellationDate, productOrderUpdate.cancellationDate) && Objects.equals(this.cancellationReason, productOrderUpdate.cancellationReason) && Objects.equals(this.category, productOrderUpdate.category) && Objects.equals(this.description, productOrderUpdate.description) && Objects.equals(this.externalId, productOrderUpdate.externalId) && Objects.equals(this.notificationContact, productOrderUpdate.notificationContact) && Objects.equals(this.priority, productOrderUpdate.priority) && Objects.equals(this.requestedCompletionDate, productOrderUpdate.requestedCompletionDate) && Objects.equals(this.requestedStartDate, productOrderUpdate.requestedStartDate) && Objects.equals(this.agreement, productOrderUpdate.agreement) && Objects.equals(this.baseType, productOrderUpdate.baseType) && Objects.equals(this.schemaLocation, productOrderUpdate.schemaLocation) && Objects.equals(this.type, productOrderUpdate.type);
+        return Objects.equals(this.baseType, productOrderUpdate.baseType) &&
+            Objects.equals(this.schemaLocation, productOrderUpdate.schemaLocation) &&
+            Objects.equals(this.type, productOrderUpdate.type) &&
+            Objects.equals(this.agreement, productOrderUpdate.agreement) &&
+            Objects.equals(this.billingAccount, productOrderUpdate.billingAccount) &&
+            Objects.equals(this.cancellationDate, productOrderUpdate.cancellationDate) &&
+            Objects.equals(this.cancellationReason, productOrderUpdate.cancellationReason) &&
+            Objects.equals(this.category, productOrderUpdate.category) &&
+            Objects.equals(this.channel, productOrderUpdate.channel) &&
+            Objects.equals(this.description, productOrderUpdate.description) &&
+            Objects.equals(this.externalId, productOrderUpdate.externalId) &&
+            Objects.equals(this.note, productOrderUpdate.note) &&
+            Objects.equals(this.notificationContact, productOrderUpdate.notificationContact) &&
+            Objects.equals(this.orderTotalPrice, productOrderUpdate.orderTotalPrice) &&
+            Objects.equals(this.payment, productOrderUpdate.payment) &&
+            Objects.equals(this.priority, productOrderUpdate.priority) &&
+            Objects.equals(this.productOfferingQualification, productOrderUpdate.productOfferingQualification) &&
+            Objects.equals(this.productOrderItem, productOrderUpdate.productOrderItem) &&
+            Objects.equals(this.quote, productOrderUpdate.quote) &&
+            Objects.equals(this.relatedParty, productOrderUpdate.relatedParty) &&
+            Objects.equals(this.requestedCompletionDate, productOrderUpdate.requestedCompletionDate) &&
+            Objects.equals(this.requestedStartDate, productOrderUpdate.requestedStartDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(cancellationDate, cancellationReason, category, description, externalId, notificationContact, priority, requestedCompletionDate, requestedStartDate, agreement, baseType, schemaLocation, type);
+        return Objects.hash(baseType, schemaLocation, type, agreement, billingAccount, cancellationDate, cancellationReason, category, channel, description, externalId, note, notificationContact, orderTotalPrice, payment, priority, productOfferingQualification, productOrderItem, quote, relatedParty, requestedCompletionDate, requestedStartDate);
     }
 
     @Override

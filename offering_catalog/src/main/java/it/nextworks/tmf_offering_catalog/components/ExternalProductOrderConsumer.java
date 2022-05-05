@@ -1,5 +1,6 @@
 package it.nextworks.tmf_offering_catalog.components;
 
+import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
 import it.nextworks.tmf_offering_catalog.information_models.kafka.ExternalProductOrder;
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrder;
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderStatesEnum;
@@ -7,6 +8,8 @@ import it.nextworks.tmf_offering_catalog.information_models.product.order.Produc
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderUpdate;
 import it.nextworks.tmf_offering_catalog.repo.ProductOrderRepository;
 import it.nextworks.tmf_offering_catalog.repo.ProductOrderStatusRepository;
+import it.nextworks.tmf_offering_catalog.services.ProductOfferingPriceService;
+import it.nextworks.tmf_offering_catalog.services.ProductOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,9 @@ public class ExternalProductOrderConsumer {
 
     @Autowired
     private ProductOrderStatusRepository productOrderStatusRepository;
+
+    @Autowired
+    private ProductOrderService productOrderService;
 
     @KafkaListener(
             topics = "#{@topic}",
@@ -82,7 +88,37 @@ public class ExternalProductOrderConsumer {
             return;
         }
 
-        ProductOrderUpdate productOrderUpdate = new ProductOrderUpdate();//TODO
+        ProductOrderUpdate productOrderUpdate = new ProductOrderUpdate()
+                .baseType(productOrder.getBaseType())
+                .schemaLocation(productOrder.getSchemaLocation())
+                .type(productOrder.getType())
+                .agreement(productOrder.getAgreement())
+                .billingAccount(productOrder.getBillingAccount())
+                .cancellationDate(productOrder.getCancellationDate())
+                .cancellationReason(productOrder.getCancellationReason())
+                .category(productOrder.getCategory())
+                .channel(productOrder.getChannel())
+                .description(productOrder.getDescription())
+                .externalId(productOrder.getExternalId())
+                .note(productOrder.getNote())
+                .notificationContact(productOrder.getNotificationContact())
+                .orderTotalPrice(productOrder.getOrderTotalPrice())
+                .payment(productOrder.getPayment())
+                .priority(productOrder.getPriority())
+                .productOfferingQualification(productOrder.getProductOfferingQualification())
+                .productOrderItem(productOrder.getProductOrderItem())
+                .quote(productOrder.getQuote())
+                .relatedParty(productOrder.getRelatedParty())
+                .requestedCompletionDate(productOrder.getRequestedCompletionDate())
+                .requestedStartDate(productOrder.getRequestedStartDate());
+
+        try {
+            productOrderService.patch(id, productOrderUpdate);
+        } catch (NotExistingEntityException e) {
+            log.error("External " + e.getMessage());
+        }
+
+        log.info("Synced Product Order " + id + " (update).");
 
     }
 
