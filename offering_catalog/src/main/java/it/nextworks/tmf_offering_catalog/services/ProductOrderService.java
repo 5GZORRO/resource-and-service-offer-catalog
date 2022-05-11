@@ -43,7 +43,7 @@ public class ProductOrderService {
     @Transactional
     public ProductOrder create(ProductOrderCreate productOrderCreate) throws IOException, StakeholderNotRegisteredException, DIDGenerationRequestException {
         log.info("Received request to create a Product Order.");
-        ProductOrder productOrder = productOrderRepository.save(new ProductOrder(productOrderCreate));
+        ProductOrder productOrder = productOrderRepository.saveAndFlush(new ProductOrder(productOrderCreate));
         productOrder.href(protocol + hostname + ":" + port + path + productOrder.getId());
 
         OrganizationWrapper ow;
