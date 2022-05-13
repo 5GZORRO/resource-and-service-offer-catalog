@@ -34,7 +34,7 @@ public class ExternalProductOrderConsumer {
 
     @KafkaListener(
             topics = "#{@topicOrders}",
-            containerFactory = "kafkaListenerContainerFactory"
+            containerFactory = "kafkaOrderListenerContainerFactory"
     )
     public void listener(ExternalProductOrder externalProductOrder) {
 

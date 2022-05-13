@@ -51,7 +51,6 @@ public class PublishProductOrderService {
         if (skipSCLCMPost)
             log.info("Skipping POST request to Smart Contract Lifecycle Manager.");
         else {
-            publishProductOrder(catalogId, pwJson);
             if (!publishProductOrder(catalogId, pwJson)) {
                 productOrderStatus.setStatus(ProductOrderStatesEnum.PUBLISHING_FAILED);
                 productOrderStatusRepository.save(productOrderStatus);
