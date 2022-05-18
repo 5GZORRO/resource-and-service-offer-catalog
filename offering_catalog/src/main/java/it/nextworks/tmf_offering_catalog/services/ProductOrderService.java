@@ -40,11 +40,8 @@ public class ProductOrderService {
     @Autowired
     private ProductOrderCommunicationService productOrderCommunicationService;
 
-    @Transactional
     public ProductOrder create(ProductOrderCreate productOrderCreate) throws IOException, StakeholderNotRegisteredException, DIDGenerationRequestException {
         log.info("Received request to create a Product Order.");
-        ProductOrder productOrder = productOrderRepository.saveAndFlush(new ProductOrder(productOrderCreate));
-        productOrder.href(protocol + hostname + ":" + port + path + productOrder.getId());
 
         OrganizationWrapper ow;
         try {
@@ -53,14 +50,21 @@ public class ProductOrderService {
             throw new StakeholderNotRegisteredException(e.getMessage());
         }
 
+        ProductOrder productOrder = productOrderRepository.save(new ProductOrder(productOrderCreate));
+        String productOrderId = productOrder.getId();
+        productOrder.href(protocol + hostname + ":" + port + path + productOrderId);
+        productOrder = productOrderRepository.save(productOrder);
+
+        log.info("Product Order " + productOrderId + " stored in Catalog.");
+
         try {
-            productOrderCommunicationService.requestDID(productOrder.getId(), ow.getToken());
+            productOrderCommunicationService.requestDID(productOrderId, ow.getToken());
         } catch (DIDGenerationRequestException e) {
             productOrderRepository.delete(productOrder);
             throw e;
         }
 
-        log.info("Product Order created with id " + productOrder.getId() + ".");
+        log.info("Product Order created with id " + productOrderId + ".");
         return productOrder;
     }
 
