@@ -11,7 +11,9 @@ public enum ProductOrderStatesEnum {
 
     PUBLISHED("Product Order published"),
 
-    PUBLISHING_FAILED("Product Order publishing failed");
+    PUBLISHING_FAILED("Product Order publishing failed"),
+
+    INSTANTIATED("Product Order instantiated");
 
     private String value;
 
