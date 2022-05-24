@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.nextworks.tmf_offering_catalog.common.exception.NSSORequestException;
+import it.nextworks.tmf_offering_catalog.rest.ProductOrderController;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -22,28 +23,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class NSSOCommunicationService {
 
-    private class UserData {
-
-        @JsonProperty(value = "transaction_id")
-        private final String transactionId;
-
-        @JsonProperty(value = "product_id")
-        private final String productId;
-
-        @JsonCreator
-        public UserData(@JsonProperty(value = "transaction_id") String transactionId,
-                        @JsonProperty(value = "product_id") String productId) {
-            this.transactionId = transactionId;
-            this.productId = productId;
-        }
-    }
-
-    private class VSInstantiationRequest {
+    private static class VSInstantiationRequest {
 
         @JsonProperty(value = "name")
         private final String name;
@@ -58,14 +45,14 @@ public class NSSOCommunicationService {
         private final String tenantId;
 
         @JsonProperty(value = "userData")
-        private final UserData userData;
+        private final Map<String, String> userData;
 
         @JsonCreator
         public VSInstantiationRequest(@JsonProperty(value = "name") String name,
                                       @JsonProperty(value = "description") String description,
                                       @JsonProperty(value = "vsdId") String vsdId,
                                       @JsonProperty(value = "tenantId") String tenantId,
-                                      @JsonProperty(value = "userData") UserData userData) {
+                                      @JsonProperty(value = "userData") Map<String, String> userData) {
             this.name = name;
             this.description = description;
             this.vsdId = vsdId;
@@ -133,7 +120,8 @@ public class NSSOCommunicationService {
     }
 
     public void instantiateVS(String vsdId, String tenantId, String productOrderId,
-                              String productOfferId, String jSessionId)
+                              String productOfferId, ProductOrderController.SliceManagerParams sliceManagerParams,
+                              String jSessionId)
             throws IOException, NSSORequestException {
         log.info("Request VS " + vsdId + " instantiation for ProductOrder " + productOrderId + ".");
 
@@ -148,12 +136,21 @@ public class NSSOCommunicationService {
         CloseableHttpClient httpClient = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
         HttpPost httpPost = new HttpPost(request);
 
+        Map<String, String> userData = new HashMap<>();
+        userData.put("transaction_id", productOrderId);
+        userData.put("product_id", productOfferId);
+        userData.put("name", sliceManagerParams.getName());
+        userData.put("description", sliceManagerParams.getDescription());
+        userData.put("vsdId", sliceManagerParams.getVsdId());
+        userData.put("tenantId", sliceManagerParams.getTenantId());
+        userData.putAll(sliceManagerParams.getUserData());
+
         VSInstantiationRequest vsInstantiationRequest = new VSInstantiationRequest(
                 "Order " + productOrderId,
                 "Order " + productOrderId + ", Offer " + productOfferId + ", VS " + vsdId,
                 vsdId,
                 tenantId,
-                new UserData(productOrderId, productOfferId));
+                userData);
         String vsInstantiationRequestJson = objectMapper.writeValueAsString(vsInstantiationRequest);
         StringEntity stringEntity = new StringEntity(vsInstantiationRequestJson);
 

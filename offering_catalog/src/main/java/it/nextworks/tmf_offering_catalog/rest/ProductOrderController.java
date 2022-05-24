@@ -1,5 +1,7 @@
 package it.nextworks.tmf_offering_catalog.rest;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -20,9 +22,106 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.Map;
 
 @RestController
 public class ProductOrderController {
+
+    public static class Auth {
+
+        @JsonProperty("usr")
+        private String usr;
+
+        @JsonProperty("psw")
+        private String psw;
+
+        @JsonProperty("tenantId")
+        private String tenantId;
+
+        @JsonCreator
+        public Auth(@JsonProperty("usr") String usr,
+                    @JsonProperty("psw") String psw,
+                    @JsonProperty("tenantId") String tenantId) {
+            this.usr = usr;
+            this.psw = psw;
+            this.tenantId = tenantId;
+        }
+
+        public String getUsr() { return usr; }
+
+        public String getPsw() { return psw; }
+
+        public String getTenantId() { return tenantId; }
+    }
+
+    public static class SliceManagerParams {
+
+        @JsonProperty("name")
+        private String name;
+
+        @JsonProperty("description")
+        private String description;
+
+        @JsonProperty("vsdId")
+        private String vsdId;
+
+        @JsonProperty("tenantId")
+        private String tenantId;
+
+        @JsonProperty("userData")
+        private Map<String, String> userData;
+
+        @JsonCreator
+        public SliceManagerParams(@JsonProperty("name") String name,
+                                  @JsonProperty("description") String description,
+                                  @JsonProperty("vsdId") String vsdId,
+                                  @JsonProperty("tenantId") String tenantId,
+                                  @JsonProperty("userData") Map<String, String> userData) {
+            this.name = name;
+            this.description = description;
+            this.vsdId = vsdId;
+            this.tenantId = tenantId;
+            this.userData = userData;
+        }
+
+        public String getName() { return name; }
+
+        public String getDescription() { return description; }
+
+        public String getVsdId() { return vsdId; }
+
+        public String getTenantId() { return tenantId; }
+
+        public Map<String, String> getUserData() { return userData; }
+    }
+
+    public static class ProductOrderWInstantiationRequest {
+
+        @JsonProperty("productOrder")
+        private ProductOrderCreate productOrderCreate;
+
+        @JsonProperty("auth")
+        private Auth auth;
+
+        @JsonProperty("sliceManagerParams")
+        private SliceManagerParams sliceManagerParams;
+
+        @JsonCreator
+        public ProductOrderWInstantiationRequest(@JsonProperty("productOrder") ProductOrderCreate productOrderCreate,
+                                                 @JsonProperty("auth") Auth auth,
+                                                 @JsonProperty("sliceManagerParams") SliceManagerParams sliceManagerParams) {
+            this.productOrderCreate = productOrderCreate;
+            this.auth = auth;
+            this.sliceManagerParams = sliceManagerParams;
+        }
+
+        public ProductOrderCreate getProductOrderCreate() { return productOrderCreate; }
+
+        public Auth getAuth() { return auth; }
+
+        public SliceManagerParams getSliceManagerParams() { return sliceManagerParams; }
+    }
+
     private final static Logger log = LoggerFactory.getLogger(ProductOrderController.class);
 
     private static final String uuidRegex = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
@@ -54,26 +153,20 @@ public class ProductOrderController {
             produces = {"application/json;charset=utf-8"},
             consumes = {"application/json;charset=utf-8"},
             method = RequestMethod.POST)
-    ResponseEntity<?> createProductOrder(@ApiParam(value = "The ProductOrder to be created", required = true)
-                                         @Valid @RequestBody ProductOrderCreate productOrderCreate,
+    ResponseEntity<?> createProductOrder(@ApiParam(value = "ProductOrder to be created and instantiated", required = true)
+                                         @Valid @RequestBody ProductOrderWInstantiationRequest productOrderWInstantiationRequest,
                                          @ApiParam(value = "Boolean flag that indicate if the DID should be requested to the ID&P")
-                                         @RequestParam(value = "skipIDP", required = false) Boolean skipIDP,
-                                         @ApiParam(value = "Username to authenticate to NSSO")
-                                         @RequestParam(value = "usr") String usr,
-                                         @ApiParam(value = "Password to authenticate to NSSO")
-                                         @RequestParam(value = "psw") String psw,
-                                         @ApiParam(value = "Tenant ID to instantiate VS")
-                                         @RequestParam(value = "tenantId") String tenantId) {
+                                         @RequestParam(value = "skipIDP", required = false) Boolean skipIDP) {
         log.info("Web-Server: Received request to create a Product Order.");
 
-        if (productOrderCreate == null) {
+        if (productOrderWInstantiationRequest == null) {
             log.error("Web-Server: Invalid request body (productOrder) received.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg("Invalid request body (productOrder) received"));
         }
 
         ProductOrder productOrder;
         try {
-            productOrder = productOrderService.create(productOrderCreate, skipIDP, usr, psw, tenantId);
+            productOrder = productOrderService.create(productOrderWInstantiationRequest, skipIDP);
         } catch (IOException e) {
             log.error("Web-Server: DID request via CommunicationService failed; " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

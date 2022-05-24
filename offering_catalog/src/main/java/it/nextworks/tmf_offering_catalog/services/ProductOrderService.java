@@ -14,6 +14,7 @@ import it.nextworks.tmf_offering_catalog.information_models.service.ServiceSpecC
 import it.nextworks.tmf_offering_catalog.information_models.service.ServiceSpecCharacteristicValue;
 import it.nextworks.tmf_offering_catalog.information_models.service.ServiceSpecification;
 import it.nextworks.tmf_offering_catalog.repo.ProductOrderRepository;
+import it.nextworks.tmf_offering_catalog.rest.ProductOrderController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,10 +60,10 @@ public class ProductOrderService {
     @Autowired
     private NSSOCommunicationService nssoCommunicationService;
 
-    public ProductOrder create(ProductOrderCreate productOrderCreate, Boolean skipIDP,
-                               String usr, String psw, String tenantId)
-            throws IOException, StakeholderNotRegisteredException, DIDGenerationRequestException,
-            NotExistingEntityException, MalformedProductOrderException, NSSORequestException, MalformedProductOfferingException {
+    public ProductOrder create(ProductOrderController.ProductOrderWInstantiationRequest productOrderWInstantiationRequest,
+                               Boolean skipIDP) throws IOException, StakeholderNotRegisteredException,
+            DIDGenerationRequestException, NotExistingEntityException, MalformedProductOrderException,
+            NSSORequestException, MalformedProductOfferingException {
         log.info("Received request to create a Product Order.");
 
         OrganizationWrapper ow;
@@ -71,6 +72,11 @@ public class ProductOrderService {
         } catch (NotExistingEntityException e) {
             throw new StakeholderNotRegisteredException(e.getMessage());
         }
+
+        ProductOrderCreate productOrderCreate = productOrderWInstantiationRequest.getProductOrderCreate();
+        ProductOrderController.Auth auth = productOrderWInstantiationRequest.getAuth();
+        ProductOrderController.SliceManagerParams sliceManagerParams =
+                productOrderWInstantiationRequest.getSliceManagerParams();
 
         List<ProductOrderItem> productOrderItems = productOrderCreate.getProductOrderItem();
         if(productOrderItems == null)
@@ -141,9 +147,10 @@ public class ProductOrderService {
         if(vsdId == null)
             throw new MalformedProductOfferingException("Missing vsdId, abort.");
 
-        String jSessionId = nssoCommunicationService.login(usr, psw);
+        String jSessionId = nssoCommunicationService.login(auth.getUsr(), auth.getPsw());
 
-        nssoCommunicationService.instantiateVS(vsdId, tenantId, productOrderId, productOfferingId, jSessionId);
+        nssoCommunicationService.instantiateVS(vsdId, auth.getTenantId(), productOrderId,
+                productOfferingId, sliceManagerParams, jSessionId);
 
         return productOrder;
     }
