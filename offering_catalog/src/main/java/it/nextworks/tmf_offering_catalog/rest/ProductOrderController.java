@@ -54,47 +54,6 @@ public class ProductOrderController {
         public String getTenantId() { return tenantId; }
     }
 
-    public static class SliceManagerParams {
-
-        @JsonProperty("name")
-        private String name;
-
-        @JsonProperty("description")
-        private String description;
-
-        @JsonProperty("vsdId")
-        private String vsdId;
-
-        @JsonProperty("tenantId")
-        private String tenantId;
-
-        @JsonProperty("userData")
-        private Map<String, String> userData;
-
-        @JsonCreator
-        public SliceManagerParams(@JsonProperty("name") String name,
-                                  @JsonProperty("description") String description,
-                                  @JsonProperty("vsdId") String vsdId,
-                                  @JsonProperty("tenantId") String tenantId,
-                                  @JsonProperty("userData") Map<String, String> userData) {
-            this.name = name;
-            this.description = description;
-            this.vsdId = vsdId;
-            this.tenantId = tenantId;
-            this.userData = userData;
-        }
-
-        public String getName() { return name; }
-
-        public String getDescription() { return description; }
-
-        public String getVsdId() { return vsdId; }
-
-        public String getTenantId() { return tenantId; }
-
-        public Map<String, String> getUserData() { return userData; }
-    }
-
     public static class ProductOrderWInstantiationRequest {
 
         @JsonProperty("productOrder")
@@ -104,12 +63,12 @@ public class ProductOrderController {
         private Auth auth;
 
         @JsonProperty("sliceManagerParams")
-        private SliceManagerParams sliceManagerParams;
+        private Map<String, String> sliceManagerParams;
 
         @JsonCreator
         public ProductOrderWInstantiationRequest(@JsonProperty("productOrder") ProductOrderCreate productOrderCreate,
                                                  @JsonProperty("auth") Auth auth,
-                                                 @JsonProperty("sliceManagerParams") SliceManagerParams sliceManagerParams) {
+                                                 @JsonProperty("sliceManagerParams") Map<String, String> sliceManagerParams) {
             this.productOrderCreate = productOrderCreate;
             this.auth = auth;
             this.sliceManagerParams = sliceManagerParams;
@@ -119,7 +78,7 @@ public class ProductOrderController {
 
         public Auth getAuth() { return auth; }
 
-        public SliceManagerParams getSliceManagerParams() { return sliceManagerParams; }
+        public Map<String, String> getSliceManagerParams() { return sliceManagerParams; }
     }
 
     private final static Logger log = LoggerFactory.getLogger(ProductOrderController.class);

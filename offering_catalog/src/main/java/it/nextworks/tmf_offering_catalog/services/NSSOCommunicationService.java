@@ -120,7 +120,7 @@ public class NSSOCommunicationService {
     }
 
     public void instantiateVS(String vsdId, String tenantId, String productOrderId,
-                              String productOfferId, ProductOrderController.SliceManagerParams sliceManagerParams,
+                              String productOfferId, Map<String, String> sliceManagerParams,
                               String jSessionId)
             throws IOException, NSSORequestException {
         log.info("Request VS " + vsdId + " instantiation for ProductOrder " + productOrderId + ".");
@@ -136,21 +136,12 @@ public class NSSOCommunicationService {
         CloseableHttpClient httpClient = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
         HttpPost httpPost = new HttpPost(request);
 
-        Map<String, String> userData = new HashMap<>();
-        userData.put("transaction_id", productOrderId);
-        userData.put("product_id", productOfferId);
-        userData.put("name", sliceManagerParams.getName());
-        userData.put("description", sliceManagerParams.getDescription());
-        userData.put("vsdId", sliceManagerParams.getVsdId());
-        userData.put("tenantId", sliceManagerParams.getTenantId());
-        userData.putAll(sliceManagerParams.getUserData());
-
         VSInstantiationRequest vsInstantiationRequest = new VSInstantiationRequest(
                 "Order " + productOrderId,
                 "Order " + productOrderId + ", Offer " + productOfferId + ", VS " + vsdId,
                 vsdId,
                 tenantId,
-                userData);
+                sliceManagerParams);
         String vsInstantiationRequestJson = objectMapper.writeValueAsString(vsInstantiationRequest);
         StringEntity stringEntity = new StringEntity(vsInstantiationRequestJson);
 

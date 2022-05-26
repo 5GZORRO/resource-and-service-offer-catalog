@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -75,8 +76,7 @@ public class ProductOrderService {
 
         ProductOrderCreate productOrderCreate = productOrderWInstantiationRequest.getProductOrderCreate();
         ProductOrderController.Auth auth = productOrderWInstantiationRequest.getAuth();
-        ProductOrderController.SliceManagerParams sliceManagerParams =
-                productOrderWInstantiationRequest.getSliceManagerParams();
+        Map<String, String> sliceManagerParams = productOrderWInstantiationRequest.getSliceManagerParams();
 
         List<ProductOrderItem> productOrderItems = productOrderCreate.getProductOrderItem();
         if(productOrderItems == null)
