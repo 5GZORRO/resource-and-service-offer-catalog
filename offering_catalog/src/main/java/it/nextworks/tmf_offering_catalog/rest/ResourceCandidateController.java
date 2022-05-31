@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
 import org.threeten.bp.ZoneId;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@ApiIgnore
 public class ResourceCandidateController implements ResourceCandidateInterface {
 
     private final static Logger log = LoggerFactory.getLogger(ResourceCandidateController.class);

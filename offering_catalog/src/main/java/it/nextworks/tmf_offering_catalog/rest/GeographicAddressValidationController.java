@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
 import org.threeten.bp.ZoneId;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -31,6 +32,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @RestController
+@ApiIgnore
 public class GeographicAddressValidationController implements GeographicAddressValidationInterface {
 
     private final static Logger log = LoggerFactory.getLogger(GeographicAddressValidationController.class);

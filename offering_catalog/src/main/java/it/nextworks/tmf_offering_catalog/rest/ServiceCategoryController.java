@@ -18,11 +18,13 @@ import org.springframework.web.bind.annotation.*;
 import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
 import org.threeten.bp.ZoneId;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
+@ApiIgnore
 public class ServiceCategoryController implements ServiceCategoryInterface {
 
     private final static Logger log = LoggerFactory.getLogger(ServiceCategoryController.class);
