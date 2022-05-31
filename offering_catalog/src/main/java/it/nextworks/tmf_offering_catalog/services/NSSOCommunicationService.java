@@ -137,8 +137,8 @@ public class NSSOCommunicationService {
         HttpPost httpPost = new HttpPost(request);
 
         VSInstantiationRequest vsInstantiationRequest = new VSInstantiationRequest(
-                "Order " + productOrderId,
-                "Order " + productOrderId + ", Offer " + productOfferId + ", VS " + vsdId,
+                "Order_" + productOrderId,
+                "Order_" + productOrderId + "_Offer_" + productOfferId + "_VS_" + vsdId,
                 vsdId,
                 tenantId,
                 sliceManagerParams);
