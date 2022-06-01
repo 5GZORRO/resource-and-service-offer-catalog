@@ -87,7 +87,7 @@ public class ProductOrderService {
 
     @Transactional
     public void delete(String id) throws NotExistingEntityException, ProductOrderDeleteScLCMException, IOException {
-        productOrderCommunicationService.deleteProductOrder(id);
+        // productOrderCommunicationService.deleteProductOrder(id);
         productOrderRepository.deleteById(id);
     }
 
