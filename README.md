@@ -16,8 +16,12 @@ traders, VNF vendors and service providers.</br>
 
 ### Software dependencies
 - PostgreSQL </br>
+  ```bash
+  docker run --name some-postgres -p 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres
+  ```
 - Apache Kafka </br>
-
+  [Deploy Kafka on docker](https://www.baeldung.com/ops/kafka-docker-setup)
+  
 If you want to deploy RSOC in a not-virtualized environment you'll need also:
 
 - Java 8 </br>
@@ -32,13 +36,15 @@ If you want to deploy RSOC in a not-virtualized environment you'll need also:
     ```
 
 ### 5GZORRO Module dependencies
-- Identity and Permission Manager
-- Smart Resource and Service Discovery
-- Smart Contract Lifecycle Manager
+- [Identity and Permission Manager](https://github.com/5GZORRO/identity)
+- [Smart Resource and Service Discovery](https://github.com/5GZORRO/Smart-Resource-and-Service-Discovery-application)
+- [Smart Contract Lifecycle Manager](https://github.com/5GZORRO/smart-contract-lifecycle-manager)
 
 ## Installation
+The following procedures consider the previously listed dependencies already up and running.
 
 ### Local Machine
+
 Customize your Offering Catalog properties in 
 ```resource-and-service-offer-catalog/offering_catalog/src/main/resources/application-local.properties``` 
 then from ```resource-and-service-offer-catalog/``` run the following commands.
@@ -78,9 +84,9 @@ No particular configurations are needed.
 
 ## Maintainers
 **Pietro Giuseppe Giardina** - *Design* - p.giardina@nextworks.it </br>
-**Adriana Fernandez** - *Desgin* - adriana.fernandez@i2cat.net </br>
-**Michael De Angelis** - *Develop* - m.deangelis@nextworks.it </br>
+**Adriana Fernandez** - *Design* - adriana.fernandez@i2cat.net </br>
+**Michael De Angelis** - *Develop and Design* - m.deangelis@nextworks.it </br>
 **Daniel Bautista Miralles** - *Develop* - daniel.bautista@i2cat.net
 
 ## License
-This module is distributed under Apache 2.0 License terms.
+This module is distributed under [Apache 2.0 License](LICENSE) terms.
