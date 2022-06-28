@@ -31,7 +31,7 @@ public class ProductOrderUpdate {
     private BillingAccountRef billingAccount = null;
 
     @JsonProperty("cancellationDate")
-    private OffsetDateTime cancellationDate = null;
+    private String cancellationDate = null;
 
     @JsonProperty("cancellationReason")
     private String cancellationReason = null;
@@ -84,12 +84,12 @@ public class ProductOrderUpdate {
     private List<RelatedParty> relatedParty = null;
 
     @JsonProperty("requestedCompletionDate")
-    private OffsetDateTime requestedCompletionDate = null;
+    private String requestedCompletionDate = null;
 
     @JsonProperty("requestedStartDate")
-    private OffsetDateTime requestedStartDate = null;
+    private String requestedStartDate = null;
 
-    public ProductOrderUpdate cancellationDate(OffsetDateTime cancellationDate) {
+    public ProductOrderUpdate cancellationDate(String cancellationDate) {
         this.cancellationDate = cancellationDate;
         return this;
     }
@@ -101,11 +101,11 @@ public class ProductOrderUpdate {
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the super-class")
 
-    public OffsetDateTime getCancellationDate() {
+    public String getCancellationDate() {
         return cancellationDate;
     }
 
-    public void setCancellationDate(OffsetDateTime cancellationDate) {
+    public void setCancellationDate(String cancellationDate) {
         this.cancellationDate = cancellationDate;
     }
 
@@ -229,7 +229,7 @@ public class ProductOrderUpdate {
         this.priority = priority;
     }
 
-    public ProductOrderUpdate requestedCompletionDate(OffsetDateTime requestedCompletionDate) {
+    public ProductOrderUpdate requestedCompletionDate(String requestedCompletionDate) {
         this.requestedCompletionDate = requestedCompletionDate;
         return this;
     }
@@ -241,15 +241,15 @@ public class ProductOrderUpdate {
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the super-class")
 
-    public OffsetDateTime getRequestedCompletionDate() {
+    public String getRequestedCompletionDate() {
         return requestedCompletionDate;
     }
 
-    public void setRequestedCompletionDate(OffsetDateTime requestedCompletionDate) {
+    public void setRequestedCompletionDate(String requestedCompletionDate) {
         this.requestedCompletionDate = requestedCompletionDate;
     }
 
-    public ProductOrderUpdate requestedStartDate(OffsetDateTime requestedStartDate) {
+    public ProductOrderUpdate requestedStartDate(String requestedStartDate) {
         this.requestedStartDate = requestedStartDate;
         return this;
     }
@@ -261,11 +261,11 @@ public class ProductOrderUpdate {
      **/
     @ApiModelProperty(value = "When sub-classing, this defines the super-class")
 
-    public OffsetDateTime getRequestedStartDate() {
+    public String getRequestedStartDate() {
         return requestedStartDate;
     }
 
-    public void setRequestedStartDate(OffsetDateTime requestedStartDate) {
+    public void setRequestedStartDate(String requestedStartDate) {
         this.requestedStartDate = requestedStartDate;
     }
 
