@@ -47,19 +47,22 @@ public class BasePathController {
         return "redirect:swagger-ui/";
     }
 
-    @ApiOperation(value = "RSOC admin onboarding handler", nickname = "adminOnboardHandler",
+    @ApiOperation(value = "RSOC admin onboarding handler", nickname = "onboardHandler",
             notes = "Endpoint used by ID&P to trigger the admin onboarding")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success"),
             @ApiResponse(code = 400, message = "Bad Request", response = ErrMsg.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = ErrMsg.class)
     })
-    @PostMapping(value = "/adminOnboardHandler", produces = "application/json;charset=utf-8")
+    @PostMapping(value = "/onboardHandler", produces = "application/json;charset=utf-8")
     public
-    ResponseEntity<?> adminOnboardHandler(@ApiParam(value = "Stakeholder Status", required = true)
+    ResponseEntity<?> onboardHandler(@ApiParam(value = "Stakeholder Status", required = true)
                                           @Valid @RequestBody Stakeholder stakeholder) {
 
         log.info("Web-Server: Received request to onboard Stakeholder.");
+
+        if(!stakeholder.getState().equals("Stakeholder Registered"))
+            return badRequestResponse("Invalid Stakeholder Status, status is not 'Stakeholder Registered'.");
 
         if(stakeholder.getId_token() == null)
             return badRequestResponse("Invalid Stakeholder Status, empty ID Token.");

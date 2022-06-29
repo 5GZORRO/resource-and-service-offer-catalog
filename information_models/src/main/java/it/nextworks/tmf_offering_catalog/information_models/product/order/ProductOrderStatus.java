@@ -26,6 +26,10 @@ public class ProductOrderStatus {
     @Convert(converter = ProductOrderStatesEnumConverter.class)
     private ProductOrderStatesEnum status;
 
+    @JsonProperty("instanceId")
+    @Column(name = "instance_id")
+    private String instanceId;
+
     public ProductOrderStatus catalogId(String catalogId) {
         this.catalogId = catalogId;
         return this;
@@ -61,6 +65,15 @@ public class ProductOrderStatus {
         return status;
     }
 
+    public ProductOrderStatus instanceId(String instanceId) {
+        this.instanceId = instanceId;
+        return this;
+    }
+
+    public void setInstanceId(String instanceId) { this.instanceId = instanceId; }
+
+    public String getInstanceId() { return instanceId; }
+
     @Override
     public boolean equals(java.lang.Object o) {
 
@@ -70,15 +83,16 @@ public class ProductOrderStatus {
         if (o == null || getClass() != o.getClass())
             return false;
 
-        ProductOrderStatus productOfferingStatus = (ProductOrderStatus) o;
-        return Objects.equals(this.catalogId, productOfferingStatus.catalogId) &&
-                Objects.equals(this.did, productOfferingStatus.did) &&
-                Objects.equals(this.status, productOfferingStatus.status);
+        ProductOrderStatus productOrderStatus = (ProductOrderStatus) o;
+        return Objects.equals(this.catalogId, productOrderStatus.catalogId) &&
+                Objects.equals(this.did, productOrderStatus.did) &&
+                Objects.equals(this.status, productOrderStatus.status) &&
+                Objects.equals(this.instanceId, productOrderStatus.instanceId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(catalogId, status);
+        return Objects.hash(catalogId, did, status, instanceId);
     }
 
     @Override
@@ -88,6 +102,7 @@ public class ProductOrderStatus {
                 "    catalogId: " + toIndentedString(catalogId) + "\n" +
                 "    did: " + toIndentedString(did) + "\n" +
                 "    status: " + toIndentedString(status) + "\n" +
+                "    instanceId: " + toIndentedString(instanceId) + "\n" +
                 "}";
     }
 
