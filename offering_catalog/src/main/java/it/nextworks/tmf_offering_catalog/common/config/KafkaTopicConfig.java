@@ -16,11 +16,8 @@ public class KafkaTopicConfig {
     @Value(value = "${kafka.bootstrapAddress}")
     private String bootstrapAddress;
 
-    @Value("${kafka.topic.offerings}")
-    private String topicOfferings;
-
-    @Value("${kafka.topic.orders}")
-    private String topicOrders;
+    @Value("${kafka.topic}")
+    private String topic;
 
     @Bean
     public KafkaAdmin kafkaAdmin() {
@@ -30,10 +27,7 @@ public class KafkaTopicConfig {
     }
 
     @Bean
-    public String topicOfferings() { return topicOfferings; }
-
-    @Bean
-    public String topicOrders() { return topicOrders; }
+    public String topic() { return topic; }
 
     @Bean
     public NewTopic topic1() {

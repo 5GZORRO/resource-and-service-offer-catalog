@@ -8,8 +8,7 @@ POSTGRES_USER=postgres
 POSTGRES_PSW=mysecretpassword
 
 KAFKA_BOOTSTRAP_ADDRESS=172.28.3.196:9092
-KAFKA_TOPIC_OFFERINGS = opa-dlt-product-offerings
-KAFKA_TOPIC_ORDERS = opa-dlt-product-orders
+KAFKA_TOPIC=operatora-dlt-product-offerings
 
 DID_SERVICE_HOSTNAME=localhost
 DID_SERVICE_PORT=8081
