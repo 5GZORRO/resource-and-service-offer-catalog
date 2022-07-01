@@ -221,7 +221,7 @@ public class ProductOrderCommunicationService {
 
         productOrderStatusRepository.save(productOrderStatus);
 
-        log.info("Status of Product Order " + catalogId + " updated with DID " + did + ".");
+        log.info("Status of Product Offering " + catalogId + " updated with DID " + did + ".");
         ProductOrderItem productOrderItem = productOrder.getProductOrderItem().get(0);
         ProductOffering productOffering = productOfferingService.get(productOrderItem.getProductOffering().getId());
         ProductSpecification productSpecification = productSpecificationService.get(productOffering.getProductSpecification().getId());
