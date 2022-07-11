@@ -13,8 +13,6 @@ public enum ProductOrderStatesEnum {
 
     PUBLISHING_FAILED("Product Order publishing failed"),
 
-    EXTERNAL("External Product Order"),
-
     INSTANTIATED("Product Order instantiated");
 
     private String value;
