@@ -77,7 +77,7 @@ public class ExternalProductOfferingConsumer {
     private ExternalGeographicAddressRepository externalGeographicAddressRepository;
 
     @KafkaListener(
-            topics = "#{@topic}",
+            topics = "#{@topicOfferings}",
             containerFactory = "kafkaListenerContainerFactory")
     public void listener(ExternalProductOffering externalProductOffering) {
 

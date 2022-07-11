@@ -38,7 +38,7 @@ public class ProductOrder {
 
     @JsonProperty("cancellationDate")
     @Column(name = "cancellation_date")
-    private OffsetDateTime cancellationDate = null;
+    private String cancellationDate = null;
 
     @JsonProperty("cancellationReason")
     @Column(name = "cancellation_reason")
@@ -49,14 +49,14 @@ public class ProductOrder {
 
     @JsonProperty("completionDate")
     @Column(name = "completion_date")
-    private OffsetDateTime completionDate = null;
+    private String completionDate = null;
 
     @JsonProperty("description")
     private String description = null;
 
     @JsonProperty("expectedCompletionDate")
     @Column(name = "expected_completion_date")
-    private OffsetDateTime expectedCompletionDate = null;
+    private String expectedCompletionDate = null;
 
     @JsonProperty("externalId")
     @Column(name = "external_id")
@@ -68,18 +68,18 @@ public class ProductOrder {
 
     @JsonProperty("orderDate")
     @Column(name = "order_date")
-    private OffsetDateTime orderDate = null;
+    private String orderDate = null;
 
     @JsonProperty("priority")
     private String priority = null;
 
     @JsonProperty("requestedCompletionDate")
     @Column(name = "requested_completion_date")
-    private OffsetDateTime requestedCompletionDate = null;
+    private String requestedCompletionDate = null;
 
     @JsonProperty("requestedStartDate")
     @Column(name = "requested_start_date")
-    private OffsetDateTime requestedStartDate = null;
+    private String requestedStartDate = null;
 
     @JsonProperty("agreement")
     @Valid
@@ -219,7 +219,7 @@ public class ProductOrder {
         this.href = href;
     }
 
-    public ProductOrder cancellationDate(OffsetDateTime cancellationDate) {
+    public ProductOrder cancellationDate(String cancellationDate) {
         this.cancellationDate = cancellationDate;
         return this;
     }
@@ -231,11 +231,11 @@ public class ProductOrder {
      **/
     @ApiModelProperty(value = "Date when the order is cancelled. This is used when order is cancelled. ")
     @Valid
-    public OffsetDateTime getCancellationDate() {
+    public String getCancellationDate() {
         return cancellationDate;
     }
 
-    public void setCancellationDate(OffsetDateTime cancellationDate) {
+    public void setCancellationDate(String cancellationDate) {
         this.cancellationDate = cancellationDate;
     }
 
@@ -277,7 +277,7 @@ public class ProductOrder {
         this.category = category;
     }
 
-    public ProductOrder completionDate(OffsetDateTime completionDate) {
+    public ProductOrder completionDate(String completionDate) {
         this.completionDate = completionDate;
         return this;
     }
@@ -289,11 +289,11 @@ public class ProductOrder {
      **/
     @ApiModelProperty(value = "Date when the order was completed")
     @Valid
-    public OffsetDateTime getCompletionDate() {
+    public String getCompletionDate() {
         return completionDate;
     }
 
-    public void setCompletionDate(OffsetDateTime completionDate) {
+    public void setCompletionDate(String completionDate) {
         this.completionDate = completionDate;
     }
 
@@ -316,7 +316,7 @@ public class ProductOrder {
         this.description = description;
     }
 
-    public ProductOrder expectedCompletionDate(OffsetDateTime expectedCompletionDate) {
+    public ProductOrder expectedCompletionDate(String expectedCompletionDate) {
         this.expectedCompletionDate = expectedCompletionDate;
         return this;
     }
@@ -328,11 +328,11 @@ public class ProductOrder {
      **/
     @ApiModelProperty(value = "Expected delivery date amended by the provider")
     @Valid
-    public OffsetDateTime getExpectedCompletionDate() {
+    public String getExpectedCompletionDate() {
         return expectedCompletionDate;
     }
 
-    public void setExpectedCompletionDate(OffsetDateTime expectedCompletionDate) {
+    public void setExpectedCompletionDate(String expectedCompletionDate) {
         this.expectedCompletionDate = expectedCompletionDate;
     }
 
@@ -374,7 +374,7 @@ public class ProductOrder {
         this.notificationContact = notificationContact;
     }
 
-    public ProductOrder orderDate(OffsetDateTime orderDate) {
+    public ProductOrder orderDate(String orderDate) {
         this.orderDate = orderDate;
         return this;
     }
@@ -386,11 +386,11 @@ public class ProductOrder {
      **/
     @ApiModelProperty(value = "Date when the order was created")
     @Valid
-    public OffsetDateTime getOrderDate() {
+    public String getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(OffsetDateTime orderDate) {
+    public void setOrderDate(String orderDate) {
         this.orderDate = orderDate;
     }
 
@@ -413,7 +413,7 @@ public class ProductOrder {
         this.priority = priority;
     }
 
-    public ProductOrder requestedCompletionDate(OffsetDateTime requestedCompletionDate) {
+    public ProductOrder requestedCompletionDate(String requestedCompletionDate) {
         this.requestedCompletionDate = requestedCompletionDate;
         return this;
     }
@@ -425,15 +425,15 @@ public class ProductOrder {
      **/
     @ApiModelProperty(value = "Requested delivery date from the requestor perspective")
     @Valid
-    public OffsetDateTime getRequestedCompletionDate() {
+    public String getRequestedCompletionDate() {
         return requestedCompletionDate;
     }
 
-    public void setRequestedCompletionDate(OffsetDateTime requestedCompletionDate) {
+    public void setRequestedCompletionDate(String requestedCompletionDate) {
         this.requestedCompletionDate = requestedCompletionDate;
     }
 
-    public ProductOrder requestedStartDate(OffsetDateTime requestedStartDate) {
+    public ProductOrder requestedStartDate(String requestedStartDate) {
         this.requestedStartDate = requestedStartDate;
         return this;
     }
@@ -445,11 +445,11 @@ public class ProductOrder {
      **/
     @ApiModelProperty(value = "Order fulfillment start date wished by the requestor. This is used when, for any reason, requestor cannot allow seller to begin to operationally begin the fulfillment before a date. ")
     @Valid
-    public OffsetDateTime getRequestedStartDate() {
+    public String getRequestedStartDate() {
         return requestedStartDate;
     }
 
-    public void setRequestedStartDate(OffsetDateTime requestedStartDate) {
+    public void setRequestedStartDate(String requestedStartDate) {
         this.requestedStartDate = requestedStartDate;
     }
 
