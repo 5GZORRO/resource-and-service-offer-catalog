@@ -17,7 +17,7 @@ import java.util.Objects;
 public class ProductOrderCreate {
 
     @JsonProperty("cancellationDate")
-    private OffsetDateTime cancellationDate = null;
+    private String cancellationDate = null;
 
     @JsonProperty("cancellationReason")
     private String cancellationReason = null;
@@ -38,10 +38,10 @@ public class ProductOrderCreate {
     private String priority = null;
 
     @JsonProperty("requestedCompletionDate")
-    private OffsetDateTime requestedCompletionDate = null;
+    private String requestedCompletionDate = null;
 
     @JsonProperty("requestedStartDate")
-    private OffsetDateTime requestedStartDate = null;
+    private String requestedStartDate = null;
 
     @JsonProperty("agreement")
     @Valid
@@ -91,7 +91,7 @@ public class ProductOrderCreate {
     @JsonProperty("@type")
     private String type = null;
 
-    public ProductOrderCreate cancellationDate(OffsetDateTime cancellationDate) {
+    public ProductOrderCreate cancellationDate(String cancellationDate) {
         this.cancellationDate = cancellationDate;
         return this;
     }
@@ -103,11 +103,11 @@ public class ProductOrderCreate {
      **/
     @ApiModelProperty(value = "Date when the order is cancelled. This is used when order is cancelled. ")
     @Valid
-    public OffsetDateTime getCancellationDate() {
+    public String getCancellationDate() {
         return cancellationDate;
     }
 
-    public void setCancellationDate(OffsetDateTime cancellationDate) {
+    public void setCancellationDate(String cancellationDate) {
         this.cancellationDate = cancellationDate;
     }
 
@@ -225,7 +225,7 @@ public class ProductOrderCreate {
         this.priority = priority;
     }
 
-    public ProductOrderCreate requestedCompletionDate(OffsetDateTime requestedCompletionDate) {
+    public ProductOrderCreate requestedCompletionDate(String requestedCompletionDate) {
         this.requestedCompletionDate = requestedCompletionDate;
         return this;
     }
@@ -237,15 +237,15 @@ public class ProductOrderCreate {
      **/
     @ApiModelProperty(value = "Requested delivery date from the requestor perspective")
     @Valid
-    public OffsetDateTime getRequestedCompletionDate() {
+    public String getRequestedCompletionDate() {
         return requestedCompletionDate;
     }
 
-    public void setRequestedCompletionDate(OffsetDateTime requestedCompletionDate) {
+    public void setRequestedCompletionDate(String requestedCompletionDate) {
         this.requestedCompletionDate = requestedCompletionDate;
     }
 
-    public ProductOrderCreate requestedStartDate(OffsetDateTime requestedStartDate) {
+    public ProductOrderCreate requestedStartDate(String requestedStartDate) {
         this.requestedStartDate = requestedStartDate;
         return this;
     }
@@ -257,11 +257,11 @@ public class ProductOrderCreate {
      **/
     @ApiModelProperty(value = "Order fulfillment start date wished by the requestor. This is used when, for any reason, requestor cannot allow seller to begin to operationally begin the fulfillment before a date. ")
     @Valid
-    public OffsetDateTime getRequestedStartDate() {
+    public String getRequestedStartDate() {
         return requestedStartDate;
     }
 
-    public void setRequestedStartDate(OffsetDateTime requestedStartDate) {
+    public void setRequestedStartDate(String requestedStartDate) {
         this.requestedStartDate = requestedStartDate;
     }
 
