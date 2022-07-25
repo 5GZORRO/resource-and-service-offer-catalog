@@ -1,27 +1,49 @@
 package it.nextworks.tmf_offering_catalog.components;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
+import it.nextworks.tmf_offering_catalog.information_models.common.RelatedParty;
 import it.nextworks.tmf_offering_catalog.information_models.kafka.ExternalProductOrder;
+import it.nextworks.tmf_offering_catalog.information_models.party.OrganizationWrapper;
+import it.nextworks.tmf_offering_catalog.information_models.product.ProductOfferingStatus;
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrder;
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderStatesEnum;
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderStatus;
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderUpdate;
+import it.nextworks.tmf_offering_catalog.repo.ProductOfferingStatusRepository;
 import it.nextworks.tmf_offering_catalog.repo.ProductOrderRepository;
 import it.nextworks.tmf_offering_catalog.repo.ProductOrderStatusRepository;
-import it.nextworks.tmf_offering_catalog.services.ProductOfferingPriceService;
+import it.nextworks.tmf_offering_catalog.services.OrganizationService;
 import it.nextworks.tmf_offering_catalog.services.ProductOrderService;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @Component
 public class ExternalProductOrderConsumer {
 
     private static final Logger log = LoggerFactory.getLogger(ExternalProductOrderConsumer.class);
+
+    private static final String protocol = "http://";
+    @Value("${sc_lcm.hostname}")
+    private String scLcmHostname;
+    @Value("${sc_lcm.port}")
+    private String scLcmPort;
+    @Value("${sc_lcm.derivative_issue.sc_lcm_request_path}")
+    private String scLcmRequestPath;
 
     @Autowired
     private ProductOrderRepository productOrderRepository;
@@ -30,13 +52,28 @@ public class ExternalProductOrderConsumer {
     private ProductOrderStatusRepository productOrderStatusRepository;
 
     @Autowired
+    private ProductOfferingStatusRepository productOfferingStatusRepository;
+
+    @Autowired
     private ProductOrderService productOrderService;
+
+    @Autowired
+    private OrganizationService organizationService;
+
+    private OrganizationWrapper organization;
+
+    private final ObjectMapper objectMapper;
+
+    @Autowired
+    public ExternalProductOrderConsumer(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     @KafkaListener(
             topics = "#{@topicOrders}",
             containerFactory = "kafkaOrderListenerContainerFactory"
     )
-    public void listener(ExternalProductOrder externalProductOrder) {
+    public void listener(ExternalProductOrder externalProductOrder) throws NotExistingEntityException, IOException {
 
         log.info("Receiving External Product Order.");
 
@@ -60,7 +97,7 @@ public class ExternalProductOrderConsumer {
         syncProductOrder(productOrder, did);
     }
 
-    private void syncProductOrder(ProductOrder productOrder, String did) {
+    private void syncProductOrder(ProductOrder productOrder, String did) throws NotExistingEntityException, IOException {
         String id = productOrder.getId();
 
         log.info("Syncing Product Order " + id + ".");
@@ -118,7 +155,82 @@ public class ExternalProductOrderConsumer {
             log.error("External " + e.getMessage());
         }
 
+        try {
+            organization = organizationService.get();
+        } catch (NotExistingEntityException e) {
+            log.error(e.getMessage());
+            return;
+        }
+
+        RelatedParty seller = null;
+        RelatedParty buyer = null;
+        for (RelatedParty relatedParty : productOrder.getRelatedParty()) {
+            if (isSellerParty(relatedParty)) {
+                seller = relatedParty;
+            } else {
+                buyer = relatedParty;
+            }
+        }
+
+        if (seller == null || buyer == null) {
+            throw new NotExistingEntityException("RelatedParty missing.");
+        }
+
+        if (amISellerParty(seller) && isSpectrumOrder(productOrder)) {
+            issueDerivativeSpectoken(productOrder, buyer);
+            log.info("Derivative Spectoken issued.");
+        }
+
         log.info("Synced Product Order " + id + " (update).");
+
+    }
+
+    private boolean isSellerParty(RelatedParty relatedParty) {
+        return "Seller".equals(relatedParty.getRole());
+    }
+
+    private boolean amISellerParty(RelatedParty relatedParty) {
+        return relatedParty.getExtendedInfo().equals(organization.getStakeholderDID());
+    }
+
+    private boolean isSpectrumOrder(ProductOrder productOrder) {
+        return "Spectrum".equals(productOrder.getCategory());
+    }
+
+    private static class IssueDerivativeSpectokenRequest {
+
+        @JsonProperty("offerDid")
+        private final String offerDid;
+
+        @JsonProperty("ownerDid")
+        private final String ownerDid;
+
+        @JsonCreator
+        public IssueDerivativeSpectokenRequest(@JsonProperty("offerDid") String offerDid, @JsonProperty("ownerDid") String ownerDid) {
+            this.offerDid = offerDid;
+            this.ownerDid = ownerDid;
+        }
+    }
+
+    private void issueDerivativeSpectoken(ProductOrder productOrder, RelatedParty buyer) throws NotExistingEntityException, IOException {
+        String offerCatalogId = productOrder.getProductOrderItem().get(0).getProductOffering().getId();
+        Optional<ProductOfferingStatus> productOfferingStatusOptional = productOfferingStatusRepository.findById(offerCatalogId);
+        if (!productOfferingStatusOptional.isPresent()) {
+            throw new NotExistingEntityException("Product Offering Status for id " + offerCatalogId + " not found in DB.");
+        }
+        ProductOfferingStatus productOfferingStatus = productOfferingStatusOptional.get();
+        IssueDerivativeSpectokenRequest issueDerivativeSpectokenRequest = new IssueDerivativeSpectokenRequest(productOfferingStatus.getDid(), buyer.getExtendedInfo());
+        String roJson = objectMapper.writeValueAsString(issueDerivativeSpectokenRequest);
+
+        String request = protocol + scLcmHostname + ":" + scLcmPort + scLcmRequestPath;
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(request);
+        StringEntity stringEntity = new StringEntity(roJson);
+
+        httpPost.setEntity(stringEntity);
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("Content-type", "application/json");
+        CloseableHttpResponse response = httpClient.execute(httpPost);
 
     }
 
