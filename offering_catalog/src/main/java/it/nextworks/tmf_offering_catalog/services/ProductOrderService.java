@@ -87,10 +87,18 @@ public class ProductOrderService {
         return productOrderOptional.get();
     }
 
+    /*
     @Transactional
     public void delete(String id) throws NotExistingEntityException, ProductOrderDeleteScLCMException, IOException {
         // productOrderCommunicationService.deleteProductOrder(id);
         productOrderRepository.deleteById(id);
+    }
+    */
+
+    @Transactional
+    public void end(String id) throws NotExistingEntityException, ProductOrderDeleteScLCMException, IOException {
+        productOrderCommunicationService.endProductOrder(id);
+        //productOrderRepository.deleteById(id);
     }
 
     public ProductOrder patch(String id, ProductOrderUpdate productOrderUpdate)

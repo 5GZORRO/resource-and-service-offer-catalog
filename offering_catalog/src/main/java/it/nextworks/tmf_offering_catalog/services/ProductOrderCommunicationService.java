@@ -17,10 +17,7 @@ import it.nextworks.tmf_offering_catalog.information_models.product.order.Produc
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderStatus;
 import it.nextworks.tmf_offering_catalog.repo.ProductOrderStatusRepository;
 import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.*;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -175,7 +172,7 @@ public class ProductOrderCommunicationService {
                 .did(null)
                 .status(ProductOrderStatesEnum.DID_REQUESTED);
         productOrderStatusRepository.save(productOrderStatus);
-
+/*
         CloseableHttpResponse response;
         try {
             response = httpClient.execute(httpPost);
@@ -197,7 +194,7 @@ public class ProductOrderCommunicationService {
             productOrderStatusRepository.delete(productOrderStatus);
             throw new DIDGenerationRequestException("Create DID request via CommunicationService not accepted by ID&P");
         }
-
+*/
         log.info("Create DID request accepted by ID&P.");
     }
 
@@ -273,5 +270,41 @@ public class ProductOrderCommunicationService {
         productOrderStatusRepository.delete(productOrderStatus);
 
         log.info("Delete Product Order request accepted.");
+    }
+
+    public void endProductOrder(String catalogId) throws NotExistingEntityException, IOException, ProductOrderDeleteScLCMException {
+
+        log.info("Sending end Product Order request.");
+
+        /*
+        Optional<ProductOrderStatus> toEnd = productOrderStatusRepository.findById(catalogId);
+        if (!toEnd.isPresent())
+            throw new NotExistingEntityException("Product Order Status for id " + catalogId + " not found in DB.");
+
+        ProductOrderStatus productOrderStatus = toEnd.get();
+        ProductOrderStatesEnum productOrderStatesEnum = productOrderStatus.getStatus();
+        if (productOrderStatesEnum == ProductOrderStatesEnum.PUBLISHING_FAILED) {
+            productOrderStatusRepository.delete(productOrderStatus);
+
+            log.info("Delete Product Order request accepted.");
+            return;
+        }
+        */
+
+        String request = protocol + scLcmHostname + ":" + scLcmPort + scLcmRequestPath + "end?orderId=" + catalogId;
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPut httpPut = new HttpPut(request);
+
+        httpPut.setHeader("Accept", "application/json");
+
+        CloseableHttpResponse response = httpClient.execute(httpPut);
+
+        if (response.getStatusLine().getStatusCode() != 200) {
+            throw new ProductOrderDeleteScLCMException("The Smart Contract LCM entity did not accept the end request.");
+        }
+
+        //productOrderStatusRepository.delete(productOrderStatus);
+
+        log.info("End Product Order request accepted.");
     }
 }
