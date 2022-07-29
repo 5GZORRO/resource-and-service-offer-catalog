@@ -172,7 +172,7 @@ public class ProductOrderCommunicationService {
                 .did(null)
                 .status(ProductOrderStatesEnum.DID_REQUESTED);
         productOrderStatusRepository.save(productOrderStatus);
-/*
+
         CloseableHttpResponse response;
         try {
             response = httpClient.execute(httpPost);
@@ -194,7 +194,7 @@ public class ProductOrderCommunicationService {
             productOrderStatusRepository.delete(productOrderStatus);
             throw new DIDGenerationRequestException("Create DID request via CommunicationService not accepted by ID&P");
         }
-*/
+
         log.info("Create DID request accepted by ID&P.");
     }
 
@@ -276,7 +276,6 @@ public class ProductOrderCommunicationService {
 
         log.info("Sending end Product Order request.");
 
-        /*
         Optional<ProductOrderStatus> toEnd = productOrderStatusRepository.findById(catalogId);
         if (!toEnd.isPresent())
             throw new NotExistingEntityException("Product Order Status for id " + catalogId + " not found in DB.");
@@ -289,7 +288,7 @@ public class ProductOrderCommunicationService {
             log.info("Delete Product Order request accepted.");
             return;
         }
-        */
+
 
         String request = protocol + scLcmHostname + ":" + scLcmPort + scLcmRequestPath + "end?orderId=" + catalogId;
         CloseableHttpClient httpClient = HttpClients.createDefault();
