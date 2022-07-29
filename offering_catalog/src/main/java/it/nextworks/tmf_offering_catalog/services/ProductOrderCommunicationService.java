@@ -172,7 +172,7 @@ public class ProductOrderCommunicationService {
                 .did(null)
                 .status(ProductOrderStatesEnum.DID_REQUESTED);
         productOrderStatusRepository.save(productOrderStatus);
-/*
+
         CloseableHttpResponse response;
         try {
             response = httpClient.execute(httpPost);
@@ -194,7 +194,7 @@ public class ProductOrderCommunicationService {
             productOrderStatusRepository.delete(productOrderStatus);
             throw new DIDGenerationRequestException("Create DID request via CommunicationService not accepted by ID&P");
         }
-*/
+
         log.info("Create DID request accepted by ID&P.");
     }
 
