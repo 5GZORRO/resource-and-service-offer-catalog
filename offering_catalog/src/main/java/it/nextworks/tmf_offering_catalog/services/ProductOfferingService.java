@@ -1,5 +1,8 @@
 package it.nextworks.tmf_offering_catalog.services;
 
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.nextworks.tmf_offering_catalog.common.exception.*;
 import it.nextworks.tmf_offering_catalog.information_models.common.*;
 import it.nextworks.tmf_offering_catalog.information_models.party.OrganizationWrapper;
@@ -7,6 +10,11 @@ import it.nextworks.tmf_offering_catalog.information_models.product.*;
 import it.nextworks.tmf_offering_catalog.repo.ProductOfferingRepository;
 import it.nextworks.tmf_offering_catalog.repo.ProductOfferingStatusRepository;
 import it.nextworks.tmf_offering_catalog.rest.Filter;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +27,7 @@ import org.threeten.bp.OffsetDateTime;
 import org.threeten.bp.ZoneId;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +44,13 @@ public class ProductOfferingService {
     @Value("${server.port}")
     private String port;
     private static final String path = "/tmf-api/productCatalogManagement/v4/productOffering/";
+
+    @Value("${sc_lcm.hostname}")
+    private String scLcmHostname;
+    @Value("${sc_lcm.port}")
+    private String scLcmPort;
+    @Value("${sc_lcm.product_offer.sc_lcm_request_path}")
+    private String scLcmRequestPath;
 
     @Autowired
     private CommunicationService communicationService;
@@ -543,6 +559,38 @@ public class ProductOfferingService {
         productOffering.setVersion(productOfferingUpdate.getVersion());
 
         productOfferingRepository.save(productOffering);
+////////Send update to SCLM
+        /*
+        try {
+            String json = "";
+            String request = protocol + scLcmHostname + ":" + scLcmPort + scLcmRequestPath + "?offerId=" + id;
+            CloseableHttpClient httpClient = HttpClients.createDefault();
+            HttpPut httpPut = new HttpPut(request);
+
+            ObjectMapper mapper = new ObjectMapper();
+
+            try {
+                // convert user object to json string and return it
+                json = mapper.writeValueAsString(productOffering);
+            }
+            catch (JsonGenerationException | JsonMappingException e) {
+                // catch various errors
+                e.printStackTrace();
+            }
+
+            httpPut.setHeader("Accept", "application/json");
+            httpPut.setEntity(new StringEntity(json, StandardCharsets.UTF_8));
+
+            CloseableHttpResponse response = httpClient.execute(httpPut);
+
+            if (response.getStatusLine().getStatusCode() != 200) {
+                throw new ProductOfferingInPublicationException("The Smart Contract LCM entity did not accept the update request.");
+            }
+        }catch(Exception e){
+            log.info("Error while accessing SCLM to update offering with id " + id);
+        }
+        */
+////////
 
         log.info("Product Offering " + id + " patched.");
 
