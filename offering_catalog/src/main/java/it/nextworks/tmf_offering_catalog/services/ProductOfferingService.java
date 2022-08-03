@@ -7,6 +7,9 @@ import it.nextworks.tmf_offering_catalog.common.exception.*;
 import it.nextworks.tmf_offering_catalog.information_models.common.*;
 import it.nextworks.tmf_offering_catalog.information_models.party.OrganizationWrapper;
 import it.nextworks.tmf_offering_catalog.information_models.product.*;
+import it.nextworks.tmf_offering_catalog.information_models.product.sla.ServiceLevelAgreement;
+import it.nextworks.tmf_offering_catalog.information_models.resource.ResourceSpecification;
+import it.nextworks.tmf_offering_catalog.information_models.service.ServiceSpecification;
 import it.nextworks.tmf_offering_catalog.repo.ProductOfferingRepository;
 import it.nextworks.tmf_offering_catalog.repo.ProductOfferingStatusRepository;
 import it.nextworks.tmf_offering_catalog.rest.Filter;
@@ -559,27 +562,21 @@ public class ProductOfferingService {
         productOffering.setVersion(productOfferingUpdate.getVersion());
 
         productOfferingRepository.save(productOffering);
+
 ////////Send update to SCLM
-        /*
         try {
             String json = "";
-            String request = protocol + scLcmHostname + ":" + scLcmPort + scLcmRequestPath + "?offerId=" + id;
+            String request = protocol + scLcmHostname + ":" + scLcmPort + scLcmRequestPath + id;
             CloseableHttpClient httpClient = HttpClients.createDefault();
             HttpPut httpPut = new HttpPut(request);
-
-            ObjectMapper mapper = new ObjectMapper();
-
-            try {
-                // convert user object to json string and return it
-                json = mapper.writeValueAsString(productOffering);
-            }
-            catch (JsonGenerationException | JsonMappingException e) {
-                // catch various errors
-                e.printStackTrace();
-            }
-
             httpPut.setHeader("Accept", "application/json");
-            httpPut.setEntity(new StringEntity(json, StandardCharsets.UTF_8));
+            httpPut.setHeader("Content-type", "application/json");
+
+            // Construct the payloads for the classify and publish POST requests
+            String pwJson = communicationService.createPatchJSON(productOffering, UUID.randomUUID().toString());
+
+            StringEntity stringEntity = new StringEntity(pwJson);
+            httpPut.setEntity(stringEntity);
 
             CloseableHttpResponse response = httpClient.execute(httpPut);
 
@@ -589,7 +586,6 @@ public class ProductOfferingService {
         }catch(Exception e){
             log.info("Error while accessing SCLM to update offering with id " + id);
         }
-        */
 ////////
 
         log.info("Product Offering " + id + " patched.");
