@@ -31,10 +31,7 @@ import org.threeten.bp.ZoneId;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ProductOfferingService {
@@ -160,6 +157,25 @@ public class ProductOfferingService {
             productOffering.setLastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
 
         updateCategory(productOffering.getCategory(), productOffering.getHref(), id, productOffering.getName());
+
+        //check if the offer validity period >= price validity period
+        try{
+            if (productOffering.getProductOfferingPrice().size()>0 && productOffering.getProductOfferingPrice().get(0).getValidFor() !=null){
+                Date offerStartDate = new Date(OffsetDateTime.parse(productOffering.getValidFor().getStartDateTime()).toInstant().toEpochMilli());
+                Date offerEndDate = new Date(OffsetDateTime.parse(productOffering.getValidFor().getEndDateTime()).toInstant().toEpochMilli());
+                Date offerPriceStartDate = new Date(OffsetDateTime.parse(productOffering.getProductOfferingPrice().get(0).getValidFor().getStartDateTime()).toInstant().toEpochMilli());
+                Date offerPriceEndDate = new Date(OffsetDateTime.parse(productOffering.getProductOfferingPrice().get(0).getValidFor().getEndDateTime()).toInstant().toEpochMilli());
+                if ((offerPriceStartDate.equals(offerStartDate) || offerPriceStartDate.after(offerStartDate)) &&
+                        (offerPriceEndDate.equals(offerEndDate) || offerPriceEndDate.before(offerEndDate))){
+
+                }else{
+                    log.info("Invalid offering price period for product offer id " + productOffering.getId());
+                    throw new NotExistingEntityException("Invalid offering price period for product offer id " + productOffering.getId());
+                }
+            }
+        }catch(Exception e){
+            throw new NullIdentifierException(e.getMessage());
+        }
 
         productOfferingRepository.save(productOffering);
         log.info("Product Offering " + id + " stored in Catalog.");
