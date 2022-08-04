@@ -169,8 +169,8 @@ public class ProductOfferingService {
                         (offerEndDate.equals(offerPriceEndDate) || offerEndDate.before(offerPriceEndDate))){
 
                 }else{
-                    log.info("Invalid offering price period for product offer id " + productOffering.getId());
-                    throw new NotExistingEntityException("Invalid offering price period for product offer id " + productOffering.getId());
+                    log.info("Invalid offering price period to create product offer");
+                    throw new NotExistingEntityException("Invalid offering price period to create product offer");
                 }
             }
         }catch(Exception e){

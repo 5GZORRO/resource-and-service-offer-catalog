@@ -1,9 +1,6 @@
 package it.nextworks.tmf_offering_catalog.services;
 
-import it.nextworks.tmf_offering_catalog.common.exception.DIDGenerationRequestException;
-import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
-import it.nextworks.tmf_offering_catalog.common.exception.ProductOrderDeleteScLCMException;
-import it.nextworks.tmf_offering_catalog.common.exception.StakeholderNotRegisteredException;
+import it.nextworks.tmf_offering_catalog.common.exception.*;
 import it.nextworks.tmf_offering_catalog.information_models.common.PlaceRef;
 import it.nextworks.tmf_offering_catalog.information_models.common.RelatedParty;
 import it.nextworks.tmf_offering_catalog.information_models.party.OrganizationWrapper;
@@ -16,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.threeten.bp.OffsetDateTime;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,6 +41,9 @@ public class ProductOrderService {
     @Autowired
     private ProductOrderCommunicationService productOrderCommunicationService;
 
+    @Autowired
+    private ProductOfferingService productOfferingService;
+
     public ProductOrder create(ProductOrderCreate productOrderCreate) throws IOException, StakeholderNotRegisteredException, DIDGenerationRequestException {
         log.info("Received request to create a Product Order.");
 
@@ -50,6 +52,31 @@ public class ProductOrderService {
             ow = organizationService.get();
         } catch (NotExistingEntityException e) {
             throw new StakeholderNotRegisteredException(e.getMessage());
+        }
+
+        //check if the offer validity period >= price validity period
+        try{
+            if (productOrderCreate.getProductOrderItem().size()>0 && productOrderCreate.getProductOrderItem().get(0).getProductOffering().getId() !=null){
+                ProductOffering productOffering = productOfferingService.get(productOrderCreate.getProductOrderItem().get(0).getProductOffering().getId());
+                if(productOffering == null){
+                    log.info("Offering Id " + productOrderCreate.getProductOrderItem().get(0).getProductOffering().getId() + " do not exist to create Order");
+                    throw new NotExistingEntityException("Offering Id " + productOrderCreate.getProductOrderItem().get(0).getProductOffering().getId() + " do not exist to create Order");
+                }
+
+                Date offerStartDate = new Date(OffsetDateTime.parse(productOffering.getValidFor().getStartDateTime()).toInstant().toEpochMilli());
+                Date offerEndDate = new Date(OffsetDateTime.parse(productOffering.getValidFor().getEndDateTime()).toInstant().toEpochMilli());
+                Date requestedStartDate = new Date(OffsetDateTime.parse(productOrderCreate.getRequestedStartDate()).toInstant().toEpochMilli());
+                Date requestedCompletionDate = new Date(OffsetDateTime.parse(productOrderCreate.getRequestedCompletionDate()).toInstant().toEpochMilli());
+                if ((requestedStartDate.equals(offerStartDate) || requestedStartDate.after(offerStartDate)) &&
+                        (requestedCompletionDate.equals(offerEndDate) || requestedCompletionDate.before(offerEndDate))){
+
+                }else{
+                    log.info("Invalid order period for offer to create product order");
+                    throw new IOException("Invalid order period for offer to create product order");
+                }
+            }
+        }catch(Exception e){
+            throw new IOException(e.getMessage());
         }
 
         ProductOrder productOrder = productOrderRepository.save(new ProductOrder(productOrderCreate));
