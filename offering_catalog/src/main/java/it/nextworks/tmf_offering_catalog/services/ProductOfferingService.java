@@ -165,8 +165,8 @@ public class ProductOfferingService {
                 Date offerEndDate = new Date(OffsetDateTime.parse(productOffering.getValidFor().getEndDateTime()).toInstant().toEpochMilli());
                 Date offerPriceStartDate = new Date(OffsetDateTime.parse(productOffering.getProductOfferingPrice().get(0).getValidFor().getStartDateTime()).toInstant().toEpochMilli());
                 Date offerPriceEndDate = new Date(OffsetDateTime.parse(productOffering.getProductOfferingPrice().get(0).getValidFor().getEndDateTime()).toInstant().toEpochMilli());
-                if ((offerPriceStartDate.equals(offerStartDate) || offerPriceStartDate.after(offerStartDate)) &&
-                        (offerPriceEndDate.equals(offerEndDate) || offerPriceEndDate.before(offerEndDate))){
+                if ((offerStartDate.equals(offerPriceStartDate) || offerStartDate.after(offerPriceStartDate)) &&
+                        (offerEndDate.equals(offerPriceEndDate) || offerEndDate.before(offerPriceEndDate))){
 
                 }else{
                     log.info("Invalid offering price period for product offer id " + productOffering.getId());
