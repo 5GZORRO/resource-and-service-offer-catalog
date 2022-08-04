@@ -52,4 +52,15 @@ public class ProductOrderStatusService {
 
         log.info("Product Order Status with id " + id + " updated.");
     }
+
+    public void rejectProductOrderStatus(ProductOrderStatus productOrderStatus)
+            throws NotExistingEntityException {
+
+        log.info("Received request to reject Product Order Status with catalog id " + productOrderStatus.getCatalogId() + ".");
+
+        productOrderStatus.setStatus(ProductOrderStatesEnum.REJECTED);
+        productOrderStatusRepository.save(productOrderStatus);
+
+        log.info("Product Order Status with catalog id " + productOrderStatus.getCatalogId() + " rejected.");
+    }
 }

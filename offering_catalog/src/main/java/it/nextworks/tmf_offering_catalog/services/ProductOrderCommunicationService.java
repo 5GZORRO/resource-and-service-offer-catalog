@@ -141,6 +141,9 @@ public class ProductOrderCommunicationService {
     private ProductSpecificationService productSpecificationService;
 
     @Autowired
+    private ProductOrderStatusService productOrderStatusService;
+
+    @Autowired
     public ProductOrderCommunicationService(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
@@ -287,8 +290,9 @@ public class ProductOrderCommunicationService {
 
             log.info("Delete Product Order request accepted.");
             return;
+        }else{
+            productOrderStatusService.rejectProductOrderStatus(productOrderStatus);
         }
-
 
         String request = protocol + scLcmHostname + ":" + scLcmPort + scLcmRequestPath + "end?orderId=" + catalogId;
         CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -301,6 +305,7 @@ public class ProductOrderCommunicationService {
         if (response.getStatusLine().getStatusCode() != 200) {
             throw new ProductOrderDeleteScLCMException("The Smart Contract LCM entity did not accept the end request.");
         }
+
 
         //productOrderStatusRepository.delete(productOrderStatus);
 

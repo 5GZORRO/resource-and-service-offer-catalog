@@ -15,7 +15,9 @@ public enum ProductOrderStatesEnum {
 
     EXTERNAL("External Product Order"),
 
-    INSTANTIATED("Product Order instantiated");
+    INSTANTIATED("Product Order instantiated"),
+
+    REJECTED("Product Order rejected");
 
     private String value;
 
