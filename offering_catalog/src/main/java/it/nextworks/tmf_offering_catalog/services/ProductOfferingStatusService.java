@@ -1,7 +1,10 @@
 package it.nextworks.tmf_offering_catalog.services;
 
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
+import it.nextworks.tmf_offering_catalog.information_models.product.ProductOfferingStatesEnum;
 import it.nextworks.tmf_offering_catalog.information_models.product.ProductOfferingStatus;
+import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderStatesEnum;
+import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderStatus;
 import it.nextworks.tmf_offering_catalog.repo.ProductOfferingStatusRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,5 +44,16 @@ public class ProductOfferingStatusService {
         log.info("Product Offering States retrieved.");
 
         return productOfferingStatuses;
+    }
+
+    public void obsoleteProductOfferingStatus(ProductOfferingStatus productOfferingStatus)
+            throws NotExistingEntityException {
+
+        log.info("Received request to obsolete Product Offering Status with catalog id " + productOfferingStatus.getCatalogId() + ".");
+
+        productOfferingStatus.setStatus(ProductOfferingStatesEnum.OBSOLETE);
+        productOfferingStatusRepository.save(productOfferingStatus);
+
+        log.info("Product Offering Status with catalog id " + productOfferingStatus.getCatalogId() + " obsolete.");
     }
 }

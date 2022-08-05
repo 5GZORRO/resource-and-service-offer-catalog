@@ -17,7 +17,9 @@ public enum ProductOfferingStatesEnum {
 
     PUBLISHING_FAILED("Product Offering publishing failed"),
 
-    EXTERNAL("External Product Offering");
+    EXTERNAL("External Product Offering"),
+
+    OBSOLETE("Obsolete Product Offering");
 
     private String value;
 
