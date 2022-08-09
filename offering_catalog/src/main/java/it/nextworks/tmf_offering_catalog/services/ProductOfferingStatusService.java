@@ -46,14 +46,4 @@ public class ProductOfferingStatusService {
         return productOfferingStatuses;
     }
 
-    public void obsoleteProductOfferingStatus(ProductOfferingStatus productOfferingStatus)
-            throws NotExistingEntityException {
-
-        log.info("Received request to obsolete Product Offering Status with catalog id " + productOfferingStatus.getCatalogId() + ".");
-
-        productOfferingStatus.setStatus(ProductOfferingStatesEnum.OBSOLETE);
-        productOfferingStatusRepository.save(productOfferingStatus);
-
-        log.info("Product Offering Status with catalog id " + productOfferingStatus.getCatalogId() + " obsolete.");
-    }
 }

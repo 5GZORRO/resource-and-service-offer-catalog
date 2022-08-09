@@ -732,4 +732,15 @@ public class ProductOfferingService {
 
         return po;
     }
+
+    public void obsoleteProductOfferingLifeCycleStatus(ProductOffering productOffering)
+            throws NotExistingEntityException {
+
+        log.info("Received request to obsolete Product Offering Life Cycle Status with catalog id " + productOffering.getId() + ".");
+
+        productOffering.setLifecycleStatus(LifecycleStatusEnumEnum.OBSOLETE.toString());
+        productOfferingRepository.save(productOffering);
+
+        log.info("Product Offering Life Cycle status with catalog id " + productOffering.getId() + " to obsolete.");
+    }
 }
