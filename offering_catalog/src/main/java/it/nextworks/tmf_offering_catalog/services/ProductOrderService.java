@@ -255,4 +255,14 @@ public class ProductOrderService {
         return productOrder;
     }
 
+    public void cancelProductOrderState(ProductOrder productOrder)
+            throws NotExistingEntityException {
+
+        log.info("Received request to cancel Product Order State with catalog id " + productOrder.getId() + ".");
+
+        productOrder.setState(ProductOrderStateType.CANCELLED);
+        productOrderRepository.save(productOrder);
+
+        log.info("Product Order State with catalog id " + productOrder.getId() + " to cancelled.");
+    }
 }

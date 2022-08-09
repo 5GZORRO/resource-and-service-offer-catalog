@@ -290,9 +290,11 @@ public class ProductOrderCommunicationService {
 
             log.info("Delete Product Order request accepted.");
             return;
-        }else{
-            productOrderStatusService.rejectProductOrderStatus(productOrderStatus);
         }
+
+        //Chane state of the product order to Cancelled
+        ProductOrder productOrder = productOrderService.get(catalogId);
+        productOrderService.cancelProductOrderState(productOrder);
 
         String request = protocol + scLcmHostname + ":" + scLcmPort + scLcmRequestPath + "end?orderId=" + catalogId;
         CloseableHttpClient httpClient = HttpClients.createDefault();
