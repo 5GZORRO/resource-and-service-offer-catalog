@@ -65,6 +65,9 @@ public class ProductOfferingService {
     private ProductOfferingStatusRepository productOfferingStatusRepository;
 
     @Autowired
+    private ProductOfferingPriceService productOfferingPriceService;
+
+    @Autowired
     private CategoryService categoryService;
 
     private void updateCategory(List<CategoryRef> categoryRefs, String href, String id, String name)
@@ -160,11 +163,14 @@ public class ProductOfferingService {
 
         //check if the offer validity period >= price validity period
         try{
-            if (productOffering.getProductOfferingPrice().size()>0 && productOffering.getProductOfferingPrice().get(0).getValidFor() !=null){
+            if (productOffering.getProductOfferingPrice().size()>0 && productOffering.getProductOfferingPrice().get(0).getId() !=null){
+
+                ProductOfferingPrice productOfferingPrice = productOfferingPriceService.get(productOffering.getProductOfferingPrice().get(0).getId());
+
                 Date offerStartDate = new Date(OffsetDateTime.parse(productOffering.getValidFor().getStartDateTime()).toInstant().toEpochMilli());
                 Date offerEndDate = new Date(OffsetDateTime.parse(productOffering.getValidFor().getEndDateTime()).toInstant().toEpochMilli());
-                Date offerPriceStartDate = new Date(OffsetDateTime.parse(productOffering.getProductOfferingPrice().get(0).getValidFor().getStartDateTime()).toInstant().toEpochMilli());
-                Date offerPriceEndDate = new Date(OffsetDateTime.parse(productOffering.getProductOfferingPrice().get(0).getValidFor().getEndDateTime()).toInstant().toEpochMilli());
+                Date offerPriceStartDate = new Date(OffsetDateTime.parse(productOfferingPrice.getValidFor().getStartDateTime()).toInstant().toEpochMilli());
+                Date offerPriceEndDate = new Date(OffsetDateTime.parse(productOfferingPrice.getValidFor().getEndDateTime()).toInstant().toEpochMilli());
                 if ((offerStartDate.equals(offerPriceStartDate) || offerStartDate.after(offerPriceStartDate)) &&
                         (offerEndDate.equals(offerPriceEndDate) || offerEndDate.before(offerPriceEndDate))){
 

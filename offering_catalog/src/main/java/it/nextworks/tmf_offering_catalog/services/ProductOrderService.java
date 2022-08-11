@@ -72,7 +72,7 @@ public class ProductOrderService {
 
                 }else{
                     log.info("Invalid order period for offer to create product order");
-                    throw new IOException("Invalid order period for offer to create product order");
+                    throw new StakeholderNotRegisteredException("Invalid order period for offer to create product order");
                 }
             }
         }catch(Exception e){
