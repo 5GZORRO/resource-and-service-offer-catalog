@@ -76,7 +76,7 @@ public class ProductOrderService {
                 }
             }
         }catch(Exception e){
-            throw new IOException(e.getMessage());
+            throw new StakeholderNotRegisteredException(e.getMessage());
         }
 
         ProductOrder productOrder = productOrderRepository.save(new ProductOrder(productOrderCreate));
