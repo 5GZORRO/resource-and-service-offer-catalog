@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.threeten.bp.OffsetDateTime;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -93,6 +94,8 @@ public class ProductOrderService {
             throw e;
         }
 
+        //Respopnse returns externalID in id
+        productOrder.setId(productOrder.getExternalId());
         log.info("Product Order created with id " + productOrderId + ".");
         return productOrder;
     }
@@ -100,7 +103,16 @@ public class ProductOrderService {
     @Transactional
     public List<ProductOrder> list() {
         log.info("Received request to retrieve all Product Orders");
-        return productOrderRepository.findAll();
+        List<ProductOrder> oldList=productOrderRepository.findAll();
+        List<ProductOrder> newList= new ArrayList<ProductOrder>();
+        for(ProductOrder elem: oldList ){
+            ProductOrder newElem = elem;
+            //Response returns externalID in id
+            newElem.setId(newElem.getExternalId());
+            newList.add(newElem);
+        }
+        return newList;
+        //return productOrderRepository.findAll();
     }
 
     @Transactional
@@ -111,7 +123,12 @@ public class ProductOrderService {
             throw new NotExistingEntityException("Product Order with id " + id + " not found in DB.");
         }
         log.info("Product Order " + id + " retrieved.");
-        return productOrderOptional.get();
+
+        //Respopnse returns externalID in id
+        ProductOrder po = productOrderOptional.get();
+        po.setId(po.getExternalId());
+        return po;
+        //return productOrderOptional.get();
     }
 
     /*
@@ -252,6 +269,8 @@ public class ProductOrderService {
 
         log.info("Product Order " + id + " patched.");
 
+        //Respopnse returns externalID in id
+        productOrder.setId(productOrder.getExternalId());
         return productOrder;
     }
 
