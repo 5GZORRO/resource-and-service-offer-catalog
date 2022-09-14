@@ -95,7 +95,9 @@ public class ProductOrderService {
         }
 
         //Respopnse returns externalID in id
-        productOrder.setId(productOrder.getExternalId());
+        if (productOrder.getExternalId()!=null) {
+            productOrder.setId(productOrder.getExternalId());
+        }
         log.info("Product Order created with id " + productOrderId + ".");
         return productOrder;
     }
@@ -108,7 +110,9 @@ public class ProductOrderService {
         for(ProductOrder elem: oldList ){
             ProductOrder newElem = elem;
             //Response returns externalID in id
-            newElem.setId(newElem.getExternalId());
+            if (newElem.getExternalId()!=null) {
+                newElem.setId(newElem.getExternalId());
+            }
             newList.add(newElem);
         }
         return newList;
@@ -126,7 +130,9 @@ public class ProductOrderService {
 
         //Respopnse returns externalID in id
         ProductOrder po = productOrderOptional.get();
-        po.setId(po.getExternalId());
+        if (po.getExternalId()!=null) {
+            po.setId(po.getExternalId());
+        }
         return po;
         //return productOrderOptional.get();
     }
@@ -270,7 +276,9 @@ public class ProductOrderService {
         log.info("Product Order " + id + " patched.");
 
         //Respopnse returns externalID in id
-        productOrder.setId(productOrder.getExternalId());
+        if (productOrder.getExternalId()!=null) {
+            productOrder.setId(productOrder.getExternalId());
+        }
         return productOrder;
     }
 
