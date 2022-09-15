@@ -227,6 +227,8 @@ public class ProductOrderCommunicationService {
         ProductSpecification productSpecification = productSpecificationService.get(productOffering.getProductSpecification().getId());
         String stakeholderDid = productSpecification.getRelatedParty().get(0).getExtendedInfo();
 
+        productOrder.getProductOrderItem().get(0).getProductOffering().setHref(productOffering.getHref());
+
         String pwJson = null;
         if (!skipSCLCMPost) {
             pwJson = objectMapper.writeValueAsString(new PublicationWrapper(
