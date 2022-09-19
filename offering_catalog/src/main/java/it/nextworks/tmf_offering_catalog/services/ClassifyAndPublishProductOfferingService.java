@@ -59,19 +59,6 @@ public class ClassifyAndPublishProductOfferingService {
 
         ProductOfferingStatus productOfferingStatus = toClassify.get();
 
-        if(skipSRSDPost)
-            log.info("Skipping POST request to Smart Resource & Service Discovery.");
-        else {
-            if (!classifyProductOffering(catalogId, cwJson)) {
-                productOfferingStatus.setStatus(ProductOfferingStatesEnum.CLASSIFICATION_FAILED);
-                productOfferingStatusRepository.save(productOfferingStatus);
-                return;
-            }
-
-            productOfferingStatus.setStatus(ProductOfferingStatesEnum.CLASSIFIED);
-            productOfferingStatusRepository.save(productOfferingStatus);
-        }
-
         if(skipSCLCMPost)
             log.info("Skipping POST request to Smart Contract Lifecycle Manager.");
         else {
@@ -82,6 +69,19 @@ public class ClassifyAndPublishProductOfferingService {
             }
 
             productOfferingStatus.setStatus(ProductOfferingStatesEnum.PUBLISHED);
+            productOfferingStatusRepository.save(productOfferingStatus);
+        }
+
+        if(skipSRSDPost)
+            log.info("Skipping POST request to Smart Resource & Service Discovery.");
+        else {
+            if (!classifyProductOffering(catalogId, cwJson)) {
+                productOfferingStatus.setStatus(ProductOfferingStatesEnum.CLASSIFICATION_FAILED);
+                productOfferingStatusRepository.save(productOfferingStatus);
+                return;
+            }
+
+            productOfferingStatus.setStatus(ProductOfferingStatesEnum.CLASSIFIED);
             productOfferingStatusRepository.save(productOfferingStatus);
         }
     }

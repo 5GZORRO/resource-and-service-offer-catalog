@@ -1,7 +1,10 @@
 package it.nextworks.tmf_offering_catalog.services;
 
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
+import it.nextworks.tmf_offering_catalog.information_models.product.ProductOfferingStatesEnum;
 import it.nextworks.tmf_offering_catalog.information_models.product.ProductOfferingStatus;
+import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderStatesEnum;
+import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderStatus;
 import it.nextworks.tmf_offering_catalog.repo.ProductOfferingStatusRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,4 +45,5 @@ public class ProductOfferingStatusService {
 
         return productOfferingStatuses;
     }
+
 }

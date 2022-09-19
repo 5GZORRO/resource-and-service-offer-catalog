@@ -1,12 +1,23 @@
 package it.nextworks.tmf_offering_catalog.services;
 
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.nextworks.tmf_offering_catalog.common.exception.*;
 import it.nextworks.tmf_offering_catalog.information_models.common.*;
 import it.nextworks.tmf_offering_catalog.information_models.party.OrganizationWrapper;
 import it.nextworks.tmf_offering_catalog.information_models.product.*;
+import it.nextworks.tmf_offering_catalog.information_models.product.sla.ServiceLevelAgreement;
+import it.nextworks.tmf_offering_catalog.information_models.resource.ResourceSpecification;
+import it.nextworks.tmf_offering_catalog.information_models.service.ServiceSpecification;
 import it.nextworks.tmf_offering_catalog.repo.ProductOfferingRepository;
 import it.nextworks.tmf_offering_catalog.repo.ProductOfferingStatusRepository;
 import it.nextworks.tmf_offering_catalog.rest.Filter;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,10 +30,8 @@ import org.threeten.bp.OffsetDateTime;
 import org.threeten.bp.ZoneId;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 @Service
 public class ProductOfferingService {
@@ -36,6 +45,13 @@ public class ProductOfferingService {
     private String port;
     private static final String path = "/tmf-api/productCatalogManagement/v4/productOffering/";
 
+    @Value("${sc_lcm.hostname}")
+    private String scLcmHostname;
+    @Value("${sc_lcm.port}")
+    private String scLcmPort;
+    @Value("${sc_lcm.product_offer.sc_lcm_request_path}")
+    private String scLcmRequestPath;
+
     @Autowired
     private CommunicationService communicationService;
 
@@ -47,6 +63,9 @@ public class ProductOfferingService {
 
     @Autowired
     private ProductOfferingStatusRepository productOfferingStatusRepository;
+
+    @Autowired
+    private ProductOfferingPriceService productOfferingPriceService;
 
     @Autowired
     private CategoryService categoryService;
@@ -141,6 +160,28 @@ public class ProductOfferingService {
             productOffering.setLastUpdate(OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
 
         updateCategory(productOffering.getCategory(), productOffering.getHref(), id, productOffering.getName());
+
+        //check if the offer validity period >= price validity period
+        try{
+            if (productOffering.getProductOfferingPrice().size()>0 && productOffering.getProductOfferingPrice().get(0).getId() !=null){
+
+                ProductOfferingPrice productOfferingPrice = productOfferingPriceService.get(productOffering.getProductOfferingPrice().get(0).getId());
+
+                Date offerStartDate = new Date(OffsetDateTime.parse(productOffering.getValidFor().getStartDateTime()).toInstant().toEpochMilli());
+                Date offerEndDate = new Date(OffsetDateTime.parse(productOffering.getValidFor().getEndDateTime()).toInstant().toEpochMilli());
+                Date offerPriceStartDate = new Date(OffsetDateTime.parse(productOfferingPrice.getValidFor().getStartDateTime()).toInstant().toEpochMilli());
+                Date offerPriceEndDate = new Date(OffsetDateTime.parse(productOfferingPrice.getValidFor().getEndDateTime()).toInstant().toEpochMilli());
+                if ((offerStartDate.equals(offerPriceStartDate) || offerStartDate.after(offerPriceStartDate)) &&
+                        (offerEndDate.equals(offerPriceEndDate) || offerEndDate.before(offerPriceEndDate))){
+
+                }else{
+                    log.info("Invalid offering price period to create product offer");
+                    throw new NotExistingEntityException("Invalid offering price period to create product offer");
+                }
+            }
+        }catch(Exception e){
+            throw new NullIdentifierException(e.getMessage());
+        }
 
         productOfferingRepository.save(productOffering);
         log.info("Product Offering " + id + " stored in Catalog.");
@@ -544,6 +585,31 @@ public class ProductOfferingService {
 
         productOfferingRepository.save(productOffering);
 
+////////Send update to SCLM
+        try {
+            String json = "";
+            String request = protocol + scLcmHostname + ":" + scLcmPort + scLcmRequestPath + id;
+            CloseableHttpClient httpClient = HttpClients.createDefault();
+            HttpPut httpPut = new HttpPut(request);
+            httpPut.setHeader("Accept", "application/json");
+            httpPut.setHeader("Content-type", "application/json");
+
+            // Construct the payloads for the classify and publish POST requests
+            String pwJson = communicationService.createPatchJSON(productOffering, UUID.randomUUID().toString());
+
+            StringEntity stringEntity = new StringEntity(pwJson);
+            httpPut.setEntity(stringEntity);
+
+            CloseableHttpResponse response = httpClient.execute(httpPut);
+
+            if (response.getStatusLine().getStatusCode() != 200) {
+                throw new ProductOfferingInPublicationException("The Smart Contract LCM entity did not accept the update request.");
+            }
+        }catch(Exception e){
+            log.info("Error while accessing SCLM to update offering with id " + id);
+        }
+////////
+
         log.info("Product Offering " + id + " patched.");
 
         return productOffering;
@@ -671,5 +737,16 @@ public class ProductOfferingService {
         log.info("Product Offering with DID " + did + " retrieved.");
 
         return po;
+    }
+
+    public void obsoleteProductOfferingLifeCycleStatus(ProductOffering productOffering)
+            throws NotExistingEntityException {
+
+        log.info("Received request to obsolete Product Offering Life Cycle Status with catalog id " + productOffering.getId() + ".");
+
+        productOffering.setLifecycleStatus(LifecycleStatusEnumEnum.OBSOLETE.toString());
+        productOfferingRepository.save(productOffering);
+
+        log.info("Product Offering Life Cycle status with catalog id " + productOffering.getId() + " to obsolete.");
     }
 }

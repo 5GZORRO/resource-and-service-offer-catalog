@@ -222,23 +222,23 @@ public class ProductOrderController {
         return null;
     }
 
-    @ApiOperation(value = "Deletes a ProductOrder", nickname = "deleteProductOrder",
-            notes = "This operation deletes a ProductOrder entity.")
+    @ApiOperation(value = "Ends a ProductOrder", nickname = "endProductOrder",
+            notes = "This operation ends a ProductOrder entity.")
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Deleted"),
+            @ApiResponse(code = 204, message = "Ended"),
             @ApiResponse(code = 400, message = "Bad Request", response = Error.class)})
     @RequestMapping(value = "/productOrderingManagement/v4/productOrder/{id}",
             produces = {"application/json;charset=utf-8"},
-            method = RequestMethod.DELETE)
-    ResponseEntity<?> deleteProductOrder(@ApiParam(value = "Identifier of the ProductOrder", required = true)
+            method = RequestMethod.PUT)
+    ResponseEntity<?> endProductOrder(@ApiParam(value = "Identifier of the ProductOrder", required = true)
                                          @PathVariable("id") String id) {
-        log.info("Web-Server: Received request to delete Product Order with id " + id + ".");
+        log.info("Web-Server: Received request to end Product Order with id " + id + ".");
         if (!id.matches(uuidRegex)) {
             log.error("Web-Server: Invalid path variable (id) request received.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg("Invalid path variable (id) request received."));
         }
         try {
-            productOrderService.delete(id);
+            productOrderService.end(id);
         } catch (NotExistingEntityException | IOException | ProductOrderDeleteScLCMException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrMsg("Exception occurred during publication to SCLCM: " + e.getMessage()));
         }
