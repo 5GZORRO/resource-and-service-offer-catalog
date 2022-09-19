@@ -227,6 +227,8 @@ public class ProductOrderCommunicationService {
         ProductSpecification productSpecification = productSpecificationService.get(productOffering.getProductSpecification().getId());
         String stakeholderDid = productSpecification.getRelatedParty().get(0).getExtendedInfo();
 
+        productOrder.getProductOrderItem().get(0).getProductOffering().setHref(productOffering.getHref());
+
         String pwJson = null;
         if (!skipSCLCMPost) {
             pwJson = objectMapper.writeValueAsString(new PublicationWrapper(
@@ -296,7 +298,7 @@ public class ProductOrderCommunicationService {
         ProductOrder productOrder = productOrderService.get(catalogId);
         productOrderService.cancelProductOrderState(productOrder);
 
-        String request = protocol + scLcmHostname + ":" + scLcmPort + scLcmRequestPath + "end?orderId=" + catalogId;
+        String request = protocol + scLcmHostname + ":" + scLcmPort + scLcmRequestPath + catalogId + "/end";
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPut httpPut = new HttpPut(request);
 
