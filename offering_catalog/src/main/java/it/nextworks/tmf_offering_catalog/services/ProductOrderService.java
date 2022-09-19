@@ -94,10 +94,6 @@ public class ProductOrderService {
             throw e;
         }
 
-        //Respopnse returns externalID in id
-        if (productOrder.getExternalId()!=null) {
-            productOrder.setId(productOrder.getExternalId());
-        }
         log.info("Product Order created with id " + productOrderId + ".");
         return productOrder;
     }
@@ -105,18 +101,7 @@ public class ProductOrderService {
     @Transactional
     public List<ProductOrder> list() {
         log.info("Received request to retrieve all Product Orders");
-        List<ProductOrder> oldList=productOrderRepository.findAll();
-        List<ProductOrder> newList= new ArrayList<ProductOrder>();
-        for(ProductOrder elem: oldList ){
-            ProductOrder newElem = elem;
-            //Response returns externalID in id
-            if (newElem.getExternalId()!=null) {
-                newElem.setId(newElem.getExternalId());
-            }
-            newList.add(newElem);
-        }
-        return newList;
-        //return productOrderRepository.findAll();
+        return productOrderRepository.findAll();
     }
 
     @Transactional
@@ -128,13 +113,7 @@ public class ProductOrderService {
         }
         log.info("Product Order " + id + " retrieved.");
 
-        //Respopnse returns externalID in id
-        ProductOrder po = productOrderOptional.get();
-        if (po.getExternalId()!=null) {
-            po.setId(po.getExternalId());
-        }
-        return po;
-        //return productOrderOptional.get();
+        return productOrderOptional.get();
     }
 
     /*
@@ -275,10 +254,6 @@ public class ProductOrderService {
 
         log.info("Product Order " + id + " patched.");
 
-        //Respopnse returns externalID in id
-        if (productOrder.getExternalId()!=null) {
-            productOrder.setId(productOrder.getExternalId());
-        }
         return productOrder;
     }
 
