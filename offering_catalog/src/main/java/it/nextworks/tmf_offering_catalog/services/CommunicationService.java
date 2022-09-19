@@ -163,6 +163,52 @@ public class CommunicationService {
         }
     }
 
+    public class UpdateWrapper {
+
+        @JsonProperty("productOffering")
+        private final ProductOffering productOffering;
+
+        @JsonProperty("invitations")
+        private final Map<String, Invitation> invitations;
+
+        @JsonProperty("did")
+        private final String did;
+
+        @JsonProperty("productOfferingPrices")
+        private final List<ProductOfferingPrice> productOfferingPrices;
+
+        @JsonProperty("productSpecification")
+        private final ProductSpecification productSpecification;
+
+        @JsonProperty("resourceSpecifications")
+        private final List<ResourceSpecification> resourceSpecifications;
+
+        @JsonProperty("serviceSpecifications")
+        private final List<ServiceSpecification> serviceSpecifications;
+
+        @JsonProperty("geographicAddresses")
+        private final List<GeographicAddress> geographicAddresses;
+
+        @JsonCreator
+        public UpdateWrapper(@JsonProperty("productOffering") ProductOffering productOffering,
+                                  @JsonProperty("invitations") Map<String, Invitation> invitations,
+                                  @JsonProperty("did") String did,
+                                  @JsonProperty("productOfferingPrices") List<ProductOfferingPrice> productOfferingPrices,
+                                  @JsonProperty("productSpecification") ProductSpecification productSpecification,
+                                  @JsonProperty("resourceSpecifications") List<ResourceSpecification> resourceSpecifications,
+                                  @JsonProperty("serviceSpecifications") List<ServiceSpecification> serviceSpecifications,
+                                  @JsonProperty("geographicAddresses") List<GeographicAddress> geographicAddresses) {
+            this.productOffering        = productOffering;
+            this.invitations            = invitations;
+            this.did                    = did;
+            this.productOfferingPrices  = productOfferingPrices;
+            this.productSpecification   = productSpecification;
+            this.resourceSpecifications = resourceSpecifications;
+            this.serviceSpecifications  = serviceSpecifications;
+            this.geographicAddresses = geographicAddresses;
+        }
+    }
+
     private static final Logger log = LoggerFactory.getLogger(CommunicationService.class);
 
     private static final String protocol = "http://";
@@ -509,5 +555,22 @@ public class CommunicationService {
         productOfferingStatusRepository.delete(productOfferingStatus);
 
         log.info("Delete Product Offering request accepted.");
+    }
+
+    public String createPatchJSON(ProductOffering productOffering, String did) throws Exception{
+        String pwJson = null;
+
+        List<ProductOfferingPrice> productOfferingPrices = getProductOfferingPrices(productOffering);
+        ProductSpecification productSpecification = getProductSpecification(productOffering);
+        List<ResourceSpecification> resourceSpecifications = getResourceSpecifications(productSpecification);
+        List<ServiceSpecification> serviceSpecifications = getServiceSpecifications(productSpecification);
+        getResourceSpecificationFromServices(serviceSpecifications, resourceSpecifications);
+        List<GeographicAddress> geographicAddresses = getGeographicAddresses(productOffering);
+        ServiceLevelAgreement sla = getServiceLevelAgreement(productOffering);
+
+        pwJson = objectMapper.writeValueAsString(new CommunicationService.UpdateWrapper(productOffering, null, did,
+                productOfferingPrices, productSpecification, resourceSpecifications, serviceSpecifications, geographicAddresses));
+
+        return pwJson;
     }
 }
