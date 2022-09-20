@@ -298,7 +298,7 @@ public class ProductOrderCommunicationService {
         ProductOrder productOrder = productOrderService.get(catalogId);
         productOrderService.cancelProductOrderState(productOrder);
 
-        String request = protocol + scLcmHostname + ":" + scLcmPort + scLcmRequestPath + "end?orderId=" + catalogId;
+        String request = protocol + scLcmHostname + ":" + scLcmPort + scLcmRequestPath + catalogId + "/end";
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPut httpPut = new HttpPut(request);
 
