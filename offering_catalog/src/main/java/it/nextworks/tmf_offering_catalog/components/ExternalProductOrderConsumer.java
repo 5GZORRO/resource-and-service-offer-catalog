@@ -7,11 +7,8 @@ import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityExcep
 import it.nextworks.tmf_offering_catalog.information_models.common.RelatedParty;
 import it.nextworks.tmf_offering_catalog.information_models.kafka.ExternalProductOrder;
 import it.nextworks.tmf_offering_catalog.information_models.party.OrganizationWrapper;
-import it.nextworks.tmf_offering_catalog.information_models.product.ProductOfferingStatus;
-import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrder;
-import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderStatesEnum;
-import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderStatus;
-import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderUpdate;
+import it.nextworks.tmf_offering_catalog.information_models.product.*;
+import it.nextworks.tmf_offering_catalog.information_models.product.order.*;
 import it.nextworks.tmf_offering_catalog.repo.ProductOfferingStatusRepository;
 import it.nextworks.tmf_offering_catalog.repo.ProductOrderRepository;
 import it.nextworks.tmf_offering_catalog.repo.ProductOrderStatusRepository;
@@ -30,6 +27,8 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -44,6 +43,12 @@ public class ExternalProductOrderConsumer {
     private String scLcmPort;
     @Value("${sc_lcm.derivative_issue.sc_lcm_request_path}")
     private String scLcmRequestPath;
+
+    @Value("${server.hostname}")
+    private String hostname;
+    @Value("${server.port}")
+    private String port;
+    private static final String path = "/tmf-api/productOrderingManagement/v4/productOrder/";
 
     @Autowired
     private ProductOrderRepository productOrderRepository;
@@ -105,7 +110,17 @@ public class ExternalProductOrderConsumer {
         Optional<ProductOrder> optionalProductOrder = productOrderRepository.findByProductOrderId(id);
 
         if (!optionalProductOrder.isPresent()) {
-            productOrderRepository.save(productOrder);
+            ProductOrder newProductOrder = productOrderRepository.save(productOrder);
+
+            String productOrderId = newProductOrder.getId();
+
+            productOrder.setId(productOrderId);
+            productOrder.href(protocol + hostname + ":" + port + path + productOrderId);
+
+            ProductOrder newOrder = checkOrphansProductOrder(productOrder);
+
+            productOrderRepository.save(newOrder);
+
             ProductOrderStatus productOrderStatus = new ProductOrderStatus()
                     .catalogId(id)
                     .did(did)
@@ -183,6 +198,61 @@ public class ExternalProductOrderConsumer {
 
         log.info("Synced Product Order " + id + " (update).");
 
+    }
+
+    private ProductOrder checkOrphansProductOrder(ProductOrder productOrder) {
+
+        final List<AgreementRef> agreement = productOrder.getAgreement();
+        if(productOrder.getAgreement() == null){
+            productOrder.setAgreement(new ArrayList<AgreementRef>());
+        }
+
+        final BillingAccountRef billingAccount = productOrder.getBillingAccount();
+        if(productOrder.getBillingAccount() == null){
+            productOrder.setBillingAccount(new BillingAccountRef());
+        }
+
+        final List<RelatedChannel> channel = productOrder.getChannel();
+        if(productOrder.getChannel() == null){
+            productOrder.setChannel(new ArrayList<RelatedChannel>());
+        }
+
+        final List<Note> note = productOrder.getNote();
+        if(productOrder.getNote() == null){
+            productOrder.setNote(new ArrayList<Note>());
+        }
+
+        final List<OrderPrice> orderTotalPrice = productOrder.getOrderTotalPrice();
+        if(productOrder.getOrderTotalPrice() == null){
+            productOrder.setOrderTotalPrice(new ArrayList<OrderPrice>());
+        }
+
+        final List<PaymentRef> payment = productOrder.getPayment();
+        if(productOrder.getPayment() == null){
+            productOrder.setPayment(new ArrayList<PaymentRef>());
+        }
+
+        final List<ProductOfferingQualificationRef> productOfferingQualification = productOrder.getProductOfferingQualification();
+        if(productOrder.getProductOfferingQualification() == null){
+            productOrder.setProductOfferingQualification(new ArrayList<ProductOfferingQualificationRef>());
+        }
+
+        final List<ProductOrderItem> productOrderItem = productOrder.getProductOrderItem();
+        if(productOrder.getProductOrderItem() == null){
+            productOrder.setProductOrderItem(new ArrayList<ProductOrderItem>());
+        }
+
+        final List<QuoteRef> quote = productOrder.getQuote();
+        if(productOrder.getQuote() == null){
+            productOrder.setQuote(new ArrayList<QuoteRef>());
+        }
+
+        final List<RelatedParty> relatedParty = productOrder.getRelatedParty();
+        if(productOrder.getRelatedParty() == null){
+            productOrder.setRelatedParty(new ArrayList<RelatedParty>());
+        }
+
+        return productOrder;
     }
 
     private boolean isSellerParty(RelatedParty relatedParty) {
