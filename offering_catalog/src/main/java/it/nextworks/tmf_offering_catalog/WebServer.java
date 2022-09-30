@@ -27,7 +27,7 @@ public class WebServer {
         config.setAllowCredentials(true);
         config.setAllowedOriginPatterns(Collections.singletonList("*"));
         config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept"));
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PATCH"));
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PATCH", "PUT"));
 
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
