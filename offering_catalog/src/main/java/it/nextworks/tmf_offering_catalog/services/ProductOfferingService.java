@@ -594,8 +594,14 @@ public class ProductOfferingService {
             httpPut.setHeader("Accept", "application/json");
             httpPut.setHeader("Content-type", "application/json");
 
+            String DID = "";
+            Optional<ProductOfferingStatus> optionalPos = productOfferingStatusRepository.findById(productOffering.getId());
+            if (optionalPos != null){
+                DID = optionalPos.get().getDid();
+            }
+
             // Construct the payloads for the classify and publish POST requests
-            String pwJson = communicationService.createPatchJSON(productOffering, UUID.randomUUID().toString());
+            String pwJson = communicationService.createPatchJSON(productOffering, DID);
 
             StringEntity stringEntity = new StringEntity(pwJson);
             httpPut.setEntity(stringEntity);
