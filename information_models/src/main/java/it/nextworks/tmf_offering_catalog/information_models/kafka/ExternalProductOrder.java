@@ -12,10 +12,14 @@ public class ExternalProductOrder {
     @JsonProperty("did")
     private final String did;
 
+    @JsonProperty("deleted")
+    private final boolean deleted;
+
     @JsonCreator
-    public ExternalProductOrder(@JsonProperty("productOrder") ProductOrder productOrder, @JsonProperty("did") String did) {
+    public ExternalProductOrder(@JsonProperty("productOrder") ProductOrder productOrder, @JsonProperty("did") String did, @JsonProperty("deleted") boolean deleted) {
         this.productOrder = productOrder;
         this.did = did;
+        this.deleted = deleted;
     }
 
     public ProductOrder getProductOrder() {
@@ -24,6 +28,10 @@ public class ExternalProductOrder {
 
     public String getDid() {
         return did;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
     }
 
 }

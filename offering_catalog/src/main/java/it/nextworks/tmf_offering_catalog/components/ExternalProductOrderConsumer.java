@@ -37,18 +37,17 @@ public class ExternalProductOrderConsumer {
     private static final Logger log = LoggerFactory.getLogger(ExternalProductOrderConsumer.class);
 
     private static final String protocol = "http://";
+    @Value("${server.hostname}")
+    private String hostname;
+    @Value("${server.port}")
+    private String port;
+    private static final String path = "/tmf-api/productOrderingManagement/v4/productOrder/";
     @Value("${sc_lcm.hostname}")
     private String scLcmHostname;
     @Value("${sc_lcm.port}")
     private String scLcmPort;
     @Value("${sc_lcm.derivative_issue.sc_lcm_request_path}")
     private String scLcmRequestPath;
-
-    @Value("${server.hostname}")
-    private String hostname;
-    @Value("${server.port}")
-    private String port;
-    private static final String path = "/tmf-api/productOrderingManagement/v4/productOrder/";
 
     @Autowired
     private ProductOrderRepository productOrderRepository;
@@ -75,8 +74,8 @@ public class ExternalProductOrderConsumer {
     }
 
     @KafkaListener(
-            topics = "#{@topicOrders}",
-            containerFactory = "kafkaOrderListenerContainerFactory"
+        topics = "#{@topicOrders}",
+        containerFactory = "kafkaOrderListenerContainerFactory"
     )
     public void listener(ExternalProductOrder externalProductOrder) throws NotExistingEntityException, IOException {
 
@@ -99,112 +98,100 @@ public class ExternalProductOrderConsumer {
             return;
         }
 
-        syncProductOrder(productOrder, did);
+        syncProductOrder(productOrder, did, externalProductOrder.isDeleted());
+
     }
 
-    private void syncProductOrder(ProductOrder productOrder, String did) throws NotExistingEntityException, IOException {
-        String id = productOrder.getId();
+    private void syncProductOrder(ProductOrder productOrder, String did, boolean deleted) throws NotExistingEntityException, IOException {
+        Optional<ProductOrderStatus> optionalProductOrderStatus = productOrderStatusRepository.findByProductOrderStatusDid(did);
 
-        log.info("Syncing Product Order " + id + ".");
+        log.info("Syncing Product Order " + did + ".");
 
-        Optional<ProductOrder> optionalProductOrder = productOrderRepository.findByProductOrderId(id);
-
-        if (!optionalProductOrder.isPresent()) {
-            ProductOrder newProductOrder = productOrderRepository.save(productOrder);
-
-            String productOrderId = newProductOrder.getId();
-
-            productOrder.setId(productOrderId);
-            productOrder.href(protocol + hostname + ":" + port + path + productOrderId);
-
-            ProductOrder newOrder = checkOrphansProductOrder(productOrder);
-
-            productOrderRepository.save(newOrder);
-
-            ProductOrderStatus productOrderStatus = new ProductOrderStatus()
-                    .catalogId(id)
-                    .did(did)
-                    .status(ProductOrderStatesEnum.EXTERNAL);
-            productOrderStatusRepository.save(productOrderStatus);
-            log.info("Synced Product Order " + id + " (new).");
-            return;
-        }
-
-        Optional<ProductOrderStatus> optionalProductOrderStatus = productOrderStatusRepository.findById(id);
         if (!optionalProductOrderStatus.isPresent()) {
-            log.error("Product Order Status " + id + " not found in DB.");
+            productOrder = productOrderRepository.save(productOrder);
+            productOrder.setHref(protocol + hostname + ":" + port + path + productOrder.getId());
+            ProductOrderStatus productOrderStatus = new ProductOrderStatus()
+                .catalogId(productOrder.getId())
+                .did(did)
+                .status(ProductOrderStatesEnum.EXTERNAL);
+            productOrderStatusRepository.save(productOrderStatus);
+
+            log.info("Synced Product Order " + productOrder.getId() + " (new).");
+
+            try {
+                organization = organizationService.get();
+            } catch (NotExistingEntityException e) {
+                log.error(e.getMessage());
+                return;
+            }
+
+            RelatedParty seller = null;
+            RelatedParty buyer = null;
+            for (RelatedParty relatedParty : productOrder.getRelatedParty()) {
+                if (isSellerParty(relatedParty)) {
+                    seller = relatedParty;
+                } else {
+                    buyer = relatedParty;
+                }
+            }
+
+            if (seller == null || buyer == null) {
+                throw new NotExistingEntityException("RelatedParty missing.");
+            }
+
+            if (amISellerParty(seller) && isSpectrumOrder(productOrder)) {
+                issueDerivativeSpectoken(productOrder, buyer);
+                log.info("Derivative Spectoken issued.");
+            }
             return;
         }
-        if (optionalProductOrderStatus.get().getStatus() != ProductOrderStatesEnum.EXTERNAL) {
-            log.info("Product Order " + id + " not external, skip.");
+
+        if (optionalProductOrderStatus.get().getStatus() != ProductOrderStatesEnum.EXTERNAL && !deleted) {
+            log.info("Product Order " + did + " not external, skip.");
             return;
         }
+
+        checkOrphansProductOrder(productOrder);
 
         ProductOrderUpdate productOrderUpdate = new ProductOrderUpdate()
-                .baseType(productOrder.getBaseType())
-                .schemaLocation(productOrder.getSchemaLocation())
-                .type(productOrder.getType())
-                .agreement(productOrder.getAgreement())
-                .billingAccount(productOrder.getBillingAccount())
-                .cancellationDate(productOrder.getCancellationDate())
-                .cancellationReason(productOrder.getCancellationReason())
-                .category(productOrder.getCategory())
-                .channel(productOrder.getChannel())
-                .description(productOrder.getDescription())
-                .externalId(productOrder.getExternalId())
-                .note(productOrder.getNote())
-                .notificationContact(productOrder.getNotificationContact())
-                .orderTotalPrice(productOrder.getOrderTotalPrice())
-                .payment(productOrder.getPayment())
-                .priority(productOrder.getPriority())
-                .productOfferingQualification(productOrder.getProductOfferingQualification())
-                .productOrderItem(productOrder.getProductOrderItem())
-                .quote(productOrder.getQuote())
-                .relatedParty(productOrder.getRelatedParty())
-                .requestedCompletionDate(productOrder.getRequestedCompletionDate())
-                .requestedStartDate(productOrder.getRequestedStartDate());
+            .baseType(productOrder.getBaseType())
+            .schemaLocation(productOrder.getSchemaLocation())
+            .type(productOrder.getType())
+            .agreement(productOrder.getAgreement())
+            .billingAccount(productOrder.getBillingAccount())
+            .cancellationDate(productOrder.getCancellationDate())
+            .cancellationReason(productOrder.getCancellationReason())
+            .category(productOrder.getCategory())
+            .channel(productOrder.getChannel())
+            .description(productOrder.getDescription())
+            .externalId(productOrder.getExternalId())
+            .note(productOrder.getNote())
+            .notificationContact(productOrder.getNotificationContact())
+            .orderTotalPrice(productOrder.getOrderTotalPrice())
+            .payment(productOrder.getPayment())
+            .priority(productOrder.getPriority())
+            .productOfferingQualification(productOrder.getProductOfferingQualification())
+            .productOrderItem(productOrder.getProductOrderItem())
+            .quote(productOrder.getQuote())
+            .relatedParty(productOrder.getRelatedParty())
+            .requestedCompletionDate(productOrder.getRequestedCompletionDate())
+            .requestedStartDate(productOrder.getRequestedStartDate());
 
         try {
-            productOrderService.patch(id, productOrderUpdate);
+            productOrderService.patch(did, productOrderUpdate, deleted);
         } catch (NotExistingEntityException e) {
             log.error("External " + e.getMessage());
         }
 
-        try {
-            organization = organizationService.get();
-        } catch (NotExistingEntityException e) {
-            log.error(e.getMessage());
-            return;
-        }
-
-        RelatedParty seller = null;
-        RelatedParty buyer = null;
-        for (RelatedParty relatedParty : productOrder.getRelatedParty()) {
-            if (isSellerParty(relatedParty)) {
-                seller = relatedParty;
-            } else {
-                buyer = relatedParty;
-            }
-        }
-
-        if (seller == null || buyer == null) {
-            throw new NotExistingEntityException("RelatedParty missing.");
-        }
-
-        if (amISellerParty(seller) && isSpectrumOrder(productOrder)) {
-            issueDerivativeSpectoken(productOrder, buyer);
-            log.info("Derivative Spectoken issued.");
-        }
-
-        log.info("Synced Product Order " + id + " (update).");
+        log.info("Synced Product Order " + optionalProductOrderStatus.get().getCatalogId() + " (update).");
 
     }
 
-    private ProductOrder checkOrphansProductOrder(ProductOrder productOrder) {
+    private void checkOrphansProductOrder(ProductOrder productOrder) {
 
         final List<AgreementRef> agreement = productOrder.getAgreement();
         if(productOrder.getAgreement() == null){
-            productOrder.setAgreement(new ArrayList<AgreementRef>());
+            productOrder.setAgreement(new ArrayList<>());
         }
 
         final BillingAccountRef billingAccount = productOrder.getBillingAccount();
@@ -214,45 +201,44 @@ public class ExternalProductOrderConsumer {
 
         final List<RelatedChannel> channel = productOrder.getChannel();
         if(productOrder.getChannel() == null){
-            productOrder.setChannel(new ArrayList<RelatedChannel>());
+            productOrder.setChannel(new ArrayList<>());
         }
 
         final List<Note> note = productOrder.getNote();
         if(productOrder.getNote() == null){
-            productOrder.setNote(new ArrayList<Note>());
+            productOrder.setNote(new ArrayList<>());
         }
 
         final List<OrderPrice> orderTotalPrice = productOrder.getOrderTotalPrice();
         if(productOrder.getOrderTotalPrice() == null){
-            productOrder.setOrderTotalPrice(new ArrayList<OrderPrice>());
+            productOrder.setOrderTotalPrice(new ArrayList<>());
         }
 
         final List<PaymentRef> payment = productOrder.getPayment();
         if(productOrder.getPayment() == null){
-            productOrder.setPayment(new ArrayList<PaymentRef>());
+            productOrder.setPayment(new ArrayList<>());
         }
 
         final List<ProductOfferingQualificationRef> productOfferingQualification = productOrder.getProductOfferingQualification();
         if(productOrder.getProductOfferingQualification() == null){
-            productOrder.setProductOfferingQualification(new ArrayList<ProductOfferingQualificationRef>());
+            productOrder.setProductOfferingQualification(new ArrayList<>());
         }
 
         final List<ProductOrderItem> productOrderItem = productOrder.getProductOrderItem();
         if(productOrder.getProductOrderItem() == null){
-            productOrder.setProductOrderItem(new ArrayList<ProductOrderItem>());
+            productOrder.setProductOrderItem(new ArrayList<>());
         }
 
         final List<QuoteRef> quote = productOrder.getQuote();
         if(productOrder.getQuote() == null){
-            productOrder.setQuote(new ArrayList<QuoteRef>());
+            productOrder.setQuote(new ArrayList<>());
         }
 
         final List<RelatedParty> relatedParty = productOrder.getRelatedParty();
         if(productOrder.getRelatedParty() == null){
-            productOrder.setRelatedParty(new ArrayList<RelatedParty>());
+            productOrder.setRelatedParty(new ArrayList<>());
         }
 
-        return productOrder;
     }
 
     private boolean isSellerParty(RelatedParty relatedParty) {

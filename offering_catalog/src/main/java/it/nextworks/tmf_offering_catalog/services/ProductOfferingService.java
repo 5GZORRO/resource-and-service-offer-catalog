@@ -596,7 +596,7 @@ public class ProductOfferingService {
 
             String DID = "";
             Optional<ProductOfferingStatus> optionalPos = productOfferingStatusRepository.findById(productOffering.getId());
-            if (optionalPos != null){
+            if (optionalPos.isPresent()){
                 DID = optionalPos.get().getDid();
             }
 
