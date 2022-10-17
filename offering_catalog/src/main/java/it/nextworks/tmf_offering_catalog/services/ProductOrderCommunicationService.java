@@ -7,9 +7,8 @@ import it.nextworks.tmf_offering_catalog.common.exception.DIDAlreadyRequestedFor
 import it.nextworks.tmf_offering_catalog.common.exception.DIDGenerationRequestException;
 import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
 import it.nextworks.tmf_offering_catalog.common.exception.ProductOrderDeleteScLCMException;
-import it.nextworks.tmf_offering_catalog.information_models.party.Organization;
-import it.nextworks.tmf_offering_catalog.information_models.party.OrganizationWrapper;
 import it.nextworks.tmf_offering_catalog.information_models.product.ProductOffering;
+import it.nextworks.tmf_offering_catalog.information_models.product.ProductOfferingStatus;
 import it.nextworks.tmf_offering_catalog.information_models.product.ProductSpecification;
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrder;
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderItem;
@@ -17,7 +16,10 @@ import it.nextworks.tmf_offering_catalog.information_models.product.order.Produc
 import it.nextworks.tmf_offering_catalog.information_models.product.order.ProductOrderStatus;
 import it.nextworks.tmf_offering_catalog.repo.ProductOrderStatusRepository;
 import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.*;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -142,6 +144,9 @@ public class ProductOrderCommunicationService {
 
     @Autowired
     private ProductOrderStatusService productOrderStatusService;
+
+    @Autowired
+    private ProductOfferingStatusService productOfferingStatusService;
 
     @Autowired
     public ProductOrderCommunicationService(ObjectMapper objectMapper) {
@@ -296,9 +301,11 @@ public class ProductOrderCommunicationService {
 
         //Chane state of the product order to Cancelled
         ProductOrder productOrder = productOrderService.get(catalogId);
+        ProductOrderItem productOrderItem = productOrder.getProductOrderItem().get(0);
+        ProductOfferingStatus productOfferingStatus = productOfferingStatusService.get(productOrderItem.getProductOffering().getId());
         productOrderService.cancelProductOrderState(productOrder);
 
-        String request = protocol + scLcmHostname + ":" + scLcmPort + scLcmRequestPath + catalogId + "/end";
+        String request = protocol + scLcmHostname + ":" + scLcmPort + scLcmRequestPath + productOrderStatus.getDid() + "/end?offerDid=" + productOfferingStatus.getDid();
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPut httpPut = new HttpPut(request);
 
@@ -309,9 +316,6 @@ public class ProductOrderCommunicationService {
         if (response.getStatusLine().getStatusCode() != 200) {
             throw new ProductOrderDeleteScLCMException("The Smart Contract LCM entity did not accept the end request.");
         }
-
-
-        //productOrderStatusRepository.delete(productOrderStatus);
 
         log.info("End Product Order request accepted.");
     }
