@@ -242,7 +242,7 @@ public class ProductOrderController {
         } catch (NotExistingEntityException | IOException | ProductOrderDeleteScLCMException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrMsg("Exception occurred during publication to SCLCM: " + e.getMessage()));
         }
-        log.info("Web-Server: Product Order " + id + " deleted.");
+        log.info("Web-Server: Product Order " + id + " cancelled.");
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

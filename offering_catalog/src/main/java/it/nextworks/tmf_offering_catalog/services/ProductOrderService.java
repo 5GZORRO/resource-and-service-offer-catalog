@@ -1,12 +1,15 @@
 package it.nextworks.tmf_offering_catalog.services;
 
-import it.nextworks.tmf_offering_catalog.common.exception.*;
-import it.nextworks.tmf_offering_catalog.information_models.common.PlaceRef;
+import it.nextworks.tmf_offering_catalog.common.exception.DIDGenerationRequestException;
+import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
+import it.nextworks.tmf_offering_catalog.common.exception.ProductOrderDeleteScLCMException;
+import it.nextworks.tmf_offering_catalog.common.exception.StakeholderNotRegisteredException;
 import it.nextworks.tmf_offering_catalog.information_models.common.RelatedParty;
 import it.nextworks.tmf_offering_catalog.information_models.party.OrganizationWrapper;
 import it.nextworks.tmf_offering_catalog.information_models.product.*;
 import it.nextworks.tmf_offering_catalog.information_models.product.order.*;
 import it.nextworks.tmf_offering_catalog.repo.ProductOrderRepository;
+import it.nextworks.tmf_offering_catalog.repo.ProductOrderStatusRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.threeten.bp.OffsetDateTime;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +37,9 @@ public class ProductOrderService {
 
     @Autowired
     private ProductOrderRepository productOrderRepository;
+
+    @Autowired
+    private ProductOrderStatusRepository productOrderStatusRepository;
 
     @Autowired
     private OrganizationService organizationService;
@@ -56,10 +61,10 @@ public class ProductOrderService {
         }
 
         //check if the offer validity period >= price validity period
-        try{
-            if (productOrderCreate.getProductOrderItem().size()>0 && productOrderCreate.getProductOrderItem().get(0).getProductOffering().getId() !=null){
+        try {
+            if (productOrderCreate.getProductOrderItem().size() > 0 && productOrderCreate.getProductOrderItem().get(0).getProductOffering().getId() != null) {
                 ProductOffering productOffering = productOfferingService.get(productOrderCreate.getProductOrderItem().get(0).getProductOffering().getId());
-                if(productOffering == null){
+                if (productOffering == null) {
                     log.info("Offering Id " + productOrderCreate.getProductOrderItem().get(0).getProductOffering().getId() + " do not exist to create Order");
                     throw new NotExistingEntityException("Offering Id " + productOrderCreate.getProductOrderItem().get(0).getProductOffering().getId() + " do not exist to create Order");
                 }
@@ -69,14 +74,14 @@ public class ProductOrderService {
                 Date requestedStartDate = new Date(OffsetDateTime.parse(productOrderCreate.getRequestedStartDate()).toInstant().toEpochMilli());
                 Date requestedCompletionDate = new Date(OffsetDateTime.parse(productOrderCreate.getRequestedCompletionDate()).toInstant().toEpochMilli());
                 if ((requestedStartDate.equals(offerStartDate) || requestedStartDate.after(offerStartDate)) &&
-                        (requestedCompletionDate.equals(offerEndDate) || requestedCompletionDate.before(offerEndDate))){
+                    (requestedCompletionDate.equals(offerEndDate) || requestedCompletionDate.before(offerEndDate))) {
 
-                }else{
+                } else {
                     log.info("Invalid order period for offer to create product order");
                     throw new StakeholderNotRegisteredException("Invalid order period for offer to create product order");
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             throw new StakeholderNotRegisteredException(e.getMessage());
         }
 
@@ -98,7 +103,6 @@ public class ProductOrderService {
         return productOrder;
     }
 
-    @Transactional
     public List<ProductOrder> list() {
         log.info("Received request to retrieve all Product Orders");
         return productOrderRepository.findAll();
@@ -116,28 +120,25 @@ public class ProductOrderService {
         return productOrderOptional.get();
     }
 
-    /*
-    @Transactional
-    public void delete(String id) throws NotExistingEntityException, ProductOrderDeleteScLCMException, IOException {
-        // productOrderCommunicationService.deleteProductOrder(id);
-        productOrderRepository.deleteById(id);
-    }
-    */
-
     @Transactional
     public void end(String id) throws NotExistingEntityException, ProductOrderDeleteScLCMException, IOException {
         productOrderCommunicationService.endProductOrder(id);
-        //productOrderRepository.deleteById(id);
     }
 
-    public ProductOrder patch(String id, ProductOrderUpdate productOrderUpdate)
-            throws NotExistingEntityException {
+    public ProductOrder patch(String did, ProductOrderUpdate productOrderUpdate, boolean deleted) throws NotExistingEntityException {
 
-        log.info("Received request to patch Product Order with id " + id + ".");
+        log.info("Received request to patch Product Order with did " + did + ".");
 
-        Optional<ProductOrder> toUpdate = productOrderRepository.findByProductOrderId(id);
-        if(!toUpdate.isPresent())
-            throw new NotExistingEntityException("Product Order with id " + id + " not found in DB.");
+        Optional<ProductOrderStatus> optionalProductOrderStatus = productOrderStatusRepository.findByProductOrderStatusDid(did);
+
+        if (!optionalProductOrderStatus.isPresent()) {
+            throw new NotExistingEntityException("Product Order Status with did " + did + " not found in DB.");
+        }
+
+        Optional<ProductOrder> toUpdate = productOrderRepository.findByProductOrderId(optionalProductOrderStatus.get().getCatalogId());
+        if (!toUpdate.isPresent()) {
+            throw new NotExistingEntityException("Product Order with id " + optionalProductOrderStatus.get().getCatalogId() + " not found in DB.");
+        }
 
         ProductOrder productOrder = toUpdate.get();
 
@@ -146,14 +147,14 @@ public class ProductOrderService {
         productOrder.setType(productOrderUpdate.getType());
 
         final List<AgreementRef> agreement = productOrderUpdate.getAgreement();
-        if(productOrder.getAgreement() == null)
+        if (productOrder.getAgreement() == null) {
             productOrder.setAgreement(agreement);
-        else if(agreement != null) {
+        } else if (agreement != null) {
             productOrder.getAgreement().clear();
             productOrder.getAgreement().addAll(agreement);
-        }
-        else
+        } else {
             productOrder.getAgreement().clear();
+        }
 
         productOrder.setBillingAccount(productOrderUpdate.getBillingAccount());
         productOrder.setCancellationDate(productOrderUpdate.getCancellationDate());
@@ -161,104 +162,108 @@ public class ProductOrderService {
         productOrder.setCategory(productOrderUpdate.getCategory());
 
         final List<RelatedChannel> channel = productOrderUpdate.getChannel();
-        if(productOrder.getChannel() == null)
+        if (productOrder.getChannel() == null) {
             productOrder.setChannel(channel);
-        else if(channel != null) {
+        } else if (channel != null) {
             productOrder.getChannel().clear();
             productOrder.getChannel().addAll(channel);
-        }
-        else
+        } else {
             productOrder.getChannel().clear();
+        }
 
         productOrder.setDescription(productOrderUpdate.getDescription());
         productOrder.setExternalId(productOrderUpdate.getExternalId());
 
         final List<Note> note = productOrderUpdate.getNote();
-        if(productOrder.getNote() == null)
+        if (productOrder.getNote() == null) {
             productOrder.setNote(note);
-        else if(note != null) {
+        } else if (note != null) {
             productOrder.getNote().clear();
             productOrder.getNote().addAll(note);
-        }
-        else
+        } else {
             productOrder.getNote().clear();
+        }
 
         productOrder.setNotificationContact(productOrderUpdate.getNotificationContact());
 
         final List<OrderPrice> orderTotalPrice = productOrderUpdate.getOrderTotalPrice();
-        if(productOrder.getOrderTotalPrice() == null)
+        if (productOrder.getOrderTotalPrice() == null) {
             productOrder.setOrderTotalPrice(orderTotalPrice);
-        else if(orderTotalPrice != null) {
+        } else if (orderTotalPrice != null) {
             productOrder.getOrderTotalPrice().clear();
             productOrder.getOrderTotalPrice().addAll(orderTotalPrice);
-        }
-        else
+        } else {
             productOrder.getOrderTotalPrice().clear();
+        }
 
         final List<PaymentRef> payment = productOrderUpdate.getPayment();
-        if(productOrder.getPayment() == null)
+        if (productOrder.getPayment() == null) {
             productOrder.setPayment(payment);
-        else if(payment != null) {
+        } else if (payment != null) {
             productOrder.getPayment().clear();
             productOrder.getPayment().addAll(payment);
-        }
-        else
+        } else {
             productOrder.getPayment().clear();
+        }
 
         productOrder.setPriority(productOrderUpdate.getPriority());
 
         final List<ProductOfferingQualificationRef> productOfferingQualification = productOrderUpdate.getProductOfferingQualification();
-        if(productOrder.getProductOfferingQualification() == null)
+        if (productOrder.getProductOfferingQualification() == null) {
             productOrder.setProductOfferingQualification(productOfferingQualification);
-        else if(productOfferingQualification != null) {
+        } else if (productOfferingQualification != null) {
             productOrder.getProductOfferingQualification().clear();
             productOrder.getProductOfferingQualification().addAll(productOfferingQualification);
-        }
-        else
+        } else {
             productOrder.getProductOfferingQualification().clear();
+        }
 
         final List<ProductOrderItem> productOrderItem = productOrderUpdate.getProductOrderItem();
-        if(productOrder.getProductOrderItem() == null)
+        if (productOrder.getProductOrderItem() == null) {
             productOrder.setProductOrderItem(productOrderItem);
-        else if(productOrderItem != null) {
+        } else if (productOrderItem != null) {
             productOrder.getProductOrderItem().clear();
             productOrder.getProductOrderItem().addAll(productOrderItem);
-        }
-        else
+        } else {
             productOrder.getProductOrderItem().clear();
+        }
 
         final List<QuoteRef> quote = productOrderUpdate.getQuote();
-        if(productOrder.getQuote() == null)
+        if (productOrder.getQuote() == null) {
             productOrder.setQuote(quote);
-        else if(quote != null) {
+        } else if (quote != null) {
             productOrder.getQuote().clear();
             productOrder.getQuote().addAll(quote);
-        }
-        else
+        } else {
             productOrder.getQuote().clear();
+        }
 
         final List<RelatedParty> relatedParty = productOrderUpdate.getRelatedParty();
-        if(productOrder.getRelatedParty() == null)
+        if (productOrder.getRelatedParty() == null) {
             productOrder.setRelatedParty(relatedParty);
-        else if(relatedParty != null) {
+        } else if (relatedParty != null) {
             productOrder.getRelatedParty().clear();
             productOrder.getRelatedParty().addAll(relatedParty);
-        }
-        else
+        } else {
             productOrder.getRelatedParty().clear();
+        }
 
         productOrder.setRequestedCompletionDate(productOrderUpdate.getRequestedCompletionDate());
         productOrder.setRequestedStartDate(productOrderUpdate.getRequestedStartDate());
 
+        if (deleted) {
+            productOrder.setState(ProductOrderStateType.CANCELLED);
+            log.info("Product Order " + productOrder.getId() + " marked as cancelled.");
+        }
+
         productOrderRepository.save(productOrder);
 
-        log.info("Product Order " + id + " patched.");
+        log.info("Product Order " + productOrder.getId() + " patched.");
 
         return productOrder;
     }
 
-    public void cancelProductOrderState(ProductOrder productOrder)
-            throws NotExistingEntityException {
+    public void cancelProductOrderState(ProductOrder productOrder) {
 
         log.info("Received request to cancel Product Order State with catalog id " + productOrder.getId() + ".");
 
