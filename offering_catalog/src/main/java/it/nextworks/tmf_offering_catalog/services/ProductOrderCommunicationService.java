@@ -73,8 +73,10 @@ public class ProductOrderCommunicationService {
         @JsonProperty("verifiableCredentials")
         private final Collection<?> verifiableCredentials;
 
-        @JsonProperty("did")
-        private final String did;
+        @JsonProperty("orderDid")
+        private final String orderDid;
+        @JsonProperty("offerDid")
+        private final String offerDid;
 
         @JsonProperty("supplierDid")
         private final String supplierDid;
@@ -83,12 +85,14 @@ public class ProductOrderCommunicationService {
         public PublicationWrapper(@JsonProperty("productOrder") ProductOrder productOrder,
                                   @JsonProperty("invitations") Map<String, ?> invitations,
                                   @JsonProperty("verifiableCredentials") Collection<?> verifiableCredentials,
-                                  @JsonProperty("did") String did,
+                                  @JsonProperty("orderDid") String orderDid,
+                                  @JsonProperty("offerDid") String offerDid,
                                   @JsonProperty("supplierDid") String supplierDid) {
             this.productOrder = productOrder;
             this.invitations = invitations;
             this.verifiableCredentials = verifiableCredentials;
-            this.did = did;
+            this.orderDid = orderDid;
+            this.offerDid = offerDid;
             this.supplierDid = supplierDid;
         }
     }
@@ -231,6 +235,7 @@ public class ProductOrderCommunicationService {
         ProductOffering productOffering = productOfferingService.get(productOrderItem.getProductOffering().getId());
         ProductSpecification productSpecification = productSpecificationService.get(productOffering.getProductSpecification().getId());
         String stakeholderDid = productSpecification.getRelatedParty().get(0).getExtendedInfo();
+        ProductOfferingStatus productOfferingStatus = productOfferingStatusService.get(productOffering.getId());
 
         productOrder.getProductOrderItem().get(0).getProductOffering().setHref(productOffering.getHref());
 
@@ -241,6 +246,7 @@ public class ProductOrderCommunicationService {
                     null,
                     null,
                     did,
+                    productOfferingStatus.getDid(),
                     stakeholderDid
             ));
         }
