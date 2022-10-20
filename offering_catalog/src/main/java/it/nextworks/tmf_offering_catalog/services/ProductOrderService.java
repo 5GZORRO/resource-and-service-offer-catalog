@@ -146,14 +146,8 @@ public class ProductOrderService {
         productOrder.setSchemaLocation(productOrder.getSchemaLocation());
         productOrder.setType(productOrderUpdate.getType());
 
-        final List<AgreementRef> agreement = productOrderUpdate.getAgreement();
         if (productOrder.getAgreement() == null) {
-            productOrder.setAgreement(agreement);
-        } else if (agreement != null) {
-            productOrder.getAgreement().clear();
-            productOrder.getAgreement().addAll(agreement);
-        } else {
-            productOrder.getAgreement().clear();
+            productOrder.setAgreement(productOrderUpdate.getAgreement());
         }
 
         productOrder.setBillingAccount(productOrderUpdate.getBillingAccount());
@@ -161,91 +155,43 @@ public class ProductOrderService {
         productOrder.setCancellationReason(productOrderUpdate.getCancellationReason());
         productOrder.setCategory(productOrderUpdate.getCategory());
 
-        final List<RelatedChannel> channel = productOrderUpdate.getChannel();
         if (productOrder.getChannel() == null) {
-            productOrder.setChannel(channel);
-        } else if (channel != null) {
-            productOrder.getChannel().clear();
-            productOrder.getChannel().addAll(channel);
-        } else {
-            productOrder.getChannel().clear();
+            productOrder.setChannel(productOrderUpdate.getChannel());
         }
 
         productOrder.setDescription(productOrderUpdate.getDescription());
         productOrder.setExternalId(productOrderUpdate.getExternalId());
 
-        final List<Note> note = productOrderUpdate.getNote();
         if (productOrder.getNote() == null) {
-            productOrder.setNote(note);
-        } else if (note != null) {
-            productOrder.getNote().clear();
-            productOrder.getNote().addAll(note);
-        } else {
-            productOrder.getNote().clear();
+            productOrder.setNote(productOrderUpdate.getNote());
         }
 
         productOrder.setNotificationContact(productOrderUpdate.getNotificationContact());
 
-        final List<OrderPrice> orderTotalPrice = productOrderUpdate.getOrderTotalPrice();
         if (productOrder.getOrderTotalPrice() == null) {
-            productOrder.setOrderTotalPrice(orderTotalPrice);
-        } else if (orderTotalPrice != null) {
-            productOrder.getOrderTotalPrice().clear();
-            productOrder.getOrderTotalPrice().addAll(orderTotalPrice);
-        } else {
-            productOrder.getOrderTotalPrice().clear();
+            productOrder.setOrderTotalPrice(productOrderUpdate.getOrderTotalPrice());
         }
 
-        final List<PaymentRef> payment = productOrderUpdate.getPayment();
         if (productOrder.getPayment() == null) {
-            productOrder.setPayment(payment);
-        } else if (payment != null) {
-            productOrder.getPayment().clear();
-            productOrder.getPayment().addAll(payment);
-        } else {
-            productOrder.getPayment().clear();
+            productOrder.setPayment(productOrderUpdate.getPayment());
         }
 
         productOrder.setPriority(productOrderUpdate.getPriority());
 
-        final List<ProductOfferingQualificationRef> productOfferingQualification = productOrderUpdate.getProductOfferingQualification();
         if (productOrder.getProductOfferingQualification() == null) {
-            productOrder.setProductOfferingQualification(productOfferingQualification);
-        } else if (productOfferingQualification != null) {
-            productOrder.getProductOfferingQualification().clear();
-            productOrder.getProductOfferingQualification().addAll(productOfferingQualification);
-        } else {
-            productOrder.getProductOfferingQualification().clear();
+            productOrder.setProductOfferingQualification(productOrderUpdate.getProductOfferingQualification());
         }
 
-        final List<ProductOrderItem> productOrderItem = productOrderUpdate.getProductOrderItem();
         if (productOrder.getProductOrderItem() == null) {
-            productOrder.setProductOrderItem(productOrderItem);
-        } else if (productOrderItem != null) {
-            productOrder.getProductOrderItem().clear();
-            productOrder.getProductOrderItem().addAll(productOrderItem);
-        } else {
-            productOrder.getProductOrderItem().clear();
+            productOrder.setProductOrderItem(productOrderUpdate.getProductOrderItem());
         }
 
-        final List<QuoteRef> quote = productOrderUpdate.getQuote();
         if (productOrder.getQuote() == null) {
-            productOrder.setQuote(quote);
-        } else if (quote != null) {
-            productOrder.getQuote().clear();
-            productOrder.getQuote().addAll(quote);
-        } else {
-            productOrder.getQuote().clear();
+            productOrder.setQuote(productOrderUpdate.getQuote());
         }
 
-        final List<RelatedParty> relatedParty = productOrderUpdate.getRelatedParty();
         if (productOrder.getRelatedParty() == null) {
-            productOrder.setRelatedParty(relatedParty);
-        } else if (relatedParty != null) {
-            productOrder.getRelatedParty().clear();
-            productOrder.getRelatedParty().addAll(relatedParty);
-        } else {
-            productOrder.getRelatedParty().clear();
+            productOrder.setRelatedParty(productOrderUpdate.getRelatedParty());
         }
 
         productOrder.setRequestedCompletionDate(productOrderUpdate.getRequestedCompletionDate());
