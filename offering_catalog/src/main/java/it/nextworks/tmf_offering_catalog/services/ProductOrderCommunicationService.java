@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.*;
@@ -123,6 +124,9 @@ public class ProductOrderCommunicationService {
     @Value("${skip_sc_lcm_post}")
     private boolean skipSCLCMPost;
 
+    @Value("${ingress:}")
+    private String ingres;
+
     private final ObjectMapper objectMapper;
 
     @Autowired
@@ -166,7 +170,7 @@ public class ProductOrderCommunicationService {
         HttpPost httpPost = new HttpPost(request);
 
         ProductOrderCommunicationService.Order requestOrder = new ProductOrderCommunicationService.Order(
-                token, "ProductOffer", new ArrayList<>(), protocol + hostname + ":" + port + "/tmf-api/productOrderingManagement/v4/productOrder/did/" + catalogId
+                token, "ProductOffer", new ArrayList<>(), StringUtils.hasText(ingres) ? ingres : (protocol + hostname + ":" + port) + "/tmf-api/productOrderingManagement/v4/productOrder/did/" + catalogId
         );
         String roJson = objectMapper.writeValueAsString(requestOrder);
 

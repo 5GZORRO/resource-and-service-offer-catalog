@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
 import org.threeten.bp.ZoneId;
@@ -36,6 +37,9 @@ public class ResourceSpecificationService {
     @Value("${server.port}")
     private String port;
     private static final String path = "/tmf-api/resourceCatalogManagement/v2/resourceSpecification/";
+
+    @Value("${ingress:}")
+    private String ingres;
 
     @Autowired
     private ResourceSpecificationRepository resourceSpecificationRepository;
@@ -64,7 +68,7 @@ public class ResourceSpecificationService {
                 .category(resourceSpecificationCreate.getCategory())
                 .description(resourceSpecificationCreate.getDescription())
                 .feature(resourceSpecificationCreate.getFeature())
-                .href(protocol + hostname + ":" + port + path + id)
+                .href(StringUtils.hasText(ingres) ? ingres : (protocol + hostname + ":" + port) + path + id)
                 .id(id)
                 .isBundle(resourceSpecificationCreate.isIsBundle())
                 .lifecycleStatus(resourceSpecificationCreate.getLifecycleStatus())

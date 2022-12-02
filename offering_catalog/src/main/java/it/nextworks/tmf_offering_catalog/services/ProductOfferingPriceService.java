@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
 import org.threeten.bp.ZoneId;
@@ -31,6 +32,9 @@ public class ProductOfferingPriceService {
     private String port;
     private static final String path = "/tmf-api/productCatalogManagement/v4/productOfferingPrice/";
 
+    @Value("${ingress:}")
+    private String ingres;
+
     @Autowired
     private ProductOfferingPriceRepository productOfferingPriceRepository;
 
@@ -46,7 +50,7 @@ public class ProductOfferingPriceService {
                 .bundledPopRelationship(productOfferingPriceCreate.getBundledPopRelationship())
                 .constraint(productOfferingPriceCreate.getConstraint())
                 .description(productOfferingPriceCreate.getDescription())
-                .href(protocol + hostname + ":" + port + path + id)
+                .href(StringUtils.hasText(ingres) ? ingres : (protocol + hostname + ":" + port) + path + id)
                 .id(id)
                 .isBundle(productOfferingPriceCreate.isIsBundle())
                 .lifecycleStatus(productOfferingPriceCreate.getLifecycleStatus())

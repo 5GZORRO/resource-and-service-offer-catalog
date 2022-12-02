@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.UUID;
@@ -29,6 +30,9 @@ public class OrganizationService {
     @Value("${server.port}")
     private String port;
     private static final String path = "/tmf-api/party/v4/organization/";
+
+    @Value("${ingress:}")
+    private String ingres;
 
     @Autowired
     private OrganizationRepository organizationRepository;
@@ -57,7 +61,7 @@ public class OrganizationService {
                 .creditRating(organizationCreate.getCreditRating())
                 .existsDuring(organizationCreate.getExistsDuring())
                 .externalReference(organizationCreate.getExternalReference())
-                .href(protocol + hostname + ":" + port + path)
+                .href(StringUtils.hasText(ingres) ? ingres : (protocol + hostname + ":" + port) + path)
                 .id(id)
                 .isHeadOffice(organizationCreate.isIsHeadOffice())
                 .isLegalEntity(organizationCreate.isIsLegalEntity())

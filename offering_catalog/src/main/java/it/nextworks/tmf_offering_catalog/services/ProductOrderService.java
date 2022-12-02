@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.threeten.bp.OffsetDateTime;
 
 import java.io.IOException;
@@ -34,6 +35,9 @@ public class ProductOrderService {
     @Value("${server.port}")
     private String port;
     private static final String path = "/tmf-api/productOrderingManagement/v4/productOrder/";
+
+    @Value("${ingress:}")
+    private String ingres;
 
     @Autowired
     private ProductOrderRepository productOrderRepository;
@@ -87,7 +91,7 @@ public class ProductOrderService {
 
         ProductOrder productOrder = productOrderRepository.save(new ProductOrder(productOrderCreate));
         String productOrderId = productOrder.getId();
-        productOrder.href(protocol + hostname + ":" + port + path + productOrderId);
+        productOrder.href(StringUtils.hasText(ingres) ? ingres : (protocol + hostname + ":" + port) + path + productOrderId);
         productOrder = productOrderRepository.save(productOrder);
 
         log.info("Product Order " + productOrderId + " stored in Catalog.");

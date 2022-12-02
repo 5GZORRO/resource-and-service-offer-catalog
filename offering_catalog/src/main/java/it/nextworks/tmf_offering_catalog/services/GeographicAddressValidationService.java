@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,9 @@ public class GeographicAddressValidationService {
     private String port;
     private static final String path = "/tmf-api/geographicAddressManagement/v4/geographicAddressValidation/";
     private static final String gaPath = "/tmf-api/geographicAddressManagement/v4/geographicAddress/";
+
+    @Value("${ingress:}")
+    private String ingres;
 
     @Autowired
     private GeographicAddressValidationRepository geographicAddressValidationRepository;
@@ -123,12 +127,12 @@ public class GeographicAddressValidationService {
         String geographicAddressId = UUID.randomUUID().toString();
         return new GeographicAddressValidation()
                 .id(id)
-                .href(protocol + hostname + ":" + port + path + id)
+                .href(StringUtils.hasText(ingres) ? ingres : (protocol + hostname + ":" + port) + path + id)
                 .schemaLocation(geographicAddressValidationCreate.getSchemaLocation())
                 .type(geographicAddressValidationCreate.getType())
                 .validGeographicAddress(new GeographicAddress()
                         .id(geographicAddressId)
-                        .href(protocol + hostname + ":" + port + gaPath + geographicAddressId)
+                        .href(StringUtils.hasText(ingres) ? ingres : (protocol + hostname + ":" + port) + gaPath + geographicAddressId)
                         .geographicLocation(submittedGeographicAddress.getGeographicLocation())
                         .city(submittedGeographicAddress.getCity())
                         .country(submittedGeographicAddress.getCountry())

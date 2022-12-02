@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
 import org.threeten.bp.ZoneId;
@@ -32,6 +33,9 @@ public class CategoryService {
     private String port;
     private static final String path = "/tmf-api/productCatalogManagement/v4/category/";
 
+    @Value("${ingress:}")
+    private String ingres;
+
     @Autowired
     private CategoryRepository categoryRepository;
 
@@ -49,7 +53,7 @@ public class CategoryService {
                 .schemaLocation(categoryCreate.getSchemaLocation())
                 .type(categoryCreate.getType())
                 .description(categoryCreate.getDescription())
-                .href(protocol + hostname + ":" + port + path + id)
+                .href(StringUtils.hasText(ingres) ? ingres : (protocol + hostname + ":" + port) + path + id)
                 .id(id)
                 .isRoot(categoryCreate.isIsRoot())
                 .lifecycleStatus(categoryCreate.getLifecycleStatus())

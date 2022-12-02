@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -48,6 +49,9 @@ public class ExternalProductOrderConsumer {
     private String scLcmPort;
     @Value("${sc_lcm.derivative_issue.sc_lcm_request_path}")
     private String scLcmRequestPath;
+
+    @Value("${ingress:}")
+    private String ingres;
 
     @Autowired
     private ProductOrderRepository productOrderRepository;
@@ -109,7 +113,7 @@ public class ExternalProductOrderConsumer {
 
         if (!optionalProductOrderStatus.isPresent()) {
             productOrder = productOrderRepository.save(productOrder);
-            productOrder.setHref(protocol + hostname + ":" + port + path + productOrder.getId());
+            productOrder.setHref(StringUtils.hasText(ingres) ? ingres : (protocol + hostname + ":" + port) + path + productOrder.getId());
             ProductOrderStatus productOrderStatus = new ProductOrderStatus()
                 .catalogId(productOrder.getId())
                 .did(did)

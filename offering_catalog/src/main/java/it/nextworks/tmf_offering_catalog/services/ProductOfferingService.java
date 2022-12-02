@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.threeten.bp.Instant;
 import org.threeten.bp.OffsetDateTime;
 import org.threeten.bp.ZoneId;
@@ -51,6 +52,9 @@ public class ProductOfferingService {
     private String scLcmPort;
     @Value("${sc_lcm.product_offer.sc_lcm_request_path}")
     private String scLcmRequestPath;
+
+    @Value("${ingress:}")
+    private String ingres;
 
     @Autowired
     private CommunicationService communicationService;
@@ -124,7 +128,7 @@ public class ProductOfferingService {
                 .category(productOfferingCreate.getCategory())
                 .channel(productOfferingCreate.getChannel())
                 .description(productOfferingCreate.getDescription())
-                .href(protocol + hostname + ":" + port + path + id)
+                .href(StringUtils.hasText(ingres) ? ingres : (protocol + hostname + ":" + port) + path + id)
                 .id(id)
                 .isBundle(productOfferingCreate.isIsBundle())
                 .isSellable(productOfferingCreate.isIsSellable())

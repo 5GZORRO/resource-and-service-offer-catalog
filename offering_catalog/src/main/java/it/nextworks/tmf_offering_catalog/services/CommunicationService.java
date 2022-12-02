@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.*;
@@ -238,6 +239,9 @@ public class CommunicationService {
     @Value("${skip_srsd_post}")
     private boolean skipSRSDPost;
 
+    @Value("${ingress:}")
+    private String ingres;
+
     private final ObjectMapper objectMapper;
 
     @Autowired
@@ -277,7 +281,7 @@ public class CommunicationService {
 
         Offer requestOffer =
                 new Offer(token, "ProductOffer", new ArrayList<>(),
-                        protocol + hostname + ":" + port +
+                		StringUtils.hasText(ingres) ? ingres : (protocol + hostname + ":" + port) +
                                 "/tmf-api/productCatalogManagement/v4/productOffering/did/" + catalogId);
         String roJson = objectMapper.writeValueAsString(requestOffer);
 
