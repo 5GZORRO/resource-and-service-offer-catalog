@@ -60,6 +60,9 @@ public class ExternalProductOffering {
     @JsonProperty("did")
     private final String did;
 
+    @JsonProperty("deleted")
+    private final boolean deleted;
+
     @JsonCreator
     public ExternalProductOffering(@JsonProperty("productOffering") ProductOffering productOffering,
                                    @JsonProperty("productOfferingPrices") List<ProductOfferingPrice> productOfferingPrices,
@@ -72,7 +75,8 @@ public class ExternalProductOffering {
                                    @JsonProperty("verifiableCredentials") Collection<VerifiableCredential> verifiableCredentials,
                                    @JsonProperty("updateType") UpdateType updateType,
                                    @JsonProperty("deduplicationId") String deduplicationId,
-                                   @JsonProperty("did") String did) {
+                                   @JsonProperty("did") String did,
+                                   @JsonProperty("deleted") boolean deleted) {
         this.productOffering        = productOffering;
         this.productOfferingPrices  = productOfferingPrices;
         this.productSpecification   = productSpecification;
@@ -85,6 +89,7 @@ public class ExternalProductOffering {
         this.updateType             = updateType;
         this.deduplicationId        = deduplicationId;
         this.did                    = did;
+        this.deleted = deleted;
     }
 
     public ProductOffering getProductOffering() { return productOffering; }
@@ -112,4 +117,8 @@ public class ExternalProductOffering {
     public String getDeduplicationId() { return deduplicationId; }
 
     public String getDid() { return did; }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
 }
