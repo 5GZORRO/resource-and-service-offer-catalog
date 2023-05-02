@@ -280,7 +280,7 @@ public class ProductOrderCommunicationService {
         CloseableHttpResponse response = httpClient.execute(httpDelete);
 
         if (response.getStatusLine().getStatusCode() != 200) {
-            throw new ProductOrderDeleteScLCMException("The Smart Contract LCM entity did not accept the delete request.");
+            throw new ProductOrderDeleteScLCMException(response.getStatusLine().getReasonPhrase());
         }
 
         productOrderStatusRepository.delete(productOrderStatus);
@@ -320,7 +320,7 @@ public class ProductOrderCommunicationService {
         CloseableHttpResponse response = httpClient.execute(httpPut);
 
         if (response.getStatusLine().getStatusCode() != 200) {
-            throw new ProductOrderDeleteScLCMException("The Smart Contract LCM entity did not accept the end request.");
+            throw new ProductOrderDeleteScLCMException(response.getEntity().getContent().toString());
         }
 
         log.info("End Product Order request accepted.");
