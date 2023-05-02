@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.nextworks.tmf_offering_catalog.common.exception.*;
 import it.nextworks.tmf_offering_catalog.information_models.common.*;
+import it.nextworks.tmf_offering_catalog.information_models.kafka.ExternalProductOffering;
 import it.nextworks.tmf_offering_catalog.information_models.party.OrganizationWrapper;
 import it.nextworks.tmf_offering_catalog.information_models.product.*;
 import it.nextworks.tmf_offering_catalog.information_models.product.sla.ServiceLevelAgreement;
@@ -444,7 +445,7 @@ public class ProductOfferingService {
         }
     }
 
-    public ProductOffering patch(String id, ProductOfferingUpdate productOfferingUpdate, String lastUpdate)
+    public ProductOffering patch(String id, ProductOfferingUpdate productOfferingUpdate, String lastUpdate, boolean deleted)
             throws NotExistingEntityException, NullIdentifierException {
 
         log.info("Received request to patch Product Offering with id " + id + ".");
@@ -459,62 +460,26 @@ public class ProductOfferingService {
         productOffering.setSchemaLocation(productOfferingUpdate.getSchemaLocation());
         productOffering.setType(productOfferingUpdate.getType());
 
-        final List<AgreementRef> agreement = productOfferingUpdate.getAgreement();
-        if(productOffering.getAgreement() == null)
-            productOffering.setAgreement(agreement);
-        else if(agreement != null) {
-            productOffering.getAgreement().clear();
-            productOffering.getAgreement().addAll(agreement);
+        if(productOffering.getAgreement() == null) {
+            productOffering.setAgreement(productOfferingUpdate.getAgreement());
         }
-        else
-            productOffering.getAgreement().clear();
 
-        final List<AttachmentRefOrValue> attachment = productOfferingUpdate.getAttachment();
-        if(productOffering.getAttachment() == null)
-            productOffering.setAttachment(attachment);
-        else if(attachment != null) {
-            productOffering.getAttachment().clear();
-            productOffering.getAttachment().addAll(attachment);
+        if(productOffering.getAttachment() == null) {
+            productOffering.setAttachment(productOfferingUpdate.getAttachment());
         }
-        else
-            productOffering.getAttachment().clear();
 
-        final List<BundledProductOffering> bundledProductOffering = productOfferingUpdate.getBundledProductOffering();
         if(productOffering.getBundledProductOffering() == null)
-            productOffering.setBundledProductOffering(bundledProductOffering);
-        else if(bundledProductOffering != null) {
-            productOffering.getBundledProductOffering().clear();
-            productOffering.getBundledProductOffering().addAll(bundledProductOffering);
-        }
-        else
-            productOffering.getBundledProductOffering().clear();
+            productOffering.setBundledProductOffering(productOfferingUpdate.getBundledProductOffering());
 
-        final List<CategoryRef> category = productOfferingUpdate.getCategory();
+        List<CategoryRef> category = productOfferingUpdate.getCategory();
         if(productOffering.getCategory() == null) {
             updateCategory(category, productOffering.getHref(), productOffering.getId(), productOffering.getName());
             productOffering.setCategory(category);
         }
-        else if(category != null) {
-            updateCategoryPatch(productOffering.getCategory(), category, productOffering.getHref(),
-                    productOffering.getId(), productOffering.getName());
 
-            productOffering.getCategory().clear();
-            productOffering.getCategory().addAll(category);
+        if(productOffering.getChannel() == null) {
+            productOffering.setChannel(productOfferingUpdate.getChannel());
         }
-        else {
-            updateCategoryDelete(productOffering.getCategory(), productOffering.getId());
-            productOffering.getCategory().clear();
-        }
-
-        final List<ChannelRef> channel = productOfferingUpdate.getChannel();
-        if(productOffering.getChannel() == null)
-            productOffering.setChannel(channel);
-        else if(channel != null) {
-            productOffering.getChannel().clear();
-            productOffering.getChannel().addAll(channel);
-        }
-        else
-            productOffering.getChannel().clear();
 
         productOffering.setDescription(productOfferingUpdate.getDescription());
         productOffering.setIsBundle(productOfferingUpdate.isIsBundle());
@@ -522,58 +487,27 @@ public class ProductOfferingService {
         productOffering.setLastUpdate(lastUpdate);
         productOffering.setLifecycleStatus(productOfferingUpdate.getLifecycleStatus());
 
-        final List<MarketSegmentRef> marketSegment = productOfferingUpdate.getMarketSegment();
-        if(productOffering.getMarketSegment() == null)
-            productOffering.setMarketSegment(marketSegment);
-        else if(marketSegment != null) {
-            productOffering.getMarketSegment().clear();
-            productOffering.getMarketSegment().addAll(marketSegment);
+        if(productOffering.getMarketSegment() == null) {
+            productOffering.setMarketSegment(productOfferingUpdate.getMarketSegment());
         }
-        else
-            productOffering.getMarketSegment().clear();
 
         productOffering.setName(productOfferingUpdate.getName());
 
-        final List<PlaceRef> place = productOfferingUpdate.getPlace();
-        if(productOffering.getPlace() == null)
-            productOffering.setPlace(place);
-        else if(place != null) {
-            productOffering.getPlace().clear();
-            productOffering.getPlace().addAll(place);
+        if(productOffering.getPlace() == null) {
+            productOffering.setPlace(productOfferingUpdate.getPlace());
         }
-        else
-            productOffering.getPlace().clear();
 
-        final List<ProductSpecificationCharacteristicValueUse> prodSpecCharValueUse =
-                productOfferingUpdate.getProdSpecCharValueUse();
-        if(productOffering.getProdSpecCharValueUse() == null)
-            productOffering.setProdSpecCharValueUse(prodSpecCharValueUse);
-        else if(prodSpecCharValueUse != null) {
-            productOffering.getProdSpecCharValueUse().clear();
-            productOffering.getProdSpecCharValueUse().addAll(prodSpecCharValueUse);
+        if(productOffering.getProdSpecCharValueUse() == null) {
+            productOffering.setProdSpecCharValueUse(productOfferingUpdate.getProdSpecCharValueUse());
         }
-        else
-            productOffering.getProdSpecCharValueUse().clear();
 
-        final List<ProductOfferingPriceRef> productOfferingPrice = productOfferingUpdate.getProductOfferingPrice();
-        if(productOffering.getProductOfferingPrice() == null)
-            productOffering.setProductOfferingPrice(productOfferingPrice);
-        else if(productOfferingPrice != null) {
-            productOffering.getProductOfferingPrice().clear();
-            productOffering.getProductOfferingPrice().addAll(productOfferingPrice);
+        if(productOffering.getProductOfferingPrice() == null) {
+            productOffering.setProductOfferingPrice(productOfferingUpdate.getProductOfferingPrice());
         }
-        else
-            productOffering.getProductOfferingPrice().clear();
 
-        final List<ProductOfferingTerm> productOfferingTerm = productOfferingUpdate.getProductOfferingTerm();
-        if(productOffering.getProductOfferingTerm() == null)
-            productOffering.setProductOfferingTerm(productOfferingTerm);
-        else if(productOfferingTerm != null) {
-            productOffering.getProductOfferingTerm().clear();
-            productOffering.getProductOfferingTerm().addAll(productOfferingTerm);
+        if(productOffering.getProductOfferingTerm() == null) {
+            productOffering.setProductOfferingTerm(productOfferingUpdate.getProductOfferingTerm());
         }
-        else
-            productOffering.getProductOfferingTerm().clear();
 
         productOffering.setProductSpecification(productOfferingUpdate.getProductSpecification());
         productOffering.setResourceCandidate(productOfferingUpdate.getResourceCandidate());
@@ -582,6 +516,11 @@ public class ProductOfferingService {
         productOffering.setStatusReason(productOfferingUpdate.getStatusReason());
         productOffering.setValidFor(productOfferingUpdate.getValidFor());
         productOffering.setVersion(productOfferingUpdate.getVersion());
+
+        if (deleted) {
+            productOffering.setLifecycleStatus(ExternalProductOffering.UpdateType.RETIRE.name());
+            log.info("Product Order " + productOffering.getId() + " marked as retired.");
+        }
 
         productOfferingRepository.save(productOffering);
 

@@ -107,7 +107,7 @@ public class ExternalProductOfferingConsumer {
         syncResourceSpecifications(externalProductOffering.getResourceSpecifications());
         syncServiceSpecifications(externalProductOffering.getServiceSpecifications());
         syncGeographicAddresses(externalProductOffering.getGeographicAddresses());
-        syncProductOffering(po, did);
+        syncProductOffering(po, did, externalProductOffering.isDeleted());
     }
 
     private void syncProductOfferingPrices(List<ProductOfferingPrice> productOfferingPrices) {
@@ -409,7 +409,7 @@ public class ExternalProductOfferingConsumer {
         });
     }
 
-    private void syncProductOffering(ProductOffering po, String did) {
+    private void syncProductOffering(ProductOffering po, String did, boolean deleted) {
         String id = po.getId();
 
         log.info("Syncing Product Offering " + id + ".");
@@ -433,7 +433,7 @@ public class ExternalProductOfferingConsumer {
             log.error("Product Offering Status " + id + " not found in DB.");
             return;
         }
-        if(optionalPos.get().getStatus() != ProductOfferingStatesEnum.EXTERNAL) {
+        if(optionalPos.get().getStatus() != ProductOfferingStatesEnum.EXTERNAL && !deleted) {
             log.info("Product Offering " + id + " not external, skip.");
             return;
         }
@@ -442,10 +442,10 @@ public class ExternalProductOfferingConsumer {
         OffsetDateTime receivedLastUpdate = OffsetDateTime.parse(poLastUpdate);
         OffsetDateTime storedLastUpdate = OffsetDateTime.parse(optionalPo.get().getLastUpdate());
 
-        if(receivedLastUpdate.compareTo(storedLastUpdate) <= 0) {
-            log.info("Product Offering " + id + " up to date, skip.");
-            return;
-        }
+//        if(receivedLastUpdate.compareTo(storedLastUpdate) <= 0) {
+//            log.info("Product Offering " + id + " up to date, skip.");
+//            return;
+//        }
 
         ProductOfferingUpdate poUpdate = new ProductOfferingUpdate()
                 .baseType(po.getBaseType())
@@ -474,7 +474,7 @@ public class ExternalProductOfferingConsumer {
                 .validFor(po.getValidFor())
                 .version(po.getVersion());
         try {
-            productOfferingService.patch(id, poUpdate, poLastUpdate);
+            productOfferingService.patch(id, poUpdate, poLastUpdate, deleted);
         } catch (NotExistingEntityException | NullIdentifierException e) {
             log.error("External " + e.getMessage());
         }

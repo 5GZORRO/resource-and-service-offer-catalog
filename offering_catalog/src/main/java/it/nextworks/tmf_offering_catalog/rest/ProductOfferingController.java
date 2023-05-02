@@ -356,7 +356,7 @@ public class ProductOfferingController implements ProductOfferingInterface {
         ProductOffering po;
         try {
             po = productOfferingService.patch(id, productOffering,
-                    OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString());
+                    OffsetDateTime.ofInstant(Instant.now(), ZoneId.of("UTC")).toString(), false);
         } catch (NotExistingEntityException e) {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrMsg(e.getMessage()));
