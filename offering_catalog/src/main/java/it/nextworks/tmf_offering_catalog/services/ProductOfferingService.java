@@ -102,8 +102,8 @@ public class ProductOfferingService {
     }
 
     public ProductOffering create(ProductOfferingCreate productOfferingCreate, Boolean skipIDP)
-            throws IOException, DIDGenerationRequestException, StakeholderNotRegisteredException,
-            NotExistingEntityException, NullIdentifierException, DIDAlreadyRequestedForProductException, ScLcmRequestException {
+        throws IOException, DIDGenerationRequestException, StakeholderNotRegisteredException,
+        NotExistingEntityException, NullIdentifierException, DIDAlreadyRequestedForProductException, ScLcmRequestException, ProductOfferingInPublicationException, ProductOfferingDeleteScLCMException {
 
         final String id = UUID.randomUUID().toString();
         log.info("Storing Product Offering " + id + ".");
