@@ -322,8 +322,8 @@ public class CommunicationService {
     }
 
     public void handleDIDReceiving(String catalogId, String did)
-            throws NotExistingEntityException, DIDAlreadyRequestedForProductException,
-            IOException, ScLcmRequestException {
+        throws NotExistingEntityException, DIDAlreadyRequestedForProductException,
+        IOException, ScLcmRequestException, ProductOfferingInPublicationException, ProductOfferingDeleteScLCMException, NullIdentifierException {
 
         log.info("Updating status of Product Offering " + catalogId + " with the received DID " + did + ".");
 

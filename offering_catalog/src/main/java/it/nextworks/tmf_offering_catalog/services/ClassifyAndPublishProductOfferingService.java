@@ -1,5 +1,9 @@
 package it.nextworks.tmf_offering_catalog.services;
 
+import it.nextworks.tmf_offering_catalog.common.exception.NotExistingEntityException;
+import it.nextworks.tmf_offering_catalog.common.exception.NullIdentifierException;
+import it.nextworks.tmf_offering_catalog.common.exception.ProductOfferingDeleteScLCMException;
+import it.nextworks.tmf_offering_catalog.common.exception.ProductOfferingInPublicationException;
 import it.nextworks.tmf_offering_catalog.information_models.product.ProductOfferingStatesEnum;
 import it.nextworks.tmf_offering_catalog.information_models.product.ProductOfferingStatus;
 import it.nextworks.tmf_offering_catalog.repo.ProductOfferingStatusRepository;
@@ -16,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -49,8 +54,12 @@ public class ClassifyAndPublishProductOfferingService {
     @Autowired
     private ProductOfferingStatusRepository productOfferingStatusRepository;
 
+    @Autowired
+    private ProductOfferingService productOfferingService;
+
     @Async
-    public void classifyAndPublish(String catalogId, String cwJson, String pwJson) {
+    @Transactional
+    public void classifyAndPublish(String catalogId, String cwJson, String pwJson) throws ProductOfferingInPublicationException, NotExistingEntityException, ProductOfferingDeleteScLCMException, IOException, NullIdentifierException {
         Optional<ProductOfferingStatus> toClassify = productOfferingStatusRepository.findById(catalogId);
         if(!toClassify.isPresent()) {
             log.error("Product Offering Status for id " + catalogId + " not found in DB.");
@@ -65,6 +74,7 @@ public class ClassifyAndPublishProductOfferingService {
             if (!publicProductOffering(catalogId, pwJson)) {
                 productOfferingStatus.setStatus(ProductOfferingStatesEnum.PUBLISHING_FAILED);
                 productOfferingStatusRepository.save(productOfferingStatus);
+                productOfferingService.delete(catalogId);
                 return;
             }
 

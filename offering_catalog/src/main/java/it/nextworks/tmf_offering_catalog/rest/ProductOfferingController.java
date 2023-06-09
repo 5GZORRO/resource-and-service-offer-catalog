@@ -102,7 +102,7 @@ public class ProductOfferingController implements ProductOfferingInterface {
         } catch (StakeholderNotRegisteredException | NotExistingEntityException | NullIdentifierException | DIDAlreadyRequestedForProductException e) {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg(e.getMessage()));
-        } catch (ScLcmRequestException e) {
+        } catch (ScLcmRequestException | ProductOfferingInPublicationException | ProductOfferingDeleteScLCMException e) {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrMsg(e.getMessage()));
         }
@@ -174,7 +174,7 @@ public class ProductOfferingController implements ProductOfferingInterface {
         } catch (DIDAlreadyRequestedForProductException e) {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrMsg(e.getMessage()));
-        } catch (ScLcmRequestException | IOException e) {
+        } catch (ScLcmRequestException | IOException | ProductOfferingInPublicationException | ProductOfferingDeleteScLCMException | NullIdentifierException e) {
             log.error("Web-Server: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrMsg(e.getMessage()));
         }
